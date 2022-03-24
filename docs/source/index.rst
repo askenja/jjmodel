@@ -1,22 +1,22 @@
-Welcome to Lumache's documentation!
+Welcome to jjmodel's documentation!
 ===================================
 
-**Lumache** (/lu'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients.
-It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
-and offers a *simple* and *intuitive* API.
+**jjmodel** (from Just-Jahreiß model) is a Python library for a semi-analytic model of the Milky Way (MW) disk. The latest version is designed 
+for modelling the MW disk within the Galactocentric distances of approximately 4-14 kpc. 
+The code is complemented by a set of `Padova <http://stev.oapd.inaf.it/cgi-bin/cmd>`_ and `MIST <https://waps.cfa.harvard.edu/MIST/>`_ isochrones, 
+such that users can synthesise stellar populations and select the observable samples on the colour-magnitude diagram.
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
+Check out the :doc:`usage` section for further information, including :ref:`installation` on how to install the project.
 
 .. note::
 
-   This project is under active development.
+   This project is *under active development*.
 
 Contents
 --------
 
 .. toctree::
-
+   
+   
    usage
    api
