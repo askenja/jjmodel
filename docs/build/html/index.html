@@ -1,0 +1,395 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Welcome to jjmodel’s documentation! &#8212; jjmodel 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-jjmodel-s-documentation">
+<h1>Welcome to jjmodel’s documentation!<a class="headerlink" href="#welcome-to-jjmodel-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p><strong>jjmodel</strong> (from Just-Jahreiß model) is a Python library for a semi-analytic model of the Milky Way (MW) disk. The latest version is designed
+for modelling the MW disk within the Galactocentric distances of approximately 4-14 kpc.
+The code is complemented by a set of <a class="reference external" href="http://stev.oapd.inaf.it/cgi-bin/cmd">Padova</a> and <a class="reference external" href="https://waps.cfa.harvard.edu/MIST/">MIST</a> isochrones,
+such that users can synthesise stellar populations and select the observable samples on the colour-magnitude diagram.</p>
+<p>Check out the <span class="xref std std-doc">usage</span> section for further information, including <span class="xref std std-ref">installation</span> on how to install the project.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This project is <em>under active development</em>.</p>
+</div>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="jjmodel.funcs.SFR">
+<em class="property">class </em><code class="sig-prename descclassname">jjmodel.funcs.</code><code class="sig-name descname">SFR</code><a class="headerlink" href="#jjmodel.funcs.SFR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class with different definitions of the star formation rate 
+(SFR) function.</p>
+<dl class="py method">
+<dt id="jjmodel.funcs.SFR.sfrd_jj10">
+<code class="sig-name descname">sfrd_jj10</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">t0</span></em>, <em class="sig-param"><span class="n">t1</span></em>, <em class="sig-param"><span class="n">sigma</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#jjmodel.funcs.SFR.sfrd_jj10" title="Permalink to this definition">¶</a></dt>
+<dd><p>SFR equation as defined in Just and Jahreiss (2010) 
+(model A).</p>
+<dl class="simple">
+<dt>t<span class="classifier">scalar or array_like</span></dt><dd><p>Galactic time, Gyr.</p>
+</dd>
+<dt>tp: scalar</dt><dd><p>Present-day age of the MW disk (i.e., present-day 
+Galactic time), Gyr.</p>
+</dd>
+<dt>t0, t1<span class="classifier">scalar</span></dt><dd><p>SFR parameters, Gyr.</p>
+</dd>
+<dt>sigma<span class="classifier">scalar</span></dt><dd><p>Midplane present-day surface density of the thin disk, 
+Msun/pc^2.</p>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs<span class="classifier">dict, optional keyword arguments</span></dt><dd><dl class="simple">
+<dt>g<span class="classifier">array_like</span></dt><dd><p>Mass loss function (for the whole Galatic time 
+range, [0,tp] Gyr).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="simple">
+<dt>SFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t, in Msun/pc^2/Gyr.</p>
+</dd>
+<dt>NSFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t normalized on the SFR 
+averaged over the whole time range of the disk evolution 
+[0,tp] Gyr.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.funcs.SFR.sfrd_jj10_default">
+<code class="sig-name descname">sfrd_jj10_default</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t</span></em><span class="sig-paren">)</span><a class="headerlink" href="#jjmodel.funcs.SFR.sfrd_jj10_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>SFR equation as defined in Just and Jahreiss (2010) 
+(model A) with its best parameters.</p>
+<dl class="simple">
+<dt>t<span class="classifier">scalar or array_like</span></dt><dd><p>Galactic time, Gyr.</p>
+</dd>
+<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs<span class="classifier">dict, optional keyword arguments</span></dt><dd><dl class="simple">
+<dt>stretch<span class="classifier">boolean</span></dt><dd><p>If True, an extended time scale is used by setting 
+a present-day age of the MW disk to tp==13 Gyr as 
+in the updated JJ model in Sysoliatina and Just 
+(2021). By default is False, tp==12 Gyr, as in the 
+first paper of this series, Just and Jahreiss (2010).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="simple">
+<dt>SFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t, in Msun/pc^2/Gyr.</p>
+</dd>
+<dt>NSFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t normalized on the SFR 
+averaged over the whole time range of the thin disk 
+evolution [0,tp] Gyr.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.funcs.SFR.sfrd_sj21">
+<code class="sig-name descname">sfrd_sj21</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">dzeta</span></em>, <em class="sig-param"><span class="n">eta</span></em>, <em class="sig-param"><span class="n">t1</span></em>, <em class="sig-param"><span class="n">t2</span></em>, <em class="sig-param"><span class="n">sigma</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#jjmodel.funcs.SFR.sfrd_sj21" title="Permalink to this definition">¶</a></dt>
+<dd><p>SFR of the thin disk, as defined in Sysoliatina and Just 
+(2021).</p>
+<dl class="simple">
+<dt>t<span class="classifier">scalar or array_like</span></dt><dd><p>Galactic time, Gyr.</p>
+</dd>
+<dt>dzeta, eta<span class="classifier">scalar</span></dt><dd><p>SFR power indices.</p>
+</dd>
+<dt>t1, t2<span class="classifier">scalar</span></dt><dd><p>Parameters that define the SFR initial time-point 
+(by default, t1==0 Gyr, i.e., the thin disk starts to 
+form without a delay), and the SFR shape (parameter t2).</p>
+</dd>
+<dt>sigma<span class="classifier">scalar</span></dt><dd><p>Midplane present-day thin-disk surface density, 
+Msun/pc^2.</p>
+</dd>
+<dt><a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs<span class="classifier">dict, optional keyword arguments</span></dt><dd><dl class="simple">
+<dt>g<span class="classifier">array_like</span></dt><dd><p>Mass loss function (for the whole Galatic time 
+range, [0,tp] Gyr).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="simple">
+<dt>SFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t, in Msun/pc^2/Gyr.</p>
+</dd>
+<dt>NSFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t normalized on the SFR 
+averaged over the whole time range of the thin disk 
+evolution [0,tp] Gyr.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.funcs.SFR.sfrd_sj21_mono_default">
+<code class="sig-name descname">sfrd_sj21_mono_default</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t</span></em><span class="sig-paren">)</span><a class="headerlink" href="#jjmodel.funcs.SFR.sfrd_sj21_mono_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>SFR of the thin disk, as defined in Sysoliatina and Just 
+(2021), calculated with the best-fit parameters 
+(model MCMC1).</p>
+<dl class="simple">
+<dt>t<span class="classifier">scalar or array_like</span></dt><dd><p>Galactic time, Gyr.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>SFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t, in Msun/pc^2/Gyr.</p>
+</dd>
+<dt>NSFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t normalized on the SFR 
+averaged over the whole time range of the thin disk 
+evolution [0,tp] Gyr.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.funcs.SFR.sfrd_sj21_multipeak">
+<code class="sig-name descname">sfrd_sj21_multipeak</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tp</span></em>, <em class="sig-param"><span class="n">tr</span></em>, <em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">dzeta</span></em>, <em class="sig-param"><span class="n">eta</span></em>, <em class="sig-param"><span class="n">t1</span></em>, <em class="sig-param"><span class="n">t2</span></em>, <em class="sig-param"><span class="n">sigma</span></em>, <em class="sig-param"><span class="n">sigmap</span></em>, <em class="sig-param"><span class="n">tpk</span></em>, <em class="sig-param"><span class="n">dtp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#jjmodel.funcs.SFR.sfrd_sj21_multipeak" title="Permalink to this definition">¶</a></dt>
+<dd><p>SFR of the thin disk, as defined in Sysoliatina and Just 
+(2021): a power-law function that prescribes a peak at old
+ages, a monotonously declining continuum after that, with 
+one or several overlaying Gaussian peaks.</p>
+<dl class="simple">
+<dt>tp<span class="classifier">scalar</span></dt><dd><p>Present-day MW disk age, Gyr.</p>
+</dd>
+<dt>tr<span class="classifier">scalar</span></dt><dd><p>Time resolution of the model, Gyr.</p>
+</dd>
+<dt>t<span class="classifier">scalar or array_like</span></dt><dd><p>Galactic time, Gyr.</p>
+</dd>
+<dt>dzeta, eta<span class="classifier">scalar</span></dt><dd><p>SFR power indices.</p>
+</dd>
+<dt>t1, t2<span class="classifier">scalar</span></dt><dd><p>Parameters that define the SFR initial time-point (by 
+default, t1==0 Gyr, i.e., the thin disk starts to form 
+without a delay), and the SFR shape (parameter t2).</p>
+</dd>
+<dt>sigma<span class="classifier">scalar</span></dt><dd><p>Midplane present-day thin-disk surface density, 
+Msun/pc^2.</p>
+</dd>
+<dt>sigmap<span class="classifier">scalar or array_like </span></dt><dd><p>Amplitude-related parameter(s) of the additional 
+Gaussian peak(s), Msun/pc^2.</p>
+</dd>
+<dt>tpk<span class="classifier">scalar or array_like</span></dt><dd><p>Mean Galactic time(s) of the Gaussian peak(s) (where 
+they are centered along the time axis), Gyr.</p>
+</dd>
+<dt>dtp<span class="classifier">scalar or array_like</span></dt><dd><p>Dispersion(s) of the Gaussian peak(s), Gyr</p>
+</dd>
+<dt><a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs<span class="classifier">dict, optional keyword arguments</span></dt><dd><dl class="simple">
+<dt>g<span class="classifier">array_like</span></dt><dd><p>Mass loss function (for the whole Galatic time 
+range, [0,tp] Gyr).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="simple">
+<dt>SFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t, in Msun/pc^2/Gyr.</p>
+</dd>
+<dt>NSFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t normalized on the SFR 
+averaged over the whole time range of the thin disk  
+evolution [0,tp] Gyr.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.funcs.SFR.sfrd_sj21_multipeak_default">
+<code class="sig-name descname">sfrd_sj21_multipeak_default</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t</span></em><span class="sig-paren">)</span><a class="headerlink" href="#jjmodel.funcs.SFR.sfrd_sj21_multipeak_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>SFR of the thin disk, as defined in Sysoliatina and Just 
+(2021): a power-law function that prescribes a peak at old 
+ages, a monotonously declining continuum after that, with 
+one or several overlaying Gaussian peaks. Calculated with 
+the best-fit parameters (model MCMC1).</p>
+<dl class="simple">
+<dt>t<span class="classifier">scalar or array_like</span></dt><dd><p>Galactic time, Gyr.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>SFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t, in Msun/pc^2/Gyr.</p>
+</dd>
+<dt>NSFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t normalized on the SFR 
+averaged over the whole time range of the thin disk 
+evolution [0,tp] Gyr.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.funcs.SFR.sfrr">
+<code class="sig-name descname">sfrr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">gd</span></em>, <em class="sig-param"><span class="n">gd0</span></em>, <em class="sig-param"><span class="n">gt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#jjmodel.funcs.SFR.sfrr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Thin- and thick-disk SFR as a function of Galactocentric 
+distance R.</p>
+<dl class="simple">
+<dt>p<span class="classifier">namedtuple</span></dt><dd><p>Set of the model parameters from the parameter file.</p>
+</dd>
+<dt>a<span class="classifier">namedtuple</span></dt><dd><p>Collection of the fixed model parameters, useful 
+quantities and arrays.</p>
+</dd>
+<dt>gd<span class="classifier">array_like</span></dt><dd><p>Thin-disk mass loss function (for the whole thin-disk 
+formation duration time range, [p.td1,p.tp] Gyr), at 
+different distances a.R.</p>
+</dd>
+<dt>gd0<span class="classifier">array_like</span></dt><dd><p>The local thin-disk mass loss function.</p>
+</dd>
+<dt>gt<span class="classifier">array_like</span></dt><dd><p>Thick-disk mass loss (for the whole thick-disk 
+formation duration time range, [p.tt1,p.tt2] Gyr). 
+Assumed to be the same for all distances a.R.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>TYPE</dt><dd><p>DESCRIPTION.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.funcs.SFR.sfrt_sj21">
+<code class="sig-name descname">sfrt_sj21</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">gamma</span></em>, <em class="sig-param"><span class="n">beta</span></em>, <em class="sig-param"><span class="n">t1</span></em>, <em class="sig-param"><span class="n">t2</span></em>, <em class="sig-param"><span class="n">sigma</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#jjmodel.funcs.SFR.sfrt_sj21" title="Permalink to this definition">¶</a></dt>
+<dd><p>SFR of the thick disk, as defined in Sysoliatina and Just (2021).</p>
+<dl class="simple">
+<dt>t<span class="classifier">scalar or array_like</span></dt><dd><p>Galactic time, Gyr.</p>
+</dd>
+<dt>gamma, beta<span class="classifier">scalar</span></dt><dd><p>SFR power- and exponent- indices.</p>
+</dd>
+<dt>t1, t2<span class="classifier">scalar</span></dt><dd><p>Parameters that define the initial and final time-
+points, in Gyr. By default, t1 == 0 Gyr, i.e., thick 
+disk starts to form without a delay, and t2 == 4 Gyr, 
+i.e., t2-t1 is the thick-disk formation duration.</p>
+</dd>
+<dt>sigma<span class="classifier">scalar</span></dt><dd><p>Midplane present-day thick-disk surface density, 
+Msun/pc^2.</p>
+</dd>
+<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs<span class="classifier">dict, optional keyword arguments</span></dt><dd><dl class="simple">
+<dt>g<span class="classifier">array_like</span></dt><dd><p>Mass loss function (for the thick-disk formation 
+duration time range, [t1,t2] Gyr).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="simple">
+<dt>SFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t, in Msun/pc^2/Gyr.</p>
+</dd>
+<dt>NSFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t normalized on the SFR 
+averaged over the whole time range of the thick disk 
+evolution [t1,t2] Gyr.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.funcs.SFR.sfrt_sj21_default">
+<code class="sig-name descname">sfrt_sj21_default</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t</span></em><span class="sig-paren">)</span><a class="headerlink" href="#jjmodel.funcs.SFR.sfrt_sj21_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Thick-disk SFR, as defined in Sysoliatina and Just (2021), 
+calculated with best parameters (model MCMC1).</p>
+<dl class="simple">
+<dt>t<span class="classifier">scalar or array_like</span></dt><dd><p>Galactic time, Gyr.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>SFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t, in Msun/pc^2/Gyr.</p>
+</dd>
+<dt>NSFR<span class="classifier">float or ndarray</span></dt><dd><p>Star formation rate at time t normalized on the SFR 
+averaged over the whole time range of the thick disk 
+evolution [t1,t2] Gyr.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">jjmodel</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Sysoliatina.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
