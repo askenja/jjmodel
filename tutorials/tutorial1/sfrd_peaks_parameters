@@ -1,0 +1,18 @@
+# --------------------------------------------------------------------
+# DTo avoid problems during the file reading, 
+# do not add emply lines with tab spaces. 
+# To add your own  commentto the files, begin lines with '#'.
+
+# Each SFRd peak is described by the six parameters:
+# sigmap[Msun/pc^2]     : SF amplitude-related parameter (for R=Rsun)
+# taup[Gyr]             : age of peak center
+# dtaup[Gyr]            : dispersion in time
+# Rp[kpc]               : peak center at R-axis
+# dRp[kpc]              : dispersion in radius
+# sigp[km/s]            : W-velocity dispersion of the peak's populations
+# --------------------------------------------------------------------
+
+#sigmap	taup	dtaup	Rp	dRp	sigp
+3.5	3	0.7	9	1	26.3
+1.3	0.5	0.25	7	0.5	12.6
+
