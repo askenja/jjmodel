@@ -49,6 +49,10 @@ def isochrone_loader(download_mode,**kwargs):
     clock = Timer()
     t1 = clock.start()
     
+    iso_folder = os.path.join(localpath,'input','isochrones')
+    if not os.path.isdir(iso_folder):
+        os.mkdir(iso_folder)
+    
     for k in range(len(download_photometry)):
         
         print('\tphotometry: ',download_photometry[k])
