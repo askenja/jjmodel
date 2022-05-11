@@ -27,33 +27,8 @@ from .analysis import (rhoz_monoage,rhoz_monomet,metz,metr,rhor_monoage,rhor_mon
 
 class Plotting():
     """
-    Class for plotting.
-    All methods of this class return figure and axes (f, ax).    
-    For details on args call analysis_args_description() 
-    (from analysis import ...) and for details on kwargs that 
-    are not listed below call analysis_kwargs_description() 
-    (from analysis import ...). 
-    
-    List of kwargs that are often used in this class methods:
-    # ----------------------------------------------------------
-    save : boolean
-        If True, the figure is saved. Note, that this keywords is
-        also passed to the fuction which calculates some quantity
-        for the plot (if such function is called), such that its 
-        output table will be also saved when save=True.
-    save_format : str
-        Format of the figure. Default is png. 
-    close : boolean
-        If True, the figure is closed after plotting (useful when
-        many figures have to be plotted). 
-    cbar : str
-        Custom colormap (matplotlib names). 
-    cbar_bins : scalar
-        Binned colorbar, number of bins. 
-    normalized : boolean
-        Normalize 
-    cumulative : boolean
-        Cumulative quantity. 
+    Class for plotting. 
+    All methods of this class return figure and axes (f, ax).        
     """
     
     def __init__(self,p,a,inp):
@@ -119,22 +94,38 @@ class Plotting():
         mpl.rcParams['xtick.labelsize'] = label_size 
         mpl.rcParams['ytick.labelsize'] = label_size 
     
+    
     def _figclose_(self,this_function,**kwargs):
+        """
+        Closes figure. 
+        """
         if inpcheck_iskwargtype(kwargs,'close',True,bool,this_function):
             plt.close()
+            
 
     def _figformat_(self,**kwargs):
+        """
+        Returns figure format (defualt png or other if specified in kwargs).
+        """
         if 'save_format' in kwargs:
             fmt = kwargs['save_format']
         else:
             fmt = 'png'
         return fmt
+    
 
     def _figsave_(self,figname,this_function,**kwargs):
+        """
+        Saves figure with the name figname.
+        """
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
             plt.savefig(figname)
+            
         
     def _figcolorbar_(self,default,nbins_default,**kwargs):
+        """ 
+        Creates colorbar (continious or binned).
+        """
         if 'cbar' in kwargs:
             if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
                 colorbar = mpl.cm.get_cmap(kwargs['cbar'],int(nbins_default))
@@ -147,12 +138,22 @@ class Plotting():
                 colorbar = self.cmaps[default]
         return colorbar 
     
+    
     def _cbarminmax_(self,cmin,cmax,dc,**kwargs):
+        """ 
+        Calculates correct min and max values for the colorbar 
+        (depend on whether the colorbar is continious or binned).
+        """
         if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
             cmin, cmax = cmin - dc/2, cmax + dc/2  
         return (cmin, cmax)
+    
   
     def _dynamic_ylim_log_(self,array,yminmax_default):
+        """ 
+        Finds the range to be displayed on the plot axis for the data in array (log scale). 
+        Array has multiple columns. 
+        """
         nx, ny = array.shape
         ymind, ymaxd = yminmax_default
         try:
@@ -176,7 +177,12 @@ class Plotting():
             ymin, ymax = ymind, ymaxd
         return (ymin,ymax)
     
+    
     def _dynamic_ylim_lin_(self,array,yminmax_default,factor):
+        """ 
+        Finds the range to be displayed on the plot axis for the data in array (linear scale). 
+        Array has multiple columns. 
+        """
         nx, ny = array.shape
         ymind, ymaxd = yminmax_default
         try:
@@ -203,6 +209,10 @@ class Plotting():
         return (ymin,ymax)
     
     def _dynamic_ylim_1d_lin_(self,array,yminmax_default,factor):
+        """ 
+        Finds the range to be displayed on the plot axis for the data in array (linear scale). 
+        Array has one column. 
+        """
         ymind, ymaxd = yminmax_default
         try:
             with warnings.catch_warnings():
@@ -222,14 +232,21 @@ class Plotting():
     
     def rhor_plt(self,**kwargs):
         """
-        Radial surface (or matter) density profiles.
+        Radial density profiles of the Galactic components 
+        (thin and thick disk, molecular and atomic gas, DM and stellar halo). 
         
-        Parameters
-        ----------
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, sigma
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param sigma: Optional. If true, surface density profiles (M_sun/pc^2) will be plotted. 
+            By default, the plot displayes midplane densities (M_sun/pc^3). 
+        :type sigma: boolean
+        :param save: Optional. If true, the figure will be saved (call a.T['inpplt'] 
+            to display the folder name).
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -275,15 +292,25 @@ class Plotting():
     
     def nsfr_plt(self,mode_comp,**kwargs):
         """
-        Plots the normalized star formation rate (NSFR) function.
+        Normalized star formation rate (NSFR) as a function of Galactocentric distance. 
+                
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), or 
+            'dt' (thin + thick disk).
+        :type mode_comp: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :type cbar_bins: boolean
+        :param save: Optional. If true, the figure will be saved (call a.T['inpplt'] 
+            to display the folder name).
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
         
-        Parameters
-        ----------
-        mode_comp ('d','t' or 'dt')
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, cbar_bins
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -345,16 +372,20 @@ class Plotting():
 
     def nsfr_rsun_plt(self,mode_comp,**kwargs):
         """
-        Plots the normalized star formation rate (NSFR) function
-        for the Solar neighbourhood, Rsun.
+        Normalized star formation rate (NSFR) for the Solar neighbourhood, p.Rsun.
         
-        Parameters
-        ----------
-        mode_comp ('d','t' or 'dt')
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), or 
+            'dt' (thin + thick disk).
+        :type mode_comp: str
+        :param save: Optional. If true, the figure will be saved (call a.T['inpplt'] 
+            to display the folder name).
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -410,15 +441,25 @@ class Plotting():
     
     def amrr_plt(self,mode_comp,**kwargs):
         """
-        Plots the age-metallicity relation (AMR).
+        Age-metallicity relation of the disk as a function of Galactocentric distance.
         
-        Parameters
-        ----------
-        mode_comp ('d','t' or 'dt')
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, cbar_bins
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), or 
+            'dt' (thin + thick disk).
+        :type mode_comp: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :type cbar_bins: boolean
+        :param save: Optional. If true, the figure will be saved (call a.T['inpplt'] 
+            to display the folder name).
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -484,16 +525,20 @@ class Plotting():
 
     def amr_rsun_plt(self,mode_comp,**kwargs):
         """
-        Plots the age-metallicity relation (AMR) 
-        for the Solar neighbourhood, Rsun.
+        Age-metallicity relation (AMR) for the Solar neighbourhood, p.Rsun.
         
-        Parameters
-        ----------
-        mode_comp ('d','t' or 'dt')
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), or 
+            'dt' (thin + thick disk).
+        :type mode_comp: str
+        :param save: Optional. If true, the figure will be saved (call a.T['inpplt'] 
+            to display the folder name).
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes        
         """
         
         this_function = inspect.stack()[0][3]
@@ -543,15 +588,25 @@ class Plotting():
 
     def gr_plt(self,mode_comp,**kwargs):
         """
-        Plots mass loss function.
+        Mass loss as a function of time and Galactocentric distance.
         
-        Parameters
-        ----------
-        mode_comp ('d','t' or 'dt')
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, cbar_bins
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), or 
+            'dt' (thin + thick disk).
+        :type mode_comp: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :type cbar_bins: boolean
+        :param save: Optional. If true, the figure will be saved (call a.T['inpplt'] 
+            to display the folder name).
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -615,16 +670,20 @@ class Plotting():
 
     def g_rsun_plt(self,mode_comp,**kwargs):
         """
-        Plots mass loss function for the Solar neighbourhood, 
-        Rsun.
+        Plots mass loss function for the Solar neighbourhood, p.Rsun.
         
-        Parameters
-        ----------
-        mode_comp ('d','t' or 'dt')
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), or 
+            'dt' (thin + thick disk).
+        :type mode_comp: str
+        :param save: Optional. If true, the figure will be saved (call a.T['inpplt'] 
+            to display the folder name).
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes  
         """
         
         this_function = inspect.stack()[0][3]
@@ -668,16 +727,26 @@ class Plotting():
 
     def rhoz_plt(self,R,**kwargs):
         """
-        Plots the vertical density profiles of the MW components.
+        Vertical density profiles of the Galactic components (thin and thick disk, 
+        molecular and atomic gas, DM and stellar halo) at some radius.
         
-        Parameters
-        ----------
-        R
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, normalized, 
-            cumulative
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param R: Galactocentric distance, kpc.
+        :type R: scalar
+        :param normalized: Optional. If true, the profiles are normalized at each height z 
+            on the total density at this z. 
+        :type normalized: boolean
+        :param cumulative: Optional. If true, the normalized cumulative mass profiles are plotted. 
+            At each height z, profiles are normalized on the total mass up to this z. 
+        :type cumulative: boolean
+        :param save: Optional. If true, the figure will be saved (call a.T['inpplt'] 
+            to display the folder name).
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes  
         """
         
         this_function = inspect.stack()[0][3]
@@ -735,17 +804,48 @@ class Plotting():
  
     def rhoz_monoage_plt(self,mode_comp,R,ages,**kwargs):
         """
-        Plots the vertical density profiles of the MW disk's mono-
-        age subpopulations.
+        Vertical density profiles of the mono-age subpopulations
+        (plotting for :func:`jjmodel.analysis.rhoz_monoage`).
         
-        Parameters
-        ----------
-        mode_comp ('d','t','dt','sh' or 'tot'), R, ages
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, between, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), 
+            'sh' (stellar halo), 'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param R: Galactocentric distance, kpc.
+        :type R: scalar
+        :param ages: Set of age-bins, Gyr. 
+        :type ages: array-like
+        :param between: Optional. If true, the output quantity corresponds to the age intervals 
+            specified by parameter ages. Otherwise the individual single mono-age subpopulations 
+            are returned (i.e., age-bins of width tr).
+        :type between: boolean
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str 
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :type cbar_bins: boolean
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.rhoz_monoage_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes  
         """
         
         this_function = inspect.stack()[0][3]
@@ -809,17 +909,48 @@ class Plotting():
     
     def rhoz_monomet_plt(self,mode_comp,R,mets,**kwargs):
         """
-        Plots the vertical density profiles of the MW disk's mono-
-        age subpopulations.
+        Vertical density profiles of the mono-metallicity subpopulations
+        (plotting for jjmodel.analysis.rhoz_monomet).
         
-        Parameters
-        ----------
-        mode_comp ('d','t','dt','sh' or 'tot'), R, mets
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), 
+            'sh' (stellar halo), 'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param R: Galactocentric distance, kpc.
+        :type R: scalar
+        :param mets: Set of metallicity bins, dex. 
+        :type mets: array-like
+        :param between: Optional. If true, the output quantity corresponds to the age intervals 
+            specified by parameter ages. Otherwise the individual single mono-age subpopulations 
+            are returned (i.e., age-bins of width tr).
+        :type between: boolean
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str 
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :type cbar_bins: boolean
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.rhoz_monomet_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes  
         """
         
         this_function = inspect.stack()[0][3]
@@ -879,17 +1010,43 @@ class Plotting():
     
     def rz_map_plt(self,mode_comp,**kwargs):
         """
-        Density distribution in Rz-plane. Can be matter or number 
-        density. 
+        Density distribution in Rz-plane. Can be matter or number density. 
+        Plotting for jjmodel.analysis.rz_map. 
         
-        Parameters
-        ----------
-        mode_comp ('d','t','dt','sh' or 'tot')
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            mode_pop, tab, number, dz, ages, mets, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), 
+            'sh' (stellar halo), 'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param ages: Optional. Set of age bins, Gyr. 
+        :type ages: array-like
+        :param mets: Optional. Set of metallicity bins.
+        :type mets: array-like
+        :param dz: Vertical resolution, pc. 
+        :type dz: scalar
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.rz_map_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes  
         """
         
         this_function = inspect.stack()[0][3]
@@ -961,18 +1118,43 @@ class Plotting():
     
     def rz_map_quantity_plt(self,mode_comp,quantity,**kwargs):
         """
-        Distribution of some quantity Q in Rz-plane. Q can be 
-        W-velocity dispersion or stellar physical parameter from
-        isochrones. 
+        Distribution of some quantity Q in Rz-plane. Q can be W-velocity dispersion or 
+        stellar physical parameter from isochrones. Plotting for jjmodel.analysis.rz_map_quantity. 
         
-        Parameters
-        ----------
-        mode_comp ('d','t','dt','sh' or 'tot'), quantity
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            mode_pop, tab, dz, mode_iso, ages, mets
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), 
+            'sh' (stellar halo), 'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param quantity: Name of column of the stellar assemblies table for which 
+            the function has to be applied; for velocity dispersion use 'sigw'. 
+        :type quantity: str
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param ages: Optional. Set of age bins, Gyr. 
+        :type ages: array-like
+        :param mets: Optional. Set of metallicity bins.
+        :type mets: array-like
+        :param dz: Vertical resolution, pc. 
+        :type dz: scalar
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.rz_map_quantity_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes  
         """
         
         this_function = inspect.stack()[0][3]
@@ -1058,16 +1240,40 @@ class Plotting():
 
     def agez_plt(self,mode_comp,**kwargs):
         """
-        Plots metallicity as a function of z at different R.
+        Mean age as a function of height z and Galactocentric distance R.
+        Plotting for jjmodel.analysis.agez. 
         
-        Parameters
-        ----------
-        mode_comp ('d','dt' or 'tot')
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 'dt' (thin + thick disk), 
+            or 'tot' (total: thin + thick disk + stellar halo). 
+        :type mode_comp: str
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :type cbar_bins: boolean
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.agez_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes  
         """
         
         this_function = inspect.stack()[0][3]
@@ -1127,16 +1333,35 @@ class Plotting():
 
     def agez_rsun_plt(self,mode_comp,**kwargs):
         """
-        Plots metallicity as a function of z at Rsun.
+        Mean age as a function of height z for the Solar neighbourhood, p.Rsun.
+        Plotting for jjmodel.analysis.agez. 
         
-        Parameters
-        ----------
-        mode_comp ('d','dt' or 'tot')
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, mode_pop, 
-            tab, number, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 'dt' (thin + thick disk), 
+            or 'tot' (total: thin + thick disk + stellar halo). 
+        :type mode_comp: str
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.agez_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes  
         """
         
         this_function = inspect.stack()[0][3]
@@ -1206,16 +1431,40 @@ class Plotting():
 
     def ager_plt(self,mode_comp,zlim,**kwargs):
         """
-        Plots radial metallicity profiles.
+        Radial age profiles. Plotting for jjmodel.analysis.ager. 
         
-        Parameters
-        ----------
-        mode_comp ('d','dt' or 'tot'), zlim
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 'dt' (thin + thick disk), 
+            or 'tot' (total: thin + thick disk + stellar halo). 
+        :type mode_comp: str
+        :param zlim: Range of heights [zmin,zmax], pc. 
+        :type zlim: array-like 
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.ager_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes  
         """
         
         this_function = inspect.stack()[0][3]
@@ -1281,17 +1530,41 @@ class Plotting():
 
 
     def metz_plt(self,mode_comp,**kwargs):
-        """
-        Plots metallicity as a function of z at different R.
+        """ 
+        Mean metallicity as a function of height z and Galactocentric distance R.
+        Plotting for jjmodel.analysis.metz. 
         
-        Parameters
-        ----------
-        mode_comp ('d','dt' or 'tot')
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 'dt' (thin + thick disk), 
+            or 'tot' (total: thin + thick disk + stellar halo). 
+        :type mode_comp: str
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :type cbar_bins: boolean
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.metz_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes  
         """
         
         this_function = inspect.stack()[0][3]
@@ -1348,17 +1621,36 @@ class Plotting():
     
     
     def metz_rsun_plt(self,mode_comp,**kwargs):
-        """
-        Plots metallicity as a function of z at Rsun.
+        """        
+        Mean metallicity as a function of height z for the Solar neighbourhood, p.Rsun.
+        Plotting for jjmodel.analysis.metz. 
         
-        Parameters
-        ----------
-        mode_comp ('d','dt' or 'tot')
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, mode_pop,  
-            tab, number, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 'dt' (thin + thick disk), 
+            or 'tot' (total: thin + thick disk + stellar halo). 
+        :type mode_comp: str
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.metz_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes 
         """
         
         this_function = inspect.stack()[0][3]
@@ -1429,17 +1721,41 @@ class Plotting():
 
     
     def metr_plt(self,mode_comp,zlim,**kwargs):
-        """
-        Plots radial metallicity profiles.
+        """        
+        Radial metallicity profiles. Plotting for jjmodel.analysis.metr. 
         
-        Parameters
-        ----------
-        mode_comp ('d','dt' or 'tot'), zlim
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 'dt' (thin + thick disk), 
+            or 'tot' (total: thin + thick disk + stellar halo). 
+        :type mode_comp: str
+        :param zlim: Range of heights [zmin,zmax], pc. 
+        :type zlim: array-like 
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.metr_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes  
         """
         
         this_function = inspect.stack()[0][3]
@@ -1508,18 +1824,51 @@ class Plotting():
   
     def rhor_monoage_plt(self,mode_comp,zlim,ages,**kwargs):
         """
-        Plots the radial densiy profiles of the mono-age MW disk's 
-        subpopulations.
+        Radial densiy profiles of the mono-age subpopulations. 
+        Plotting for jjmodel.analysis.rhor_monoage. 
         
-        Parameters
-        ----------
-        mode_comp ('d','t','sh','dt' or 'tot'), zlim, ages
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, between, sigma, 
-            mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), 
+            'sh' (stellar halo), 'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param zlim: Range of heights [zmin,zmax], pc. 
+        :type zlim: array-like 
+        :param ages: Set of age-bins, Gyr. 
+        :type ages: array-like
+        :param sigma: Optional. If True, the result is surface density in Msun/pc^2, 
+            otherwise the midplane matter density in Msun/pc^3 is calculated. 
+            In combination with number=True returns the number surface density, i.e, number of stars/pc^2.
+        :type sigma: boolean
+        :param between: Optional. If true, the output quantity corresponds to the age intervals 
+            specified by parameter ages. Otherwise the individual single mono-age subpopulations 
+            are returned (i.e., age-bins of width tr).
+        :type between: boolean
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.rhor_monoage_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -1594,17 +1943,47 @@ class Plotting():
 
     def rhor_monomet_plt(self,mode_comp,zlim,mets,**kwargs):
         """
-        Plots the radial densiy profiles of the mono-metallicity 
-        MW disk's subpopulations.
+        Radial densiy profiles of the mono-metallicity subpopulations. 
+        Plotting for jjmodel.analysis.rhor_monomet. 
         
-        Parameters
-        ----------
-        mode_comp ('d','t','sh','dt' or 'tot'), zlim, mets
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, sigma, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), 
+            'sh' (stellar halo), 'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param zlim: Range of heights [zmin,zmax], pc. 
+        :type zlim: array-like 
+        :param mets: Set of metallicity bins, dex. 
+        :type mets: array-like
+        :param sigma: Optional. If True, the result is surface density in Msun/pc^2, 
+            otherwise the midplane matter density in Msun/pc^3 is calculated. 
+            In combination with number=True returns the number surface density, i.e, number of stars/pc^2.
+        :type sigma: boolean
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.rhor_monomet_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -1674,17 +2053,46 @@ class Plotting():
 
     def agehist_plt(self,mode_comp,zlim,**kwargs):
         """
-        Plots the MW disk's age distributions (normalized).
+        Age distribution (normalized on area) as a function of height and Galactocentric distance. 
+        Plotting for jjmodel.analysis.agehist. 
         
-        Parameters
-        ----------
-        mode_comp ('d','t','sh','dt' or 'tot'), zlim
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, sigma_gauss, 
-            cumulative, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), 
+            'sh' (stellar halo), 'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param zlim: Range of heights [zmin,zmax], pc. 
+        :type zlim: array-like 
+        :param cumulative: Optional. If true, the normalized cumulative age distributions will be plotted. 
+        :type cumulative: boolean
+        :param sigma_gauss: Optional. Standard deviation of the Gaussian kernel used to smooth
+            the age distributions, Gyr.
+        :type sigma_gauss: scalar
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.agehist_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -1763,18 +2171,47 @@ class Plotting():
 
     def agehist_rsun_plt(self,mode_comp,zlim,**kwargs):
         """
-        Plots the MW disk's age distributions (normalized) 
-        for the Solar neighbourhood, at Rsun.
+        Age distribution (normalized on area) as a function of height for the Solar neighbourhood, p. Rsun.
+        Plotting for jjmodel.analysis.agehist. 
         
-        Parameters
-        ----------
-        mode_comp ('d','t','sh','dt' or 'tot'), zlim
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, sigma_gauss, 
-            cumulative, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), 
+            'sh' (stellar halo), 'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param zlim: Range of heights [zmin,zmax], pc. Or set of z-bin edges, pc. 
+        :type zlim: array-like 
+        :param cumulative: Optional. If true, the normalized cumulative age distributions will be plotted. 
+        :type cumulative: boolean
+        :param sigma_gauss: Optional. Standard deviation of the Gaussian kernel used to smooth
+            the age distributions, Gyr.
+        :type sigma_gauss: scalar
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. Needed only when zlim is not a single 
+            slice, but a set of z-bins. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.agehist_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -1917,18 +2354,50 @@ class Plotting():
 
 
     def methist_plt(self,mode_comp,zlim,**kwargs):
-        """
-        Plots the MW disk's metallicity distributions (normalized).
+        """     
+        Metallicity distribution (normalized on area) as a function of height and Galactocentric distance. 
+        Plotting for jjmodel.analysis.methist. 
         
-        Parameters
-        ----------
-        mode_comp ('d','t','sh','dt' or 'tot'), zlim
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, sigma_gauss,
-            metbins, cumulative, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), 
+            'sh' (stellar halo), 'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param zlim: Range of heights [zmin,zmax], pc. 
+        :type zlim: array-like 
+        :param metbins: Optional. Set of metallicity bins. If not given, the grid is -1.1,...,0.8 dex 
+            with 0.05 dex step. 
+        :type metbins: array-like
+        :param cumulative: Optional. If true, the normalized cumulative age distributions will be plotted. 
+        :type cumulative: boolean
+        :param sigma_gauss: Optional. Standard deviation of the Gaussian kernel used to smooth
+            the age distributions, Gyr.
+        :type sigma_gauss: scalar
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.methist_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2002,18 +2471,50 @@ class Plotting():
 
     def methist_rsun_plt(self,mode_comp,zlim,**kwargs):
         """
-        Plots the MW disk's metallicity distributions (normalized)
-        for the Solar neighbourhood, at Rsun.
+        Metallicity distribution (normalized on area) as a function of height 
+        for the Solar neighbourhood, p. Rsun. Plotting for jjmodel.analysis.methist. 
         
-        Parameters
-        ----------
-        mode_comp ('d','t','sh','dt' or 'tot'), zlim
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, sigma_gauss,
-            metbins, cumulative, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), 
+            'sh' (stellar halo), 'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param zlim: Range of heights [zmin,zmax], pc. Or set of z-bin edges, pc. 
+        :type zlim: array-like 
+        :param metbins: Optional. Set of metallicity bins. If not given, the grid is -1.1,...,0.8 dex 
+            with 0.05 dex step. 
+        :type metbins: array-like
+        :param cumulative: Optional. If true, the normalized cumulative age distributions will be plotted. 
+        :type cumulative: boolean
+        :param sigma_gauss: Optional. Standard deviation of the Gaussian kernel used to smooth
+            the metallicity distributions, dex.
+        :type sigma_gauss: scalar
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. Needed only when zlim is not a single 
+            slice, but a set of z-bins. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.methist_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2153,15 +2654,21 @@ class Plotting():
 
     def h_plt(self,**kwargs):
         """
-        Plots the MW thin-disk's scale height as a function of age.
+        MW thin-disk's scale height as a function of time (and age).
         
-        Parameters
-        ----------
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory is a.T['heightplt']. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2223,15 +2730,18 @@ class Plotting():
 
     def h_rsun_plt(self,**kwargs):
         """
-        Plots the MW thin-disk's scale height as a function of age
-        for the Solar neighbourhood, at Rsun.
+        MW thin-disk's scale height as a function of time (and age)
+        for the Solar neighbourhood, at p.Rsun.
         
-        Parameters
-        ----------
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close 
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory is a.T['heightplt']. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2280,17 +2790,44 @@ class Plotting():
 
     def hr_monoage_plt(self,mode_comp,ages,**kwargs):
         """
-        Plots scale heights of the disk's mono-age subpopulations 
-        as a function of R.
+        Scale heights of the disk's mono-age subpopulations as a function of Galactocentric distance.
         
-        Parameters
-        ----------
-        mode_comp ('d','dt' or 'tot'), ages
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, between, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 
+            'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param ages: Set of age-bins, Gyr. 
+        :type ages: array-like
+        :param between: Optional. If true, the output quantity corresponds to the age intervals 
+            specified by parameter ages. Otherwise the individual single mono-age subpopulations 
+            are returned (i.e., age-bins of width tr).
+        :type between: boolean
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is weighted by the spatial number 
+            density of stars, not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.hr_monoage_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2358,17 +2895,40 @@ class Plotting():
     
     def hr_monomet_plt(self,mode_comp,mets,**kwargs):
         """
-        Plots scale heights of the disk's mono-metallicity sub-
-        populations as a function of R.
+        Scale heights of the disk's mono-metallicity sub-populations as a function of Galactocentric distance.
         
-        Parameters
-        ----------
-        mode_comp ('d','dt' or 'tot'), mets
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 
+            'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param mets: Set of metallicity bins. 
+        :type mets: array-like
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is weighted by the spatial number 
+            density of stars, not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.hr_monomet_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2435,15 +2995,17 @@ class Plotting():
 
     def hr_gas_plt(self,**kwargs):
         """
-        Plots scale heights of the gas components as a function 
-        of R.
+        Scale heights of molecular and atomic gas as functions of Galactocentric distance.
         
-        Parameters
-        ----------
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory is a.T['inpplt']. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2480,13 +3042,19 @@ class Plotting():
         """
         Plots age - W-velocity dispersion relation (AVR).
         
-        Parameters
-        ----------
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory is a.T['kinplt']. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2548,14 +3116,17 @@ class Plotting():
     def avr_rsun_plt(self,**kwargs):
         """
         Plots age - W-velocity dispersion relation (AVR) 
-        for the Solar neighbourhood, at Rsun.
+        for the Solar neighbourhood, at p.Rsun.
         
-        Parameters
-        ----------
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory is a.T['kinplt']. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2600,14 +3171,17 @@ class Plotting():
     
     def sigwr_thick_plt(self,**kwargs):
         """
-        Plots W-velocity dispersion of the thick disk.
+        Thick-disk W-velocity dispersion as a function of Galactocentric distance.
         
-        Parameters
-        ----------
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory is a.T['kinplt']. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2635,17 +3209,38 @@ class Plotting():
     
     def sigwz_plt(self,mode_comp,**kwargs):
         """
-        Plots W-velocity dispersion as a function of z at different 
-        R.
+        W-velocity dispersion as a function of height z and Galactocentric distance. 
         
-        Parameters
-        ----------
-        mode_comp ('d','dt' or 'tot')
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 
+            'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is weighted by the spatial number 
+            density of stars, not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.sigwz_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2699,17 +3294,34 @@ class Plotting():
 
     def sigwz_rsun_plt(self,mode_comp,**kwargs):
         """
-        Plots W-velocity dispersion as a function of z 
-        for the Solar neighbourhood, at Rsun. 
+        W-velocity dispersion as a function of height z for the Solar neighbourhood, at p.Rsun. 
         
-        Parameters
-        ----------
-        mode_comp ('d','dt' or 'tot')
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, mode_pop,
-            tab, number, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 
+            'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is weighted by the spatial number 
+            density of stars, not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.sigwz_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2745,19 +3357,42 @@ class Plotting():
         return (f, ax) 
 
 
-    
     def sigwr_plt(self,mode_comp,zlim,**kwargs):
         """
-        Plots the disk's W-velocity dispersion as a function of R.
+        W-velocity dispersion as a function of Galactocentric distance.
         
-        Parameters
-        ----------
-        mode_comp ('d','dt' or 'tot'), zlim 
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 
+            'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param zlim: Range of heights [zmin,zmax], pc. Or set of z-bin edges, pc. 
+        :type zlim: array-like 
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is weighted by the spatial number 
+            density of stars, not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.sigwr_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2800,7 +3435,6 @@ class Plotting():
         ax.set_ylabel(self.axts['sigw'],fontsize=self.fnt['main'])
         f.subplots_adjust(left=0.14,top=0.86,bottom=0.15,right=0.86)
                  
-                
         if nz > 2:
             ax.set_title(ln,fontsize=self.fnt['main'],pad=10)
             line_segments = LineCollection([list(zip(self.a.R,sigw_r[i])) for i in np.arange(nz-1)],
@@ -2837,17 +3471,46 @@ class Plotting():
 
     def sigwr_monoage_plt(self,mode_comp,zlim,ages,**kwargs):
         """
-        Plots W-velocity dispersion of the disk's mono-age sub-
-        populations as a function of R.
+        W-velocity dispersion of mono-age sub-populations as a function of Galactocentric distance.
         
-        Parameters
-        ----------
-        mode_comp ('d','dt' or 'tot'), zlim, ages
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, between, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 
+            'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param zlim: Range of heights [zmin,zmax], pc. Or set of z-bin edges, pc. 
+        :type zlim: array-like 
+        :param ages: Set of age bins, Gyr. 
+        :type ages: array-like
+        :param between: Optional. If true, the output quantity corresponds to the age intervals 
+            specified by parameter ages. Otherwise the individual single mono-age subpopulations 
+            are returned (i.e., age-bins of width tr).
+        :type between: boolean
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is weighted by the spatial number 
+            density of stars, not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.sigwr_monoage_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -2925,17 +3588,42 @@ class Plotting():
 
     def sigwr_monomet_plt(self,mode_comp,zlim,mets,**kwargs):
         """
-        Plots W-velocity dispersion of the disk's mono-metallicity 
-        subpopulations as a function of R.
-        
-        Parameters
-        ----------
-        mode_comp ('d','dt' or 'tot'), zlim, mets
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        W-velocity dispersion of mono-metallicity subpopulations as a function of Galactocentric distance.
+
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 
+            'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param zlim: Range of heights [zmin,zmax], pc. Or set of z-bin edges, pc. 
+        :type zlim: array-like 
+        :param mets: Set of metallicity bins. 
+        :type mets: array-like
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is weighted by the spatial number 
+            density of stars, not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.sigwr_monomet_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -3009,15 +3697,17 @@ class Plotting():
 
     def sigwr_gas_plt(self,**kwargs):
         """
-        Plots W-velocity dispersion of the gas components as a 
-        function of R.
+        W-velocity dispersion of the atomic and molecular gas as a function of Galactocentric distance.
         
-        Parameters
-        ----------
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory is a.T['kinplt']. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -3051,16 +3741,22 @@ class Plotting():
     
     def fi_plt(self,**kwargs):
         """
-        Plots the normalized vertical gravitational potential as 
-        a function of R.
-        
-        Parameters
-        ----------
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        Vertical gravitational potential as a function of Galactocentric distance. 
+        Potential is normalized to SIGMA_E^2. 
+
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory is a.T['fiplt']. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -3104,15 +3800,18 @@ class Plotting():
 
     def fi_rsun_plt(self,**kwargs):
         """
-        Plots the normalized vertical gravitational potential  
-        for the Solar neighbourhood, at Rsun.
-        
-        Parameters
-        ----------
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        The normalized vertical gravitational potential  
+        for the Solar neighbourhood, at p.Rsun.
+
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory is a.T['fiplt']. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -3141,15 +3840,17 @@ class Plotting():
 
     def fi_iso_plt(self,**kwargs):
         """
-        Plots the normalized vertical gravitational potential as 
-        a function of R.
+        2d map (R-z plane) of the normalized gravitational potential with isolines. 
         
-        Parameters
-        ----------
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory is a.T['fiplt']. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -3182,16 +3883,20 @@ class Plotting():
 
     def kz_plt(self,R,**kwargs):
         """
-        Plots the vertical gravitational force of the different 
-        model components.
+        Vertical gravitational force of the different model components calculated 
+        for a fixed Galactocentric distance.
         
-        Parameters
-        ----------
-        R 
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param R: Galactocentric distance, kpc. 
+        :type R: scalar 
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory is a.T['fiplt']. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -3224,15 +3929,19 @@ class Plotting():
     
     def rot_curve_plt(self,**kwargs):
         """
-        Rotation curve as follows from the assumed radial density 
-        profiles.
+        Rotation curve as follows from the assumed MW mass model.
         
-        Parameters
-        ----------
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, R
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param R: Optional. Galactocentric distance grid, kpc. 
+        :type R: array-like 
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory is a.T['kinplt']. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -3266,17 +3975,51 @@ class Plotting():
 
     def fw_hist_plt(self,mode_comp,R,zlim,**kwargs):
         """
-        |W|-velocity distribution function. 
+        |W|-velocity distribution function. Plotting for jjmodel.analysis.fw_hist. 
         
-        Parameters
-        ----------
-        mode_comp ('d','t','sh','dt' or 'tot'), R, zlim
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, mode_pop, tab, number, mode_iso, wmax, dw,  
-            ages, mets
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component. Can be 'd' (thin disk), 't' (thick disk), 
+            'sh' (stellar halo), 'dt' (thin + thick disk), or 'tot' (total: thin + thick disk + halo).
+        :type mode_comp: str
+        :param R: Galactocentric distance, kpc. Can be a single distance bin or a set of bins. 
+        :type R: scalar or array-like 
+        :param zlim: Range of heights, pc. Can be a single slice [zmin,zmax] or a set of z-bin edges. 
+        :type zlim: array-like 
+        :param ages: Optional. Set of age bins, Gyr. 
+        :type ages: array-like
+        :param mets: Optional. Set of metallicity bins. 
+        :type mets: array-like
+        :param wmax: Maximum value of |W|-velocity, km/s. 
+        :type wmax: scalar
+        :param dw: Step in |W|-velocity, km/s. 
+        :type dw: scalar
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
+             not matter density. Active only when mode_pop or tab are given. 
+        :type number: boolean
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.fw_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -3478,18 +4221,47 @@ class Plotting():
     
     def disk_brightness_plt(self,mode_comp,mode_geom,bands,**kwargs):
         """
-        Colour or brightness profiles of the disk seen face-on 
-        or edge-on. 
+        Surface brightness or colour profile of the MW viewed edge-on or face-on. 
+        Plotting for jjmodel.analysis.disk_brightness. 
+    
+        :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
+            (thin disk, thick disk, halo, thin+thick disk or total). 
+        :type mode_comp: str
+        :param mode_geom: Modeled geometry. Applicable for Hess diagram calculation, stellar assembly 
+            table in volume, volume itself: can be 'local_sphere', 'local_cylinder' or 'rphiz_box'. 
+            For the calculation of disk brightness or colour profile, it is disk orientation with respect 
+            to observer: 'face-on' or 'edge-on'. 
+        :type mode_geom: str
+        :param bands: If bands is a string, it corresponds to the band of the surface brightness profile. 
+            If it is a list, then it gives the two band names to be used for the colour profilie - e.g. 
+            ['U','V'] for U-V.
+        :type bands: string or list
+        :param zlim: optional. Range of heights [zmim,zmax] to be processed. Note that zmax-zmin > p.dz, 
+            the slice cannot be thinner than the model z-resolution. If this parameter is given, and volume 
+            is an array, be sure that len(volume) equals to (zmax-zlim)//p.dz. If no zlim is given, then 
+            all z from 0 to p.zmax are considered.
+        :type zlim: array-like
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+            If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
+            [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+        :type tab: astropy table or list[astropy table] 
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.disk_brightness_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
         
-        Parameters
-        ----------
-        mode_comp ('d','t','sh','dt' or 'tot'), mode_geom, bands
-        
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, zlim, 
-            mode_pop, tab, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -3557,17 +4329,53 @@ class Plotting():
     
     def hess_simple_plt(self,mode_comp,mode_geom,bands,mag_range,mag_step,**kwargs):
         """
+        Hess diagram for the simple volumes. PLotting for jjmodel.analysis.hess_simple. 
         
-        Parameters
-        ----------
-        mode_comp ('d','t','sh','dt' or 'tot'), mode_geom, bands, 
-        mag_range, mag_step
-        **kwargs : dict, optional keyword arguments
-            valid keywords : save, save_format, close, cbar, 
-            cbar_bins, zlim, mode_pop, r_minmax, R_minmax, smooth,
-            dphi, mode_iso
-        For details call help(Plotting) and from analysis
-        analysis_args_description() and analysis_kwargs_description() 
+        :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
+            (thin disk, thick disk, halo, thin+thick disk or total). 
+        :type mode_comp: str
+        :param mode_geom: Modeled geometry. Can be 'local_sphere', 'local_cylinder' or 'rphiz_box'. 
+        :type mode_geom: str
+        :param bands: List of names of photometric columns. 
+            Three column names must be given, e.g. ['B','V','V'] for (B-V) versus M_V. 
+        :type bands: list[str]
+        :param mag_range: Min-max magnitudes along the x- and y-axis of the Hess 
+            diagram, [[x_min,x_max],[y_min,y_max]]. 
+        :type mag_range: list[list]
+        :param mag_step: Step along the x- and y-axis of the Hess diagram, [dx,dy]. 
+        :type mag_step: array-like
+        :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
+            ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
+            and saved as a table in advance). 
+        :type mode_pop: str
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param r_minmax: Optional. Minimal and maximal radius of the spherical shell if mode_geom=='sphere' 
+            or minimal and maximal radius of the cylindrical shell if mode_geom=='cylinder', pc.   
+        :type r_minmax: array-like
+        :param R_minmax: Optional. Minimal and maximal Galactocentric distance if mode_geom=='rphiz_box', kpc. 
+        :type R_minmax: array-like
+        :param dphi: Optional. Minimal and maximal Galactic angle phi if mode_geom=='rphiz_box', deg.
+        :type dphi: array-like
+        :param smooth: Optional. Width of smoothing window in x and y, mag. 
+        :type smooth: array-like
+        :param zlim: Optional. Range of heights [zmim,zmax] to be processed, pc.
+        :type zlim: array-like
+        :param cbar: Optional. Matplotlib name of the colorbar. 
+        :type cbar: str
+        :param cbar_bins: Optional. If true, the colorbar will be discrete. 
+            By default, it is continious.  
+        :param save: Optional. If true, the figure will be saved. 
+            The output directory and figure name 
+            are prescribed by jjmodel.iof.TabSaver.hess_save. 
+        :type save: boolean
+        :param save_format: Optional. Format of the figure. 
+        :type save_format: str 
+        :param close: Optional. If true, the figure window is closed in the end.
+        :type close: boolean
+        
+        :return: figure and axes
         """
         
         this_function = inspect.stack()[0][3]
@@ -3624,40 +4432,22 @@ class Plotting():
         return (f, ax)     
         
             
-        
-
-
 
 class PlotBlocks():
     """
     Class to plot and save many figures automatically. 
-    
-    args of the methods in this Class:
-    ---------------------------------------
-    zlim_set : array-like
-        z-bins where the quantity will be calculated. 
-    zlim : array-like
-        Single z-bin, where the quantity will be calculated. 
-    ages : array-like
-        Set of age-bins, Gyr. 
-    mets : array-like
-        Set of meallicity bins. 
-    age_sm : scalar
-        Standard deviation of the Gaussian kernel, which is used 
-        to smooth age distributions, in Gyr. 
-    mets_sm : scalar
-        Standard deviation of the Gaussian kernel, which is used 
-        to smooth metallicity distributions, in dex. 
-        
-    kwargs of the methods in this Class:
-    ---------------------------------------
-    print_time : boolean
-        If False, calculation time is not printed. 
     """
     
     def __init__(self,p,a,inp):
         """
-        Class is initialized with tuples p and a. 
+        Class is initialized with tuples p and a and dictionary inp. 
+        
+        :param p: Set of model parameters from the parameter file. 
+        :type p: namedtuple
+        :param a: Collection of the fixed model parameters, useful quantities and arrays.
+        :type a: namedtuple
+        :param inp: Collection of the input functions including SFR, AVR, AMR, and IMF.
+        :type inp: dict   
         """
         self.P = Plotting(p,a,inp)
         self.a, self.p, self.inp = a, p, inp
@@ -3671,14 +4461,12 @@ class PlotBlocks():
     def model_input(self,**kwgs):
         """
         Plots and saves all model input: radial density profiles 
-        of the Galactic components, SFR, mass loss, gas scale 
-        heights. 
+        of the Galactic components, SFR, mass loss, gas scale heights. 
         
-        Parameters
-        ----------
-        **kwgs : dict, optional keyword arguments
-            valid keywords : print_time 
-        For details call help(PlotBlocks)
+        :param print_time: Optional. If True, calculation time is printed. 
+        :type print_time: boolean 
+        
+        :return: None. 
         """
         
         this_function = inspect.stack()[0][3]
@@ -3706,16 +4494,19 @@ class PlotBlocks():
         
     def densities(self,zlim,ages,mets,**kwgs):
         """
-        Plots and saves predicted vertical and radial profiles:  
-        of the Galactic components and of the disk's mono-age and  
-        mono-metallicity subpopulations. 
+        Plots and saves predicted vertical and radial profiles  
+        of the Galactic components and of the disk's mono-age and mono-metallicity subpopulations. 
         
-        Parameters
-        ----------
-        zlim, ages, mets
-        **kwgs : dict, optional keyword arguments
-            valid keywords : print_time 
-        For details call help(PlotBlocks)
+        :param zlim: Single z-bin [zmin,zmax], where the quantity will be calculated. 
+        :type zlim: array-like
+        :param ages: Set of age bins, Gyr. 
+        :type ages: array-like
+        :param mets: Set of meallicity bins. 
+        :type mets: array-like
+        :param print_time: Optional. If True, calculation time is printed. 
+        :type print_time: boolean 
+        
+        :return: None. 
         """
         
         this_function = inspect.stack()[0][3]
@@ -3753,14 +4544,17 @@ class PlotBlocks():
         
     def ages(self,zlim_set,age_sm,**kwgs):
         """
-        Plots and saves disk's age distributions at different z and R. 
+        Plots and saves disk's age distributions at different heights and Galactocentric distances. 
         
-        Parameters
-        ----------
-        zlim_set, age_sm
-        **kwgs : dict, optional keyword arguments
-            valid keywords : print_time 
-        For details call help(PlotBlocks)
+        :param zlim_set: Edges of z-bins where the quantity will be calculated. 
+        :type zlim_set: array-like
+        :param age_sm: Standard deviation of the Gaussian kernel, which is used 
+            to smooth age distributions, Gyr. 
+        :type age_sm: scalar   
+        :param print_time: Optional. If True, calculation time is printed. 
+        :type print_time: boolean 
+        
+        :return: None. 
         """
         
         this_function = inspect.stack()[0][3]
@@ -3796,14 +4590,17 @@ class PlotBlocks():
             
     def metallicities(self,zlim_set,met_sm,**kwgs):
         """
-        Plots and saves disk's age distributions at different z and R. 
+        Plots and saves disk's age distributions at different heights and Galactocentric distances. 
         
-        Parameters
-        ----------
-        zlim_set, met_sm
-        **kwgs : dict, optional keyword arguments
-            valid keywords : print_time 
-        For details call help(PlotBlocks)
+        :param zlim_set: Edges of z-bins where the quantity will be calculated. 
+        :type zlim_set: array-like
+        :param met_sm: Standard deviation of the Gaussian kernel, which is used 
+            to smooth metallicity distributions. 
+        :type met_sm: scalar   
+        :param print_time: Optional. If True, calculation time is printed. 
+        :type print_time: boolean 
+        
+        :return: None. 
         """
         
         this_function = inspect.stack()[0][3]
@@ -3838,15 +4635,15 @@ class PlotBlocks():
             
     def heights(self,ages,mets,**kwgs):
         """
-        Plots and saves disk's scale heights as a function of age 
-        and R. 
+        Plots and saves disk's scale heights as a function of age and Galactocentric distance. 
         
-        Parameters
-        ----------
-        ages, mets
-        **kwgs : dict, optional keyword arguments
-            valid keywords : print_time 
-        For details call help(PlotBlocks)
+        :type ages: array-like
+        :param mets: Set of meallicity bins. 
+        :type mets: array-like
+        :param print_time: Optional. If True, calculation time is printed. 
+        :type print_time: boolean 
+        
+        :return: None. 
         """
         
         this_function = inspect.stack()[0][3]
@@ -3871,14 +4668,17 @@ class PlotBlocks():
     def kinematics(self,zlim_set,ages,mets,**kwgs):
         """
         Plots and saves disk's kinematic functions: AVR, W-velocity 
-        dispersion of the thick disk and gas at different R. 
+        dispersion of the thick disk and gas at different Galactocentric distances. 
         
-        Parameters
-        ----------
-        zlim_set, ages, mets
-        **kwgs : dict, optional keyword arguments
-            valid keywords : print_time 
-        For details call help(PlotBlocks)
+        :param zlim_set: Edges of z-bins where the quantity will be calculated. 
+        :type zlim_set: array-like
+        :type ages: array-like
+        :param mets: Set of meallicity bins. 
+        :type mets: array-like
+        :param print_time: Optional. If True, calculation time is printed. 
+        :type print_time: boolean 
+        
+        :return: None. 
         """
         
         this_function = inspect.stack()[0][3]
@@ -3917,14 +4717,12 @@ class PlotBlocks():
             
     def potential(self,**kwgs):
         """
-        Plots and saves vertical grvitational potential and 
-        gravitational force. 
+        Plots and saves vertical grvitational potential and gravitational force. 
         
-        Parameters
-        ----------
-        **kwgs : dict, optional keyword arguments
-            valid keywords : print_time 
-        For details call help(PlotBlocks)
+        :param print_time: Optional. If True, calculation time is printed. 
+        :type print_time: boolean 
+        
+        :return: None. 
         """
         
         this_function = inspect.stack()[0][3]
@@ -3950,14 +4748,14 @@ class PlotBlocks():
             
     def rz_maps(self,dz,**kwgs):
         """
-        Plots and saves density?age/[Fe/H]/sigw maps in Rz plane. 
+        Plots and saves density/age/[Fe/H]/sigw maps in Rz plane. 
         
-        Parameters
-        ----------
-        dz
-        **kwgs : dict, optional keyword arguments
-            valid keywords : print_time 
-        For details call help(PlotBlocks)
+        :param dz: Optional. Vertical resolution, pc. 
+        :type dz: scalar
+        :param print_time: Optional. If True, calculation time is printed. 
+        :type print_time: boolean 
+        
+        :return: None. 
         """
         
         this_function = inspect.stack()[0][3]
@@ -3974,14 +4772,30 @@ class PlotBlocks():
             
     def populations(self,zlim,ages,mets,age_sm,met_sm,rmax,**kwgs):
         """
-        Plots and saves Hess diagrams. 
+        Plots and saves radial density profiles, age, metallicity , and f(|W|) distributions, 
+        Hess diagrams and Rz-maps for the different populations. 
+    
+        :param ages: Set of age bins, Gyr. 
+        :type ages: array-like
+        :param mets: Set of meallicity bins. 
+        :type mets: array-like
+        :param age_sm: Standard deviation of the Gaussian kernel, which is used 
+            to smooth age distributions, Gyr. 
+        :type age_sm: scalar  
+        :param met_sm: Standard deviation of the Gaussian kernel, which is used 
+            to smooth metallicity distributions. 
+        :type met_sm: scalar  
+        :param rmax: Radius of the local sphere or cylinder (for calculation of Hess diagram), pc. 
+        :type rmax: scalar
+        :param dz: Optional. Vertical resolution for Rz maps, pc. If not specified, dz = 25 pc. 
+        :type dz: scalar
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+        :param print_time: Optional. If True, calculation time is printed. 
+        :type print_time: boolean 
         
-        
-        Parameters
-        ----------
-        **kwgs : dict, optional keyword arguments
-            valid keywords : print_time 
-        For details call help(PlotBlocks)
+        :return: None. 
         """
         
         this_function = inspect.stack()[0][3]
@@ -3989,10 +4803,7 @@ class PlotBlocks():
             timer = Timer()
             t_start = timer.start()
         if 'mode_iso' in kwgs:
-            self.kwargs['mode_iso'] = kwgs['mode_iso']
-            if kwgs['mode_iso']=='BaSTI':
-                self.pops.remove('rc')
-                self.pops.append('rc+')                            
+            self.kwargs['mode_iso'] = kwgs['mode_iso']                          
         
         modes_disk = 'tot'
         
@@ -4061,10 +4872,27 @@ class PlotBlocks():
         """
         Plots and saves all figures (basic output of the model). 
         
-        Parameters
-        ----------
-        zlim_set, ages, mets, age_sm, met_sm
-        For details call help(PlotBlocks)
+        :param zlim_set: Edges of z-bins where the quantities will be calculated. 
+        :type zlim_set: array-like
+        :param ages: Set of age bins, Gyr. 
+        :type ages: array-like
+        :param mets: Set of meallicity bins. 
+        :type mets: array-like
+        :param age_sm: Standard deviation of the Gaussian kernel, which is used 
+            to smooth age distributions, Gyr. 
+        :type age_sm: scalar  
+        :param met_sm: Standard deviation of the Gaussian kernel, which is used 
+            to smooth metallicity distributions. 
+        :type met_sm: scalar  
+        :param rmax: Radius of the local sphere or cylinder (for calculation of Hess diagram), pc. 
+        :type rmax: scalar
+        :param dz: Optional. Vertical resolution for Rz maps, pc. If not specified, dz = 25 pc. 
+        :type dz: scalar
+        :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+            If not specified, 'Padova' is the default isochrone set. 
+        :type mode_iso: str
+ 
+        :return: None. 
         """
 
         timer = Timer()

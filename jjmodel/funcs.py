@@ -17,7 +17,7 @@ from scipy.special import erf, kv, iv
 from scipy.optimize import curve_fit
 from scipy.integrate import dblquad, quad
 from .iof import tab_reader, dir_tree
-from .tools import transition_2curves, ConvertAxes
+from .tools import _transition_2curves_, ConvertAxes
 from .constants import tp, tr, GA, G, GYR, PC, SIGMA_E, KM, M_SUN
 from . import localpath
 
@@ -29,17 +29,17 @@ from . import localpath
 def hgr(p,a):
     """
     Scale heights of the atomic and molecular gas components as 
-    a function of Galactocentric distance R. 
-    Data taken from Nakanishi and Sofue (2016). 
+    functions of Galactocentric distance. Data are taken from Nakanishi and Sofue (2016). 
     
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
         
-    :return: ((hg1,hg10),(hg2,hg20)) - Molecular/atomic gas scale height (in pc) at 
-             Galactocentric distances a.R and at the Solar radius. 
-    :rtype: ((ndarray,float),(ndarray,float))
+    :return: *((hg1,hg10),(hg2,hg20))*, indices 1 and 2 correspond to molecular and atomic gas, 
+        respectively. Gas scale heights (pc) at Galactocentric distances ``a.R`` and at the Solar 
+        radius ``p.Rsun``. 
+    :rtype: ((1d-array,float),(1d-array,float))
     """
     
     T = dir_tree(p)
@@ -59,18 +59,17 @@ def hgr(p,a):
 
 def heffr(p,a,heffd0):
     """
-    Thin-disk half-thickness as a function of the Galactocentric 
-    distance R. 
+    Thin-disk half-thickness as a function of Galactocentric distance. 
 
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
-    :param heffd0: Thin-disk half-thickness at the Solar radius.
+    :param heffd0: Thin-disk half-thickness at the Solar radius ``p.Rsun``.
     :type heffd0: scalar
     
-    :return: Thin-disk half-thickness at Galactocentric distances a.R, in pc. 
-    :rtype: ndarray        
+    :return: Thin-disk half-thickness calculated at Galactocentric distances ``a.R``, pc. 
+    :rtype: 1d-array        
     """
     
     if p.Rf < p.Rmax:
@@ -83,25 +82,25 @@ def heffr(p,a,heffd0):
         hdeff_r2 = [hdeff_rf*np.exp((i-p.Rf)/p.Rdf) for i in a.R[indR:]] 
         hdeff = np.concatenate((hdeff_r1,hdeff_r2),axis=0)
         epsilon_R = 0.5     # kpc
-        hdeff = transition_2curves(epsilon_R,p.Rf,a.R,hdeff)
+        hdeff = _transition_2curves_(epsilon_R,p.Rf,a.R,hdeff)
     else:
         hdeff = [heffd0 for i in a.R]
     
-    return hdeff
+    return np.array(hdeff)
 
 
 def log_surface_gravity(Mf,L,Teff):
     """
     Function for calculation of surface gravity. 
     
-    :param Mf: Stellar mass (present-day mass in isochrones), M_sun.
+    :param Mf: Stellar mass (present-day mass in isochrones), :math:`\mathrm{M}_\odot`.
     :type Mf: scalar or array-like
-    :param L: Stellar luminosity, L_odot.
+    :param L: Stellar luminosity, :math:`\mathrm{L}_\odot`.
     :type L: scalar or array-like
     :param Teff: Effective temperature, K.
     :type Teff: scalar or array-like
     
-    :return: Log surface gravity, log(m/s^2).
+    :return: Log surface gravity, :math:`\mathrm{log(cm \ s^{-2})}`.
     :rtype: scalar or array-like
     """
     
@@ -133,13 +132,11 @@ class RadialPotential():
     
     def __init__(self,Rsun,R):
         """
-        Class instance is initialized by the two parameters.
+        Class instance is initialized by two parameters.
         
-        Parameters
-        ----------
         :param Rsun: Solar Galactocentric distance, kpc.
         :type Rsun: float
-        :param R: Galactocentric distance(s), kpc.  
+        :param R: Galactocentric distance(s) where potential has to be calculated, kpc.  
         :type R: float or array-like          
         """
         self.R, self.Rsun = R, Rsun
@@ -147,14 +144,15 @@ class RadialPotential():
         
     def exp_disk(self,sigma0,Rd):
         """
-        Potential of a razor-thin exponential disk (Bessel functions). 
+        Potential of a razor-thin exponential disk (via Bessel functions). 
         
-        :param sigma0: Local surface density, Msun/pc^2.    
+        :param sigma0: Local surface density, :math:`\mathrm{M_\odot \ pc^{-2}}`.    
         :type sigma0: scalar
         :param Rd: Radial scale length of the disk, kpc. 
         :type Rd: scalar
                
-        :return: Potential of the disk at Galactocentric distance R, m^2/s^2.             
+        :return: Potential of the disk at the given Galactocentric distance(s) **R**, 
+            :math:`\mathrm{m^2 \ s^{-2}}`.             
         :rtype: float or array-like
         """
     
@@ -166,14 +164,15 @@ class RadialPotential():
     
     def pow_law(self,rho0,alpha):
         """
-        Potential of a component with power-law radial profile. 
+        Potential of a MW component with a power-law radial density profile, 
+        :math:`{\\rho}(R) \propto (R_\odot/R)^{\\alpha}`. 
         
-        :param rho0: Density at Rsun, Msun/pc^3. 
+        :param rho0: Local mass density, :math:`\mathrm{M_\odot \ pc^{-3}}`. 
         :type rho0: scalar
         :param alpha: Power-law slope.
         :type alpha: scalar
                
-        :return: Potential at Galactocentric distance R, m^2/s^2.             
+        :return: Potential at the given Galactocentric distance(s) **R**, :math:`\mathrm{m^2 \ s^{-2}}`.             
         :rtype: float or array-like
         """
     
@@ -186,12 +185,12 @@ class RadialPotential():
         """
         Potential of a cored isothermal sphere. 
 
-        :param rho0: Local mass density, Msun/pc^3.
+        :param rho0: Local mass density, :math:`\mathrm{M_\odot \ pc^{-3}}`. 
         :type rho0: scalar
         :param ah: Scaling parameter, kpc. 
         :type ah: scalar
         
-        :return: Potential at Galactocentric distance R, m^2/s^2.             
+        :return: Potential the given Galactocentric distance(s) **R**, :math:`\mathrm{m^2 \ s^{-2}}`. 
         :rtype: float or array-like
         """
     
@@ -204,22 +203,19 @@ class RadialPotential():
 
 class RadialDensity():
     """
-    Class for defining radial density profiles of the different 
-    Galactic components. 
+    Radial density profiles of the different Galactic components.     
     """
     
     def __init__(self,Rsun,zsun,R):
         """
         Class instance is initialized by three parameters.
         
-        Parameters
-        ----------
         :param Rsun: Solar Galactocentric distance, kpc.
         :type Rsun: float
-        :param R: Galactocentric distance(s), kpc.  
-        :type R: float or array-like       
-        :param zsun: Height of Sun above the plane, pc.
+        :param zsun: Height of the Sun above the Galactic plane, pc.
         :type zsun: float
+        :param R: Galactocentric distance(s) where density has to be calculated, kpc.  
+        :type R: float or array-like       
         """
         self.Rsun = Rsun
         self.zsun = zsun*1e-3
@@ -229,15 +225,16 @@ class RadialDensity():
         
     def rho_disk(self,rho0,Rd):
         """
-        Mass density of an exponential disk in the Galactic plane.
+        Midplane mass density of an exponential disk.
     
-        :param rho0: Local mass density, Msun/pc^3.
+        :param rho0: Local mass density, :math:`\mathrm{M_\odot \ pc^{-3}}`. 
         :type rho0: scalar
         :param Rd: Radial scale length of the disk, kpc. 
         :type Rd: scalar
         
-        :return: Mass density of the disk at Galactocentric distance R, Msun/pc^3.             
-        :rtype: float
+        :return: Mass density of the disk calculated at the given Galactocentric distance(s) **R**, 
+            :math:`\mathrm{M_\odot \ pc^{-3}}`.             
+        :rtype: float or array-like  
         """
         rho = rho0*np.exp(-(np.subtract(self.R,self.Rsun))/Rd)
         return rho
@@ -247,13 +244,14 @@ class RadialDensity():
         """
         Surface density of an exponential disk.
     
-        :param sigma0: Local surface density, Msun/pc^2.    
+        :param sigma0: Local surface density, :math:`\mathrm{M_\odot \ pc^{-2}}`. 
         :type sigma0: scalar
         :param Rd: Radial scale length of the disk, kpc. 
         :type Rd: scalar
         
-        :return: Surface density of the disk at Galactocentric distance R, Msun/pc^2. 
-        :rtype: float
+        :return: Surface density of the disk calculated at the given Galactocentric distance(s) **R**, 
+            :math:`\mathrm{M_\odot \ pc^{-2}}`. 
+        :rtype: float or array-like 
         """
         
         sigma = sigma0*np.exp(-(np.subtract(self.R,self.Rsun))/Rd)
@@ -262,17 +260,17 @@ class RadialDensity():
     
     def rho_dm_halo(self,z,rho0,ah):
         """
-        3D mass density of an isothermal DM sphere.
+        3d mass density of an isothermal dark matter (DM) sphere.
     
-        :param z: Height above the plane, kpc.
+        :param z: Height above the Galactic plane, kpc.
         :type z: scalar
-        :param rho0: Local mass density of the DM halo, Msun/pc^3.
+        :param rho0: Local mass density of the DM halo, :math:`\mathrm{M_\odot \ pc^{-3}}`.
         :type rho0: scalar
         :param ah: DM scaling parameter, kpc. 
         :type ah: scalar
         
-        :return: DM halo mass density at (R,z), Msun/pc^3.   
-        :rtype: float
+        :return: DM halo mass density at the given **z** and **R**, :math:`\mathrm{M_\odot \ pc^{-3}}`.
+        :rtype: float or array-like
         """
         
         '''
@@ -291,18 +289,19 @@ class RadialDensity():
     
     def sigma_dm_halo(self,zmax,sigma0,ah):
         """
-        Surface density of an isothermal DM sphere.
+        Surface density of an isothermal dark matter (DM) sphere.
         
-        :param zmax: Maximal height above the plane, kpc. 
+        :param zmax: Maximal height above the Galactic plane, kpc. Up to this height DM mass 
+            density law will be integrated.
         :type zmax: scalar
-        :param sigma0: Local surface density, Msun/pc^2.
+        :param sigma0: Local surface density, :math:`\mathrm{M_\odot \ pc^{-2}}`. 
         :type sigma0: scalar 
         :param ah: DM scaling parameter, kpc. 
         :type ah: scalar 
       
-        :return: DM halo surface density at Galactocentric 
-                 distance R (up to height zmax), Msun/pc^2.   
-        :rtype: float
+        :return: DM halo surface density at Galactocentric distance(s) **R** 
+                 (up to the height **zmax**), :math:`\mathrm{M_\odot \ pc^{-2}}`.   
+        :rtype: float or array-like
         """
         tan_term = np.arctan(zmax/np.sqrt(ah**2 + self.R**2))/np.arctan(zmax/np.sqrt(ah**2 + self.Rsun**2))
         sigma = sigma0*np.sqrt(ah**2 + self.Rsun**2)/np.sqrt(ah**2 + self.R**2)*tan_term    
@@ -311,18 +310,19 @@ class RadialDensity():
     
     def rho_stellar_halo(self,z,rho0,a_sh):
         """
-        3D mass density of a spherical stellar halo.
-        Flattening is ignored, profile is a power law. 
+        3d mass density of a spherical stellar halo.
+        Flattening is ignored, profile is a power law, :math:`{\\rho}(R) \propto (R_\odot/R)^{-\\alpha}`. 
         
-        :param z: Height above the plane, kpc. 
+        :param z: Height above the Galactic plane, kpc. 
         :type z: scalar
-        :param rho0: Local mass density of the halo, Msun/pc^3. 
+        :param rho0: Local mass density of the halo, :math:`\mathrm{M_\odot \ pc^{-3}}`. 
         :type rho0: scalar
-        :param a_sh: Slope of the halo profile. (about -2.5, see Bland-Hawthorn 2016). 
+        :param a_sh: Slope of the halo profile (about -2.5, see Bland-Hawthorn 2016). 
         :type a_sh: scalar
                      
-        :return: Midplane halo mass density at Galactocentric distance R, Msun/pc^3.    
-        :rtype: float
+        :return: Halo mass density at the given **z** and **R**, 
+            :math:`\mathrm{M_\odot \ pc^{-3}}`.    
+        :rtype: float or array-like
         """
     
         #rho = rho0*(np.divide(self.Rsun,self.R))**(-a_sh)
@@ -334,17 +334,19 @@ class RadialDensity():
     def sigma_stellar_halo(self,zmax,sigma0,a_sh):
         """
         Surface density of a spherical stellar halo.
-        Flattening ignored, profile is a power law. 
+        Flattening is ignored, profile is a power law (see :meth:`jjmodel.RadialDensity.rho_stellar_halo`). 
         
-        :param zmax: Maximal height above the plane, kpc. 
+        :param zmax: Maximal height above the Galactic plane, kpc. 
+            Up to this height halo mass density law will be integrated.
         :type zmax: scalar
-        :param sigma0: Local surface density, Msun/pc^2.
+        :param sigma0: Local surface density, :math:`\mathrm{M_\odot \ pc^{-2}}`.   
         :type sigma0: scalar
-        :param a_sh: Slope of the halo profile. (about -2.5, see Bland-Hawthorn 2016). 
+        :param a_sh: Slope of the halo profile (about -2.5, see Bland-Hawthorn 2016). 
         :type a_sh: scalar
              
-        :return:  Halo surface density at Galactocentric distance R up to zmax, Msun/pc^2.       
-        :rtype: float
+        :return:  Halo surface density at the given Galactocentric distance(s) **R** 
+            (up to the height **zmax**), :math:`\mathrm{M_\odot \ pc^{-2}}`.       
+        :rtype: float or array-like
         """
         
         rho0 = sigma0/2/quad(lambda z: (self.Rsun/np.sqrt(self.Rsun**2 + z**2))**(-a_sh),0,zmax)[0]
@@ -362,18 +364,16 @@ class RadialDensity():
 class RotCurve():
     """
     Circular velocity as a function of Galactocentric distance 
-    as follows from the assumed density laws for the model components.
+    as follows from the assumed density laws for the MW components.
     """
     
     def __init__(self,Rsun,R):
         """
         Class instance is initialized by two parameters. 
         
-        Parameters
-        ----------
         :param Rsun: Solar Galactocentric distance, kpc.
         :type Rsun: float
-        :param R: Galactocentric distance(s), kpc.  
+        :param R: Galactocentric distance(s) where circular velocity has to be calculated, kpc.  
         :type R: float or array-like       
         """
         self.Rsun = Rsun
@@ -384,12 +384,12 @@ class RotCurve():
         
     def vc_bulge(self,Mb):
         """
-        Rotation velocity of a point-mass bulge. 
+        Rotation curve of a point-mass bulge. 
         
-        :param Mb: Mass of the bulge.
+        :param Mb: Mass of the bulge, :math:`\mathrm{M_\odot}`. 
         :type Mb: scalar
 
-        :return: Circular velocity, km/s. 
+        :return: Circular velocity corresponding to **R**, :math:`\mathrm{km \ s^{-1}}`. 
         :rtype: scalar or array-like        
         """
         
@@ -398,17 +398,17 @@ class RotCurve():
 
     def vc_disk(self,sigma0,Rd,R0):
         """
-        Rotation velocity of an infinitely thin exponential disk 
-        (Eq. 2-169 in Binney & Tremaine).
+        Rotation curve of an infinitely thin exponential disk 
+        (Eq. 2-169 in Binney and Tremaine).
         
-        :param sigma0: Surface density at Rsun, Msun/pc^2. 
+        :param sigma0: Local surface density, :math:`\mathrm{M_\odot \ pc^{-2}}`.   
         :type sigma0: scalar
-        :param Rd: Radial scale length, kpc.
+        :param Rd: Radial scale length of the disk, kpc.
         :type Rd: scalar
-        :param R0: Radius of the inner hole, kpc. 
+        :param R0: Radius of the inner hole in the disk density profile, kpc. 
         :type R0: scalar  
         
-        :return: Circular velocity, km/s. 
+        :return: Circular velocity corresponding to **R**, :math:`\mathrm{km \ s^{-1}}`. 
         :rtype: scalar or array-like  
         """
         
@@ -421,14 +421,14 @@ class RotCurve():
 
     def vc_halo_nfw(self,rho0,ah):
         """
-        Rotation velocity of DM halo with NWF profile.
+        Rotation curve of dark matter (DM) halo with NWF profile.
         
-        :param rho0: DM density at Rsun, Msun/pc^3. 
+        :param rho0: Local DM mass density, :math:`\mathrm{M_\odot \ pc^{-3}}`. 
         :type rho0: scalar
         :param ah: Scaling parameter, kpc.
         :type ah: scalar
         
-        :return: Circular velocity, km/s. 
+        :return: Circular velocity corresponding to **R**, :math:`\mathrm{km \ s^{-1}}`. 
         :rtype: scalar or array-like  
         """
         
@@ -441,14 +441,14 @@ class RotCurve():
 
     def vc_halo_cored_iso_sphere(self,rho0,ah):
         """
-        Rotation velocity of DM halo, which is a cored isothermal sphere.
+        Rotation curve of dark matter (DM) halo, which is a cored isothermal sphere.
         
-        :param rho0: DM density at Rsun, Msun/pc^3. 
+        :param rho0: Local DM mass density, :math:`\mathrm{M_\odot \ pc^{-3}}`. 
         :type rho0: scalar
         :param ah: Scaling parameter, kpc.
         :type ah: scalar 
             
-        :return: Circular velocity, km/s. 
+        :return: Circular velocity corresponding to **R**, :math:`\mathrm{km \ s^{-1}}`. 
         :rtype: scalar or array-like  
         """
         
@@ -463,12 +463,12 @@ class RotCurve():
         Not physical, gives too large enclosed halo mass. Must be 
         truncated at some R near GC, or core has to be added. 
         
-        :param rho0: Halo density at Rsun, Msun/pc^3. 
+        :param rho0: Halo density at Rsun, :math:`\mathrm{M_\odot \ pc^{-3}}`. 
         :type rho0: scalar
         :param alpha: Power-law slope (rho ~ 1/R^alpha, make sure that you give alpha > 0).
         :type alpha: scalar
             
-        :return: Circular velocity, km/s. 
+        :return: Circular velocity corresponding to **R**, :math:`\mathrm{km \ s^{-1}}`. 
         :rtype: scalar or array-like  
         """
     
@@ -478,16 +478,13 @@ class RotCurve():
     
     def vc_tot(self,vc_array):
         """
-        Total rotation velocity, quadratic sum of all velocity components.         
+        Total rotation curve as quadratic sum of all velocity components.         
         
-        :param vc_array: Vc components at distance(s) R. 
-            List of lists, list of arrays or 2d-array. Here lists,
-            arrays or array rows contain Vc(R) of the different
-            components. Output units are the same as for the 
-            input velocities. 
+        :param vc_array: :math:`{\\upsilon}_\mathrm{c}` components at distance(s) **R**. 
+            Output units are the same as for the input velocities. 
         :type vc_array: array-like (list or list[list])
             
-        :return: Circular velocity, km/s. 
+        :return: Circular velocity corresponding to **R**, :math:`\mathrm{km \ s^{-1}}`. 
         :rtype: scalar or array-like 
         """
         
@@ -502,12 +499,14 @@ class RotCurve():
     
     def vc0(self,vc_tot):
         """
-        Calculates total circular velocity Vc at the Solar radius.  
+        Calculates total circular velocity :math:`{\\upsilon}_\mathrm{c}` at the Solar radius, ``p.Rsun``.  
         
-        :param vc_tot: Vc components at distance(s) R. 
+        :param vc_tot: Total circular velocity at the given Galactocentric distance(s) **R**. 
+            Note that this method is only useful when **R** is an array and covers Solar neighbourhood 
+            with a decent resolution. 
         :type vc_tot: array-like
             
-        :return: Local circular velocity, km/s. 
+        :return: Local circular velocity corresponding to **R**, :math:`\mathrm{km \ s^{-1}}`.
         :rtype: scalar
         """
         
@@ -519,8 +518,8 @@ class RotCurve():
 
 class AMR():
     """
-    Collection of functions which are used 
-    to model metallicities and age-metallicity relation (AMR).  
+    Collection of methods which are used to define age-metallicity relation (AMR) 
+    and work with metallicities in the model and data.  
     """
         
     def amrd_jj10(self,t,tp,q,r,FeH_0,FeH_p):
@@ -528,7 +527,7 @@ class AMR():
         Thin-disk AMR from Just and Jahreiss (2010), Eq.(31).
         
         :param t: Galactic time, Gyr. 
-        :type t: scalar or array_like
+        :type t: scalar or array-like
         :param tp: Present-day age of the MW disk (present-day Galactic time), Gyr.
         :type tp: scalar
         :param q: AMR parameter.
@@ -540,8 +539,8 @@ class AMR():
         :param FeH_p: Present-day metallicity of the thin disk in the Solar neighbourhood. 
         :type FeH_p: scalar
 
-        :return: Metallicities of the local thin-disk populations born at Galactic times t.
-        :rtype: float or ndarray             
+        :return: Metallicities of the local thin-disk populations born at Galactic times **t**.
+        :rtype: float or array-like             
         """
         
         a = 2.67
@@ -555,17 +554,18 @@ class AMR():
 
     def amrd_jj10_default(self,t,**kwargs):
         """
-        Thin-disk AMR from Just and Jahreiss (2010), Eq.(31), best parameters (model A). 
+        Thin-disk AMR from Just and Jahreiss (2010), Eq.(31), calculated with 
+        the best parameters (model A). 
         
         :param t: Galactic time, Gyr. 
-        :type t: scalar or array_like
-        :param stretch: Optional. If True, uses an extended (relative to model A) 
-                time scale by setting a present-day age of the MW disk to tp = 13 Gyr. 
-                By default is False, tp = 12 Gyr, as in Just and Jahreiss (2010).
+        :type t: scalar or array-like
+        :param stretch: Optional. If True, an extended (relative to model A) 
+                time scale is used - a present-day MW disk age is set to **tp** = 13 Gyr. 
+                By default is False, **tp** = 12 Gyr, as in Just and Jahreiss (2010).
         :type stretch: boolean
                                 
-        :return: Metallicities of the local thin-disk populations born at Galactic times t.
-        :rtype: float or ndarray      
+        :return: Metallicities of the local thin-disk populations born at Galactic times **t**.
+        :rtype: float or array-like      
         """
         
         q, r = 2.0, 0.55
@@ -581,13 +581,13 @@ class AMR():
     
     def amrd_sj21(self,t,tp,q,r,FeH_0,FeH_p):
         """
-        Thin-disk AMR from Sysoliatina and Just (2021), Eqs. (21) and (22).
+        Thin-disk AMR from Sysoliatina and Just (2021), Eq. (21) and (22).
         
         :param t: Galactic time, Gyr. 
-        :type t: scalar or array_like
+        :type t: scalar or array-like
         :param tp: Present-day age of the MW disk (present-day Galactic time), Gyr.
         :type tp: scalar
-        :param q: AMR parameter.
+        :param q: AMR parameter (impacts the function shape).
         :type q: scalar
         :param r: AMR power index.
         :type r: scalar
@@ -596,8 +596,8 @@ class AMR():
         :param FeH_p: Present-day metallicity of the thin disk in the Solar neighbourhood. 
         :type FeH_p: scalar
             
-        :return: Metallicities of the local thin-disk populations born at Galactic times t.
-        :rtype: float or ndarray  
+        :return: Metallicities of the local thin-disk populations born at Galactic times **t**.
+        :rtype: float or array-like  
         """
         
         FeH = FeH_0 + (FeH_p - FeH_0)*np.log(1+q*(np.divide(t,tp)**r))/np.log(1+q)
@@ -606,13 +606,14 @@ class AMR():
     
     def amrd_sj21_default(self,t):
         """
-        Thin-disk AMR from Sysoliatina and Just (2021), Eqs. (21) and (22), best parameters (Table 3).
+        Thin-disk AMR from Sysoliatina and Just (2021), Eq. (21) and (22), 
+        calculated with the best parameters (Table 3).
         
         :param t: Galactic time, Gyr. 
-        :type t: scalar or array_like
+        :type t: scalar or array-like
            
-        :return: Metallicities of the local thin-disk populations born at Galactic times t.
-        :rtype: float or ndarray  
+        :return: Metallicities of the local thin-disk populations born at Galactic times **t**.
+        :rtype: float or array-like 
         """
         
         tp_ = tp
@@ -623,26 +624,27 @@ class AMR():
     
     def amrd_global_sj22(self,t,t01,t02,r1,r2,alpha_w,FeH_0,FeH_p):
         """
-        Thin-disk AMR from Sysoliatina and Just (2022), Eqs. (22) and (23). 
-        All parameters must correspond to the same Galactocentric distance R (but not necessarily to Rsun). 
+        Thin-disk AMR from Sysoliatina and Just (2022), Eq. (22) and (23). 
+        All parameters must correspond to the same Galactocentric distance (but not necessarily to 
+        the Solar radius ``p.Rsun``). 
         
         :param t: Galactic time, Gyr. 
-        :type t: scalar or array_like
-        :param t01: Time-scale parameter of the first tanh term, Gyr.
+        :type t: scalar or array-like
+        :param t01: Time-scale parameter of the first *tanh* term, Gyr.
         :type t01: scalar
-        :param t02: Time-scale parameter of the second tanh term, Gyr.
+        :param t02: Time-scale parameter of the second *tanh* term, Gyr.
         :type t02: scalar
-        :param r1: Power index of the first tanh term. 
+        :param r1: Power index of the first *tanh* term. 
         :type r1: scalar
-        :param r2: Power index of the second tanh term. 
+        :param r2: Power index of the second *tanh* term. 
         :type r2: scalar
-        :param FeH_0: Initial metallicity of the thin disk in the Solar neighbourhood. 
+        :param FeH_0: Initial metallicity of the thin disk. 
         :type FeH_0: scalar
-        :param FeH_p: Present-day metallicity of the thin disk in the Solar neighbourhood. 
+        :param FeH_p: Present-day metallicity of the thin disk. 
         :type FeH_p: scalar
            
-        :return: Metallicities of the local thin-disk populations born at Galactic times t.
-        :rtype: float or ndarray  
+        :return: Metallicities of the thin-disk populations born at Galactic times **t**.
+        :rtype: float or array-like  
         """
         
         f_t = (alpha_w*np.tanh(np.divide(t,t01))**r1/np.tanh(np.divide(tp,t01))**r1 +
@@ -653,20 +655,20 @@ class AMR():
     
     def amrd_global_sj22_custom(self,t,R,p):
         """
-        Thin-disk AMR from Sysoliatina and Just (2022), Eqs. (22) and (23), 
-        calculated for the radius R. Extension of the local parameters 
-        (stored in namedtuple p) to an arbitrary R is done as explained 
+        Thin-disk AMR from Sysoliatina and Just (2022), Eq. (22) and (23), 
+        calculated for the specified Galactocentric distance. Extension of the local parameters 
+        to an arbitrary radius is done as explained 
         in Table 2 in Sysoliatina and Just (2022). 
         
         :param t: Galactic time, Gyr. 
-        :type t: scalar or array_like
+        :type t: scalar or array-like
         :param R: Galactocentric distance for which AMR has to be calculated, kpc. 
             Note that the recommended range is 4-14 kpc (see the paper). 
         :type R: scalar
         :param p: Set of model parameters from the parameter file. 
         :type p: namedtuple
         
-        :return: Metallicities of the local thin-disk populations born at Galactic times t.
+        :return: Metallicities of the thin-disk populations born at Galactic times **t**.
         :rtype: float or ndarray  
         """
         
@@ -698,18 +700,18 @@ class AMR():
     
     def amrd_global_sj22_default(self,t,R,p):
         """
-        Thin-disk AMR from Sysoliatina and Just (2022), Eqs. (22) and (23), 
-        calculated for the radius R using the best parameters (Table 2).  
+        Thin-disk AMR from Sysoliatina and Just (2022), Eq. (22) and (23), 
+        calculated for the specified Galactocentric distance with the best parameters (Table 2).  
         
         :param t: Galactic time, Gyr. 
-        :type t: scalar or array_like
+        :type t: scalar or array-like
         :param R: Galactocentric distance for which AMR has to be calculated, kpc. 
             Note that the recommended range is 4-14 kpc (see the paper). 
         :type R: scalar
         :param p: Set of model parameters from the parameter file. 
         :type p: namedtuple
         
-        :return: Metallicities of the local thin-disk populations born at Galactic times t.
+        :return: Metallicities of the local thin-disk populations born at Galactic times **t**.
         :rtype: float or ndarray  
         """
         
@@ -750,10 +752,12 @@ class AMR():
         
     def amrt_sj21(self,t,t0,r,FeH_0,FeH_p):
         """
-        Thick-disk AMR from Sysoliatina and Just (2021), Eqs. (21) and (22). 
+        Thick-disk AMR from Sysoliatina and Just (2021), Eq. (21) and (22). 
+        Applicable to the Solar neighbourhood and other Galactocentric distances 
+        (AMR of the thick disk is assumed to be inpedended of radius). 
         
         :param t: Galactic time, Gyr. 
-        :type t: scalar or array_like
+        :type t: scalar or array-like
         :param t0: Time-scale parameter, Gyr. 
         :type t0: scalar
         :param r: Power index.
@@ -763,8 +767,8 @@ class AMR():
         :param FeH_p: Present-day metallicity of the thick disk in the Solar neighbourhood. 
         :type FeH_p: scalar
            
-        :return: Metallicities of the local thick-disk populations born at Galactic times t.
-        :rtype: float or ndarray  
+        :return: Metallicities of the thick-disk populations born at Galactic times **t**.
+        :rtype: float or array-like  
         """
         
         FeH = FeH_0 + (FeH_p - FeH_0)*np.tanh(np.divide(t,t0))**r
@@ -773,13 +777,14 @@ class AMR():
     
     def amrt_sj21_default(self,t):
         """
-        Thick-disk AMR from Sysoliatina and Just (2021), Eqs. (21) and (22), best parameters (Table 3). 
+        Thick-disk AMR from Sysoliatina and Just (2021), Eq. (21) and (22), 
+        calculated with the best parameters (Table 3). 
                 
         :param t: Galactic time, Gyr. 
-        :type t: scalar or array_like
+        :type t: scalar or array-like
            
-        :return: Metallicities of the local thick-disk populations born at Galactic times t.
-        :rtype: float or ndarray  
+        :return: Metallicities of the thick-disk populations born at Galactic times **t**.
+        :rtype: float or array-like
         """
         
         FeH_0, FeH_p = -0.94, 0.04
@@ -790,11 +795,11 @@ class AMR():
     
     def amrt_sj22(self,t,t0,r,FeH_0,FeH_p):
         """
-        Thick-disk AMR from Sysoliatina and Just (2021), Eqs. (22) and (23).  
+        Thick-disk AMR from Sysoliatina and Just (2021), Eq. (22) and (23).  
         Difference from SJ21 is normalization (impact negligible). 
         
         :param t: Galactic time, Gyr. 
-        :type t: scalar or array_like
+        :type t: scalar or array-like
         :param t0: Time-scale parameter, Gyr. 
         :type t0: scalar
         :param r: Power index.
@@ -804,8 +809,8 @@ class AMR():
         :param FeH_p: Present-day metallicity of the thick disk in the Solar neighbourhood. 
         :type FeH_p: scalar
            
-        :return: Metallicities of the local thick-disk populations born at Galactic times t.
-        :rtype: float or ndarray  
+        :return: Metallicities of the thick-disk populations born at Galactic times **t**.
+        :rtype: float or array-like  
         """
         
         FeH = FeH_0 + (FeH_p - FeH_0)*np.tanh(np.divide(t,t0))**r/np.tanh(np.divide(tp,t0))**r
@@ -814,14 +819,15 @@ class AMR():
 
     def amrt_sj22_default(self,t):
         """
-        Thick-disk AMR from Sysoliatina and Just (2021), Eqs. (22) and (23), best parameters (Table 2). 
-        Independent of radius, applicable at R = 4-14 kpc. 
+        Thick-disk AMR from Sysoliatina and Just (2021), Eq. (22) and (23), calculated with 
+        the best parameters (Table 2). Independent of radius, applicable for Galactocentric distances 
+        R = 4-14 kpc. 
         
         :param t: Galactic time, Gyr. 
-        :type t: scalar or array_like
+        :type t: scalar or array-like
            
-        :return: Metallicities of the local thick-disk populations born at Galactic times t.
-        :rtype: float or ndarray  
+        :return: Metallicities of the local thick-disk populations born at Galactic times **t**.
+        :rtype: float or array-like  
         """
         
         FeH_0, FeH_p = -0.89, 0.04
@@ -833,19 +839,21 @@ class AMR():
     def amrr(self,p,a):
         """
         Thin-disk AMR across the disk. 
-        If p.fehkey==0, AMR s from Sysliatina and Just (2021), AMR parameters are assumed to be linear functions 
-        of Galactocentric distance (old version of the AMR generalisation). 
-        If p.fehkey==1 or p.fehkey==2, AMR and its extension approach are as in Sysliatina and Just (2022). 
-        In case of p.fehkey==1, parameters are taken from the parameter file (custom), and when p.fehkey==2, 
-        parameters are default (best from Sysliatina and Just 2022). 
+        If ``p.fehkey=0``, AMR is from Sysoliatina and Just (2021), and AMR parameters are assumed 
+        to be linear functions of Galactocentric distance (old version of the AMR generalization). 
+        If ``p.fehkey=1`` or ``p.fehkey=2``, AMR and its extension approach are as in 
+        Sysoliatina and Just (2022). In case of ``p.fehkey=1``, parameters are taken from 
+        the parameter file (i.e., custom), and when ``p.fehkey=2``, 
+        parameters are default (best from Sysoliatina and Just 2022). 
         
         :param p: Set of model parameters from the parameter file. 
         :type p: namedtuple
-        :param a: Collection of the fixed model parameters, useful quantities and arrays.
+        :param a: Collection of the fixed model parameters, useful quantities, and arrays.
         :type a: namedtuple  
 
-        :return: Thin-disk AMR calculated for a.R radii, array size is (a.Rbins,a.jd).
-        :rtype: ndarray 
+        :return: Thin-disk AMR calculated for the Galactocentric distances ``a.R``, 
+            array size is ``(a.Rbins,a.jd)``.
+        :rtype: 2d-array 
         """
     
         amrd = np.zeros((a.Rbins,a.jd))
@@ -868,26 +876,27 @@ class AMR():
     
     def get_amr(self,fe_ax,nfe_cum,t_ax,nt_cum,a):
         """
-        Reconstructs AMR from a normalized cumulative metallicity distribution functions (CMDF) 
+        Reconstructs AMR from a normalized cumulative metallicity distribution function (CMDF) 
         and a normalized cumulative age distribution function (CADF). The first can be taken from 
         some observational data, the latter is modeled. Both CMDF and CADF correspond to the same 
         stellar population. See Sysoliatina and Just (2021) and Sysoliatina and Just (2022) for 
         the approach description. 
         
-        :param fe_ax: Bin centers of CMDF, dex.
+        :param fe_ax: Bin centers of the CMDF metallicity grid, dex.
         :type fe_ax: array-like
-        :param nfe_cum: y-values of CMDF corresponding to fe_ax. 
+        :param nfe_cum: CMDF y-values corresponding to fe_ax. 
         :type nfe_cum: array-like
-        :param t_ax: Bin centers of CADF (Galactic time, not age), Gyr. Length of t_ax does not need 
+        :param t_ax: Bin centers of CADF (Galactic time, not age!), Gyr. Length of t_ax does not need 
             to be the same as of fe_ax. 
         :type t_ax: array-like
-        :param nt_cum: y-values of CADF corresponding to t_ax.
+        :param nt_cum: CADF y-values corresponding to t_ax.
         :type nt_cum: array-like
-        :param a: Collection of the fixed model parameters, useful quantities and arrays.
+        :param a: Collection of the fixed model parameters, useful quantities, and arrays.
         :type a: namedtuple  
         
-        :return: Metallicity as a function of Galactic time, array corresponds to the time array a.t.
-        :rtype: ndarray
+        :return: Metallicity as a function of Galactic time, array corresponds 
+            to the time array ``a.t``.
+        :rtype: 1d-array
         """
     
         n_cum_common = np.linspace(0,1,a.jd)
@@ -911,24 +920,24 @@ class AMR():
     
     def chemical_disks(self,tab,feh_br,alpha_br):
         """
-        Method for separation of the two populations in [Fe/H]-[Alpha/Fe] plane. 
-        Form of the separating border is motivated by the APOGEE Red Clump data 
+        Method used to separate two populations in :math:`\mathrm{[Fe/H]}\\text{-}\mathrm{[{\\alpha}/Fe]}` plane. 
+        Shape of the separating border was chosed based on the APOGEE Red Clump data 
         (may be not optimal for other data samples). Equation defining the border 
-        between high-alpha and low-alpha populations has the form:
-        [Alpha/Fe] = AlphaFe1,        if [Fe/H] > Fe2, 
-        [Alpha/Fe] = k*[Fe/H] + b,    if Fe1 < [Fe/H] < Fe2, 
-        [Alpha/Fe] = AlphaFe2,        if [Fe/H] < Fe1
+        between high-:math:`\\alpha` and low-:math:`\\alpha` populations has the form:
+        :math:`\mathrm{[\\alpha/Fe]} = \mathrm{[\\alpha/Fe]}_1, \  \\text{if} \ \mathrm{[Fe/H]} < \mathrm{[Fe/H]}_1`, 
+        :math:`\mathrm{[\\alpha/Fe]} = k \mathrm{[Fe/H]} + b,  \ \\text{if} \ \mathrm{[Fe/H]}_1 < \mathrm{[Fe/H]} < \mathrm{[Fe/H]}_2`, 
+        :math:`\mathrm{[\\alpha/Fe]} = \mathrm{[\\alpha/Fe]}_2, \ \\text{if} \ \mathrm{[Fe/H]} > \mathrm{[Fe/H]}_2`
         
-        :param tab: [Fe/H] and [Alpha/Fe] data columns.
+        :param tab: :math:`\mathrm{[Fe/H]}` and :math:`\mathrm{[\\alpha/Fe]}` data columns.
         :type tab: list[array-likes]
-        :param feh_br: Break points Fe1 and Fe2.
+        :param feh_br: Break points :math:`\mathrm{[Fe/H]}_1` and :math:`\mathrm{[Fe/H]}_2`.
         :type feh_br: list
-        :param alpha_br: Parameters AlphaFe1 and AlphaFe2. 
+        :param alpha_br: Parameters :math:`\mathrm{[\\alpha/Fe]}_1` and :math:`\mathrm{[\\alpha/Fe]}_2`. 
         :type alpha_br: list
             
-        :return: Arrays with indices of records in tab columns which correspond 
-            to the low-alpha and high-alpha populations.
-        :rtype: [ndarray,ndarray]
+        :return: Arrays with indices of **tab** rows corresponding to the low- and 
+            high-:math:`\\alpha` populations.
+        :rtype: list[1d-array]
         """
         
         FeH, AlphaFe = tab
@@ -956,16 +965,16 @@ class AMR():
     
     def chemical_disks_sj21(self,tab):
         """
-        Same as chemical_disks method, with the separating border chosen 
-        for the APOGEE RC DR14. Can be not optimal for other data samples 
+        Same as :meth:`jjmodel.funcs.AMR.chemical_disks`, but with the specified separating border 
+        location (for the APOGEE RC DR14). Can be not optimal for other data samples 
         (also for other releases of the RC catalogue). 
         
-        :param tab: [Fe/H] and [Alpha/Fe] data columns.
+        :param tab: :math:`\mathrm{[Fe/H]}` and :math:`\mathrm{[\\alpha/Fe]}` data columns.
         :type tab: list[array-likes]
 
-        :return: Arrays with indices of records in tab columns which correspond 
-            to the low-alpha and high-alpha populations.
-        :rtype: [ndarray,ndarray]
+        :return: Arrays with indices of **tab** rows corresponding to the low- and 
+            high-:math:`\\alpha` populations.
+        :rtype: list[1d-array]
         """
         
         low_alpha, high_alpha = self.chemical_disks(tab,[-0.69,0.0],[0.18,0.07])
@@ -974,15 +983,15 @@ class AMR():
     
     def chemical_disks_mg(self,tab):
         """
-        Same as hemical_disks method, but for [Fe/H]-[Mg/Fe] plane. 
-        Separating border is adapted for the RAVE DR5, may be not optimal for other data samples. 
+        Same as :meth:`jjmodel.funcs.AMR.chemical_disks`, but for :math:`\mathrm{[Fe/H]}\\text{-}\mathrm{[Mg/Fe]}`
+        plane. Separating border is adapted for the RAVE DR5, may be not optimal for other data samples. 
         
-        :param tab: [Fe/H] and [Mg/Fe] data columns.
+        :param tab: :math:`\mathrm{[Fe/H]}` and :math:`\mathrm{[Mg/Fe]}` data columns.
         :type tab: list[array-likes]
 
-        :return: Arrays with indices of records in tab columns which correspond 
-            to the low-alpha and high-alpha populations.
-        :rtype: [ndarray,ndarray]
+        :return: Arrays with indices of **tab** rows corresponding to the low- and 
+            high-:math:`\\alpha` populations.
+        :rtype: list[1d-array]
         """
         
         FeH, MgFe = tab
@@ -1003,25 +1012,27 @@ class AMR():
         """
         Calculates normalized cumulative metallicity distribution function (CMDF) from the data. 
         
-        :param Rlim: Range of Galactocentric distances, same units as for column R in tab.
+        :param Rlim: Range of Galactocentric distances, same units as for Galactocentric distance 
+            column *R* in the input data **tab**.
         :type Rlim: list[scalar]
-        :param zlim: Range of heights above the Galactic plane, same units as for column z in tab.
+        :param zlim: Range of heights above the Galactic plane, same units as for column *z* 
+            in the input data **tab**.
         :type zlim: list[scalar]
-        :param tab: Array of the shape (n,4), where n is an arbitrary length of columns. 
-                Columns order is (R,D,z,Fe). R and D are Galactocentric and heliocentric distances 
-                (both in the same units, pc or kpc). z is distance from the Galactic plane 
-                (can be also just absolute value). Fe is metallicity. 
+        :param tab: Array of the shape *(n,4)*, where *n* is an arbitrary length of all columns. 
+                Columns order is *(R,D,z,Fe)*. *R* and *D* are Galactocentric and heliocentric distances 
+                (both in the same units, pc or kpc). *z* is distance from the Galactic plane 
+                (can be also just absolute value). *Fe* is metallicity. 
         :type tab: ndarray
-        :param a: Collection of the fixed model parameters, useful quantities and arrays.
+        :param a: Collection of the fixed model parameters, useful quantities, and arrays.
         :type a: namedtuple
-        :param Dmax: Optional, maximal heliocentric distance, same units as in column D in tab. 
+        :param Dmax: Optional, maximal heliocentric distance, same units as in column *D* in **tab**. 
         :type Dmax: scalar         
         
-        :return: The output list consists of (FeH_bins, Ncum, Ncum_err, FeH_mean). 
-                FeH_bins is the metallicity grid with bin centers. Ncum contains CMDF y-values
-                corresponding to FeH_bins. Ncum_err is a column of y-errors (Poisson noise in bins). 
-                FeH_mean is a mean metallicity of the selected sample.
-        :rtype: list[ndarray,ndarray,ndarray,float]            
+        :return: The output list consists of *(FeH_bins, Ncum, Ncum_err, FeH_mean)*. 
+                *FeH_bins* is the metallicity grid with bin centers. *Ncum* contains CMDF y-values
+                corresponding to *FeH_bins*. *Ncum_err* is a column of y-errors (Poisson noise in bins). 
+                *FeH_mean* is a mean metallicity of the selected sample.
+        :rtype: list[1d-array,1d-array,1d-array,float]            
         """
 
         R1,R2 = Rlim
@@ -1053,7 +1064,7 @@ class AMR():
     
     def conv(self,x,k,b,sigma):
         """
-        Analytical convolution of the linear function (k*x + b) with a Gaussian kernel. 
+        Analytical convolution of the linear function :math:`(k*x + b)` with a Gaussian kernel. 
         See Eq.(20) in Sysoliatina and Just (2022). 
         
         :param x: x-coordinates.
@@ -1062,11 +1073,11 @@ class AMR():
         :type k: scalar
         :param b: Intercept of the linear function.
         :type b: scalar
-        :param sigma: Standard deviation of the kernel, same units as x.
+        :param sigma: Standard deviation of the kernel, same units as for **x**.
         :type sigma: scalar
         
-        :return: y-coordinates of the convolution corresponding to x. 
-        :rtype: ndarray  
+        :return: y-coordinates of the convolution corresponding to **x** grid. 
+        :rtype: 1d-array  
         """
         
         s = ((-1/2*(k*x + b)*erf((b + k*x - 1)/np.sqrt(2)/k/sigma) 
@@ -1081,18 +1092,18 @@ class AMR():
     def get_convolved(self,x,ycum,sigma,y_linpart):
         """
         Convolution of the normalized cumulative metallicity distribution function (CMDF) 
-        with a Gaussian kernel based on conv method. Only the upper part of CMDF (ycum > 0.5) is 
-        convolved. 
+        with a Gaussian kernel based on :meth:`jjmodel.funcs.AMR.conv`. 
+        Only the upper part of CMDF (**ycum** > 0.5) is convolved. 
         
         :param x: x-coordinates of CMDF (centers of metallicity bins).
         :type x: array-like
-        :param ycum: y-coordinates of CMDF corresponding to x. 
+        :param ycum: y-coordinates of CMDF corresponding to **x**. 
         :type ycum: array-like
-        :param sigma: Standard deviation of the kernel, same units as x.
+        :param sigma: Standard deviation of the kernel, same units as for **x**.
         :type sigma: scalar    
         
-        :return ycum_convolved: y-coordinates of the convolved CMDF corresponding to x. 
-        :rtype: ndarray
+        :return: y-coordinates of the convolved CMDF corresponding to **x** grid. 
+        :rtype: 1d-array
         """
         
         y1, y2 = y_linpart       # Linear part of the NCMD
@@ -1123,25 +1134,24 @@ class AMR():
         
     def get_deconvolved(self,x,ycum,y_linpart):
         """
-        Reconstructs the 'true' normalized cumulative metallicity distribution function (CMDF) 
+        Reconstructs 'true' normalized cumulative metallicity distribution function (CMDF) 
         assuming that the observed CMDF is a convolution of the 'true' distribution with a Gaussian 
         kernel (e.g. related to observational errors). See Sysoliatina and Just (2021) and 
-        Sysoliatina and Just (2021) for details. 
+        Sysoliatina and Just (2022) for details. 
         
         :param x: x-coordinates of CMDF (centers of metallicity bins).
         :type x: array-like
-        :param ycum: y-coordinates of CMDF corresponding to x. 
+        :param ycum: y-coordinates of CMDF corresponding to **x**. 
         :type ycum: array-like
         :param y_linpart: y-values of the input CMDF giving the range 
                 where the distribution is approximately linear.  
         :type y_linpart: list[scalar]    
 
-        :return: Output is the list (ycum_deconvolved,ycum_convolved,sigma). 
-            ycum_deconvolved contains y-coordinates of the reconstructed 'true' CMDF.
-            ycum_convolved is a convolution of ycum_deconvolved with a kernel with 
-            the standard deviation sigma. Should reasonably reproduce the input CMDF. 
-            sigma is the standard deviation of the Gaussian kernel.
-        :rtype: list[ndarray,ndarray,float]        
+        :return: Output is the list *(ycum_deconvolved,ycum_convolved,sigma)*. 
+            *ycum_deconvolved* contains y-coordinates of the reconstructed 'true' CMDF.
+            *ycum_convolved* is a convolution of *ycum_deconvolved* with a kernel with 
+            the standard deviation *sigma*. Should reasonably reproduce the input CMDF. 
+        :rtype: list[1d-array,1d-array,float]        
         """
         
         y1, y2 = y_linpart               # Linear part of the NCMD
@@ -1188,12 +1198,12 @@ class AMR():
     
     def mass_loss_jj10_default(self):
         """
-        Thin-disk mass loss function calculated with Chempy code consistent with the three-slope 
+        Thin-disk mass loss function calculated with the **Chempy** code consistent with the three-slope 
         broken power-law IMF from Rybizki and Just (2015) and AMR from Just and Jahreiss (2010). 
         This mass loss function is close to the one used in Just and Jahreiss (2010). 
         
-        :return: Mass loss as a function of Galactic time a.t.
-        :rtype: ndarray            
+        :return: Mass loss as a function of Galactic time ``a.t``.
+        :rtype: 1d-array            
         """
         
         t, gd_jj10_default = np.loadtxt(os.path.join(localpath,'input','mass_loss','gd_jj10_default.txt')).T
@@ -1202,12 +1212,12 @@ class AMR():
 
     def mass_loss_sj21_default(self):
         """
-        Thin-disk mass loss function calculated with Chempy code consistent with the four-slope 
+        Thin-disk mass loss function calculated with the **Chempy** code consistent with the four-slope 
         broken power-law IMF and AMR from Sysoliatina and Just (2021).
         
-        :return: Thin-disk mass loss as a function of Galactic time a.t and 
-            thick-disk mass loss as a function of Galactic time a.t[:a.jt]. 
-        :rtype: [ndarray,ndarray]
+        :return: Thin-disk mass loss as a function of Galactic time ``a.t`` and 
+            thick-disk mass loss as a function of Galactic time ``a.t[:a.jt]``. 
+        :rtype: list[1d-array]
         """
         
         t, gd_sj21_default = np.loadtxt(os.path.join(localpath,'input','mass_loss','gd_sj20_default.txt')).T
@@ -1218,15 +1228,16 @@ class AMR():
     
     def mass_loss(self,t,FeH):
         """
-        Mass loss for an arbitrary AMR (IMF is a four-slope broken power law from Sysoliatina and Just 2021).         
+        Mass loss for an arbitrary AMR (IMF 
+        is a four-slope broken power law from Sysoliatina and Just 2021).         
         
         :param t: Galactic time, Gyr.
         :type t: array-like
-        :param FeH: Metallicity of stellar populations born at Galactic time t.
+        :param FeH: Metallicity of stellar populations born at Galactic time **t**.
         :type FeH: array-like
         
-        :return: Mass loss function (fraction in stars and remnants) as a function of time t. 
-        :rtype: ndarray
+        :return: Mass loss function (fraction in stars and remnants) as a function of time **t**. 
+        :rtype: 1d-array
         """
         
         if len(t)!=len(FeH):
@@ -1247,13 +1258,14 @@ class AMR():
     
     def z2fe(self,Z):
         """
-        Function to convert mass fraction of metals Z into abundance [Fe/H]. Formulae are taken 
-        from Choi et al. (2016). The approach adopts a primordial helium abundance Yp = 0.249
+        Function to convert mass fraction of metals *Z* into abundance :math:`\mathrm{[Fe/H]}`. 
+        Formulae are taken 
+        from Choi et al. (2016). The approach adopts a primordial helium abundance *Yp* = 0.249
         (Planck Collaboration et al. 2015) determined by combining the Planck power spectra, 
-        Planck lensing, and a number of `external data` such as baryonic acoustic oscillations. 
+        Planck lensing, and a number of 'external data' such as baryonic acoustic oscillations. 
         In the equations below, a linear enrichment law to the protosolar helium abundance, 
-        Y_protosolar = 0.2703 (Asplund et al.2009), is assumed. Once Y is computed for a desired 
-        value of Z, X and [Fe/H] is trivial to compute.
+        *Y_protosolar* = 0.2703 (Asplund et al.2009), is assumed. Once *Y* is computed for a desired 
+        value of *Z*, *X* and :math:`\mathrm{[Fe/H]}` is trivial to compute.
         
         :param Z: Mass fraction of metals in a star.
         :type Z: scalar or array-like
@@ -1275,12 +1287,13 @@ class AMR():
 
     def fe2z(self,FeH):
         """
-        Function to convert abundance [Fe/H] a to mass fraction of metals Z. Formulae are taken 
-        from Choi et al. (2016). The  approach adopts a primordial helium abundance Yp = 0.249 
+        Function to convert abundance :math:`\mathrm{[Fe/H]}` into mass fraction of metals *Z*. 
+        Formulae are taken 
+        from Choi et al. (2016). The approach adopts a primordial helium abundance *Yp* = 0.249
         (Planck Collaboration et al. 2015) determined by combining the Planck power spectra, 
-        Planck lensing, and a number of `external data` such as baryonic acoustic oscillations. 
+        Planck lensing, and a number of 'external data' such as baryonic acoustic oscillations. 
         In the equations below, a linear enrichment law to the protosolar helium abundance, 
-        Y_protosolar = 0.2703 (Asplund et al.2009), is assumed.  
+        *Y_protosolar* = 0.2703 (Asplund et al.2009), is assumed. 
         
         :param FeH: Chemical abundance of metals, dex. 
         :type FeH: scalar or array-like
@@ -1303,7 +1316,8 @@ class AMR():
      
 class AVR():
     """
-    Collection of functions to work with the age-velocity dispersion relation (AVR). 
+    Collection of methods to work with the age-velocity dispersion relation (AVR). 
+    Here velocity dispersion is :math:`\\sigma_\mathrm{W}`, the vertical component. 
     """
     
     def avr_jj10(self,t,tp,sigma_e,tau0,alpha):
@@ -1315,15 +1329,16 @@ class AVR():
         :param tp: Present-day age of the MW disk (i.e., present-day Galactic time), Gyr.
         :type tp: scalar 
         :param sigma_e: AVR scaling factor, W-velocity dispersion of the oldest thin-disk 
-            stellar population in the Solar neighbourhood, km/s.    
+            stellar population in the Solar neighbourhood, :math:`\mathrm{km \ s^{-1}}`.    
         :type sigma_e: float
         :param tau0: AVR parameter, Gyr.
         :type tau0: scalar
         :param alpha: AVR power index.  
         :type alpha: scalar 
         
-        :return: Present-day W-velocity dispersion of the thin-disk populations at time t, km/s.  
-        :rtype: float or ndarray
+        :return: Present-day W-velocity dispersion of the thin-disk populations at time **t**, 
+            :math:`\mathrm{km \ s^{-1}}`.  
+        :rtype: float or array-like
         """
         
         sigma_W = sigma_e*(np.add(np.subtract(tp,t),tau0)/(tp + tau0))**alpha
@@ -1338,12 +1353,13 @@ class AVR():
         :param t: Galactic time, Gyr. 
         :type t: float or array-like
         :param stretch: Optional. If True, uses an extended (relative to model A) 
-                time scale by setting a present-day age of the MW disk to tp = 13 Gyr. 
-                By default is False, tp = 12 Gyr, as in Just and Jahreiss (2010).
+                time scale by setting a present-day age of the MW disk to **tp** = 13 Gyr. 
+                By default is False, **tp** = 12 Gyr, as in Just and Jahreiss (2010).
         :type stretch: boolean 
         
-        :return: Present-day W-velocity dispersion of the thin-disk populations at time t, km/s.  
-        :rtype: float or ndarray 
+        :return: Present-day W-velocity dispersion of the thin-disk populations at time **t**, 
+            :math:`\mathrm{km \ s^{-1}}`.    
+        :rtype: float or array-like
         """
         
         sigma_e = 25    # model A default parameters
@@ -1363,12 +1379,13 @@ class AVR():
 
 class SFR():
     """
-    Class with different definitions of the star formation rate (SFR) function. 
+    Class with definitions of the MW disk star formation rate (SFR) function. 
     """
     
     def __init__(self):
         """
-        Initialization includes reading several tables with the default mass loss functions.  
+        Initialization includes reading several tables with the default mass loss functions, 
+        no parameters have to be specified. 
         """
         g_jj10_table = np.loadtxt(os.path.join(localpath,'input','mass_loss','gd_jj10_default.txt')).T
         self.t, self.gd_jj10_default = g_jj10_table
@@ -1380,7 +1397,7 @@ class SFR():
         
     def sfrd_jj10(self,t,t0,t1,sigma,**kwargs):
         """
-        SFR equation as defined in Just and Jahreiss (2010) (model A). 
+        Thin-disk SFR equation as defined in Just and Jahreiss (2010) (model A). 
         
         :param t: Galactic time, Gyr. 
         :type t: scalar or array-like
@@ -1390,14 +1407,17 @@ class SFR():
         :type t0: scalar
         :param t1: SFR parameter, Gyr. 
         :type t1: scalar 
-        :param sigma: Midplane local present-day surface density of the thin disk, Msun/pc^2.      
+        :param sigma: Midplane local present-day surface density of the thin disk, 
+            :math:`\mathrm{M_\odot \ pc^{-2}}`.      
         :type sigma: scalar
-        :param g: Optional, mass loss function (same length as t). 
+        :param g: Optional, mass loss function (same length as **t**). 
         :type g: scalar or array-like
         
-        :return: Absolute and normalized SFR as a function of t, Msun/pc^2/Gyr. Normalization factor 
-                is the mean SFR (averaged over the whole time range of the disk evolution 0-tp Gyr). 
-        :rtype: list[ndarray] or list[float]             
+        :return: Absolute and normalized SFR as functions of **t**, 
+            :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`. 
+            Normalization factor is the mean SFR 
+            (averaged over the whole time range of the disk evolution 0-**tp** Gyr). 
+        :rtype: list[1d-array] or list[float]             
         """
         
         if 'g' in kwargs:
@@ -1416,18 +1436,21 @@ class SFR():
 
     def sfrd_jj10_default(self,t):
         """
-        SFR equation from Just and Jahreiss (2010) (model A) calculated with the best parameters.
+        SFR equation from Just and Jahreiss (2010) (model A)  
+        (:meth:`jjmodel.funcs.SFR.sfrd_jj10`) calculated with the best parameters.
         
         :param t: Galactic time, Gyr. 
         :type t: scalar or array-like
         :param stretch: Optional. If True, uses an extended (relative to model A) 
-                time scale by setting a present-day age of the MW disk to tp = 13 Gyr. 
-                By default is False, tp = 12 Gyr, as in Just and Jahreiss (2010).
+                time scale by setting a present-day age of the MW disk to **tp** = 13 Gyr. 
+                By default is False, **tp** = 12 Gyr, as in Just and Jahreiss (2010).
         :type stretch: boolean 
                    
-        :return: Absolute and normalized SFR as a function of t, Msun/pc^2/Gyr. Normalization factor 
-                is the mean SFR (averaged over the whole time range of the disk evolution 0-tp Gyr). 
-        :rtype: list[ndarray] or list[float]         
+        :return: Absolute and normalized SFR as a function of **t**, 
+            :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`. 
+            Normalization factor is the mean SFR 
+            (averaged over the whole time range of the disk evolution 0-**tp** Gyr). 
+        :rtype: list[1d-array] or list[float]     
         """
         t0, t1 = 5.6, 8.2    
         sigma0 = 29.4 
@@ -1445,19 +1468,20 @@ class SFR():
         :type dzeta: scalar 
         :param eta: SFR power index. 
         :type eta: scalar 
-        :param t1: Parameter defining the SFR initial time-point (by default, t1==0 Gyr, i.e., 
+        :param t1: Parameter defining the SFR initial time-point (by default, **t1** = 0 Gyr, i.e., 
                 the thin disk starts to form without a delay). 
         :type t1: scalar 
         :param t2: Parameter controlling the SFR shape. 
         :type t2: scalar 
-        :param sigma: Midplane present-day thin-disk surface density, Msun/pc^2.        
+        :param sigma: Midplane present-day thin-disk surface density, :math:`\mathrm{M_\odot \ pc^{-2}}`.        
         :type sigma: scalar
-        :param g: Optional, mass loss function (same length as t). 
+        :param g: Optional, mass loss function (same length as **t**). 
         :type g: scalar or array-like
             
-        :return: Absolute and normalized SFR as a function of t, Msun/pc^2/Gyr. Normalization factor 
-                is the mean SFR (averaged over the whole time range of the disk evolution 0-tp Gyr). 
-        :rtype: list[ndarray] or list[float]    
+        :return: Absolute and normalized SFR as a function of **t**, 
+            :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`. Normalization factor 
+            is the mean SFR (averaged over the whole time range of the disk evolution 0-**tp** Gyr). 
+        :rtype: list[1d-array] or list[float]    
         """
         
         if 'g' in kwargs:
@@ -1474,15 +1498,17 @@ class SFR():
     
     def sfrd_sj21_mono_default(self,t):
         """
-        SFR of the thin disk, as defined in Sysoliatina and Just (2021) calculated with 
+        SFR of the thin disk, as defined in Sysoliatina and Just (2021) 
+        (:meth:`jjmodel.funcs.SFR.sfrd_sj21`) calculated with 
         the best-fit parameters (model MCMC1).
         
         :param t: Galactic time, Gyr. 
         :type t: scalar or array-like 
         
-        :return: Absolute and normalized SFR as a function of t, Msun/pc^2/Gyr. Normalization factor 
-                is the mean SFR (averaged over the whole time range of the disk evolution 0-tp Gyr). 
-        :rtype: list[ndarray] or list[float]    
+        :return: Absolute and normalized SFR as a function of **t**, 
+            :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`. Normalization factor 
+            is the mean SFR (averaged over the whole time range of the disk evolution 0-**tp** Gyr). 
+        :rtype: list[1d-array] or list[float]    
         """
         
         dzeta, eta = 0.8, 5.6
@@ -1506,26 +1532,28 @@ class SFR():
         :type dzeta: scalar 
         :param eta: SFR power index. 
         :type eta: scalar 
-        :param t1: Parameter defining the SFR initial time-point (by default, t1==0 Gyr, i.e., 
+        :param t1: Parameter defining the SFR initial time-point (by default, **t1** = 0 Gyr, i.e., 
                 the thin disk starts to form without a delay). 
         :type t1: scalar 
         :param t2: Parameter controlling the SFR shape. 
         :type t2: scalar            
-        :param sigma: Midplane present-day thin-disk surface density, Msun/pc^2.        
+        :param sigma: Midplane present-day thin-disk surface density, :math:`\mathrm{M_\odot \ pc^{-2}}`.        
         :type sigma: scalar
-        :param sigmap: Amplitude-related parameter(s) of the additional Gaussian peak(s), Msun/pc^2. 
+        :param sigmap: Amplitude-related parameter(s) of the additional Gaussian peak(s), 
+            :math:`\mathrm{M_\odot \ pc^{-2}}`. 
         :type sigmap: scalar or array-like 
         :param tpk: Mean Galactic time(s) of the Gaussian peak(s), Gyr. 
         :type tpk: scalar or array-like 
         :param dtp: Dispersion(s) of the Gaussian peak(s), Gyr
         :type dtp: scalar or array-like
-        :param g: Optional, mass loss function (same length as t). 
+        :param g: Optional, mass loss function (same length as **t**). 
         :type g: scalar or array-like
             
-        :return: Absolute and normalized SFR as a function of t, Msun/pc^2/Gyr, and 
-                ratio of the peaks' contribution to the total SFR. Normalization factor 
-                is the mean SFR (averaged over the whole time range of the disk evolution 0-tp Gyr). 
-        :rtype: [ndarray,ndarray,list[ndarray]] or [float,float,list[float]]    
+        :return: Absolute and normalized SFR as a function of **t**, 
+            :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`, and ratio of the peaks' contributions
+            to the total SFR. Normalization factor is the mean SFR 
+            (averaged over the whole time range of the disk evolution 0-**tp** Gyr). 
+        :rtype: [1d-array,1d-array,list[1d-array]] or [float,float,list[float]]    
         """
         
         jd = int((tp-t1)/tr)
@@ -1570,16 +1598,18 @@ class SFR():
     
     def sfrd_sj21_multipeak_default(self,t):   
         """
-        SFR of the thin disk as defined in Sysoliatina and Just (2021) with two extra Gaussian peaks. 
+        SFR of the thin disk as defined in Sysoliatina and Just (2021) with two extra Gaussian peaks 
+        (see :meth:`jjmodel.funcs.SFR.sfrd_sj21_multipeak`). 
         Calculated with the best-fit parameters (model MCMC1). 
         
         :param t: Galactic time, Gyr. 
         :type t: scalar or array-like               
              
-        :return: Absolute and normalized SFR as a function of t, Msun/pc^2/Gyr, and 
-                ratio of the peaks' contribution to the total SFR. Normalization factor 
-                is the mean SFR (averaged over the whole time range of the disk evolution 0-tp Gyr). 
-        :rtype: [ndarray,ndarray,list[ndarray]] or [float,float,list[float]]  
+        :return: Absolute and normalized SFR as a function of **t**, 
+            :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`, and ratio of the peaks' contributions
+            to the total SFR. Normalization factor is the mean SFR 
+            (averaged over the whole time range of the disk evolution 0-**tp** Gyr). 
+        :rtype: [1d-array,1d-array,list[1d-array]] or [float,float,list[float]]  
         """
         
         tp_, tr_ = 13, 0.025 
@@ -1592,7 +1622,7 @@ class SFR():
     
     def sfrt_sj21(self,t,gamma,beta,t1,t2,sigma,**kwargs):
         """
-        SFR of the thick disk as defined in Sysoliatina and Just (2021), Eqs. (7)-(8). 
+        SFR of the thick disk as defined in Sysoliatina and Just (2021), Eq. (7)-(8). 
         
         :param t: Galactic time, Gyr. 
         :type t: scalar or array-like  
@@ -1600,18 +1630,20 @@ class SFR():
         :type gamma: scalar
         :param beta: SFR exponential index. 
         :type beta: scalar
-        :param t1: Parameter defining the star formation rate at the initial time-point, SFR(t==0), Gyr.  
+        :param t1: Parameter defining the star formation rate at the initial time-point, **t** = 0 Gyr.  
         :type t1: scalar 
         :param t2: Parameter defining the final time-point of the thick-disk formation, Gyr. 
         :type t2: scalar 
-        :param sigma: Midplane present-day thick-disk surface density, Msun/pc^2. 
+        :param sigma: Midplane present-day thick-disk surface density, :math:`\mathrm{M_\odot \ pc^{-2}}`. 
         :type sigma: scalar 
-        :param g: Optional, mass loss function (for the time range 0-t2 Gyr or 0-tp Gyr). 
+        :param g: Optional, mass loss function (for the time range 0-**t2** Gyr or 0-**tp** Gyr). 
         :type g: scalar or array-like
         
-        :return: Absolute and normalized SFR as a function of t, Msun/pc^2/Gyr. Normalization factor 
-                is the mean SFR (averaged over the whole time range of the thick-disk evolution). 
-        :rtype: list[ndarray] or list[float]  
+        :return: Absolute and normalized SFR as a function of **t**, 
+            :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`. 
+            Normalization factor  is the mean SFR 
+            (averaged over the whole time range of the thick-disk evolution). 
+        :rtype: list[1d-array] or list[float]  
         """
         
         if 'g' in kwargs:
@@ -1630,15 +1662,16 @@ class SFR():
     
     def sfrt_sj21_default(self,t):
         """
-        Thick-disk SFR as defined in Sysoliatina and Just (2021) calculated with best parameters 
-        (model MCMC1). 
+        Thick-disk SFR as defined in Sysoliatina and Just (2021) (:meth:`jjmodel.funcs.SFR.sfrt_sj21`)
+        calculated with best parameters (model MCMC1). 
         
         :param t: Galactic time, Gyr. 
         :type t: scalar or array-like            
             
-        :return: Absolute and normalized SFR as a function of t, Msun/pc^2/Gyr. Normalization factor 
-                is the mean SFR (averaged over the whole time range of the thick-disk evolution). 
-        :rtype: list[ndarray] or list[float]  
+        :return: Absolute and normalized SFR as a function of **t**, 
+            :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`. Normalization factor 
+            is the mean SFR (averaged over the whole time range of the thick-disk evolution). 
+        :rtype: list[1d-array] or list[float]  
         """
         t1, t2 = 0.1, 4 
         gamma, beta = 3.5, 2 
@@ -1652,21 +1685,24 @@ class SFR():
         
         :param p: Set of model parameters from the parameter file. 
         :type p: namedtuple
-        :param a: Collection of the fixed model parameters, useful quantities and arrays.
+        :param a: Collection of the fixed model parameters, useful quantities, and arrays.
         :type a: namedtuple
-        :param gd: Thin-disk mass loss function at a function of a.t, at the different distances a.R.  
+        :param gd: Thin-disk mass loss function at a function of ``a.t``, at the different 
+            Galactocentric distances ``a.R``.  
         :type gd: array-like
         :param gd0: Local thin-disk mass loss function. 
-        :param gt: Thick-disk mass loss function corresponding to a.t ot a.t[:a.jt]. 
-                Assumed to be the same for all distances a.R. 
+        :param gt: Thick-disk mass loss function corresponding to ``a.t`` or ``a.t[:a.jt]``. 
+                Assumed to be the same for all distances ``a.R``. 
         
-        :return: When p.pkey==0 (no extra peaks in the thin-disk SFR), the output has the following structure: 
-            ((SFRd,NSFRd,SFRd0,NSFRd0),(SFRt,NSFRt,SFRt0,NSFRt0),(SFRtot,NSFRtot,SFRtot0,NSFRtot0)). 
-            For the thin-disk, thick-disk, and total SFR calculated quantites are absolute and 
-            normalized star formation rate at radii a.R (array shapes (a.Rbins,a.jd) or (a.Rbins,a.jt)) 
-            and in the Solar neighbourhood. If p.pkey==1, the thin-disk part is (SFRd,NSFRd,Fp,SFRd0,NSFRd0,Fp0), 
-            where Fp and Fp0 are contributions of the peaks to the total SFR at each R and locally.     
-        :rtype: list[list[ndarray]]
+        :return: When ``p.pkey=0`` (no extra peaks in the thin-disk SFR), the output has the following structure: 
+            *((SFRd,NSFRd,SFRd0,NSFRd0),(SFRt,NSFRt,SFRt0,NSFRt0),(SFRtot,NSFRtot,SFRtot0,NSFRtot0))*. 
+            For the thin-disk, thick-disk, and total SFR calculated quantities are absolute and 
+            normalized star formation rate at ``a.R`` (array shapes ``(a.Rbins,a.jd)`` or ``(a.Rbins,a.jt)``) 
+            and in the Solar neighbourhood. If ``p.pkey=1``, the thin-disk part is 
+            *(SFRd,NSFRd,Fp,SFRd0,NSFRd0,Fp0)*, 
+            where *Fp* and *Fp0* are the relative contributions of the peaks to the total SFR at each 
+            radius and also locally.     
+        :rtype: list[list[1d-array]]
         """
         
         SFRd, NSFRd = np.zeros((a.Rbins,a.jd)), np.zeros((a.Rbins,a.jd))        
@@ -1725,18 +1761,16 @@ class SFR():
 
 class IMF():
     """
-    Class for the initial mass function (IMF).
+    Class for defining the initial mass function (IMF).
     """
     
     def __init__(self,mlow,mup):
         """
         Class instance is initialized by two parameters. 
         
-        Parameters
-        ----------
-        :param mlow: Lower limit of the mass range, M_sun. 
+        :param mlow: Lower limit of the mass range, :math:`\mathrm{M_\odot}`. 
         :type mlow: scalar 
-        :param mup: Upper limit of the mass range, M_sun.
+        :param mup: Upper limit of the mass range, :math:`\mathrm{M_\odot}`. 
         :type mup: scalar 
         """
         self.mlow, self.mup = mlow, mup
@@ -1846,16 +1880,16 @@ class IMF():
         :type a2: scalar 
         :param a3: Fourth IMF slope. 
         :type a3: scalar 
-        :param m1: First break point (slopes a0-a1), M_sun. 
+        :param m1: First break point (slopes **a0**-**a1**), :math:`\mathrm{M_\odot}`.  
         :type m1: scalar 
-        :param m2: Second break point (slopes a1-a2), M_sun. 
+        :param m2: Second break point (slopes **a1**-**a2**), :math:`\mathrm{M_\odot}`. 
         :type m2: scalar 
-        :param m3: Third break point (slopes a2-a3), M_sun. 
+        :param m3: Third break point (slopes **a2**-**a3**), :math:`\mathrm{M_\odot}`. 
         :type m3: scalar         
         
-        :return: Linear mass grid from mlow to mup (in M_sun) and 
+        :return: Linear mass grid from **mlow** to **mup** (in :math:`\mathrm{M_\odot}`) and 
                 probabilities corresponding to these mass intervals.
-        :rtype: 2d-ndarray
+        :rtype: 2d-array
         """        
         # if mass2 - mass1 > 3*0.005:
         #     mres = 0.005
@@ -1885,11 +1919,12 @@ class IMF():
     def BPL_4slopes_rj15_default(self):
         """
         A four-slope broken power-law (BPL) IMF from Rybizki and Just (2015) and Rybizki (2018) 
+        (:meth:`jjmodel.funcs.IMF.BPL_4slopes`)
         calculated with the best parameters. 
         
-        :return: Linear mass grid from mlow to mup (in M_sun) and 
+        :return: Linear mass grid from **mlow** to **mup** (in :math:`\mathrm{M_\odot}`) and 
                 probabilities corresponding to these mass intervals.
-        :rtype: 2d-ndarray
+        :rtype: 2d-array
         """  
         
         a0, a1, a2, a3 = 1.26, 1.49, 3.02, 2.28
@@ -1899,12 +1934,13 @@ class IMF():
 
     def BPL_4slopes_sj21_default(self):
         """
-        A four-slope broken power law (BPL) IMF from Sysoliatina and Just (2021)
+        A four-slope broken power law (BPL) IMF from Sysoliatina and Just (2021) 
+        (:meth:`jjmodel.funcs.IMF.BPL_4slopes`) 
         calculated with the best parameters (MCMC1 run). 
         
-        :return: Linear mass grid from mlow to mup (in M_sun) and 
+        :return: Linear mass grid from **mlow** to **mup** (in :math:`\mathrm{M_\odot}`) and 
                 probabilities corresponding to these mass intervals.
-        :rtype: 2d-ndarray
+        :rtype: 2d-array
         """  
         
         a0, a1, a2, a3 = 1.31, 1.5, 2.88, 2.28
@@ -1916,9 +1952,9 @@ class IMF():
         """
         A lognormal + power-law IMF from Chabrier (2003). 
         
-        :return: Linear mass grid from mlow to mup (in M_sun) and 
+        :return: Linear mass grid from **mlow** to **mup** (in :math:`\mathrm{M_\odot}`) and 
                 probabilities corresponding to these mass intervals.
-        :rtype: 2d-ndarray
+        :rtype: 2d-array
         """  
         # if mass2 - mass1 > 3*0.005:
         #     mres = 0.005
@@ -1943,9 +1979,9 @@ class IMF():
         """
         A three-slope broken power law (BPL) IMF from Kroupa et al. (1993).
         
-        :return: Linear mass grid from mlow to mup (in M_sun) and 
+        :return: Linear mass grid from **mlow** to **mup** (in :math:`\mathrm{M_\odot}`) and 
                 probabilities corresponding to these mass intervals.
-        :rtype: 2d-ndarray
+        :rtype: 2d-array
         """  
             
         a1, a2, a3 = 1.3, 2.2, 2.7

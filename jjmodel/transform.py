@@ -12,32 +12,54 @@ from astropy.table import Table
 
 
 class XVTrans():
-    '''
-    Class for coordinate transformation and calculation of Galactocentric distances and velocities from 
-    astrometric parameters and radial velocities. 
-    '''
+    """
+    Class for coordinate transformation and calculation of Galactocentric distances and velocities 
+    from astrometric parameters and radial velocities. 
+    """
     
     def __init__(self,filename,fileformat,gframe):
-        '''
-        Initialization of class with reading data table 
-        *filename* - name of file 
-        *fileformat* - format of file
-        *gframe* - dict, parameters describing Galactic frame, (Rsun,Zsun) and (U,V,W)sun and their errors
-        IMPORTANT. In all functions of this class input quantites must be in the following units:
-            (ra, dec, era, edec) = [deg]
-            (pmra, pmdec, epmra, epmdec) = [mas/yr]
-            (par, epar) = [mas]
-            (vr, evr) = km/s
-            d = [pc]
-            (Usun,Vsun,Wsun,Vtsun) and their errors = km/s 
-            (Rsun,eRsun) = [kpc] 
-            (Zsun,eZsun) = [pc]
-        Units of the output: 
-            (l,b,phi,ephi) = [deg]
-            (X,Y,Z,eX,eY,eZ) = [pc] 
-            (R,eR) = [kpc] 
-            (U,V,W,eU,eV,eW,Vr,Vphi,eVr,eVphi) = [km/s] 
-        '''
+        """
+        Initialization of the class instance is performed with reading the data table 
+        and specifying parameters of the Galactic coordinate system. 
+        
+        :param filename: Name of the file 
+        :type filename: str 
+        :param fileformat: Format of the file
+        :type fileformat: str 
+        :param gframe: Parameters describing the Galactic frame. Keys to specify are: 
+            
+            - 'Rsun': Solar radius, kpc 
+            - 'Zsun': Solar distance from the Galactic plane, pc 
+            - 'Usun', 'Vsun', 'Wsun': Cartesian components of the Solar peculiar velocity, km/s 
+            - 'eRsun': Error of the Solar radius, kpc 
+            - 'eZsun': Error of the Solar distance from the Galactic plane, pc 
+            - 'eUsun', 'eVsun', 'eWsun': Errors of the Solar peculiar velocity components, km/s 
+            - 'pm_sgrA': Sgr A* proper motion, mas/yr 
+            - 'epm_sgrA': Error of Sgr A* proper motion, mas/yr 
+              
+        :type gframe: dict 
+
+        .. note:: 
+            
+            In all methods of this class the input quantities must be in the following units:
+                
+                - (ra, dec, era, edec) = [deg]
+                - (pmra, pmdec, epmra, epmdec) = [mas/yr]
+                - (par, epar) = [mas]
+                - (vr, evr) = km/s
+                - d = [pc]
+                - (Usun, Vsun, Wsun, Vtsun) and their errors = km/s 
+                - (Rsun, eRsun) = [kpc] 
+                - (Zsun, eZsun) = [pc]
+                
+            Units of the output: 
+                
+                - (l, b, phi, ephi) = [deg]
+                - (X, Y, Z, eX, eY, eZ) = [pc] 
+                - (R, eR) = [kpc] 
+                - (U, V, W, eU, eV, eW, Vr, Vphi, eVr, eVphi) = [km/s] 
+                
+        """
         self.filename = filename
         self.fileformat = fileformat
         self.Rsun, self.Zsun, self.Usun, self.Vsun, self.Wsun, self.eRsun, self.eZsun, \
@@ -62,16 +84,32 @@ class XVTrans():
 
 
     def calc_3d_gal(self,names):
-        '''
-        *input*:
-            - names (dict), contains names of columns for 
-            {ra[deg],dec[deg],heliocentric_distance[pc or kpc] or parallax[mas]} 
-        *output*:
-            - l,b - Galactic lon and lat
-            - X,Y,Z - 3D cartesian coords in a frame located at solar position (projected to midplane), 
-                x-axis points to GC, y corresponds to l=90 deg, z-axis points to NGP
-            - R,phi - Galactocentric cylindrical coords 
-        '''
+        """
+        Calculates Galactic coordinates (Cartesian and cylindrical). 
+        If parallax column is used, distances are calculated as 1/parallax. 
+        
+        :param names: Names of columns for the following quantities: 
+            
+            - 'ra': right ascention, deg 
+            - 'dec': declination, deg
+            - 'dpc' or 'dkpc': heliocentric distance, pc or kpc 
+            - 'parallax': parallax, can be given instead of distance column, mas
+            
+        :type names: dict
+            
+        :return: None. 
+            
+            Adds columns to the table:  
+            
+            - 'd': Heliocentric distance (if parallax column is given as an input). 
+            - ('l', 'b'): Galactic longitude and latitude 
+            - ('x', 'y', 'z'): 3D Cartesian coordinates in a frame located at the Solar position 
+              (projected on the midplane), x-axis points to the Galactic center, y corresponds to l=90 deg, 
+              z-axis points to the Northern Galactic Pole
+            - ('rg', 'phi'): Galactocentric cylindrical coordinates 
+            
+        """
+        
         print('Calculation of Galactic coordinates:')
         # Define Galactic frame from the given solar position {Rsun,Zsun}
         with coord.galactocentric_frame_defaults.set('v4.0'):
@@ -113,17 +151,37 @@ class XVTrans():
 
     
     def calc_6d_gal(self,names):
-        '''
-        *input*:
-            - names (dict), contains names of columns for 
-              {ra[deg],dec[deg],heliocentric_distance[pc] or parallax[mas],pmra[mas/yr],pmdec[mas/yr],vr[km/s]} 
-        *output*:
-            - X,Y,Z - 3D cartesian coords in a frame located at solar position (projected to midplane), 
-                x-axis points to GC, y corresponds to l=90 deg, z-axis points to NGP
-            - R,phi - Galactocentric cylindrical coords 
-            - U,V,W - 3D cartesian velocity relative to LSR
-            - Vr, Vphi - Galactocentric velocities in cylindrical coords (the 3-rd component is W)
-        '''
+        """
+        Calculates Galactic coordinates (Cartesian and cylindrical). 
+        If parallax column is used, distances are calculated as 1/parallax. 
+        
+        :param names: Names of columns for the following quantities: 
+            
+            - 'ra': right ascention, deg 
+            - 'dec': declination, deg
+            - 'dpc' or 'dkpc': heliocentric distance, pc or kpc 
+            - 'parallax': parallax, can be given instead of distance column, mas
+            - 'pmra': proper motion in right ascention, mas/yr
+            - 'pmdec': proper motion in right declination, mas/yr
+            - 'vr': radial velocity, km/s
+            
+        :type names: dict
+        
+        :return: None. 
+        
+            Adds columns to the table:  
+            
+            - 'd': Heliocentric distance (if parallax column is given as an input).
+            - ('l', 'b'): Galactic longitude and latitude 
+            - ('x', 'y', 'z'): 3D Cartesian coordinates in a frame located at the Solar position 
+              (projected on the midplane), x-axis points to the Galactic center, y corresponds to l=90 deg, 
+              z-axis points to the Northern Galactic Pole
+            - ('rg', 'phi'): Galactocentric cylindrical coordinates 
+            - ('U', 'V', 'W'): 3D Cartesian velocity components (relative to LSR)
+            - ('Vr', 'Vphi'): Galactocentric velocities in cylindrical coordinates (the 3-rd component is W)
+            
+        """
+        
         print('Calculation of Galactic coordinates and velocities:')
         # Define Galactic frame from the given solar position {Rsun,Zsun}, 
         # solar peculiar motion(relative to LSR) and solar tangential velocity (SgrA* proper motion)
@@ -176,11 +234,32 @@ class XVTrans():
 
 
     def calc_3d_err(self,names):
-        '''
-        Should be called after calc_3d_err.
-        - names: dict, same columns as in calc_6d_gal + errors: era,edec,epmra,epmdec 
-                 and edpc or edkpc or eparallax.
-        '''
+        """
+        Calculation of the coordinate errors. 
+        Should be called only after calc_3d_gal or calc_6d_gal.
+        
+        :param names: Names of columns for the following quantities: 
+            
+            - 'ra': right ascention, deg 
+            - 'dec': declination, deg
+            - 'dpc' or 'dkpc': heliocentric distance, pc or kpc 
+            - 'parallax': parallax, can be given instead of distance column, mas
+            - 'era': error in right ascention, deg 
+            - 'edec': error in declination, deg
+            - 'edpc' or 'edkpc': error in heliocentric distance, pc or kpc 
+            - 'eparallax': parallax error, can be given instead of the distance error column, mas
+            
+        :type names: dict
+            
+        :return: None.  
+            
+            Adds columns to the table:  
+            
+            - 'ed': Distance error (if parallax and parallax error are given)
+            - ('ex', 'ey', 'ez'): Errors of 3D Cartesian coordinates 
+            - ('erg', 'ephi'): Errors of Galactocentric cylindrical coordinates 
+        
+        """
         
         print('Calculation of the Galactic coordinate errors:')
         if 'edpc' or 'edkpc' or 'eparallax' in names:
@@ -208,21 +287,56 @@ class XVTrans():
         # output to the table
         self.t['ex'],self.t['ey'],self.t['ez'] = self.eX,self.eY,self.eZ
         self.t['erg'],self.t['ephi'] = self.eR,np.rad2deg(self.ePhi)
+        if 'eparallax' in names: 
+            self.t['ed'] = self.edist
 
        
     def calc_6d_err(self,names,**kwargs):
-        '''
-        Should be called after calc_6d_err.
-        - names: dict, same columns as in calc_6d_gal + errors: era,edec,epmra,epmdec 
-                 and edpc or edkpc or eparallax.
-        - cov_matrix: dict, correlation coefficients. 
-              There could be maximum 10 coefficients called here c12,c13,c14,c15,c23,c24,c25,c34,c35,c45. \
-              Indices correspond to the correlated quantities: (ra,dec,pmra,pmdec,parallax) = (1,2,3,4,5).
-              Have fun :) Here we assume that there is no correlation between 5 astrometric parameters and 
-              radial velocity as they are obtained via measurements of the different instruments. 
-              Remember that terms {c15, c25, c35, c45} should not be taken into account  
-              if distances are not simple inverted parallaxes. 
-        '''
+        """
+        Calculation of the coordinate and velocity errors. 
+        Should be called only after calc_6d_gal.
+        
+        :param names: Names of columns for the following quantities: 
+            
+            - 'ra': right ascention, deg 
+            - 'dec': declination, deg
+            - 'dpc' or 'dkpc': heliocentric distance, pc or kpc 
+            - 'parallax': parallax, can be given instead of distance, mas
+            - 'pmra': proper motion in right ascention, mas/yr
+            - 'pmdec': proper motion in right declination, mas/yr
+            - 'vr': radial velocity, km/s
+            - 'era': error in right ascention, deg 
+            - 'edec': error in declination, deg
+            - 'edpc' or 'edkpc': error in heliocentric distance, pc or kpc 
+            - 'eparallax': parallax error, can be given instead of the distance error, mas
+            - 'epmra': error in proper motion in right ascention, mas/yr
+            - 'epmdec': error in proper motion in right declination, mas/yr
+            - 'evr': error in radial velocity, km/s
+            
+        :type names: dict
+        
+        :param cov_matrix: Optional, correlation coefficients for the error calculation. 
+            There can be maximum 10 coefficients: 'c12', 'c13', 'c14', 'c15', 'c23', 'c24', 'c25', 
+            'c34', 'c35', 'c45'. Indices correspond to the correlated quantities in the following way: 
+            (ra,dec,pmra,pmdec,parallax) = (1,2,3,4,5). Don't mess it up. Have fun:)
+            Here we assume that there is no correlation between 5 astrometric parameters and 
+            radial velocity as they are obtained via measurements by the different instruments. 
+            Remember that terms ('c15', 'c25', 'c35', 'c45') should not be taken into account  
+            if distances are not simple inverted parallaxes. 
+        :type cov_matrix: dict
+        
+        :return: None. 
+        
+            Adds columns to the table:  
+        
+            - 'ed': Distance error (if parallax and parallax error are given)
+            - ('ex', 'ey', 'ez'): Errors of 3D Cartesian coordinates 
+            - ('erg', 'ephi'): Errors of Galactocentric cylindrical coordinates 
+            - ('eU', 'eV', 'eW'): Errors of the 3D Cartesian velocity components
+            - (eUc, eVc, eWc): Random errors of the 3D Cartesian velocity components (calculated only when covarience matrix is given to check the impact of correlations). 
+            - (eVr, eVphi): Errors of Galactocentric velocities in cylindrical coordinates
+              
+        """
         print('Calculation of the Galactic coordinate and velocity errors:')
         
         if 'edpc' or 'edkpc' or 'eparallax' in names:
@@ -364,6 +478,8 @@ class XVTrans():
         
         # output to the table
         self.t['ex'],self.t['ey'],self.t['ez'] = self.eX,self.eY,self.eZ
+        if 'eparallax' in names: 
+            self.t['ed'] = self.edist
         if 'cov_matrix' not in kwargs:
             self.t['eU'],self.t['eV'],self.t['eW'] = self.eU,self.eV,self.eW
         else:
@@ -378,8 +494,13 @@ class XVTrans():
         self.t['eVr'],self.t['eVphi'] = self.eVr,self.eVphi
         
 
-                            
     def save_result(self):
+        """
+        Saves the data table with the new columns. 
+        Save directory is constructed as filename+'_trans.'+fileformat. 
+        
+        :return: None. 
+        """
         print('Writing output...',end=' ')
         self.t.write(''.join((self.filename,'_trans.',self.fileformat)),format=self.fileformat,overwrite=True)
         print('done.') 

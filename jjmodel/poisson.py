@@ -36,27 +36,24 @@ def z_potential(x,a,b,c,d,e,f):
 
 def vertical_force(a,fimax,Sigma,sigW,h):
     """
-    Calculates the vertical force produced by the given Galactic component. 
+    Calculates the vertical force produced by the Galactic component. 
     
-    a : namedtuple
-        Collection of the fixed model parameters, useful quantities 
-        and arrays.
-    fimax : float
-        The optimal maximum value of the normalized gravitational 
-        potential, up to which the Poisson-Boltzmann eq. will be 
-        solved (approximately corresponds to the prescribed in 
-        parameterfile maximum height zmax). Output of fimax_optimal.
-    Sigma : scalar or array_like
-        Surface density in Msun/pc^2 (for the thin- and thick disk 
-        SFRd and SFRt).
-    sigW : scalar or array_like
-        W-velocity dispersion in km/s (AVR for the thin disk).
-    h : scalar or array_like
-        Scale height in pc (function of stellar age for the thin 
-        disk).
-
-    Kzi : 1d-array
-        Vertical force as a function of calculated z up to zmax.
+    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :type a: namedtuple
+    :param fimax: The optimal maximum value of the normalized gravitational potential 
+        up to which the Poisson-Boltzmann eq. is solved (approximately corresponds 
+        to the maximum height zmax prescribed in the parameter file). Output of fimax_optimal.
+    :type fimax: scalar 
+    :param Sigma: Surface density, Msun/pc^2 (for the thin and thick disk can be a function of time, 
+        SFRd*gd and SFRt*gt)
+    :type Sigma: scalar or array-like
+    :param sigW: W-velocity dispersion, km/s (for the thin disk this is AVR).
+    :type sigW: scalar or array-like
+    :param h: Scale height, pc (for the thin disk this is a function of time).
+    :type h: scalar or array-like
+    
+    :return: Vertical force as a function of z (up to zmax), km^2/s^2/kpc. 
+    :rtype: 1d-array        
     """
     
     # Grid along the potential axis. 
@@ -66,7 +63,7 @@ def vertical_force(a,fimax,Sigma,sigW,h):
     fieq = np.logspace(np.log10(fi1),np.log10(fimax),fist,base=10)
     fieq1 = np.concatenate(([fi1],fieq),axis=0)
     
-    # Intergration of the POisson-Boltzman eq. 
+    # Intergration of the Poisson-Boltzman eq. 
     rho0 = Sigma/2/h
     Ar1 = rho0*(sigW/SIGMA_E)**2/RHO_D0
     Ar2 = (SIGMA_E/sigW)**2
@@ -86,7 +83,7 @@ def vertical_force(a,fimax,Sigma,sigW,h):
 
 
 
-def fimax_optimal(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
+def _fimax_optimal_(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
     """
     Estimates reasonable maximum value of the normalized potential,
     which is needed to optimize the computation time of the 
@@ -249,111 +246,76 @@ def fimax_optimal(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
 
 def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
     """
-    This is the Poisson-Boltzmann eq. solver. 
+    Solver of the Poisson-Boltzmann equation. 
     
-    Parameters
-    ----------
-    a : namedtuple
-        Collection of the fixed model parameters, useful quantities 
-        and arrays.
-    fimax : float
-        The optimal maximum value of the normalized gravitational 
-        potential, up to which the Poisson-Boltzmann eq. will be
-        solved (approximately corresponds to the prescribed in 
-        parameterfile maximum height zmax). Output of fimax_optimal.
-    dfi : float
-        Reasonable step in normalized potential to be used when 
-        solving the Poisson-Boltzmann eq. Output of fimax_optimal.
-    SFRd : array_like
-        Thin-disk star formation rate function, Msun/pc^2/Gyr. 
-        Array length is equal to the number of thin-disk 
-        subpopulations: a.jd = int((tp-p.td1)/tr).
-    SFRt : array_like
-        Thick-disk star formation rate function in Msun/pc^2/Gyr. 
+    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :type a: namedtuple
+    :param fimax: The optimal maximum value of the normalized gravitational potential 
+        up to which the Poisson-Boltzmann eq. is solved (approximately corresponds 
+        to the maximum height zmax prescribed in the parameter file). Output of fimax_optimal.
+    :type fimax: scalar 
+    :param dfi: Step in normalized potential. Output of fimax_optimal.
+    :type dfi: float
+    :param SFRd: Thin-disk star formation rate function, Msun/pc^2/Gyr. 
+        Array length is equal to the number of thin-disk subpopulations: a.jd = int((tp-p.td1)/tr).
+    :type SFRd: array-like
+    :param SFRt: Thick-disk star formation rate function, Msun/pc^2/Gyr. 
         Length of the array is a.jt = int(p.tt2/tr). 
-    gd : array_like
-        Thin-disk mass loss function, len(gd)==len(SFRd).
-    gt : array_like
-        Thin-disk mass loss function, len(gd)==len(SFRd).
-    Sigma : array_like
-        Present-day surface densities of the (molecular gas, 
-        atomic gas, DM, stellar halo). All values are in Msun/pc^2. 
-    sigW : array_like
-        Set of parameters to define W-velocity dispersions of the 
-        Galactic components: (sige, alpha, sigt, sigdh, sigsh). 
-        sige and alpha are the scaling parameter (in km/s) and 
-        power index (dimensionless) of the power-law age-velocity 
-        relation of the thin disk. sigt, sigdh, sigsh (all in km/s) 
-        are W-velocity dispersions of the thick disk, DM and 
-        stellar halo, respectively.  
-    hg : array_like
-        Scale heights of the molecular and atomic gas (hg1, hg2), 
-        in pc.
-    **kwargs : dict, optional keyword arguments
-        status_equation : boolean
-            If True, the iteration details are printed to console.
-        log : file
-            When given, the details of the iteration are written 
-            to the file. 
-        plot: boolean
-            If True, the derived potential is plotted for each 
-            iteration.  
-        fp : array_like
-            Amplitude-related parameters for all additional thin-
-            disk SFR peaks. len(fp)==npeak. Must be specified  
-            together with npeak and sigp.
-        sigp : array_like
-            W-velocity dispersions (km/s) of the thin-disk 
-            populations associated with the stellar density excess 
-            forming additional peaks. len(sigp)==npeak. Must be
-            given together with npeak and fp. 
-        heffd : scalar
-            Thin-disk half-thickness (effective scale height), pc. 
-            If fixed by this parameter, additional iterations will 
-            be performed to adapt AVR to fulfill this requirement. 
-        hefft : scalar
-            Thick-disk half-thickness (effective scale height), pc. 
-            If fixed by this parameter, additional iterations will 
-            be performed to adapt sigt to fulfill this requirement. 
-
-            
-    Returns
-    -------
-    out : dict
+    :type SFRt: array-like
+    :param gd: Thin-disk mass loss function, len(gd)==len(SFRd).
+    :type gd: array-like
+    :param gt: Thick-disk mass loss function, len(gt)==len(SFRt).
+    :type gt: array-like
+    :param Sigma: Present-day surface densities of non-disk components 
+        (molecular gas, atomic gas, DM, stellar halo), Msun/pc^2.
+    :type Sigma: array-like
+    :param sigW: Set of parameters defining W-velocity dispersions of the Galactic components: 
+        (sige, alpha, sigt, sigdh, sigsh). sige and alpha are the AVR scaling parameter (km/s) 
+        and power index (dim). sigt, sigdh, sigsh (km/s) are W-velocity dispersions of the thick disk, 
+        DM and stellar halo, respectively.  
+    :type sigW: array-like
+    :param hg: Scale heights of the molecular and atomic gas (hg1, hg2), pc.
+    :type hg: array-like
+    :param fp: Optional. Amplitude-related parameters for all additional thin-disk SFR peaks. 
+        Must be specified together sigp.
+    :type fp: array-like
+    :param sigp: Optional. W-velocity dispersions (km/s) of the thin-disk populations associated with 
+        the stellar density excess in the additional peaks. Must be given together fp. 
+    :type sigp: array-like
+    :param heffd: Optional. Thin-disk half-thickness (effective scale height), pc. If fixed by this parameter, 
+        additional iterations will be performed to adapt AVR to fulfill this requirement. 
+    :type heffd: scalar 
+    :param hefft: Optional. Thick-disk half-thickness (effective scale height), pc. If fixed by this parameter, 
+        additional iterations will be performed to adapt sigt to fulfill this requirement. 
+    :type hefft: scalar
+    :param status_equation: Optional. If True, the iteration details are printed to console.
+    :type status_equation: boolean
+    :param log: Optional. If given, the details of the iteration are written to a file.
+    :type log: file
+    :param plot: Optional. If True, the derived potential is plotted for each iteration.  
+    :type plot: boolean
+        
+    :return: Dictionary with all sorts of output. 
+    
         Keys of the standard output:
-        'hd': 1d-array of length a.jd, scale heights of the thin-
-            disk subpopulations (pc). 
-        'ht', 'hdh', 'hsh' : float, thick-disk DM and halo scale 
-            heights (pc). 
-        'heffd', 'hefft' : float, half-thickness of the thin and 
-            thick disk (pc). 
-        'sigg1','sigg2','sigt' : molecular and atomic gas and 
-            thick-disk W-velocity dispersions (km/s). 
-        'sige' : float, scaling parameter of the thin-disk AVR 
-            (km/s). 
-        'avr' : 1d-array of length a.jd, thin-disk AVR (km/s). 
-        'fie', 'phi' : gravitational potential as a function of z 
-            (corresponds to a.z grid). fie is the normalized 
-            potential multiplied by SIGMA_E^2 (in km/s), useful for
-            the further calculations of the potential-dependend 
-            quantites. phi is the potential in physical units,
-            m^2/s^2. 
-        'rhodtot','rhot','rhog1','rhog2','rhodh','rhosh' : Matter 
-            density vertical profiles of the Galactic components 
-            (correspond to a.z grid), in Msun/pc^3. rhodtot is the 
-            total thin-disk density, that includes subpopulations 
-            characterized by W-velocity dispersion prescribed by 
-            the AVR and SFR-peaks' subpopulations with special 
-            kinematics, if any.
+            
+        - 'hd': 1d-array of length a.jd, scale heights of the thin-disk subpopulations (pc).             
+        - 'ht', 'hdh', 'hsh' : float, thick-disk DM and halo scale heights (pc).             
+        - 'heffd', 'hefft' : float, half-thickness of the thin and thick disk (pc).             
+        - 'sigg1','sigg2','sigt' : molecular and atomic gas and thick-disk W-velocity dispersions (km/s). 
+        - 'sige' : float, scaling parameter of the thin-disk AVR (km/s).             
+        - 'avr' : 1d-array of length a.jd, thin-disk AVR (km/s). 
+        - 'fie', 'phi' : gravitational potential as a function of z (corresponds to a.z grid). fie is the normalized potential multiplied by SIGMA_E^2 (in km/s), useful for further calculations of the potential-dependend quantities. phi is the potential in physical units, m^2/s^2. 
+        - 'rhodtot','rhot','rhog1','rhog2','rhodh','rhosh' : Matter density vertical profiles of the Galactic components (correspond to a.z grid), Msun/pc^3. rhodtot is the total thin-disk density, that includes subpopulations characterized by W-velocity dispersion prescribed by the AVR and SFR-peaks' subpopulations with special kinematics, if any.
+            
         Keys of the optional output (depend on kwargs):
-        'hdp' : Scale height(s) of the SFR-peak(s)' subpopulations, 
-            in pc. 
-        'rhodp','rhod0' : Matter density vertical profiles of the 
-            SFR-peak(s)' subpopulations, and of the thin-disk sub-
-            populations with the vertical kinematics described by 
-            the AVR, in Msun/pc^3. In this case rhodtot == rhod0 + 
-            sum(rhodp,axis=0). 
-        'log' : file, log file with the iteration details.  
+            
+        - 'hdp' : Scale height(s) of the SFR-peak(s)' subpopulations, pc. 
+        - 'rhodp','rhod0' : Matter density vertical profiles of the SFR-peak(s)' subpopulations, and of the thin-disk subpopulations with the vertical kinematics described by the AVR, Msun/pc^3. In this case rhodtot == rhod0 + sum(rhodp,axis=0). 
+        - 'log' : file, log file with the iteration details.  
+        
+    :rtype: dict 
+        
     """
     # ----------------------------------------------------------------------------------------------
     # Initialization of the procedure. sigg1 and sigg2 (in km/s) are the assumed W-velocity 

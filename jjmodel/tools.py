@@ -18,17 +18,14 @@ from . import localpath
 
 def read_parameters(path_to_file):
     """
-    Reads parameters from a text file.
+    Reads parameters from text file(s).
     
-    Parameters
-    ----------
-    path_to_file : string
-        Relative path to the parameter file.
- 
-    Returns
-    -------
-    p : namedtuple
-        Names and values of parameters given in the parameter file.
+    :param path_to_file: Relative path to the parameter file(s). Main parameter file must have name 
+        'parameters' and the second, optional parameter file, must be called 'sfrd_peaks_parameters'. 
+    :type path_to_file: string
+    
+    :return: Names and values of parameters given in the parameter file(s).
+    :rtype: namedtuple 
     """
     
     f = open(os.path.join('.',path_to_file),'r')
@@ -157,19 +154,13 @@ def read_parameters(path_to_file):
 
 def resave_parameters(path_to_parameterfile,path_to_parameterfile_copy,p):
     """
-    Reads parameters from a text file and saves parameter file 
-    to the output folder with only those parameters which are 
-    needed for this run.
+    Reads parameters from text file(s) and saves parameter file(s) 
+    to the output folder with only those parameters which are needed for this run.
     
-    Parameters
-    ----------
-    path_to_file : string
-        Relative path to the parameter file.
- 
-    Returns
-    -------
-    p : namedtuple
-        Names and values of parameters given in the parameter file.
+    :param path_to_file: Relative path to the parameter file(s).
+    :type path_to_file: string 
+    
+    :return: None 
     """
     
     pnames_local = ['run_mode','out_dir','out_mode','nprocess','Rsun','zsun','Vsun','zmax','dz',
@@ -254,12 +245,20 @@ class LogFiles():
     def __init__(self,filename):
         """
         Creates an instance of the class with a given file name.
+        
+        :param filename: Name of the file. 
+        :type filename: str 
         """
         self.filename = filename
 
     def write(self,text):
         """
         Creates a file, writes a line, closes the file.
+        
+        :param text: Text to be added to the file. 
+        :type text: str 
+        
+        :return: None. 
         """
         f = open(self.filename,'w+')
         f.write(text)
@@ -268,6 +267,11 @@ class LogFiles():
     def append(self,text):
         """
         Opens the file, adds a line, closes the file.
+        
+        :param text: Text to be added to the file. 
+        :type text: str 
+        
+        :return: None. 
         """
         f = open(self.filename,'a+')
         f.write(text)
@@ -290,6 +294,12 @@ class Timer():
         """
         Returns time interval between the current and some previous 
         moment. Output in fractions of hours, minutes and seconds.
+        
+        :param moment: Time record (in the format of output of time.time()). 
+        :type moment: float 
+        
+        :return: Time interval in hms. 
+        :rtype: str 
         """
         
         s = round(time.time() - moment,2)
@@ -310,17 +320,15 @@ class ConvertAxes():
         Returns new axis2-values for a new set of axis1-values 
         given the old (axis1,axis2). Uses linear interpolation. 
         
-        Parameters
-        ----------
-        axis1_new, axis1_old, axis2_old : array_like
-            New values along axis1 and the old set of pairs for 
-            (axis1,axis2).
-     
-        Returns
-        -------
-        axis2_new : ndarray
-            New values along axis2 corresponding to the new axis1 
-            value set. 
+        :param axis1_new: New values along axis1. 
+        :type axis1_new: array-like
+        :param axis1_old: Old values along axis1. 
+        :type axis1_old: array-like
+        :param axis2_old: Old values along axis2. 
+        :type axis2_old: array-like
+        
+        :return: New values along axis2 corresponding to the new axis1-values set. 
+        :rtype: 1d-array
         """ 
         
         pnum = 2            # Number of point used for interpolation 
@@ -355,17 +363,15 @@ class ConvertAxes():
         method is good when the resolution of the old axis1-array 
         is much better than the resolution of the new axis1-array. 
         
-        Parameters
-        ----------
-        axis1_new, axis1_old, axis2_old : array_like
-            New values along axis1 and the old set of pairs for 
-            (axis1,axis2).
-     
-        Returns
-        --------
-        axis2_new : ndarray
-            New values along axis2, corresponding to the new axis1 
-            value set. 
+        :param axis1_new: New values along axis1. 
+        :type axis1_new: array-like
+        :param axis1_old: Old values along axis1. 
+        :type axis1_old: array-like
+        :param axis2_old: Old values along axis2. 
+        :type axis2_old: array-like
+        
+        :return: New values along axis2 corresponding to the new axis1-values set. 
+        :rtype: 1d-array
         """  
         
         axis2_new = [] 
@@ -383,16 +389,15 @@ def rebin_histogram(bin_edges,x_centers,counts):
     different set of x-bins, such that the overall counts are 
     conserved. 
     
-    Parameters
-    ----------
-    bin_edges, x_centers, counts : array_like
-        Edges of the new x-bins, centers of the old x-bins and 
-        the corresponding old histogram counts. 
- 
-    Returns
-    -------
-    hist : ndarray
-        New counts corresponding to the new x-bins. 
+    :param bin_edges: Edges of the new x-bins. 
+    :type bin_edges: array-like
+    :param x_centers: Centers of the old x-bins. 
+    :type x_centers: array-like
+    :param counts: Histogram counts corresponding to the old x-bin centers. 
+    :type counts: array-like
+    
+    :return: New counts corresponding to the new x-bins (len(bin_edges)-1). 
+    :rtype: 1d-array
     """  
 
     n = len(bin_edges) - 1                  # Number of new bins 
@@ -424,7 +429,7 @@ def rebin_histogram(bin_edges,x_centers,counts):
 
 
 
-def transition_2curves(epsilon,x_break,x,y):
+def _transition_2curves_(epsilon,x_break,x,y):
     """
     This is a crazy routine of my own invention, that allows to 
     make a smooth `naturally looking` transition between two curves. 
@@ -536,19 +541,15 @@ def cumhist_smooth_savgol(y,m,n):
     Smoothes a normalized cumulative distribution of some quantity 
     with the Savitzky-Golay filter. 
     
-    Parameters
-    ----------
-    y : array_like
-        y-coordinates of the normalized cumulative distribution.
-    m : int
-        Parameter window_length of scipy.signal.savgol_filter.
-    n : int
-        Parameter polyorder of scipy.signal.savgol_filter.
-
-    Returns
-    -------
-    y_sm : ndarray
-        Smoothed y.
+    :param y: y-coordinates of the normalized cumulative distribution.
+    :type y: array-like
+    :param m: Parameter window_length of scipy.signal.savgol_filter.
+    :type m: int 
+    :param n: Parameter polyorder of scipy.signal.savgol_filter.
+    :type n: int 
+    
+    :return y_sm: Smoothed y.
+    :rtype: 1d-array         
     """
     
     dn = 3*m
@@ -562,7 +563,7 @@ def cumhist_smooth_savgol(y,m,n):
     return y_sm 
 
 
-def rotation_matrix(axis, theta):
+def _rotation_matrix_(axis, theta):
     """
     Returns the rotation matrix associated with counterclockwise rotation about
     the given axis by theta radians.
@@ -582,18 +583,15 @@ def gauss_weights(x,mean,sigma):
     """
     Draws instances from the Gaussian PDF. 
     
-    Parameters
-    ----------
-    x : array_like
-        Set of points, where probability density (PD) has to be 
-        calculated.
-    mean, sigma : scalar
-        Mean and standard deviation of the Gaussian distribution.
+    :param x: Set of points, where probability density (PD) has to be calculated.        
+    :type x: array-like
+    :param mean: Mean of the Gaussian distribution.
+    :type mean: scalar 
+    :param sigma: Standard deviation of the Gaussian distribution.
+    :type sigma: scalar
         
-    Returns
-    -------
-    weights : array_like
-        PD values at x, normalized to unity. 
+    :return: PD values at x, normalized to unity.
+    :rtype: array-like
     """  
     weights = [np.exp(-(i-mean)**2/2/sigma**2) for i in x]
     weights = weights/np.sum(weights)
@@ -603,24 +601,18 @@ def gauss_weights(x,mean,sigma):
 
 def reduce_table(tab,a):
     """
-    Calculates the surface number density of the mono-age sub-
-    populations, thus, reduces the length of the `stellar assemblies` 
-    table to the number of thin- or thick-disk, or halo sub-
-    populations. 
+    Calculates the surface number density of the mono-age sub-populations, thus, 
+    reduces the length of the 'stellar assemblies' table to the number of thin- or thick-disk, 
+    or halo subpopulations. 
     
-    Parameters
-    ----------
-    tab : dict
-        Dictionary of the isochrone columns.
-    a : namedtuple
-        Collection of the fixed model parameters, useful quantities 
-        and arrays.
-
-    Returns
-    -------
-    out : astropy Table 
-        Has two columns: `t` and `N`, Galactic time in Gyr and the 
-        surface number densities in number/pc^2. 
+    :param tab: Isochrone columns.
+    :type tab: dict 
+    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :type a: namedtuple
+    
+    :return: Table with wo columns: 't' and 'N', Galactic time (Gyr) 
+        and surface number densities (number/pc^2).
+    :rtype: astropy Table 
     """
     
     timebins = np.arange(0,tp+tr,tr)
@@ -644,20 +636,16 @@ def convolve2d_gauss(array,dxy_smooth,xy_range):
     """
     Smoothing a 2d-array with a Gaussian kernel.  
 
-    Parameters
-    ----------
-    array : array-like
-        2d-array.
-    dxy_smooth : list
-        Dispersions in x and y, [dx,dy].
-    xy_range : list
-        Min and max values along the array axis, 
+    :param array: Initial array.
+    :type array: 2d-array.
+    :param dxy_smooth: Dispersions in x and y, [dx,dy].
+    :type dxy_smooth: list 
+    :param xy_range: Min and max values along the array axis, 
         [[xmin,xmax],[ymin,ymax]].
-
-    Returns
-    -------
-    array : array-like
-        The new smoothed array of the same shape.
+    :type xy_range: list[list]
+    
+    :return: New smoothed array of the same shape.
+    :rtype: 2d-array 
     """
     
     dx, dy = dxy_smooth
@@ -684,20 +672,15 @@ def convolve1d_gauss(array,dx_smooth,x_range):
     """
     Smoothing a 1d-array with a Gaussian kernel.  
 
-    Parameters
-    ----------
-    array : array-like
-        1d-array.
-    dx_smooth : scalar
-        Dispersion in x.
-    x_range : list
-        Min and max values along the array axes, 
-        [xmin,xmax].
-
-    Returns
-    -------
-    array : array-like
-        The new smoothed array of the same shape.
+    :param array: Initial array.
+    :type array: 1d-array.
+    :param dx_smooth: Dispersion in x. 
+    :type dx_smooth: scalar
+    :param x_range:  Min and max values along the array axes, [xmin,xmax].
+    :type x_range: list 
+    
+    :return: New smoothed array of the same shape.
+    :rtype: 1d-array 
     """
     
     xmin, xmax = x_range

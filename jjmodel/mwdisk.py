@@ -11,127 +11,85 @@ from multiprocessing import Pool
 from .funcs import heffr
 from .iof import dir_tree, TabSaver
 from .tools import Timer, LogFiles
-from .poisson import fimax_optimal, poisson_solver, vertical_force
+from .poisson import _fimax_optimal_, poisson_solver, vertical_force
 from .constants import tr, SIGMA_E
 
 
 def rbin_builder(R,a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
     """
-    Predicts the vertical structure of the MW disk at the given 
-    Galactocentric distance R.  
+    Predicts the vertical structure of the MW disk at a given Galactocentric distance R.  
     
-    Parameters
-    ----------
-    R : scalar
-        Galactocentric distance in kpc. 
-    p : namedtuple
-        Set of the model parameters from the parameter file. 
-    a : namedtuple
-        Collection of the fixed model parameters, useful quantities 
-        and arrays.
-    SFRd : array_like
-        Thin-disk star formation rate function, Msun/pc^2/Gyr. 
-        Array length is equal to the number of thin-disk sub-
-        populations: a.jd = int((tp-p.td1)/tr).
-    SFRt : array_like
-        Thick-disk star formation rate function in Msun/pc^2/Gyr. 
+    :param R: Galactocentric distance, kpc. 
+    :type R: scalar
+    :param p: Set of model parameters from the parameter file. 
+    :type p: namedtuple
+    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :type a: namedtuple
+    :param SFRd: Thin-disk star formation rate function, Msun/pc^2/Gyr. 
+        Array length is equal to the number of thin-disk subpopulations: a.jd = int((tp-p.td1)/tr).
+    :type SFRd: array-like
+    :param SFRt: Thick-disk star formation rate function, Msun/pc^2/Gyr. 
         Length of the array is a.jt = int(p.tt2/tr). 
-    gd : array_like
-        Thin-disk mass loss function, len(gd)==len(SFRd).
-    gt : array_like
-        Thin-disk mass loss function, len(gd)==len(SFRd).
-    Sigma : array_like
-        Present-day surface densities of the (molecular gas, 
-        atomic gas, DM, stellar halo). All values are in Msun/pc^2. 
-    sigW : array_like
-        Set of parameters to define W-velocity dispersions of the 
-        Galactic components: (sige, alpha, sigt, sigdh, sigsh).  
-        sige and alpha are the scaling parameter (in km/s) and 
-        power index (dimensionless) of the power-law age-velocity 
-        relation of the thin disk. sigt, sigdh, sigsh (all in km/s) 
-        are  W-velocity dispersions of the thick disk, DM and 
-        stellar halo, respectively.  
-    hg : array_like
-        Scale heights of the molecular and atomic gas (hg1, hg2), 
-        in pc.
-    **kwargs : dict, optional keyword arguments
-        status_equation : boolean
-            If True, the details of solving the Poisson-Boltzmann 
-            eq. are printed to the console.
-        status_progress : boolean
-            If True, the overall progress details are printed to 
-            console.
-        log : file
-            When given, the details of the iteration are written 
-            to the file. 
-        plot: boolean
-            If True, the derived potential is plotted for each 
-            iteration.  
-        fp : array_like
-            Amplitude-related parameters for all additional thin-
-            disk SFR peaks. len(fp)==npeak. Must be specified 
-            together with npeak and sigp.
-        sigp : array_like
-            W-velocity dispersions (km/s) of the thin-disk 
-            populations associated with the stellar density excess 
-            forming additional peaks. len(sigp)==npeak. Must be 
-            given together with npeak and fp. 
-        heffd : scalar
-            Thin-disk half-thickness (effective scale height), pc. 
-            If fixed by this parameter, additional iterations will 
-            be performed to adapt AVR to fulfill this requirement. 
-        hefft : scalar
-            Thick-disk half-thickness (effective scale height), pc. 
-            If fixed by this parameter, additional iterations will 
-            be performed to adapt sigt to fulfill this requirement. 
-        save: boolean
-            If True, the output tables (and plot with converging 
-            potential in plot==True), is saved to the specified 
-            directory, a.dir. 
+    :type SFRt: array-like
+    :param gd: Thin-disk mass loss function, len(gd)==len(SFRd).
+    :type gd: array-like
+    :param gt: Thick-disk mass loss function, len(gt)==len(SFRt).
+    :type gt: array-like
+    :param Sigma: Present-day surface densities of non-disk components 
+        (molecular gas, atomic gas, DM, stellar halo), Msun/pc^2.
+    :type Sigma: array-like
+    :param sigW: Set of parameters defining W-velocity dispersions of the Galactic components: 
+        (sige, alpha, sigt, sigdh, sigsh). sige and alpha are the AVR scaling parameter (km/s) 
+        and power index (dim). sigt, sigdh, sigsh (km/s) are W-velocity dispersions of the thick disk, 
+        DM and stellar halo, respectively.  
+    :type sigW: array-like
+    :param hg: Scale heights of the molecular and atomic gas (hg1, hg2), pc.
+    :type hg: array-like
+    :param fp: Optional. Amplitude-related parameters for all additional thin-disk SFR peaks. 
+        Must be specified together sigp.
+    :type fp: array-like
+    :param sigp: Optional. W-velocity dispersions (km/s) of the thin-disk populations associated with 
+        the stellar density excess in the additional peaks. Must be given together fp. 
+    :type sigp: array-like
+    :param heffd: Optional. Thin-disk half-thickness (effective scale height), pc. If fixed by this parameter, 
+        additional iterations will be performed to adapt AVR to fulfill this requirement. 
+    :type heffd: scalar 
+    :param hefft: Optional. Thick-disk half-thickness (effective scale height), pc. If fixed by this parameter, 
+        additional iterations will be performed to adapt sigt to fulfill this requirement. 
+    :type hefft: scalar
+    :param status_equation: Optional. If True, the iteration details are printed to console.
+    :type status_equation: boolean
+    :param status_progress: Optional. If True, the overall progress details are printed to console.
+    :type status_progress: boolean
+    :param log: Optional. If given, the details of the iteration are written to a file.
+    :type log: file
+    :param plot: Optional. If True, the derived potential is plotted for each iteration.  
+    :type plot: boolean
+    :param save: Optional. If True, the output tables (and plot with converging potential in plot==True), 
+        is saved to the specified directory, a.dir. 
+    :type save: boolean
             
-    Returns
-    -------
-    out : dict
+    :return: Dictionary with all sorts of output.  
+    
         Keys of the standard output:
-        'hd': 1d-array of length a.jd, scale heights of the thin-
-            disk subpopulations (pc). 
-        'ht', 'hdh', 'hsh' : float, thick-disk DM and halo scale 
-            heights (pc). 
-        'heffd', 'hefft' : float, half-thickness of the thin and 
-            thick disk (pc). 
-        'sigg1','sigg2','sigt' : molecular and atomic gas and 
-            thick-disk W-velocity dispersions (km/s). 
-        'sige' : float, scaling parameter of the thin-disk AVR 
-            (km/s). 
-        'avr' : 1d-array of length a.jd, thin-disk AVR (km/s). 
-        'fie', 'phi' : gravitational potential as a function of z 
-            (corresponds to a.z grid). fie is the normalized  
-            potential multiplied by SIGMA_E^2 (in km/s), useful 
-            for the further calculations of the potential-dependend 
-            quantites. phi is the potential in physical units, 
-            m^2/s^2. 
-        'rhodtot','rhot','rhog1','rhog2','rhodh','rhosh' : Matter 
-            density vertical profiles of the Galactic components 
-            (correspond to a.z grid), in Msun/pc^3. rhodtot is 
-            the total thin-disk density, that includes sub-
-            populations characterized by W-velocity dispersion 
-            prescribed by the AVR and SFR-peaks' subpopulations 
-            with special kinematics, if any.
-        'Kzdtot','Kzt','Kzg1','Kzg2','Kzdh','Kzsh' : Vertical 
-            gravitational force from i-th model component, in 
-            m^2/s^2/pc. Kzdtot corresponds to the total thin disk, 
-            as rhodtot. 
-        Keys of the optional output (depends on kwargs):
-        'hdp' : Scale height(s) of the SFR-peak(s)' subpopulations, 
-            in pc. 
-        'rhodp','rhod0' : Matter density vertical profiles of the 
-            SFR-peak(s)' subpopulations, and of the thin-disk sub-
-            populations with the vertical kinematics described by 
-            the AVR, in Msun/pc^3. In this case rhodtot == rhod0 + 
-            sum(rhodp,axis=0). 
-        'Kzd0', 'Kzdp' : Analogically to rhodp and rhod0, thin-
-            disk vertical graditational force components, in 
-            m^2/s^2/pc.     
+            
+        - 'hd': 1d-array of length a.jd, scale heights of the thin-disk subpopulations (pc).             
+        - 'ht', 'hdh', 'hsh' : float, thick-disk DM and halo scale heights (pc).             
+        - 'heffd', 'hefft' : float, half-thickness of the thin and thick disk (pc).             
+        - 'sigg1','sigg2','sigt' : molecular and atomic gas and thick-disk W-velocity dispersions (km/s). 
+        - 'sige' : float, scaling parameter of the thin-disk AVR (km/s).             
+        - 'avr' : 1d-array of length a.jd, thin-disk AVR (km/s). 
+        - 'fie', 'phi' : gravitational potential as a function of z (corresponds to a.z grid). fie is the normalized potential multiplied by SIGMA_E^2 (in km/s), useful for further calculations of the potential-dependend quantities. phi is the potential in physical units, m^2/s^2. 
+        - 'rhodtot','rhot','rhog1','rhog2','rhodh','rhosh' : Matter density vertical profiles of the Galactic components (correspond to a.z grid), Msun/pc^3. rhodtot is the total thin-disk density, that includes subpopulations characterized by W-velocity dispersion prescribed by the AVR and SFR-peaks' subpopulations with special kinematics, if any.
+        - 'Kzdtot','Kzt','Kzg1','Kzg2','Kzdh','Kzsh' : Vertical gravitational force from i-th model component, m^2/s^2/pc. Kzdtot corresponds to the total thin disk, as rhodtot. 
+        
+        Keys of the optional output (depend on kwargs):
+            
+        - 'hdp' : Scale height(s) of the SFR-peak(s)' subpopulations, pc. 
+        - 'rhodp','rhod0' : Matter density vertical profiles of the SFR-peak(s)' subpopulations, and of the thin-disk subpopulations with the vertical kinematics described by the AVR, Msun/pc^3. In this case rhodtot == rhod0 + sum(rhodp,axis=0). 
+        - 'Kzd0', 'Kzdp' : Analogically to rhodp and rhod0, thin-disk vertical graditational force components, m^2/s^2/pc.   
+        
+    :rtype: dict 
     """
 
     timer = Timer()
@@ -145,9 +103,9 @@ def rbin_builder(R,a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
     
     # Firstly, fimax value is optimized.  
     if 'log' in kwargs:
-        fimax, dfi = fimax_optimal(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,log=kwargs['log'])
+        fimax, dfi = _fimax_optimal_(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,log=kwargs['log'])
     else:
-        fimax,dfi = fimax_optimal(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg)
+        fimax,dfi = _fimax_optimal_(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg)
     
     if 'status_progress' in kwargs and kwargs['status_progress']==True:
         sys.stdout.write(''.join(('\n','{:<4}'.format(''),
@@ -214,24 +172,17 @@ def rbin_builder(R,a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
 
 def local_run(p,a,inp,**kwargs):
     """
-    Builds the local JJ model based on the given parameters and 
-    input functions.
+    Builds the local JJ model based on the given parameters and input functions.
     
-    Parameters
-    ----------
-    p : namedtuple
-        Set of the model parameters from the parameter file. 
-    a : namedtuple
-        Collection of the fixed model parameters, useful quantities 
-        and arrays.
-    inp : dict
-        Collection of the input functions including SFR, AVR, AMR 
-        and IMF.
+    :param p: Set of model parameters from the parameter file. 
+    :type p: namedtuple
+    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :type a: namedtuple
+    :param inp: Collection of the input functions including SFR, AVR, AMR, and IMF.
+    :type inp: dict      
 
-    Returns
-    -------
-    out : dict
-        Output of the function rbin_builder (for R == R_SUN).
+    :return: Output of the function rbin_builder for R==p.Rsun.
+    :rtype: dict
     """
     
     f = LogFiles(os.path.join(a.T['stat'],''.join(('log_R',str(p.Rsun),'kpc.txt'))))
@@ -249,27 +200,19 @@ def local_run(p,a,inp,**kwargs):
 
 def extended_run(inp,i,out_local,**kwargs):
     """
-    Calculates the predictions of JJ-model at a given Galactocentric 
-    distance. 
+    Calculates the predictions of the JJ model at a given Galactocentric distance. 
         
-    Parameters
-    ----------
-    inp : dict
-        Collection of the input functions including SFR, AVR, AMR 
-        and IMF.
-    i : int
-        Index of the R-bin.
-    out_local : dict
-        Output of the function local_run.
-    **kwargs : dict, optional keyword arguments
-        status_progress : boolean
-            If True, the overall progress details are printed 
-            to the console.
+    :param inp: Collection of the input functions including SFR, AVR, AMR, and IMF.
+    :type inp: dict   
+    :param i: Index of the current R-bin in a.R array.
+    :type i: int
+    :param out_local: Output of the function local_run.
+    :type out_local: dict
+    :param status_progress: Optional. If True, the overall progress details are printed to console.
+    :type status_progress: boolean
             
-    Returns
-    -------
-    out : dict
-        Output of the function rbin_builder (for this i-th R-bin).
+    :return: Output of the function rbin_builder (for the i-th R-bin).
+    :rtype: dict        
     """
     
     from .input_ import p, a
@@ -300,44 +243,35 @@ def extended_run(inp,i,out_local,**kwargs):
     return out
 
 
-def starmap_with_kwargs(pool, fn, args_iter, kwargs_iter):
+def _starmap_with_kwargs_(pool, fn, args_iter, kwargs_iter):
     args_for_starmap = zip(repeat(fn), args_iter, kwargs_iter)
     return pool.starmap(apply_args_and_kwargs, args_for_starmap)
 
-def apply_args_and_kwargs(fn, args, kwargs):
+def _apply_args_and_kwargs_(fn, args, kwargs):
     return fn(*args, **kwargs)
 
 
 def disk_builder(p,a,inp,**kwargs):
     """
-    Constructs the disk (vertical structure at some 
-    Galactocentric distance R). Can work in two modes (depending 
-    on the parameter run_mode):
-        (1) models the Solar neighbourhood only 
-        (2) starts with the Solar neighbourhood and then extends
-        the local JJ model to other R. 
-    Input data (e.g. SFR and AMR) and results (e.g. potential, 
-    densities, scale heights, AVR) are saved as txt files 
-    to the output directory. 
+    Constructs the disk (vertical structure at some Galactocentric distance R). 
+    Can work in two modes (depending on the parameter p.run_mode):
+        
+        1. models the Solar neighbourhood only;
+        2. starts with the Solar neighbourhood and then extends the local JJ model to other radii. 
+        
+    Input data (e.g. SFR and AMR) and results (e.g. potential, densities, scale heights, AVR) 
+    are saved as txt files to the output directory a.dir. 
     
-    Parameters
-    ----------
-    p : namedtuple
-        Set of the model parameters from the parameter file. 
-    a : namedtuple
-        Collection of the fixed model parameters, useful quantities 
-        and arrays.
-    inp : dict
-        Collection of the input functions including SFR, AVR, AMR 
-        and IMF.
-    **kwargs : dict, optional keyword arguments
-        status_progress : boolean
-            If True, the overall progress details are printed to 
-            console during the main run.
+    :param p: Set of model parameters from the parameter file. 
+    :type p: namedtuple
+    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :type a: namedtuple
+    :param inp: Collection of the input functions including SFR, AVR, AMR, and IMF.
+    :type inp: dict     
+    :param status_progress: Optional. If True, the overall progress details are printed to console.
+    :type status_progress: boolean
 
-    Returns
-    -------
-    None.
+    :return: None. 
     """
     
     timer = Timer()
@@ -363,7 +297,7 @@ def disk_builder(p,a,inp,**kwargs):
         kwargs_iter = repeat(kwargs)
         
         pool = Pool(processes=p.nprocess)
-        result = starmap_with_kwargs(pool,extended_run,args_iter,kwargs_iter)
+        result = _starmap_with_kwargs_(pool,extended_run,args_iter,kwargs_iter)
         pool.close()
         pool.join()
         print('\n')

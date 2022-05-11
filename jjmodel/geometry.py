@@ -13,10 +13,20 @@ from .control import inpcheck_height, inpcheck_kwargs, inpcheck_iskwargtype
 
 class Volume():
     """
-    Class for calculation of the different volume cells. 
+    Class for calculating the volume of different spatial cells. 
     """
     def __init__(self,p,a):
+        """
+        Class instance is initialized by collections of parameters and useful arrays. 
+        
+        :param p: Set of model parameters from the parameter file. 
+        :type p: namedtuple
+        :param a: Collection of the fixed model parameters, useful quantities and arrays.
+        :type a: namedtuple
+        """
+        
         self.p, self.a = p, a 
+        
         
     def _circ_intersect_(self,R_ann,R_sph,r_sph):
 
@@ -35,6 +45,7 @@ class Volume():
         if (R_sph + r_sph) <= R_ann:
             area = np.pi*r_sph**2
         return area
+    
     
     def _circ_volume_(self,r_min,r_max,R2,R1):
 
@@ -98,12 +109,29 @@ class Volume():
      
     def none(self):
         """
-        Useful when no volume is considered, returns z-grid 
-        filled with ones. 
+        Useful when the volume does not need to be taken into account,
+        but equation is kept general with the volume term. 
+        In this case, the volume array can be simply filled with ones. 
+        
+        :retrun: z-grid array (of len a.n) filled with ones. 
+        :rtype: 1d-array
         """
         return np.ones(self.a.n)
     
+    
     def zcut(self,v,zlim):
+        """
+        Fills z-cells laying outside of the chosen range with zeros. 
+        
+        :param v: z-grid with volume of the cells. z-grid is of len a.n 
+            (absolute z from 0 to p.zmax with a step of p.dz). 
+        :type v: 1d-array
+        :param zlim: Min and max absolute z. 
+        :type zlim: list 
+        
+        :return: z-grid with volume of the cells. 
+        :rtype: 1d-array
+        """
         
         indz1, indz2 = int(zlim[0]//self.p.dz), int(zlim[1]//self.p.dz)
         v[:indz1] = np.zeros((indz1))
@@ -113,21 +141,31 @@ class Volume():
         
     def local_sphere(self,r_min,r_max):
         """
-        Returns volume z-grid for the local sphere of radius 
-        r_max with an inner hole of radius r_min. For testing use 
-            V = Volume(p,a)
-            v1 = V.local_sphere(0,850) 
-            print(np.sum(v1[0])/(4/3*np.pi*850**3))
+        Returns z-grid with volume of the cells for the local sphere of radius 
+        r_max with an inner hole of radius r_min. For testing, do: 
+            
+        .. code-block:: python 
         
-        Parameters
-        ----------
-        r_min, r_max : scalar
-            Inner and outer radii of the spherical shell, in pc.
+           import numpy as np
+           from jjmodel.input_ import p,a
+           from jjmodel.geometry import Volume
+           
+           V = Volume(p,a)
+           v1 = V.local_sphere(0,850) 
+           print(np.sum(v1[0])/(4/3*np.pi*850**3))
         
-        Returns
-        -------
-        Volume (pc^3) of z-bins in different R-bins.  
-        Indices of R-bins (use with a.R). 
+        :param r_min: Inner radii of the spherical shell, pc.
+        :type r_min: scalar 
+        :param r_max: Outer radii of the spherical shell, pc.
+        :type r_max: scalar 
+        
+        :return: Three quantities: 
+            
+            - z-grid with volumes of the cells (pc^3). If the outer radius of the sphere is larger than the model radial resolution p.dR, then the sphere will be splitted over several radial bins, and z-grid with volumes will be given separately for each R-bin.       
+            - Indices of R-bins for which z-grids are calculated (to get radii, use indices with a.R array).
+            - Reference line with information about the input parameters. 
+                    
+        :rtype: [array-like, array-like, str]
         """
         
         ln = 'local sphere r = [' + str(np.round(r_min/1e3,3)) + ',' +\
@@ -157,23 +195,35 @@ class Volume():
     
     def local_cylinder(self,r_min,r_max,z_min,z_max):
         """
-        Returns volume z-grid for the local cylinder of radius 
-        r_max with an inner hole of radius r_min. For testing use 
-            V = Volume(p,a)
-            v2 = V.local_cylinder(100,800,0,500)
-            print(np.sum(v2[0])/(2*np.pi*(800**2-100**2)*500))
+        Returns z-grid with volume of the cells for the local cylinder of radius 
+        r_max with an inner hole of radius r_min. For testing, do: 
+            
+        .. code-block:: python 
         
-        Parameters
-        ----------
-        r_min, r_max : scalar
-            Inner and outer radii of cylinder, in pc.
-        z_min, z_max : scalar
-            Limiting |z|, in pc.
+           import numpy as np
+           from jjmodel.input_ import p,a
+           from jjmodel.geometry import Volume
+           
+           V = Volume(p,a)
+           v2 = V.local_cylinder(100,800,0,500)
+           print(np.sum(v2[0])/(2*np.pi*(800**2-100**2)*500))
         
-        Returns
-        -------
-        Volume (pc^3) of z-bins in different R-bins.  
-        Indices of R-bins (use with a.R). 
+        :param r_min: Inner radius of the cylinder, pc.
+        :type r_min: scalar 
+        :param r_max: Outer radius of the cylinder, pc.
+        :type r_max: scalar 
+        :param z_min: Minimal absolute z, pc.
+        :type z_min: scalar
+        :param z_max: Maximal absolute z, pc.
+        :type z_max: scalar
+        
+        :return: Three quantities: 
+            
+                    - z-grid with volumes of the cells (pc^3). If the outer radius of the cylinder is larger than the model radial resolution p.dR, then the cylinder will be splitted over several radial bins, and z-grid with volumes will be given separately for each R-bin. 
+                    - Indices of R-bins for which z-grids are calculated (to get radii, use indices with a.R array).
+                    - Reference line with information about the input parameters. 
+                    
+        :rtype: [array-like, array-like, str]
         """
         
         ln = 'local cylider r = [' + str(np.round(r_min/1e3,3)) + ',' + str(np.round(r_max/1e3,3)) +\
@@ -205,26 +255,37 @@ class Volume():
     
     def rphiz_box(self,R_min,R_max,dphi,z_min,z_max):
         """
-        Returns volume z-grid for the 'box' in cylindrical coords 
-        R-phi-z. For testing use 
-            V = Volume(p,a)
-            v3 = V.rphiz_box(8.15,8.25,360,100,250)
-            print(np.sum(v3[0])/(2*np.pi*(8250**2-8150**2)*150))
+        Returns volume z-grid for the 'box' in the Galactic cylindrical coordinates (R,phi,z). 
+        For testing, do: 
+            
+        .. code-block:: python 
         
-        Parameters
-        ----------
-        R_min, R_max : scalar
-            Range of Galactocentric radii, in kpc.
-        dphi: scalar
-            Galactocentric(? not sure how it's called..) angle, 
-            in deg. 
-        z_min, z_max : scalar
-            Range of |z|, in pc.
+           import numpy as np
+           from jjmodel.input_ import p,a
+           from jjmodel.geometry import Volume
+           
+           V = Volume(p,a)
+           v3 = V.rphiz_box(8.15,8.25,360,100,250)
+           print(np.sum(v3[0])/(2*np.pi*(8250**2-8150**2)*150))
         
-        Returns
-        -------
-        Volume (pc^3) of z-bins in different R-bins.  
-        Indices of R-bins (use with a.R). 
+        :param R_min: Minimal Galactocentric radius, kpc.
+        :type R_min: scalar 
+        :param R_max: Maximal Galactocentric radius, kpc.
+        :type R_max: scalar 
+        :param dphi: Galactocentric(? not sure how it's called..) angle, deg.
+        :type dphi: scalar
+        :param z_min: Minimal absolute z, pc.
+        :type z_min: scalar
+        :param z_max: Maximal absolute z, pc.
+        :type z_max: scalar
+
+        :return: Three quantities: 
+            
+                    - z-grid with volumes of the cells (pc^3). If the radial span of the volume is larger than the model radial resolution p.dR, then it will be splitted over several radial bins, and z-grid with volumes will be given separately for each R-bin. 
+                    - Indices of R-bins for which z-grids are calculated (to get radii, use indices with a.R array).
+                    - Reference line with information about the input parameters. 
+                    
+        :rtype: [array-like, array-like, str]
         """
         
         indr1 = int(np.where(self.a.R_edges - R_min < 0)[0][-1])
@@ -248,29 +309,25 @@ class Volume():
 
 class Grid():
     """
-    Class for creating r-phi-z grids 
-    (e.g. for the Solar neighbourhood modeling).
-
-    Parameters
-    ----------
-    zmax : scalar, pc
-        Max height.
-    dz : scalar, pc
-        Step in height.
-    rmax : scalar, pc
-        Max distnace from z-axis in xy-plane.
-    rnum : scalar, dim
-        Number of bins in r (xy plane).
-    **kwargs: optional keyword arguments: 
-        rlog : boolean
-            If True, binning aling r is in log space.
-        dl : scalar, deg
-            Step in angle (longitude).
+    Class for creating (r,l,z) grids (e.g. for the Solar neighbourhood modeling).
     """
     
     def __init__(self,zmax,dz,rmax,rnum,**kwargs):
         """
         Initialization.
+
+        :param zmax: Maximal height, pc. 
+        :type zmax: scalar 
+        :param dz: Step in height, pc. 
+        :type dz: scalar 
+        :param rmax: Maximal distance from z-axis in xy-plane, pc. 
+        :type rmax: scalar 
+        :param rnum: Number of bins along r axis (in xy plane).
+        :type rnum: int 
+        :param rlog: Optional. If True, binning aling r is in log space.
+        :type rlog: boolean
+        :param dl: Step in angle (longitude), deg. 
+        :type dl: scalar 
         """
         
         this_function = inspect.stack()[0][3]
@@ -311,10 +368,8 @@ class Grid():
         """
         Puts all grid elements into a namedtuple. 
         
-        Returns
-        -------
-        grid : namedtuple
-            Grid along z and r axis (optionally also in angle).
+        :return: Grid along z and r axis (optionally also in angle l).
+        :rtype: namedtuple
         """
         
         par = namedtuple('par',self.k)
@@ -324,13 +379,27 @@ class Grid():
              
     def indz_full(self):
         """
-        Returns indices of the full grid. 
+        Generates indices of the full z-grid. 
+        
+        :return: Index array corresponding to the created z-grid. 
+        :rtype: 1d-array
         """
         
         k_array = np.arange(0,len(self.zc),1)
         return k_array
         
     def indr(self,rmin,rmax):
+        """
+        Generates indices of the part of r-array (indices correspond to the full r-grid). 
+        
+        :param rmin: Minimal r, pc. 
+        :type rmin: scalar 
+        :param rmax: Maximal r, pc. 
+        :type rmax: scalar 
+
+        :return: Index array. 
+        :rtype: 1d-array 
+        """
         
         ind_r1 = np.where(abs(self.r-rmin)==np.amin(abs(self.r-rmin)))[0][0]
         ind_r2 = np.where(abs(self.r-rmax)==np.amin(abs(self.r-rmax)))[0][0]
@@ -339,7 +408,18 @@ class Grid():
     
     
     def indl(self,lmin,lmax):
-    
+        """
+        Generates indices of the part of l-array (indices correspond to the full l-grid). 
+        
+        :param lmin: Minimal l, deg. 
+        :type lmin: scalar 
+        :param lmax: Maximal l, deg. 
+        :type lmax: scalar 
+
+        :return: Index array. 
+        :rtype: 1d-array 
+        """
+ 
         if 'dl' in kwargs:
             ind_l1 = np.where(abs(self.l-lmin)==np.amin(abs(self.l-lmin)))[0][0]
             ind_l2 = np.where(abs(self.l-lmax)==np.amin(abs(self.l-lmax)))[0][0]
@@ -357,13 +437,18 @@ class Grid():
             return []
         
         
-
-    
     def ind_part(self,zcent,zwidth):
         """
-        Returns indices corresponding to a z-slice with a central 
-        height z=zcent and a half-width of the slice zwidth 
-        (both in pc). 
+        Returns indices corresponding to a z-slice with the central 
+        height zcent and a half-width of the slice zwidth. 
+        
+        :param zcent: Mean z of the slice, pc. 
+        :type zcent: scalar 
+        :param zwidth: Half-width of the slice, pc. 
+        :type zwidth: scalar 
+
+        :return: Index array corresponding to the full z-grid. 
+        :rtype: 1d-array  
         """
         
         ii1 = np.where(self.zc==(zcent-zwidth))[0][0]
@@ -375,3 +460,6 @@ class Grid():
         k_ar2 = np.arange(ii1,ii2+1,1)
         k_array = np.concatenate((k_ar1,k_ar2),axis=0)
         return k_array
+
+
+
