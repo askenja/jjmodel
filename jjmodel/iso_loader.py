@@ -62,7 +62,7 @@ def isochrone_loader(download_mode,**kwargs):
         zip_file = ''.join((destination_folder,'.zip'))
         
         urllib.request.urlretrieve(main_link+iso_folder_ids[download_mode][download_photometry[k]],zip_file)
-        print('\tdata downloaded')
+        print('\tdata downloaded, please wait...')
         
         shutil.unpack_archive(zip_file,destination_folder)
         print('\tarchive unpacked')
