@@ -9,7 +9,8 @@ import os
 import shutil
 import urllib
 import requests
-import jjmodel as jjm
+from .__init__ import localpath
+from .tools import Timer
 
 
 
@@ -45,14 +46,14 @@ def isochrone_loader(download_mode,**kwargs):
          
     print('Loading isochrones: ',download_mode,'...')
     
-    clock = jjm.tools.Timer()
+    clock = Timer()
     t1 = clock.start()
     
     for k in range(len(download_photometry)):
         
         print('\tphotometry: ',download_photometry[k])
         
-        destination_folder = os.path.join(jjm.localpath,'input','isochrones',download_mode)
+        destination_folder = os.path.join(localpath,'input','isochrones',download_mode)
                                 
         zip_file = ''.join((destination_folder,'.zip'))
         
