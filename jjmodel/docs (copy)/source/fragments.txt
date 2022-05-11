@@ -1,0 +1,23 @@
+
+
+At the moment, we cannot offer an automatic download of the isochrone packages for technical reasons, so you need to download them manually from here: `Padova (Johnson+Gaia_DR1+Gaia_EDR3) <https://drive.google.com/file/d/1QkaFTrepG6DKoUmLKU46eILCI7uHRIE2/view?usp=sharing>`_, `MIST (Johnson+2MASS+Gaia_DR1+Gaia_EDR3) <https://drive.google.com/file/d/1REWCW0eAk_iUacSQmds9Wcl-NbF5iH23/view?usp=sharing>`_. 
+
+To find a path to the **jjmodel** library on your computer, you can do in python:
+
+.. code-block:: python 
+   
+   import os 
+   import jjmodel
+   os.path.dirname(jjmodel.__file__) 
+   
+For example, the package directory (``package_directory``) can be ``/home/skevja/anaconda2/envs/py3/lib/python3.8/site-packages/jjmodel``. Open a terminal in the the folder with your downloaded isochrone archive. Assuming that you have chosen Padova multiband isochrones, you need to execute the following command:
+
+.. code-block:: bash
+   
+   $ unzip multiband.zip -d isochrone_directory
+   
+where ``isochrone_directory`` is constructed as ``package_directory+/input/isochrones/Padova``. This will produce quite a lot of output in the terminal due to a large number of isochrone tables in the archive. 
+
+If you plan to work with different stellar evolution libraries, you can download all available archives, just remember to give a correct destination in each case (``package_directory+/input/isochrones/Padova`` or ``package_directory+/input/isochrones/MIST``). 
+
+
