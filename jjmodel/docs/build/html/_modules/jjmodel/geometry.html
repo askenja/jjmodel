@@ -1,0 +1,577 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>jjmodel.geometry &#8212; jjmodel 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for jjmodel.geometry</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Mon Feb 20 18:17:18 2017</span>
+
+<span class="sd">@author: Skevja</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">.control</span> <span class="kn">import</span> <span class="n">inpcheck_height</span><span class="p">,</span> <span class="n">inpcheck_kwargs</span><span class="p">,</span> <span class="n">inpcheck_iskwargtype</span>
+
+
+<div class="viewcode-block" id="Volume"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Volume">[docs]</a><span class="k">class</span> <span class="nc">Volume</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for calculating the volume of different spatial cells. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Volume.__init__"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Volume.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class instance is initialized by collections of parameters and useful arrays. </span>
+<span class="sd">        </span>
+<span class="sd">        :param p: Set of model parameters from the parameter file. </span>
+<span class="sd">        :type p: namedtuple</span>
+<span class="sd">        :param a: Collection of the fixed model parameters, useful quantities and arrays.</span>
+<span class="sd">        :type a: namedtuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">p</span><span class="p">,</span> <span class="n">a</span> </div>
+        
+        
+    <span class="k">def</span> <span class="nf">_circ_intersect_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">R_ann</span><span class="p">,</span><span class="n">R_sph</span><span class="p">,</span><span class="n">r_sph</span><span class="p">):</span>
+
+        <span class="n">R_ann</span><span class="p">,</span> <span class="n">R_sph</span> <span class="o">=</span> <span class="n">R_ann</span><span class="o">*</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">R_sph</span><span class="o">*</span><span class="mf">1e3</span> <span class="c1"># kpc to pc</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span><span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r_sph</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">area</span> <span class="o">=</span> <span class="n">r_sph</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">((</span><span class="n">R_sph</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">r_sph</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">R_ann</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">R_sph</span><span class="o">/</span><span class="n">r_sph</span><span class="p">)</span> <span class="o">+</span>\
+                       <span class="n">R_ann</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">((</span><span class="n">R_sph</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">R_ann</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">r_sph</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">R_sph</span><span class="o">/</span><span class="n">R_ann</span><span class="p">)</span> <span class="o">-</span>\
+                       <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="o">-</span><span class="n">R_sph</span> <span class="o">+</span> <span class="n">r_sph</span> <span class="o">+</span> <span class="n">R_ann</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">R_sph</span> <span class="o">+</span> <span class="n">r_sph</span> <span class="o">-</span> <span class="n">R_ann</span><span class="p">)</span><span class="o">*</span>\
+                                   <span class="p">(</span><span class="n">R_sph</span> <span class="o">-</span> <span class="n">r_sph</span> <span class="o">+</span> <span class="n">R_ann</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">R_sph</span> <span class="o">+</span> <span class="n">r_sph</span> <span class="o">+</span> <span class="n">R_ann</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">area</span> <span class="o">=</span> <span class="mi">0</span> 
+        <span class="k">if</span> <span class="n">area</span><span class="o">&lt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="n">area</span><span class="o">*</span><span class="mi">0</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="mi">0</span> 
+        <span class="k">if</span> <span class="p">(</span><span class="n">R_sph</span> <span class="o">+</span> <span class="n">r_sph</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">R_ann</span><span class="p">:</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">r_sph</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">return</span> <span class="n">area</span>
+    
+    
+    <span class="k">def</span> <span class="nf">_circ_volume_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r_min</span><span class="p">,</span><span class="n">r_max</span><span class="p">,</span><span class="n">R2</span><span class="p">,</span><span class="n">R1</span><span class="p">):</span>
+
+        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="p">):</span>            
+            <span class="n">z_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">zsun</span><span class="p">)</span>
+            <span class="n">z_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">zsun</span><span class="p">)</span>
+            <span class="n">r1_pos</span><span class="p">,</span><span class="n">r1_neg</span><span class="p">,</span><span class="n">r2_pos</span><span class="p">,</span><span class="n">r2_neg</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span>            
+            <span class="k">if</span> <span class="n">z_pos</span> <span class="o">&lt;=</span> <span class="n">r_max</span> <span class="p">:</span>
+                <span class="n">r1_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">r_max</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">z_pos</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">z_neg</span> <span class="o">&lt;=</span> <span class="n">r_max</span><span class="p">:</span>
+                <span class="n">r1_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">r_max</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">z_neg</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>    
+            <span class="k">if</span> <span class="n">z_pos</span> <span class="o">&lt;=</span> <span class="n">r_min</span><span class="p">:</span>
+                <span class="n">r2_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">r_min</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">z_pos</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">z_neg</span> <span class="o">&lt;=</span> <span class="n">r_min</span><span class="p">:</span>
+                <span class="n">r2_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">r_min</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">z_neg</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>        
+    
+            <span class="n">intersect_large_pos1</span><span class="p">,</span><span class="n">intersect_large_neg1</span><span class="p">,</span><span class="n">intersect_small_pos1</span><span class="p">,</span><span class="n">intersect_small_neg1</span><span class="p">,</span> \
+            <span class="n">intersect_large_pos2</span><span class="p">,</span><span class="n">intersect_large_neg2</span><span class="p">,</span><span class="n">intersect_small_pos2</span><span class="p">,</span><span class="n">intersect_small_neg2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span>
+            <span class="k">if</span> <span class="n">r1_pos</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">intersect_large_pos1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_intersect_</span><span class="p">(</span><span class="n">R1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">,</span><span class="n">r1_pos</span><span class="p">)</span>
+                <span class="n">intersect_large_pos2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_intersect_</span><span class="p">(</span><span class="n">R2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">,</span><span class="n">r1_pos</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r1_neg</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">intersect_large_neg1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_intersect_</span><span class="p">(</span><span class="n">R1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">,</span><span class="n">r1_neg</span><span class="p">)</span>
+                <span class="n">intersect_large_neg2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_intersect_</span><span class="p">(</span><span class="n">R2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">,</span><span class="n">r1_neg</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r2_pos</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">intersect_small_pos1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_intersect_</span><span class="p">(</span><span class="n">R1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">,</span><span class="n">r2_pos</span><span class="p">)</span>
+                <span class="n">intersect_small_pos2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_intersect_</span><span class="p">(</span><span class="n">R2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">,</span><span class="n">r2_pos</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r2_neg</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">intersect_small_neg1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_intersect_</span><span class="p">(</span><span class="n">R1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">,</span><span class="n">r2_neg</span><span class="p">)</span>
+                <span class="n">intersect_small_neg2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_intersect_</span><span class="p">(</span><span class="n">R2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">,</span><span class="n">r2_neg</span><span class="p">)</span>
+            
+            <span class="n">int_large_pos</span> <span class="o">=</span> <span class="n">intersect_large_pos1</span> <span class="o">-</span> <span class="n">intersect_large_pos2</span>
+            <span class="n">int_small_pos</span> <span class="o">=</span> <span class="n">intersect_small_pos1</span> <span class="o">-</span> <span class="n">intersect_small_pos2</span>  
+            <span class="n">int_large_neg</span> <span class="o">=</span> <span class="n">intersect_large_neg1</span> <span class="o">-</span> <span class="n">intersect_large_neg2</span> 
+            <span class="n">int_small_neg</span> <span class="o">=</span> <span class="n">intersect_small_neg1</span> <span class="o">-</span> <span class="n">intersect_small_neg2</span>            
+            <span class="n">s_pos</span> <span class="o">=</span> <span class="n">int_large_pos</span> <span class="o">-</span> <span class="n">int_small_pos</span>
+            <span class="n">s_neg</span> <span class="o">=</span> <span class="n">int_large_neg</span> <span class="o">-</span> <span class="n">int_small_neg</span>            
+            <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">s_pos</span> <span class="o">+</span> <span class="n">s_neg</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">dz</span>    
+            
+        <span class="k">return</span> <span class="n">v</span>
+       
+    
+    <span class="k">def</span> <span class="nf">_cyl_volume_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r_min</span><span class="p">,</span><span class="n">r_max</span><span class="p">,</span><span class="n">z_min</span><span class="p">,</span><span class="n">z_max</span><span class="p">,</span><span class="n">R2</span><span class="p">,</span><span class="n">R1</span><span class="p">):</span>
+
+        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="p">))</span> 
+        <span class="n">indz1</span><span class="p">,</span> <span class="n">indz2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_min</span><span class="o">//</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">dz</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_max</span><span class="o">//</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">dz</span><span class="p">)</span>
+                 
+        <span class="n">intersect_large1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_intersect_</span><span class="p">(</span><span class="n">R1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">,</span><span class="n">r_max</span><span class="p">)</span>
+        <span class="n">intersect_large2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_intersect_</span><span class="p">(</span><span class="n">R2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">,</span><span class="n">r_max</span><span class="p">)</span>
+        <span class="n">intersect_small1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_intersect_</span><span class="p">(</span><span class="n">R1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">,</span><span class="n">r_min</span><span class="p">)</span>
+        <span class="n">intersect_small2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_intersect_</span><span class="p">(</span><span class="n">R2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">,</span><span class="n">r_min</span><span class="p">)</span>
+        <span class="n">int_large</span> <span class="o">=</span> <span class="n">intersect_large1</span> <span class="o">-</span> <span class="n">intersect_large2</span>
+        <span class="n">int_small</span> <span class="o">=</span> <span class="n">intersect_small1</span> <span class="o">-</span> <span class="n">intersect_small2</span>  
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">indz2</span><span class="o">-</span><span class="n">indz1</span><span class="p">):</span>
+            <span class="n">v</span><span class="p">[</span><span class="n">indz1</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">int_large</span> <span class="o">-</span> <span class="n">int_small</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">dz</span>    
+            
+        <span class="k">return</span> <span class="n">v</span>
+    
+     
+<div class="viewcode-block" id="Volume.none"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Volume.none">[docs]</a>    <span class="k">def</span> <span class="nf">none</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Useful when the volume does not need to be taken into account,</span>
+<span class="sd">        but equation is kept general with the volume term. </span>
+<span class="sd">        In this case, the volume array can be simply filled with ones. </span>
+<span class="sd">        </span>
+<span class="sd">        :retrun: z-grid array (of len a.n) filled with ones. </span>
+<span class="sd">        :rtype: 1d-array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="p">)</span></div>
+    
+    
+<div class="viewcode-block" id="Volume.zcut"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Volume.zcut">[docs]</a>    <span class="k">def</span> <span class="nf">zcut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">zlim</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fills z-cells laying outside of the chosen range with zeros. </span>
+<span class="sd">        </span>
+<span class="sd">        :param v: z-grid with volume of the cells. z-grid is of len a.n </span>
+<span class="sd">            (absolute z from 0 to p.zmax with a step of p.dz). </span>
+<span class="sd">        :type v: 1d-array</span>
+<span class="sd">        :param zlim: Min and max absolute z. </span>
+<span class="sd">        :type zlim: list </span>
+<span class="sd">        </span>
+<span class="sd">        :return: z-grid with volume of the cells. </span>
+<span class="sd">        :rtype: 1d-array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">indz1</span><span class="p">,</span> <span class="n">indz2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">zlim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">dz</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">zlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">dz</span><span class="p">)</span>
+        <span class="n">v</span><span class="p">[:</span><span class="n">indz1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">indz1</span><span class="p">))</span>
+        <span class="n">v</span><span class="p">[</span><span class="n">indz2</span><span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="o">-</span><span class="n">indz2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">v</span> </div>
+    
+        
+<div class="viewcode-block" id="Volume.local_sphere"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Volume.local_sphere">[docs]</a>    <span class="k">def</span> <span class="nf">local_sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r_min</span><span class="p">,</span><span class="n">r_max</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns z-grid with volume of the cells for the local sphere of radius </span>
+<span class="sd">        r_max with an inner hole of radius r_min. For testing, do: </span>
+<span class="sd">            </span>
+<span class="sd">        .. code-block:: python </span>
+<span class="sd">        </span>
+<span class="sd">           import numpy as np</span>
+<span class="sd">           from jjmodel.input_ import p,a</span>
+<span class="sd">           from jjmodel.geometry import Volume</span>
+<span class="sd">           </span>
+<span class="sd">           V = Volume(p,a)</span>
+<span class="sd">           v1 = V.local_sphere(0,850) </span>
+<span class="sd">           print(np.sum(v1[0])/(4/3*np.pi*850**3))</span>
+<span class="sd">        </span>
+<span class="sd">        :param r_min: Inner radii of the spherical shell, pc.</span>
+<span class="sd">        :type r_min: scalar </span>
+<span class="sd">        :param r_max: Outer radii of the spherical shell, pc.</span>
+<span class="sd">        :type r_max: scalar </span>
+<span class="sd">        </span>
+<span class="sd">        :return: Three quantities: </span>
+<span class="sd">            </span>
+<span class="sd">            - z-grid with volumes of the cells (pc^3). If the outer radius of the sphere is larger than the model radial resolution p.dR, then the sphere will be splitted over several radial bins, and z-grid with volumes will be given separately for each R-bin.       </span>
+<span class="sd">            - Indices of R-bins for which z-grids are calculated (to get radii, use indices with a.R array).</span>
+<span class="sd">            - Reference line with information about the input parameters. </span>
+<span class="sd">                    </span>
+<span class="sd">        :rtype: [array-like, array-like, str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">ln</span> <span class="o">=</span> <span class="s1">&#39;local sphere r = [&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_min</span><span class="o">/</span><span class="mf">1e3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span>\
+             <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_max</span><span class="o">/</span><span class="mf">1e3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;] kpc&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">run_mode</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">volume</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_volume_</span><span class="p">(</span><span class="n">r_min</span><span class="p">,</span><span class="n">r_max</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="o">-</span><span class="mf">1.1</span><span class="o">*</span><span class="n">r_max</span><span class="o">/</span><span class="mf">1e3</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="o">+</span><span class="mf">1.1</span><span class="o">*</span><span class="n">r_max</span><span class="o">/</span><span class="mf">1e3</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">volume</span><span class="p">,</span> <span class="n">ln</span>
+            
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">R_min</span><span class="p">,</span> <span class="n">R_max</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="o">-</span><span class="n">r_max</span><span class="o">/</span><span class="mf">1e3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="o">+</span><span class="n">r_max</span><span class="o">/</span><span class="mf">1e3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>       
+            <span class="k">if</span> <span class="n">R_min</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rmin</span> <span class="ow">or</span> <span class="n">R_max</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rmax</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sphere is too large, reduce r_max.&quot;</span><span class="p">)</span>
+            <span class="n">indr1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">R_edges</span> <span class="o">-</span> <span class="n">R_min</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">indr2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">R_edges</span> <span class="o">-</span> <span class="n">R_max</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            
+            <span class="n">subR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">R_edges</span><span class="p">[</span><span class="n">indr1</span><span class="p">:</span><span class="n">indr2</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">subR</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">subR</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">R_min</span><span class="p">,</span> <span class="n">R_max</span>
+            <span class="n">volume</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">subR</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subR</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">volume</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circ_volume_</span><span class="p">(</span><span class="n">r_min</span><span class="p">,</span><span class="n">r_max</span><span class="p">,</span><span class="n">subR</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">subR</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> 
+                
+            <span class="k">return</span> <span class="n">volume</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">indr1</span><span class="p">,</span><span class="n">indr2</span><span class="p">),</span> <span class="n">ln</span></div>
+    
+    
+<div class="viewcode-block" id="Volume.local_cylinder"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Volume.local_cylinder">[docs]</a>    <span class="k">def</span> <span class="nf">local_cylinder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r_min</span><span class="p">,</span><span class="n">r_max</span><span class="p">,</span><span class="n">z_min</span><span class="p">,</span><span class="n">z_max</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns z-grid with volume of the cells for the local cylinder of radius </span>
+<span class="sd">        r_max with an inner hole of radius r_min. For testing, do: </span>
+<span class="sd">            </span>
+<span class="sd">        .. code-block:: python </span>
+<span class="sd">        </span>
+<span class="sd">           import numpy as np</span>
+<span class="sd">           from jjmodel.input_ import p,a</span>
+<span class="sd">           from jjmodel.geometry import Volume</span>
+<span class="sd">           </span>
+<span class="sd">           V = Volume(p,a)</span>
+<span class="sd">           v2 = V.local_cylinder(100,800,0,500)</span>
+<span class="sd">           print(np.sum(v2[0])/(2*np.pi*(800**2-100**2)*500))</span>
+<span class="sd">        </span>
+<span class="sd">        :param r_min: Inner radius of the cylinder, pc.</span>
+<span class="sd">        :type r_min: scalar </span>
+<span class="sd">        :param r_max: Outer radius of the cylinder, pc.</span>
+<span class="sd">        :type r_max: scalar </span>
+<span class="sd">        :param z_min: Minimal absolute z, pc.</span>
+<span class="sd">        :type z_min: scalar</span>
+<span class="sd">        :param z_max: Maximal absolute z, pc.</span>
+<span class="sd">        :type z_max: scalar</span>
+<span class="sd">        </span>
+<span class="sd">        :return: Three quantities: </span>
+<span class="sd">            </span>
+<span class="sd">                    - z-grid with volumes of the cells (pc^3). If the outer radius of the cylinder is larger than the model radial resolution p.dR, then the cylinder will be splitted over several radial bins, and z-grid with volumes will be given separately for each R-bin. </span>
+<span class="sd">                    - Indices of R-bins for which z-grids are calculated (to get radii, use indices with a.R array).</span>
+<span class="sd">                    - Reference line with information about the input parameters. </span>
+<span class="sd">                    </span>
+<span class="sd">        :rtype: [array-like, array-like, str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">ln</span> <span class="o">=</span> <span class="s1">&#39;local cylider r = [&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_min</span><span class="o">/</span><span class="mf">1e3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_max</span><span class="o">/</span><span class="mf">1e3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span> <span class="o">+</span>\
+            <span class="s1">&#39;] kpc &amp; |z| = [&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">z_min</span><span class="o">/</span><span class="mf">1e3</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">z_max</span><span class="o">/</span><span class="mf">1e3</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;] kpc&#39;</span>
+        
+        <span class="n">z_min</span><span class="p">,</span><span class="n">z_max</span> <span class="o">=</span> <span class="n">inpcheck_height</span><span class="p">([</span><span class="n">z_min</span><span class="p">,</span><span class="n">z_max</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">run_mode</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">volume</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cyl_volume_</span><span class="p">(</span><span class="n">r_min</span><span class="p">,</span><span class="n">r_max</span><span class="p">,</span><span class="n">z_min</span><span class="p">,</span><span class="n">z_max</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="o">-</span><span class="mf">1.1</span><span class="o">*</span><span class="n">r_max</span><span class="o">/</span><span class="mf">1e3</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="o">+</span><span class="mf">1.1</span><span class="o">*</span><span class="n">r_max</span><span class="o">/</span><span class="mf">1e3</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">volume</span><span class="p">,</span> <span class="n">ln</span>
+            
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">R_min</span><span class="p">,</span> <span class="n">R_max</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="o">-</span><span class="n">r_max</span><span class="o">/</span><span class="mf">1e3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="o">+</span><span class="n">r_max</span><span class="o">/</span><span class="mf">1e3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">R_min</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rmin</span> <span class="ow">or</span> <span class="n">R_max</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rmax</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cylinder radius is too large, reduce r_max.&quot;</span><span class="p">)</span>
+            <span class="n">indr1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">R_edges</span> <span class="o">-</span> <span class="n">R_min</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">indr2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">R_edges</span> <span class="o">-</span> <span class="n">R_max</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            
+            <span class="n">subR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">R_edges</span><span class="p">[</span><span class="n">indr1</span><span class="p">:</span><span class="n">indr2</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">subR</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">subR</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">R_min</span><span class="p">,</span> <span class="n">R_max</span>
+            <span class="n">volume</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">subR</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subR</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">volume</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cyl_volume_</span><span class="p">(</span><span class="n">r_min</span><span class="p">,</span><span class="n">r_max</span><span class="p">,</span><span class="n">z_min</span><span class="p">,</span><span class="n">z_max</span><span class="p">,</span><span class="n">subR</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">subR</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> 
+            
+            <span class="k">return</span> <span class="n">volume</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">indr1</span><span class="p">,</span><span class="n">indr2</span><span class="p">),</span> <span class="n">ln</span></div>
+        
+    
+<div class="viewcode-block" id="Volume.rphiz_box"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Volume.rphiz_box">[docs]</a>    <span class="k">def</span> <span class="nf">rphiz_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">R_min</span><span class="p">,</span><span class="n">R_max</span><span class="p">,</span><span class="n">dphi</span><span class="p">,</span><span class="n">z_min</span><span class="p">,</span><span class="n">z_max</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns volume z-grid for the &#39;box&#39; in the Galactic cylindrical coordinates (R,phi,z). </span>
+<span class="sd">        For testing, do: </span>
+<span class="sd">            </span>
+<span class="sd">        .. code-block:: python </span>
+<span class="sd">        </span>
+<span class="sd">           import numpy as np</span>
+<span class="sd">           from jjmodel.input_ import p,a</span>
+<span class="sd">           from jjmodel.geometry import Volume</span>
+<span class="sd">           </span>
+<span class="sd">           V = Volume(p,a)</span>
+<span class="sd">           v3 = V.rphiz_box(8.15,8.25,360,100,250)</span>
+<span class="sd">           print(np.sum(v3[0])/(2*np.pi*(8250**2-8150**2)*150))</span>
+<span class="sd">        </span>
+<span class="sd">        :param R_min: Minimal Galactocentric radius, kpc.</span>
+<span class="sd">        :type R_min: scalar </span>
+<span class="sd">        :param R_max: Maximal Galactocentric radius, kpc.</span>
+<span class="sd">        :type R_max: scalar </span>
+<span class="sd">        :param dphi: Galactocentric(? not sure how it&#39;s called..) angle, deg.</span>
+<span class="sd">        :type dphi: scalar</span>
+<span class="sd">        :param z_min: Minimal absolute z, pc.</span>
+<span class="sd">        :type z_min: scalar</span>
+<span class="sd">        :param z_max: Maximal absolute z, pc.</span>
+<span class="sd">        :type z_max: scalar</span>
+
+<span class="sd">        :return: Three quantities: </span>
+<span class="sd">            </span>
+<span class="sd">                    - z-grid with volumes of the cells (pc^3). If the radial span of the volume is larger than the model radial resolution p.dR, then it will be splitted over several radial bins, and z-grid with volumes will be given separately for each R-bin. </span>
+<span class="sd">                    - Indices of R-bins for which z-grids are calculated (to get radii, use indices with a.R array).</span>
+<span class="sd">                    - Reference line with information about the input parameters. </span>
+<span class="sd">                    </span>
+<span class="sd">        :rtype: [array-like, array-like, str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">indr1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">R_edges</span> <span class="o">-</span> <span class="n">R_min</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">indr2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">R_edges</span> <span class="o">-</span> <span class="n">R_max</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">indz1</span><span class="p">,</span> <span class="n">indz2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_min</span><span class="o">//</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">dz</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_max</span><span class="o">//</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">dz</span><span class="p">)</span>
+        
+        <span class="n">subR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">R_edges</span><span class="p">[</span><span class="n">indr1</span><span class="p">:</span><span class="n">indr2</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">subR</span> <span class="o">=</span> <span class="n">subR</span><span class="o">*</span><span class="mf">1e3</span> <span class="c1"># kpc to pc</span>
+        <span class="n">subR</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">subR</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">R_min</span><span class="o">*</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">R_max</span><span class="o">*</span><span class="mf">1e3</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">subR</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subR</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">const</span> <span class="o">=</span> <span class="p">(</span><span class="n">subR</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">subR</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">dphi</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">dz</span>
+            <span class="n">volume</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">indz1</span><span class="p">:</span><span class="n">indz2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">const</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">indz2</span><span class="o">-</span><span class="n">indz1</span><span class="p">)]</span>
+        
+        <span class="n">ln</span> <span class="o">=</span> <span class="s1">&#39;R-phi-z box R = [&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">R_min</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">R_max</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;] kpc &amp; dphi = &#39;</span> <span class="o">+</span>\
+            <span class="nb">str</span><span class="p">(</span><span class="n">dphi</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; deg &amp; |z| = [&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">z_min</span><span class="o">/</span><span class="mf">1e3</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">z_max</span><span class="o">/</span><span class="mf">1e3</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;] kpc&#39;</span>
+                        
+        <span class="k">return</span> <span class="n">volume</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">indr1</span><span class="p">,</span><span class="n">indr2</span><span class="p">),</span> <span class="n">ln</span> </div></div>
+        
+
+
+<div class="viewcode-block" id="Grid"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Grid">[docs]</a><span class="k">class</span> <span class="nc">Grid</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for creating (r,l,z) grids (e.g. for the Solar neighbourhood modeling).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="Grid.__init__"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Grid.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zmax</span><span class="p">,</span><span class="n">dz</span><span class="p">,</span><span class="n">rmax</span><span class="p">,</span><span class="n">rnum</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialization.</span>
+
+<span class="sd">        :param zmax: Maximal height, pc. </span>
+<span class="sd">        :type zmax: scalar </span>
+<span class="sd">        :param dz: Step in height, pc. </span>
+<span class="sd">        :type dz: scalar </span>
+<span class="sd">        :param rmax: Maximal distance from z-axis in xy-plane, pc. </span>
+<span class="sd">        :type rmax: scalar </span>
+<span class="sd">        :param rnum: Number of bins along r axis (in xy plane).</span>
+<span class="sd">        :type rnum: int </span>
+<span class="sd">        :param rlog: Optional. If True, binning aling r is in log space.</span>
+<span class="sd">        :type rlog: boolean</span>
+<span class="sd">        :param dl: Step in angle (longitude), deg. </span>
+<span class="sd">        :type dl: scalar </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">this_function</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">inpcheck_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,[</span><span class="s1">&#39;rlog&#39;</span><span class="p">,</span><span class="s1">&#39;dl&#39;</span><span class="p">],</span><span class="n">this_function</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Grid initialization... &#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="c1"># z,  r,  l       - bin edges  </span>
+        <span class="c1"># zc, rc, lc      - bin centers</span>
+        
+        <span class="c1"># Vertical </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">zmax</span><span class="p">,</span><span class="n">zmax</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">zmax</span><span class="o">/</span><span class="n">dz</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">zmax</span><span class="o">+</span><span class="n">dz</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="n">zmax</span><span class="o">-</span><span class="n">dz</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">zmax</span><span class="o">/</span><span class="n">dz</span><span class="p">))</span>
+        
+        <span class="c1"># Radial</span>
+        <span class="k">if</span> <span class="n">inpcheck_iskwargtype</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span><span class="s1">&#39;rlog&#39;</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">this_function</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">rmax</span><span class="p">),</span><span class="n">num</span><span class="o">=</span><span class="n">rnum</span><span class="p">,</span><span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">rmax</span><span class="p">,</span><span class="n">rnum</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rc</span><span class="o">=</span><span class="p">[(</span><span class="n">i1</span> <span class="o">+</span> <span class="n">i2</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">i1</span><span class="p">,</span> <span class="n">i2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">dr</span><span class="p">)]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">,</span><span class="s1">&#39;zc&#39;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="s1">&#39;rc&#39;</span><span class="p">,</span><span class="s1">&#39;dr&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">zc</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">rc</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">dr</span><span class="p">]</span>   
+        
+        <span class="c1"># Azimuthal</span>
+        <span class="k">if</span> <span class="s1">&#39;dl&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">360</span><span class="p">,</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dl&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dl&#39;</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="mi">360</span><span class="o">+</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dl&#39;</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dl&#39;</span><span class="p">])</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;l&#39;</span><span class="p">,</span><span class="s1">&#39;lc&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">l</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="p">])</span>
+     
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ok</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+    
+    
+<div class="viewcode-block" id="Grid.make"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Grid.make">[docs]</a>    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Puts all grid elements into a namedtuple. </span>
+<span class="sd">        </span>
+<span class="sd">        :return: Grid along z and r axis (optionally also in angle l).</span>
+<span class="sd">        :rtype: namedtuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">par</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;par&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">_make</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">)</span>   
+        <span class="k">return</span> <span class="n">grid</span></div>
+             
+             
+<div class="viewcode-block" id="Grid.indz_full"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Grid.indz_full">[docs]</a>    <span class="k">def</span> <span class="nf">indz_full</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates indices of the full z-grid. </span>
+<span class="sd">        </span>
+<span class="sd">        :return: Index array corresponding to the created z-grid. </span>
+<span class="sd">        :rtype: 1d-array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">k_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zc</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">k_array</span></div>
+        
+<div class="viewcode-block" id="Grid.indr"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Grid.indr">[docs]</a>    <span class="k">def</span> <span class="nf">indr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rmin</span><span class="p">,</span><span class="n">rmax</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates indices of the part of r-array (indices correspond to the full r-grid). </span>
+<span class="sd">        </span>
+<span class="sd">        :param rmin: Minimal r, pc. </span>
+<span class="sd">        :type rmin: scalar </span>
+<span class="sd">        :param rmax: Maximal r, pc. </span>
+<span class="sd">        :type rmax: scalar </span>
+
+<span class="sd">        :return: Index array. </span>
+<span class="sd">        :rtype: 1d-array </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">ind_r1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">-</span><span class="n">rmin</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">-</span><span class="n">rmin</span><span class="p">)))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ind_r2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">-</span><span class="n">rmax</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">-</span><span class="n">rmax</span><span class="p">)))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">r_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ind_r1</span><span class="p">,</span><span class="n">ind_r2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r_array</span></div>
+    
+    
+<div class="viewcode-block" id="Grid.indl"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Grid.indl">[docs]</a>    <span class="k">def</span> <span class="nf">indl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lmin</span><span class="p">,</span><span class="n">lmax</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates indices of the part of l-array (indices correspond to the full l-grid). </span>
+<span class="sd">        </span>
+<span class="sd">        :param lmin: Minimal l, deg. </span>
+<span class="sd">        :type lmin: scalar </span>
+<span class="sd">        :param lmax: Maximal l, deg. </span>
+<span class="sd">        :type lmax: scalar </span>
+
+<span class="sd">        :return: Index array. </span>
+<span class="sd">        :rtype: 1d-array </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+ 
+        <span class="k">if</span> <span class="s1">&#39;dl&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">ind_l1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l</span><span class="o">-</span><span class="n">lmin</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l</span><span class="o">-</span><span class="n">lmin</span><span class="p">)))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ind_l2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l</span><span class="o">-</span><span class="n">lmax</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l</span><span class="o">-</span><span class="n">lmax</span><span class="p">)))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            
+            <span class="k">if</span> <span class="n">lmin</span> <span class="o">&gt;</span> <span class="n">lmax</span><span class="p">:</span>
+                <span class="n">l_array_part1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ind_l1</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="mi">360</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dl&#39;</span><span class="p">]))</span>
+                <span class="n">l_array_part2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">ind_l2</span><span class="p">)</span>
+                <span class="n">l_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">l_array_part1</span><span class="p">,</span><span class="n">l_array_part2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">l_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ind_l1</span><span class="p">,</span><span class="n">ind_l2</span><span class="p">)</span>
+                <span class="n">l_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l_array</span><span class="p">,[</span><span class="n">l_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">l_array</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No azimuthal step is given.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span></div>
+        
+        
+<div class="viewcode-block" id="Grid.ind_part"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Grid.ind_part">[docs]</a>    <span class="k">def</span> <span class="nf">ind_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zcent</span><span class="p">,</span><span class="n">zwidth</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns indices corresponding to a z-slice with the central </span>
+<span class="sd">        height zcent and a half-width of the slice zwidth. </span>
+<span class="sd">        </span>
+<span class="sd">        :param zcent: Mean z of the slice, pc. </span>
+<span class="sd">        :type zcent: scalar </span>
+<span class="sd">        :param zwidth: Half-width of the slice, pc. </span>
+<span class="sd">        :type zwidth: scalar </span>
+
+<span class="sd">        :return: Index array corresponding to the full z-grid. </span>
+<span class="sd">        :rtype: 1d-array  </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">ii1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zc</span><span class="o">==</span><span class="p">(</span><span class="n">zcent</span><span class="o">-</span><span class="n">zwidth</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ii2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zc</span><span class="o">==</span><span class="p">(</span><span class="n">zcent</span><span class="o">+</span><span class="n">zwidth</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ii3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zc</span><span class="o">==-</span><span class="p">(</span><span class="n">zcent</span><span class="o">-</span><span class="n">zwidth</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ii4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zc</span><span class="o">==-</span><span class="p">(</span><span class="n">zcent</span><span class="o">+</span><span class="n">zwidth</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="n">k_ar1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ii4</span><span class="p">,</span><span class="n">ii3</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">k_ar2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ii1</span><span class="p">,</span><span class="n">ii2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">k_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">k_ar1</span><span class="p">,</span><span class="n">k_ar2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">k_array</span></div></div>
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">jjmodel</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../funcs.html">Physical functions (input)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model_core.html">Radial and vertical MW structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../populations.html">Stellar populations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../geometry.html">Geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../trans.html">Coordinates and velocities (from data)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tools.html">Useful tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Output analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plotting.html">Plotting tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contacts.html">Authors and contact</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Sysoliatina.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

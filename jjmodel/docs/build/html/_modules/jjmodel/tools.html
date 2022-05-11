@@ -1,0 +1,814 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>jjmodel.tools &#8212; jjmodel 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for jjmodel.tools</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Mon Feb  1 13:36:02 2016</span>
+<span class="sd">@author: Skevja</span>
+
+<span class="sd">This file contains definitions of the functions (not related to the model physics),</span>
+<span class="sd">that are used later in the main code.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">import</span> <span class="nn">scipy.signal</span> <span class="k">as</span> <span class="nn">sgn</span>
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span> 
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">tp</span><span class="p">,</span> <span class="n">tr</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">localpath</span>
+
+
+<div class="viewcode-block" id="read_parameters"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.read_parameters">[docs]</a><span class="k">def</span> <span class="nf">read_parameters</span><span class="p">(</span><span class="n">path_to_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads parameters from text file(s).</span>
+<span class="sd">    </span>
+<span class="sd">    :param path_to_file: Relative path to the parameter file(s). Main parameter file must have name </span>
+<span class="sd">        &#39;parameters&#39; and the second, optional parameter file, must be called &#39;sfrd_peaks_parameters&#39;. </span>
+<span class="sd">    :type path_to_file: string</span>
+<span class="sd">    </span>
+<span class="sd">    :return: Names and values of parameters given in the parameter file(s).</span>
+<span class="sd">    :rtype: namedtuple </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">path_to_file</span><span class="p">),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">paramd</span> <span class="o">=</span> <span class="p">{}</span> 
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Read parameter name, commented lines are ignored.</span>
+            <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> 
+            <span class="k">if</span> <span class="nb">list</span><span class="p">(</span><span class="n">key</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span> <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Read parameter value, decompose it into characters</span>
+                <span class="c1"># (parameter values can be not only numbers, but also strings).</span>
+                <span class="n">value_str</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> 
+                <span class="n">value_str_char</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">value_str</span><span class="p">)</span> 
+                
+                <span class="c1"># Interpret input as a string, float or integer.</span>
+                <span class="k">if</span> <span class="s2">&quot;&#39;&quot;</span> <span class="ow">in</span> <span class="n">value_str_char</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value_str</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">value_str_char</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value_str</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value_str</span><span class="p">)</span>    
+                <span class="n">paramd</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">value</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;pkey&#39;</span> <span class="ow">in</span> <span class="n">paramd</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="ow">and</span> <span class="p">(</span><span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;pkey&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;pkey&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;File must have the following parameters organized as columns:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span>
+                  <span class="s2">&quot;sigmap[Msun/pc^2] : SF amplitude-related parameter (for R=Rsun)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span>
+                  <span class="s2">&quot;taup[Gyr]         : age of peak center</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span>
+                  <span class="s2">&quot;dtaup[Gyr]        : dispersion in time</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span>
+                  <span class="s2">&quot;Rp[kpc]           : peak center at R-axis</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span>
+                  <span class="s2">&quot;dRp[kpc]          : dispersion in radius</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>                  
+        <span class="k">if</span> <span class="p">(</span><span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;pkey&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;sigp[km/s]      : W-velocity dispersion of the peak&#39;s populations</span><span class="se">\n</span><span class="s2">&quot;</span>
+        
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="s1">&#39;sfrd_peaks_parameters&#39;</span><span class="p">)):</span>
+            <span class="n">sf_peaks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="s1">&#39;sfrd_peaks_parameters&#39;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sf_peaks</span><span class="p">)</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sf_peaks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">==</span><span class="mi">6</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">sf_peaks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">==</span><span class="mi">5</span><span class="p">:</span>
+                    <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;sigmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sf_peaks</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;tpk&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">-</span> <span class="n">sf_peaks</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;dtp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sf_peaks</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;Rp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sf_peaks</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]</span>
+                    <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;dRp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sf_peaks</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;pkey&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+                        <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;sigp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sf_peaks</span><span class="p">[:,</span><span class="mi">5</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Some of parameters are missing in &#39;sfrd_peaks_parameters&#39;! &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">File &#39;sfrd_peaks_parameters&#39; is empty, give the parameters! &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">File &#39;sfrd_peaks_parameters&#39; not found! Create it or copy to the directory. &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="p">)</span>
+        
+    
+    <span class="c1"># All parameters are organized as a tuple and can be called as tuple_name.parameter_name</span>
+    <span class="c1"># Non-local parameters</span>
+    <span class="n">pnames_nonlocal</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Vsun&#39;</span><span class="p">,</span><span class="s1">&#39;Rmin&#39;</span><span class="p">,</span><span class="s1">&#39;Rmax&#39;</span><span class="p">,</span><span class="s1">&#39;dR&#39;</span><span class="p">,</span><span class="s1">&#39;Rd&#39;</span><span class="p">,</span><span class="s1">&#39;Rt&#39;</span><span class="p">,</span><span class="s1">&#39;Rg1&#39;</span><span class="p">,</span><span class="s1">&#39;Rg2&#39;</span><span class="p">,</span><span class="s1">&#39;Rg10&#39;</span><span class="p">,</span><span class="s1">&#39;Rg20&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;fkey&#39;</span><span class="p">,</span><span class="s1">&#39;Rf&#39;</span><span class="p">,</span><span class="s1">&#39;Rdf&#39;</span><span class="p">,</span><span class="s1">&#39;a_in&#39;</span><span class="p">,</span><span class="s1">&#39;Mb&#39;</span><span class="p">,</span><span class="s1">&#39;k_td2&#39;</span><span class="p">,</span><span class="s1">&#39;k_dzeta&#39;</span><span class="p">,</span><span class="s1">&#39;k_eta&#39;</span><span class="p">,</span><span class="s1">&#39;Rp&#39;</span><span class="p">,</span><span class="s1">&#39;dRp&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;k_FeHd0&#39;</span><span class="p">,</span><span class="s1">&#39;k_FeHdp&#39;</span><span class="p">,</span><span class="s1">&#39;k_rd&#39;</span><span class="p">,</span><span class="s1">&#39;k_q&#39;</span><span class="p">]</span>
+                       
+    <span class="n">pnames_amrd0</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;FeHdp&#39;</span><span class="p">,</span><span class="s1">&#39;rd&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;k_FeHd0&#39;</span><span class="p">,</span><span class="s1">&#39;k_FeHdp&#39;</span><span class="p">,</span><span class="s1">&#39;k_rd&#39;</span><span class="p">,</span><span class="s1">&#39;k_q&#39;</span><span class="p">]</span>
+    <span class="n">pnames_amrd1</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rd1&#39;</span><span class="p">,</span><span class="s1">&#39;rd2&#39;</span><span class="p">,</span><span class="s1">&#39;Rbr1&#39;</span><span class="p">,</span><span class="s1">&#39;Rbr2&#39;</span><span class="p">,</span><span class="s1">&#39;Rbr3&#39;</span><span class="p">,</span><span class="s1">&#39;k1_FeHdp&#39;</span><span class="p">,</span><span class="s1">&#39;b1_FeHdp&#39;</span><span class="p">,</span><span class="s1">&#39;k_alphaw&#39;</span><span class="p">,</span><span class="s1">&#39;b_alphaw&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;k1_t01&#39;</span><span class="p">,</span><span class="s1">&#39;b1_t01&#39;</span><span class="p">,</span><span class="s1">&#39;k2_t01&#39;</span><span class="p">,</span><span class="s1">&#39;b2_t01&#39;</span><span class="p">,</span><span class="s1">&#39;k3_t01&#39;</span><span class="p">,</span><span class="s1">&#39;b3_t01&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;k1_t02&#39;</span><span class="p">,</span><span class="s1">&#39;b1_t02&#39;</span><span class="p">,</span><span class="s1">&#39;k2_t02&#39;</span><span class="p">,</span><span class="s1">&#39;b2_t02&#39;</span><span class="p">,</span><span class="s1">&#39;k3_t02&#39;</span><span class="p">,</span><span class="s1">&#39;b3_t02&#39;</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;run_mode&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">paramd_reduced</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">paramd</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pnames_nonlocal</span><span class="p">:</span>
+                <span class="n">paramd_reduced</span><span class="p">[</span><span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">paramd</span><span class="p">[</span><span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">paramd</span> <span class="o">=</span> <span class="n">paramd_reduced</span>
+        
+    <span class="n">pnames_imf</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a0&#39;</span><span class="p">,</span><span class="s1">&#39;a1&#39;</span><span class="p">,</span><span class="s1">&#39;a2&#39;</span><span class="p">,</span><span class="s1">&#39;a3&#39;</span><span class="p">,</span><span class="s1">&#39;m0&#39;</span><span class="p">,</span><span class="s1">&#39;m1&#39;</span><span class="p">,</span><span class="s1">&#39;m2&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;imfkey&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pnames_imf</span><span class="p">)):</span>
+            <span class="k">del</span> <span class="n">paramd</span><span class="p">[</span><span class="n">pnames_imf</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+    <span class="k">if</span> <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;fehkey&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+    	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pnames_amrd1</span><span class="p">)):</span>    
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">paramd</span><span class="p">[</span><span class="n">pnames_amrd1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+            <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+    <span class="k">if</span> <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;fehkey&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span> 
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pnames_amrd0</span><span class="p">)):</span>
+                <span class="k">del</span> <span class="n">paramd</span><span class="p">[</span><span class="n">pnames_amrd0</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+    <span class="k">if</span> <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;fehkey&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;FeHd0&#39;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pnames_amrd0</span><span class="p">)):</span>
+                <span class="n">paramd</span><span class="p">[</span><span class="n">pnames_amrd0</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pnames_amrd1</span><span class="p">)):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">paramd</span><span class="p">[</span><span class="n">pnames_amrd1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+            <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+    
+    <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="o">=</span> <span class="n">paramd</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">paramd</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="n">k</span><span class="p">)</span> 
+    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">_make</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>   
+    <span class="k">if</span> <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;pkey&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">nparams</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">paramd</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;pkey&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">nparams</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">paramd</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">+</span> <span class="mi">6</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;sigmap&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;pkey&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">nparams</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">paramd</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">+</span> <span class="mi">5</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">paramd</span><span class="p">[</span><span class="s1">&#39;sigmap&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">pnames_technical</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;run_mode&#39;</span><span class="p">,</span><span class="s1">&#39;out_dir&#39;</span><span class="p">,</span><span class="s1">&#39;out_mode&#39;</span><span class="p">,</span><span class="s1">&#39;nprocess&#39;</span><span class="p">,</span><span class="s1">&#39;pkey&#39;</span><span class="p">,</span><span class="s1">&#39;imfkey&#39;</span><span class="p">,</span><span class="s1">&#39;fkey&#39;</span><span class="p">,</span><span class="s1">&#39;fehkey&#39;</span><span class="p">]</span>
+    <span class="n">count_technical</span> <span class="o">=</span> <span class="mi">0</span> 
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">paramd</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">pnames_technical</span><span class="p">:</span>
+            <span class="n">count_technical</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Parameter file(s) : ok.&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of parameters = &#39;</span><span class="p">,</span><span class="n">nparams</span><span class="p">,</span> <span class="s1">&#39;, among them technical = &#39;</span><span class="p">,</span><span class="n">count_technical</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>    
+        
+    <span class="k">return</span> <span class="n">p</span></div>
+
+
+<div class="viewcode-block" id="resave_parameters"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.resave_parameters">[docs]</a><span class="k">def</span> <span class="nf">resave_parameters</span><span class="p">(</span><span class="n">path_to_parameterfile</span><span class="p">,</span><span class="n">path_to_parameterfile_copy</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads parameters from text file(s) and saves parameter file(s) </span>
+<span class="sd">    to the output folder with only those parameters which are needed for this run.</span>
+<span class="sd">    </span>
+<span class="sd">    :param path_to_file: Relative path to the parameter file(s).</span>
+<span class="sd">    :type path_to_file: string </span>
+<span class="sd">    </span>
+<span class="sd">    :return: None </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">pnames_local</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;run_mode&#39;</span><span class="p">,</span><span class="s1">&#39;out_dir&#39;</span><span class="p">,</span><span class="s1">&#39;out_mode&#39;</span><span class="p">,</span><span class="s1">&#39;nprocess&#39;</span><span class="p">,</span><span class="s1">&#39;Rsun&#39;</span><span class="p">,</span><span class="s1">&#39;zsun&#39;</span><span class="p">,</span><span class="s1">&#39;Vsun&#39;</span><span class="p">,</span><span class="s1">&#39;zmax&#39;</span><span class="p">,</span><span class="s1">&#39;dz&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;sigmad&#39;</span><span class="p">,</span><span class="s1">&#39;sigmat&#39;</span><span class="p">,</span><span class="s1">&#39;sigmag1&#39;</span><span class="p">,</span><span class="s1">&#39;sigmag2&#39;</span><span class="p">,</span><span class="s1">&#39;sigmadh&#39;</span><span class="p">,</span><span class="s1">&#39;sigmash&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;td1&#39;</span><span class="p">,</span><span class="s1">&#39;td2&#39;</span><span class="p">,</span><span class="s1">&#39;dzeta&#39;</span><span class="p">,</span><span class="s1">&#39;eta&#39;</span><span class="p">,</span><span class="s1">&#39;pkey&#39;</span><span class="p">,</span><span class="s1">&#39;tt1&#39;</span><span class="p">,</span><span class="s1">&#39;tt2&#39;</span><span class="p">,</span><span class="s1">&#39;gamma&#39;</span><span class="p">,</span><span class="s1">&#39;beta&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;FeHd0&#39;</span><span class="p">,</span><span class="s1">&#39;FeHdp&#39;</span><span class="p">,</span><span class="s1">&#39;rd&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;dFeHdt&#39;</span><span class="p">,</span><span class="s1">&#39;n_FeHdt&#39;</span><span class="p">,</span><span class="s1">&#39;FeHt0&#39;</span><span class="p">,</span><span class="s1">&#39;FeHtp&#39;</span><span class="p">,</span><span class="s1">&#39;rt&#39;</span><span class="p">,</span><span class="s1">&#39;t0&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;FeHsh&#39;</span><span class="p">,</span><span class="s1">&#39;dFeHsh&#39;</span><span class="p">,</span><span class="s1">&#39;n_FeHsh&#39;</span><span class="p">,</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span><span class="s1">&#39;sige&#39;</span><span class="p">,</span><span class="s1">&#39;sigt&#39;</span><span class="p">,</span><span class="s1">&#39;sigdh&#39;</span><span class="p">,</span><span class="s1">&#39;sigsh&#39;</span><span class="p">]</span>                    
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">pnames_local</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;sigmap&#39;</span><span class="p">,</span><span class="s1">&#39;taup&#39;</span><span class="p">,</span><span class="s1">&#39;dtaup&#39;</span><span class="p">,</span><span class="s1">&#39;sigp&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">pnames_local</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;sigmap&#39;</span><span class="p">,</span><span class="s1">&#39;taup&#39;</span><span class="p">,</span><span class="s1">&#39;dtaup&#39;</span><span class="p">])</span>
+        
+    <span class="c1"># Main parameter file</span>
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">path_to_parameterfile</span><span class="p">),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">f_out</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">path_to_parameterfile_copy</span><span class="p">),</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">path_to_parameterfile</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">f_out</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">path_to_parameterfile_copy</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">!=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+            <span class="c1"># Read parameter name, commented lines are ignored.</span>
+            <span class="n">linechar</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">linechar</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;#&#39;</span><span class="p">:</span>
+                <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">parameter</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">run_mode</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">pnames_local</span><span class="p">:</span>
+                        <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>     
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span>
+    <span class="n">f_out</span><span class="o">.</span><span class="n">close</span>
+    
+    <span class="c1"># SFRd-peaks parameter file</span>
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">run_mode</span><span class="o">==</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">path_to_parameterfile</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">f_out</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">path_to_parameterfile_copy</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">!=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+                <span class="c1"># Read parameter name, commented lines are ignored.</span>
+                <span class="n">linechar</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">linechar</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;#&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">linechar</span><span class="p">[:</span><span class="mi">7</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;#sigmap&#39;</span><span class="p">:</span>
+                        <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">parameters</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">parameter0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">parameter0</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span> <span class="c1"># removes &#39;#&#39; char</span>
+                        <span class="n">parameter1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">parameters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">parameter1</span><span class="p">))</span> <span class="c1"># removes &#39;\n&#39; char</span>
+                        <span class="n">ind_reduced</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameters</span><span class="p">)):</span>
+                            <span class="k">if</span> <span class="n">parameters</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">pnames_local</span><span class="p">:</span>
+                                <span class="n">ind_reduced</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>   
+                        <span class="n">ind_reduced</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ind_reduced</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+                        <span class="n">parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+                        <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">parameters</span><span class="p">[</span><span class="n">ind_reduced</span><span class="p">]))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">parameters</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+                    <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">parameters</span><span class="p">[</span><span class="n">ind_reduced</span><span class="p">])))</span>                  
+            <span class="k">else</span><span class="p">:</span> 
+                <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>     
+                
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span>
+        <span class="n">f_out</span><span class="o">.</span><span class="n">close</span>     </div>
+    
+
+
+<div class="viewcode-block" id="LogFiles"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.LogFiles">[docs]</a><span class="k">class</span> <span class="nc">LogFiles</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for text file manipulations. Includes methods for creating </span>
+<span class="sd">    text files and adding lines to them. Used for writing log files. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LogFiles.__init__"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.LogFiles.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates an instance of the class with a given file name.</span>
+<span class="sd">        </span>
+<span class="sd">        :param filename: Name of the file. </span>
+<span class="sd">        :type filename: str </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span></div>
+
+<div class="viewcode-block" id="LogFiles.write"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.LogFiles.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a file, writes a line, closes the file.</span>
+<span class="sd">        </span>
+<span class="sd">        :param text: Text to be added to the file. </span>
+<span class="sd">        :type text: str </span>
+<span class="sd">        </span>
+<span class="sd">        :return: None. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;w+&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LogFiles.append"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.LogFiles.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Opens the file, adds a line, closes the file.</span>
+<span class="sd">        </span>
+<span class="sd">        :param text: Text to be added to the file. </span>
+<span class="sd">        :type text: str </span>
+<span class="sd">        </span>
+<span class="sd">        :return: None. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;a+&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+
+
+
+<div class="viewcode-block" id="Timer"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.Timer">[docs]</a><span class="k">class</span> <span class="nc">Timer</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for measuring time intervals. </span>
+<span class="sd">    &quot;&quot;&quot;</span>  
+    
+<div class="viewcode-block" id="Timer.start"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.Timer.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates an instance and fixes current time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="Timer.stop"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.Timer.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">moment</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns time interval between the current and some previous </span>
+<span class="sd">        moment. Output in fractions of hours, minutes and seconds.</span>
+<span class="sd">        </span>
+<span class="sd">        :param moment: Time record (in the format of output of time.time()). </span>
+<span class="sd">        :type moment: float </span>
+<span class="sd">        </span>
+<span class="sd">        :return: Time interval in hms. </span>
+<span class="sd">        :rtype: str </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">moment</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">s</span><span class="o">/</span><span class="mi">3600</span><span class="p">)</span><span class="o">//</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">mi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(((</span><span class="n">s</span><span class="o">/</span><span class="mi">3600</span><span class="o">-</span><span class="n">h</span><span class="p">)</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span><span class="o">//</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ss</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((((</span><span class="n">s</span><span class="o">/</span><span class="mi">3600</span><span class="o">-</span><span class="n">h</span><span class="p">)</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span><span class="o">-</span><span class="n">mi</span><span class="p">)</span><span class="o">*</span><span class="mi">60</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">h</span><span class="p">),</span><span class="s1">&#39;h &#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">mi</span><span class="p">),</span><span class="s1">&#39;m &#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">ss</span><span class="p">),</span><span class="s1">&#39;s&#39;</span><span class="p">))</span></div></div>
+        
+        
+<div class="viewcode-block" id="ConvertAxes"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.ConvertAxes">[docs]</a><span class="k">class</span> <span class="nc">ConvertAxes</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interpolation methods to calculate values [new_axis1] for an </span>
+<span class="sd">    array [new_axis2], given [old_axis1] and [old_axis2]. </span>
+<span class="sd">    &quot;&quot;&quot;</span>  
+         
+<div class="viewcode-block" id="ConvertAxes.interpolate"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.ConvertAxes.interpolate">[docs]</a>    <span class="k">def</span> <span class="nf">interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">axis1_new</span><span class="p">,</span><span class="n">axis1_old</span><span class="p">,</span><span class="n">axis2_old</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns new axis2-values for a new set of axis1-values </span>
+<span class="sd">        given the old (axis1,axis2). Uses linear interpolation. </span>
+<span class="sd">        </span>
+<span class="sd">        :param axis1_new: New values along axis1. </span>
+<span class="sd">        :type axis1_new: array-like</span>
+<span class="sd">        :param axis1_old: Old values along axis1. </span>
+<span class="sd">        :type axis1_old: array-like</span>
+<span class="sd">        :param axis2_old: Old values along axis2. </span>
+<span class="sd">        :type axis2_old: array-like</span>
+<span class="sd">        </span>
+<span class="sd">        :return: New values along axis2 corresponding to the new axis1-values set. </span>
+<span class="sd">        :rtype: 1d-array</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        
+        <span class="n">pnum</span> <span class="o">=</span> <span class="mi">2</span>            <span class="c1"># Number of point used for interpolation </span>
+        <span class="n">axis2_new</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c1"># Empty list for new axis2-values </span>
+        
+        <span class="c1"># -----------------------------------------------------------------------------------------</span>
+        <span class="c1"># We find two nearest values to a given new axis1-value in the old axis1-array.</span>
+        <span class="c1"># Then we use these two neighbour points to perform linear interpolation. </span>
+        <span class="c1"># We manually set the slope to zero if points are too close.   </span>
+        <span class="c1"># Then a new axis2-value is calculated. </span>
+        <span class="c1"># -----------------------------------------------------------------------------------------</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">axis1_new</span><span class="p">)):</span>
+            
+            <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">axis1_new</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">axis1_old</span><span class="p">))[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">pnum</span><span class="p">)]</span>
+            
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">axis1_old</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">-</span><span class="n">axis1_old</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span> <span class="o">&lt;</span> <span class="mf">0.0000001</span><span class="p">:</span> 
+                <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span> 
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">axis2_old</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">-</span><span class="n">axis2_old</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span><span class="o">/</span><span class="p">(</span><span class="n">axis1_old</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">-</span><span class="n">axis1_old</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">axis2_old</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-</span> <span class="n">k</span><span class="o">*</span><span class="n">axis1_old</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="n">axis2_new</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="n">axis1_new</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">b</span><span class="p">)</span> 
+            
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">axis2_new</span><span class="p">)</span></div>
+      
+    
+<div class="viewcode-block" id="ConvertAxes.get_closest"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.ConvertAxes.get_closest">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">axis1_new</span><span class="p">,</span><span class="n">axis1_old</span><span class="p">,</span><span class="n">axis2_old</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        No interpolation is applied, the new axis1-values are </span>
+<span class="sd">        replaced by the closest values from the old axis1-array </span>
+<span class="sd">        and the corresponding old axis2-values are returned. This </span>
+<span class="sd">        method is good when the resolution of the old axis1-array </span>
+<span class="sd">        is much better than the resolution of the new axis1-array. </span>
+<span class="sd">        </span>
+<span class="sd">        :param axis1_new: New values along axis1. </span>
+<span class="sd">        :type axis1_new: array-like</span>
+<span class="sd">        :param axis1_old: Old values along axis1. </span>
+<span class="sd">        :type axis1_old: array-like</span>
+<span class="sd">        :param axis2_old: Old values along axis2. </span>
+<span class="sd">        :type axis2_old: array-like</span>
+<span class="sd">        </span>
+<span class="sd">        :return: New values along axis2 corresponding to the new axis1-values set. </span>
+<span class="sd">        :rtype: 1d-array</span>
+<span class="sd">        &quot;&quot;&quot;</span>  
+        
+        <span class="n">axis2_new</span> <span class="o">=</span> <span class="p">[]</span> 
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">axis1_new</span><span class="p">)):</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">axis1_new</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">axis1_old</span><span class="p">))</span>
+            <span class="n">axis2_new</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">axis2_old</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span> 
+            
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">axis2_new</span><span class="p">)</span></div></div>
+    
+        
+             
+<div class="viewcode-block" id="rebin_histogram"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.rebin_histogram">[docs]</a><span class="k">def</span> <span class="nf">rebin_histogram</span><span class="p">(</span><span class="n">bin_edges</span><span class="p">,</span><span class="n">x_centers</span><span class="p">,</span><span class="n">counts</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses existing histogram to create a new histogram for the </span>
+<span class="sd">    different set of x-bins, such that the overall counts are </span>
+<span class="sd">    conserved. </span>
+<span class="sd">    </span>
+<span class="sd">    :param bin_edges: Edges of the new x-bins. </span>
+<span class="sd">    :type bin_edges: array-like</span>
+<span class="sd">    :param x_centers: Centers of the old x-bins. </span>
+<span class="sd">    :type x_centers: array-like</span>
+<span class="sd">    :param counts: Histogram counts corresponding to the old x-bin centers. </span>
+<span class="sd">    :type counts: array-like</span>
+<span class="sd">    </span>
+<span class="sd">    :return: New counts corresponding to the new x-bins (len(bin_edges)-1). </span>
+<span class="sd">    :rtype: 1d-array</span>
+<span class="sd">    &quot;&quot;&quot;</span>  
+
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bin_edges</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>                  <span class="c1"># Number of new bins </span>
+    <span class="n">bin_width</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">bin_edges</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>       <span class="c1"># New bin width </span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x_centers</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>              <span class="c1"># Old bin width </span>
+    <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">))</span> 
+    
+    <span class="c1"># ---------------------------------------------------------------------------------------------</span>
+    <span class="c1"># Firstly, we select all old bins falling into a new bin, at least partially.</span>
+    <span class="c1"># Then we calculate how far the outer boundary of the old bin lays within </span>
+    <span class="c1"># the range of the new bin, and assign weights to all selected old bins.</span>
+    <span class="c1"># Case 1: Old bin not fully entered the new bin.</span>
+    <span class="c1"># Case 2: Old bin partly left the new bin </span>
+    <span class="c1"># Case 3: For all old bins that are fully inside the new bin weights remain 1. </span>
+    <span class="c1"># ---------------------------------------------------------------------------------------------</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">x_centers</span> <span class="o">+</span> <span class="n">dx</span><span class="o">/</span><span class="mi">2</span> <span class="o">&gt;</span> <span class="n">bin_edges</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">&amp;</span><span class="p">(</span><span class="n">x_centers</span> <span class="o">-</span> <span class="n">dx</span><span class="o">/</span><span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">bin_edges</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span> 
+        
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">ind</span><span class="p">))</span>                                         <span class="c1"># Case 3</span>
+        <span class="n">frac</span> <span class="o">=</span> <span class="n">x_centers</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">+</span> <span class="n">dx</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">bin_edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> 
+        <span class="n">weights</span><span class="p">[</span><span class="n">frac</span> <span class="o">&lt;</span> <span class="n">dx</span><span class="p">]</span> <span class="o">=</span> <span class="n">frac</span><span class="p">[</span><span class="n">frac</span> <span class="o">&lt;</span> <span class="n">dx</span><span class="p">]</span><span class="o">/</span><span class="n">dx</span>                                     <span class="c1"># Case 1</span>
+        <span class="n">weights</span><span class="p">[</span><span class="n">frac</span> <span class="o">&gt;</span> <span class="n">bin_width</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dx</span> <span class="o">-</span> <span class="n">frac</span><span class="p">[</span><span class="n">frac</span> <span class="o">&gt;</span> <span class="n">bin_width</span><span class="p">]</span> <span class="o">+</span> <span class="n">bin_width</span><span class="p">)</span><span class="o">/</span><span class="n">dx</span>    <span class="c1"># Case 2</span>
+        
+        <span class="n">hist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">counts</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="o">*</span><span class="n">weights</span><span class="p">)</span> 
+
+    <span class="k">return</span> <span class="n">hist</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_transition_2curves_</span><span class="p">(</span><span class="n">epsilon</span><span class="p">,</span><span class="n">x_break</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a crazy routine of my own invention, that allows to </span>
+<span class="sd">    make a smooth `naturally looking` transition between two curves. </span>
+<span class="sd">    It could be a fragmet of cycloid or hyperbola, but according </span>
+<span class="sd">    to my tests, they don&#39;t always look good. This function is </span>
+<span class="sd">    applied only once in this package, in funcs.heffr and only if </span>
+<span class="sd">    the thin-disk flaring is swithed on. Then this routine makes </span>
+<span class="sd">    a smooth transition between the straight line and exponent. </span>
+<span class="sd">    If you know any better way to do this, you&#39;re welcome to </span>
+<span class="sd">    improve the code, but so far it is not really needed as this </span>
+<span class="sd">    function does the job. Just be careful if you decide to apply </span>
+<span class="sd">    this function for your own purposes, plot the outcome to check </span>
+<span class="sd">    what it does. </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    epsilon : scalar</span>
+<span class="sd">        Half-width of the window, where the smooth transition will </span>
+<span class="sd">        be constructed. Units of epsilon are the same as units of x. </span>
+<span class="sd">    x_break : scalar</span>
+<span class="sd">        x-coordinate of a break point.</span>
+<span class="sd">    x : array_like</span>
+<span class="sd">        x-coordinates.</span>
+<span class="sd">    y : array_like</span>
+<span class="sd">        y-coordinates.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    y_smooth : ndarray</span>
+<span class="sd">        y-coordinates with a smooth transition in [x_break-epsilon, </span>
+<span class="sd">        x_break+epsilon].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">epsilon</span><span class="o">/</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">epsilon</span><span class="o">/</span><span class="mi">10</span>
+        <span class="n">ind_br</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">x_break</span><span class="p">))</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">x_break</span><span class="p">))))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">x_break</span><span class="p">,</span><span class="n">dx</span><span class="p">)</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x_break</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">dx</span><span class="p">,</span><span class="n">dx</span><span class="p">)</span>
+        
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">ConvertAxes</span><span class="p">()</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x</span><span class="p">[:</span><span class="n">ind_br</span><span class="p">],</span><span class="n">y</span><span class="p">[:</span><span class="n">ind_br</span><span class="p">])</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="n">ind_br</span><span class="p">:],</span><span class="n">y</span><span class="p">[</span><span class="n">ind_br</span><span class="p">:])</span>
+        
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">y1</span><span class="p">,</span><span class="n">y2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        
+    <span class="n">x_smooth_start</span> <span class="o">=</span> <span class="n">x_break</span> <span class="o">-</span> <span class="n">epsilon</span>
+    <span class="n">x_smooth_stop</span> <span class="o">=</span> <span class="n">x_break</span> <span class="o">+</span> <span class="n">epsilon</span> 
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">x_break</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">epsilon</span><span class="p">):</span>
+        <span class="n">x_2en</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: (Rdf-Rmin)/epsilon &lt; 3, smoothing algorithm may fail.</span><span class="se">\</span>
+<span class="s1">              Decrease Rmin or epsilon for a given Rf.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x_2en</span> <span class="o">=</span> <span class="n">x_break</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">epsilon</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">x_break</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">epsilon</span><span class="p">):</span>
+        <span class="n">x_2ep</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: (Rmax-Rdf)/epsilon &lt; 3, smoothing algorithm may fail.</span><span class="se">\</span>
+<span class="s1">              Increase Rmax or decrease epsilon for a given Rf.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x_2ep</span> <span class="o">=</span> <span class="n">x_break</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">epsilon</span>  
+        
+    <span class="n">ind_sm1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">X</span><span class="o">-</span><span class="n">x_smooth_start</span><span class="p">))</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">X</span><span class="o">-</span><span class="n">x_smooth_start</span><span class="p">))))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ind_sm2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">X</span><span class="o">-</span><span class="n">x_smooth_stop</span><span class="p">))</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">X</span><span class="o">-</span><span class="n">x_smooth_stop</span><span class="p">))))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">ind_2en</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">X</span><span class="o">-</span><span class="n">x_2en</span><span class="p">))</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">X</span><span class="o">-</span><span class="n">x_2en</span><span class="p">))))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ind_2ep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">X</span><span class="o">-</span><span class="n">x_2ep</span><span class="p">))</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">X</span><span class="o">-</span><span class="n">x_2ep</span><span class="p">))))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">y_smooth_start</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="n">ind_sm1</span><span class="p">]</span>
+    <span class="n">y_smooth_stop</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="n">ind_sm2</span><span class="p">]</span>
+                  
+    <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X</span><span class="p">[</span><span class="n">ind_2en</span><span class="p">:</span><span class="n">ind_sm1</span><span class="p">],</span><span class="n">X</span><span class="p">[</span><span class="n">ind_sm2</span><span class="p">:</span><span class="n">ind_2ep</span><span class="p">]),</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Y</span><span class="p">[</span><span class="n">ind_2en</span><span class="p">:</span><span class="n">ind_sm1</span><span class="p">],</span><span class="n">Y</span><span class="p">[</span><span class="n">ind_sm2</span><span class="p">:</span><span class="n">ind_2ep</span><span class="p">]),</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+ 
+    <span class="n">pp11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">pp12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+    
+    <span class="k">def</span> <span class="nf">pp1</span><span class="p">(</span><span class="n">xp</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">pp11</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span><span class="n">pp12</span><span class="p">(</span><span class="n">xp</span><span class="p">)])</span>
+    
+    <span class="n">smooth</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x_smooth_stop</span><span class="o">-</span><span class="n">i</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">epsilon</span><span class="o">*</span><span class="n">pp11</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">x_smooth_stop</span><span class="o">-</span><span class="n">i</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">epsilon</span><span class="p">)</span><span class="o">*</span><span class="n">pp12</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="p">[</span><span class="n">ind_sm1</span><span class="p">:</span><span class="n">ind_sm2</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
+
+    <span class="n">shift_low1</span> <span class="o">=</span> <span class="n">smooth</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_smooth_start</span>
+    <span class="n">shift_low2</span> <span class="o">=</span> <span class="n">smooth</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_smooth_stop</span>
+    
+    <span class="n">correction_low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ind_sm2</span><span class="o">-</span><span class="n">ind_sm1</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">correction_low</span><span class="p">[:</span><span class="nb">int</span><span class="p">((</span><span class="n">ind_sm2</span><span class="o">-</span><span class="n">ind_sm1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)]</span> <span class="o">=</span>\
+        <span class="p">[</span><span class="n">shift_low1</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="n">X</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ind_sm1</span><span class="o">+</span><span class="p">(</span><span class="n">ind_sm2</span><span class="o">-</span><span class="n">ind_sm1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span><span class="o">/</span><span class="p">(</span><span class="n">x_smooth_start</span><span class="o">-</span>\
+        <span class="n">X</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ind_sm1</span><span class="o">+</span><span class="p">(</span><span class="n">ind_sm2</span><span class="o">-</span><span class="n">ind_sm1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="p">[</span><span class="n">ind_sm1</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">ind_sm1</span><span class="o">+</span><span class="p">(</span><span class="n">ind_sm2</span><span class="o">-</span><span class="n">ind_sm1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)]]</span>
+    <span class="n">correction_low</span><span class="p">[</span><span class="nb">int</span><span class="p">((</span><span class="n">ind_sm2</span><span class="o">-</span><span class="n">ind_sm1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">):]</span> <span class="o">=</span>\
+        <span class="p">[</span><span class="n">shift_low2</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="n">X</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ind_sm1</span><span class="o">+</span><span class="p">(</span><span class="n">ind_sm2</span><span class="o">-</span><span class="n">ind_sm1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span><span class="o">/</span><span class="p">(</span><span class="n">x_smooth_stop</span><span class="o">-</span>\
+        <span class="n">X</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ind_sm1</span><span class="o">+</span><span class="p">(</span><span class="n">ind_sm2</span><span class="o">-</span><span class="n">ind_sm1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ind_sm1</span><span class="o">+</span><span class="p">(</span><span class="n">ind_sm2</span><span class="o">-</span><span class="n">ind_sm1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">):</span><span class="n">ind_sm2</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
+   
+    <span class="n">y_smooth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Y</span><span class="p">[:</span><span class="n">ind_sm1</span><span class="p">],</span><span class="n">smooth</span><span class="o">-</span><span class="n">correction_low</span><span class="p">,</span><span class="n">Y</span><span class="p">[</span><span class="n">ind_sm2</span><span class="o">+</span><span class="mi">1</span><span class="p">:]),</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">y_smooth</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">y_smooth</span><span class="p">)</span>
+                                       
+    <span class="k">return</span> <span class="n">y_smooth</span>
+
+
+<div class="viewcode-block" id="cumhist_smooth_savgol"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.cumhist_smooth_savgol">[docs]</a><span class="k">def</span> <span class="nf">cumhist_smooth_savgol</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Smoothes a normalized cumulative distribution of some quantity </span>
+<span class="sd">    with the Savitzky-Golay filter. </span>
+<span class="sd">    </span>
+<span class="sd">    :param y: y-coordinates of the normalized cumulative distribution.</span>
+<span class="sd">    :type y: array-like</span>
+<span class="sd">    :param m: Parameter window_length of scipy.signal.savgol_filter.</span>
+<span class="sd">    :type m: int </span>
+<span class="sd">    :param n: Parameter polyorder of scipy.signal.savgol_filter.</span>
+<span class="sd">    :type n: int </span>
+<span class="sd">    </span>
+<span class="sd">    :return y_sm: Smoothed y.</span>
+<span class="sd">    :rtype: 1d-array         </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">dn</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">m</span>
+    <span class="n">y_long</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">dn</span><span class="p">),</span><span class="n">y</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">dn</span><span class="p">)),</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">y_sm</span> <span class="o">=</span> <span class="n">sgn</span><span class="o">.</span><span class="n">savgol_filter</span><span class="p">(</span><span class="n">y_long</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+    
+    <span class="n">y_sm</span> <span class="o">=</span> <span class="n">y_sm</span><span class="p">[</span><span class="n">dn</span><span class="p">:</span><span class="o">-</span><span class="n">dn</span><span class="p">]</span>
+    <span class="n">y_sm</span><span class="p">[</span><span class="n">y_sm</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> 
+    <span class="n">y_sm</span><span class="p">[</span><span class="n">y_sm</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="k">return</span> <span class="n">y_sm</span> </div>
+
+
+<span class="k">def</span> <span class="nf">_rotation_matrix_</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the rotation matrix associated with counterclockwise rotation about</span>
+<span class="sd">    the given axis by theta radians.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">axis</span><span class="p">))</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="o">-</span><span class="n">axis</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">aa</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">cc</span><span class="p">,</span> <span class="n">dd</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">*</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span> <span class="o">*</span> <span class="n">d</span>
+    <span class="n">bc</span><span class="p">,</span> <span class="n">ad</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">ab</span><span class="p">,</span> <span class="n">bd</span><span class="p">,</span> <span class="n">cd</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">c</span><span class="p">,</span> <span class="n">a</span> <span class="o">*</span> <span class="n">d</span><span class="p">,</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span><span class="p">,</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="n">b</span> <span class="o">*</span> <span class="n">d</span><span class="p">,</span> <span class="n">c</span> <span class="o">*</span> <span class="n">d</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">aa</span> <span class="o">+</span> <span class="n">bb</span> <span class="o">-</span> <span class="n">cc</span> <span class="o">-</span> <span class="n">dd</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">bc</span> <span class="o">+</span> <span class="n">ad</span><span class="p">),</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">bd</span> <span class="o">-</span> <span class="n">ac</span><span class="p">)],</span>
+                     <span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">bc</span> <span class="o">-</span> <span class="n">ad</span><span class="p">),</span> <span class="n">aa</span> <span class="o">+</span> <span class="n">cc</span> <span class="o">-</span> <span class="n">bb</span> <span class="o">-</span> <span class="n">dd</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">cd</span> <span class="o">+</span> <span class="n">ab</span><span class="p">)],</span>
+                     <span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">bd</span> <span class="o">+</span> <span class="n">ac</span><span class="p">),</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">cd</span> <span class="o">-</span> <span class="n">ab</span><span class="p">),</span> <span class="n">aa</span> <span class="o">+</span> <span class="n">dd</span> <span class="o">-</span> <span class="n">bb</span> <span class="o">-</span> <span class="n">cc</span><span class="p">]])</span>
+
+
+<div class="viewcode-block" id="gauss_weights"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.gauss_weights">[docs]</a><span class="k">def</span> <span class="nf">gauss_weights</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">mean</span><span class="p">,</span><span class="n">sigma</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Draws instances from the Gaussian PDF. </span>
+<span class="sd">    </span>
+<span class="sd">    :param x: Set of points, where probability density (PD) has to be calculated.        </span>
+<span class="sd">    :type x: array-like</span>
+<span class="sd">    :param mean: Mean of the Gaussian distribution.</span>
+<span class="sd">    :type mean: scalar </span>
+<span class="sd">    :param sigma: Standard deviation of the Gaussian distribution.</span>
+<span class="sd">    :type sigma: scalar</span>
+<span class="sd">        </span>
+<span class="sd">    :return: PD values at x, normalized to unity.</span>
+<span class="sd">    :rtype: array-like</span>
+<span class="sd">    &quot;&quot;&quot;</span>  
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="n">mean</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">weights</span></div>
+
+
+<div class="viewcode-block" id="reduce_table"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.reduce_table">[docs]</a><span class="k">def</span> <span class="nf">reduce_table</span><span class="p">(</span><span class="n">tab</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the surface number density of the mono-age sub-populations, thus, </span>
+<span class="sd">    reduces the length of the &#39;stellar assemblies&#39; table to the number of thin- or thick-disk, </span>
+<span class="sd">    or halo subpopulations. </span>
+<span class="sd">    </span>
+<span class="sd">    :param tab: Isochrone columns.</span>
+<span class="sd">    :type tab: dict </span>
+<span class="sd">    :param a: Collection of the fixed model parameters, useful quantities and arrays.</span>
+<span class="sd">    :type a: namedtuple</span>
+<span class="sd">    </span>
+<span class="sd">    :return: Table with wo columns: &#39;t&#39; and &#39;N&#39;, Galactic time (Gyr) </span>
+<span class="sd">        and surface number densities (number/pc^2).</span>
+<span class="sd">    :rtype: astropy Table </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">timebins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">tp</span><span class="o">+</span><span class="n">tr</span><span class="p">,</span><span class="n">tr</span><span class="p">)</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">tp</span><span class="p">,</span><span class="n">tab</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">])</span>
+    
+    <span class="n">out</span> <span class="o">=</span> <span class="n">Table</span><span class="p">()</span>
+    <span class="n">out</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">],</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">],</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;Sigma&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">jd</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">jd</span><span class="p">))</span>
+    
+    <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span> 
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">jd</span><span class="p">):</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">time</span><span class="o">&gt;=</span><span class="n">timebins</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">time</span><span class="o">&lt;</span><span class="n">timebins</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">c</span><span class="o">+=</span><span class="nb">len</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ind</span><span class="o">!=</span><span class="p">[]:</span>
+            <span class="n">out</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tab</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">][</span><span class="n">ind</span><span class="p">]))</span>
+            <span class="n">out</span><span class="p">[</span><span class="s1">&#39;Sigma&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tab</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">][</span><span class="n">ind</span><span class="p">]</span><span class="o">*</span><span class="n">tab</span><span class="p">[</span><span class="s1">&#39;Mf&#39;</span><span class="p">][</span><span class="n">ind</span><span class="p">]))</span>
+        
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="convolve2d_gauss"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.convolve2d_gauss">[docs]</a><span class="k">def</span> <span class="nf">convolve2d_gauss</span><span class="p">(</span><span class="n">array</span><span class="p">,</span><span class="n">dxy_smooth</span><span class="p">,</span><span class="n">xy_range</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Smoothing a 2d-array with a Gaussian kernel.  </span>
+
+<span class="sd">    :param array: Initial array.</span>
+<span class="sd">    :type array: 2d-array.</span>
+<span class="sd">    :param dxy_smooth: Dispersions in x and y, [dx,dy].</span>
+<span class="sd">    :type dxy_smooth: list </span>
+<span class="sd">    :param xy_range: Min and max values along the array axis, </span>
+<span class="sd">        [[xmin,xmax],[ymin,ymax]].</span>
+<span class="sd">    :type xy_range: list[list]</span>
+<span class="sd">    </span>
+<span class="sd">    :return: New smoothed array of the same shape.</span>
+<span class="sd">    :rtype: 2d-array </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">dxy_smooth</span>
+    <span class="p">[</span><span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="p">],[</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="p">]</span> <span class="o">=</span> <span class="n">xy_range</span>
+    
+    <span class="n">x_step</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y_step</span> <span class="o">=</span> <span class="p">(</span><span class="n">ymax</span><span class="o">-</span><span class="n">ymin</span><span class="p">)</span><span class="o">/</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="n">k_dx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">dx</span><span class="o">/</span><span class="n">x_step</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">k_dy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">dy</span><span class="o">/</span><span class="n">y_step</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">k_dx</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">k_dx</span> <span class="o">=</span> <span class="n">k_dx</span> <span class="o">-</span> <span class="mi">1</span> 
+    <span class="k">if</span> <span class="n">k_dy</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">k_dy</span> <span class="o">=</span> <span class="n">k_dy</span> <span class="o">-</span> <span class="mi">1</span> 
+    <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">k_dx</span><span class="p">,</span><span class="n">k_dy</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  
+    <span class="n">K_norm</span> <span class="o">=</span> <span class="n">K</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">sgn</span><span class="o">.</span><span class="n">convolve2d</span><span class="p">(</span><span class="n">array</span><span class="p">,</span><span class="n">K_norm</span><span class="p">,</span><span class="n">boundary</span><span class="o">=</span><span class="s1">&#39;symm&#39;</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">array</span></div>
+    
+
+<div class="viewcode-block" id="convolve1d_gauss"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.convolve1d_gauss">[docs]</a><span class="k">def</span> <span class="nf">convolve1d_gauss</span><span class="p">(</span><span class="n">array</span><span class="p">,</span><span class="n">dx_smooth</span><span class="p">,</span><span class="n">x_range</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Smoothing a 1d-array with a Gaussian kernel.  </span>
+
+<span class="sd">    :param array: Initial array.</span>
+<span class="sd">    :type array: 1d-array.</span>
+<span class="sd">    :param dx_smooth: Dispersion in x. </span>
+<span class="sd">    :type dx_smooth: scalar</span>
+<span class="sd">    :param x_range:  Min and max values along the array axes, [xmin,xmax].</span>
+<span class="sd">    :type x_range: list </span>
+<span class="sd">    </span>
+<span class="sd">    :return: New smoothed array of the same shape.</span>
+<span class="sd">    :rtype: 1d-array </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">x_range</span>
+    <span class="n">x_step</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+    
+    <span class="n">k_dx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">dx_smooth</span><span class="o">/</span><span class="n">x_step</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">k_dx</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">k_dx</span> <span class="o">=</span> <span class="n">k_dx</span> <span class="o">-</span> <span class="mi">1</span> 
+    <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">k_dx</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  
+    <span class="n">K_norm</span> <span class="o">=</span> <span class="n">K</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">sgn</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">array</span><span class="p">,</span><span class="n">K_norm</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">array</span></div>
+    
+
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">jjmodel</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../funcs.html">Physical functions (input)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model_core.html">Radial and vertical MW structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../populations.html">Stellar populations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../geometry.html">Geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../trans.html">Coordinates and velocities (from data)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tools.html">Useful tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Output analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plotting.html">Plotting tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contacts.html">Authors and contact</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Sysoliatina.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
