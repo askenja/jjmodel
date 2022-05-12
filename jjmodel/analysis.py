@@ -206,7 +206,7 @@ class GetPopulations():
         
         # Each (logT,logg,[Fe/H]) vector is rotated around z-axis, such that RC and HGB 
         # stars are better separated in the new X'Z plane. 
-        rc_list_rotated = [np.dot(rotation_matrix(axis0,theta0),vector) for vector in rc_list]
+        rc_list_rotated = [np.dot(_rotation_matrix_(axis0,theta0),vector) for vector in rc_list]
         
         '''
         # Helpful plot, uncomment if something goes wrong, then try to use this method again.
@@ -277,8 +277,8 @@ class GetPopulations():
                 rc_compl_ind.extend(ind[indx_original[:indbr]])
                 
                 # Rotate each vector back to return to X-axis. 
-                rc_sample_unrotated = [np.dot(rotation_matrix(axis0,-theta0),vector) for vector in rc_sample_rotated]
-                rc_compl_unrotated = [np.dot(rotation_matrix(axis0,-theta0),vector) for vector in rc_compl_rotated]
+                rc_sample_unrotated = [np.dot(_rotation_matrix_(axis0,-theta0),vector) for vector in rc_sample_rotated]
+                rc_compl_unrotated = [np.dot(_rotation_matrix_(axis0,-theta0),vector) for vector in rc_compl_rotated]
                 rc_sample.extend(rc_sample_unrotated)
                 rc_compl.extend(rc_compl_unrotated)
             except: pass
