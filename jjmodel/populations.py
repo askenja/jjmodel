@@ -18,7 +18,7 @@ from . import localpath
 
 class ColumnsIso():
     """
-    Collection of the useful functions to work with the columns of Padova, MIST, and BaSTI isochrones.
+    Collection of methods to work with the columns of Padova, MIST, and BaSTI isochrones.
     """
     
     def column_namespace(self,photometric_system):
@@ -27,19 +27,19 @@ class ColumnsIso():
         the stellar library (or calculated from them).
         
         :param photometric_system: Name of the photometric system to be used. 
-            Valid names are: 'UBVRIplus', 'GaiaDR2_MAW', 'GaiaEDR3', 'UBVRIplus+GaiaDR2_MAW',
-            'UBVRIplus+GaiaEDR3', 'GaiaDR2_MAW+GaiaEDR3', 'UBVRIplus+GaiaDR2_MAW+GaiaEDR3'. 
-            For MIST isochrones 'UBVRIplus' = UBV(RI)c + 2MASS, for 
-            Padova 'UBVRIplus' = UBVRIJHK. For BaSTI, only 'GaiaEDR3' system is available. 
+            Valid names are: ``'UBVRIplus'``, ``'GaiaDR2_MAW'``, ``'GaiaEDR3'``, ``'UBVRIplus+GaiaDR2_MAW'``,
+            ``'UBVRIplus+GaiaEDR3'``, ``'GaiaDR2_MAW+GaiaEDR3'``, ``'UBVRIplus+GaiaDR2_MAW+GaiaEDR3'``. 
+            For MIST isochrones ``'UBVRIplus'`` is UBV(RI)c + 2MASS, for 
+            Padova ``'UBVRIplus'`` is UBVRIJHK. For BaSTI, only ``'GaiaEDR3'`` system is available. 
         :type photometric_system: str
          
         :return: Dictionary with column names. 
         
             Keys are:    
-                - 'all': list of all columns that will be eventually saved.
-                - 'basic': list of columns independent from the chosen photometric system.
-                - 'basic_short': same as 'basic', but only columns initially present in the isochrones.
-                - 'phot': columns with photometry corresponding to the chosen photometric system). 
+                - ``'all'``: list of all columns that will be eventually saved.
+                - ``'basic'``: list of columns independent from the chosen photometric system.
+                - ``'basic_short'``: same as ``'basic'``, but only columns initially present in the isochrones.
+                - ``'phot'``: columns with photometry corresponding to the chosen photometric system). 
                 
         :rtype: dict 
         """  
@@ -69,14 +69,14 @@ class ColumnsIso():
         """
         Gets position of columns in the isochrone tables.
             
-        :param mode: Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+        :param mode: Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
         :type mode: str
         :param get: List names of the columns to be extracted from the isochrone tables.
         :type get: list[str]
         :param printnames: Optional. If True, prints all useful columns available in the isochrones. 
         :type printnames: boolean
          
-        :return: List of positions of the columns given in parameter 'get'. 
+        :return: List of positions of the columns given in parameter **get**. 
         :rtype: list             
         """  
 
@@ -116,9 +116,9 @@ class ColumnsIso():
         """
         Extracts columns from the isochrone tables.
             
-        :param mode: Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+        :param mode: Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
         :type mode: str
-        :param isochrone: Isochrone table which has been readen from the input directory. 
+        :param isochrone: Isochrone table which has been read from the input directory. 
         :type isochrone: array 
         :param columns: Names of the columns to be extracted from the isochrone.
         :type columns: array-like 
@@ -143,7 +143,7 @@ class ColumnsIso():
         :param iso: Isochrone (output of read_columns).
         :type iso: dict           
         
-        :return: Isochrone with the reshuffled rows, such that the column 'Mini' (initial mass) is ordered. 
+        :return: Isochrone with the reshuffled rows, such that the column ``'Mini'`` (initial mass) is ordered. 
         :rtype: dict             
         """ 
         
@@ -161,16 +161,16 @@ class ColumnsIso():
         Applies IMF to the isochrone mass column.
         
         :param imf: IMF PDF function returning the probability to form a 
-            star with a mass between mass1 and mass2. 
-        :type imf: function(mass1,mass2) 
+            star with a mass between *mass1* and *mass2*. 
+        :type imf: *function(mass1,mass2)* 
         :param iso_masses: Mass column from the isochrone table. 
         :type iso_masses: array-like
         :param mass: Total mass that was converted into stars of the chosen 
-            metallicity and age (this isochrone), Msun.
+            metallicity and age (this isochrone), :math:`\mathrm{M}_\odot`.
         :type mass: scalar  
         
         :return: New column with the present-day surface number densities of the semi-(metallicity-age-mass)
-             'stellar assemblies', number/pc^2. 
+             'stellar assemblies',  :math:`\mathrm{number \ pc}^{-2}`. 
         :rtype: 1d-array            
         """ 
         
@@ -189,28 +189,30 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf):
     """
     Creates a table with the semi-(metallicity,age,mass) 'stellar assemblies'.
     
-    :param mode: Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+    :param mode: Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
     :type mode: str
     :param photometric_system: Photometric system. 
         Name of the photometric system to use, can be: 
-            1 = UBVRIplus (UBVRIJHK - Padova; UBV(RI)c + 2MASS - MIST), 
-            2 = GaiaDR2_MAW, 
-            3 = GaiaEDR3, 
-            4 = UBVRIplus + GaiaDR2_MAW, 
-            5 = UBVRIplus + GaiaEDR3, 
-            6 = GaiaDR2_MAW + GaiaEDR3, 
-            7 = UBVRIplus + GaiaDR2_MAW + GaiaEDR3. 
+            
+            - 1 = ``'UBVRIplus'`` (UBVRIJHK - for Padova; UBV(RI)c+2MASS - for MIST), 
+            - 2 = ``'GaiaDR2_MAW'``
+            - 3 = ``'GaiaEDR3'`` 
+            - 4 = ``'UBVRIplus + GaiaDR2_MAW'``
+            - 5 = ``'UBVRIplus + GaiaEDR3'``
+            - 6 = ``'GaiaDR2_MAW + GaiaEDR3'``
+            - 7 = ``'UBVRIplus + GaiaDR2_MAW + GaiaEDR3'``
+            
         For BaSTI the only option at the moment is 3.     
     :type photometric_system: int 
     :param met: Metallicity [Fe/H]. 
     :type met: scalar 
-    :param age: Age (in case of the disk, age is linked to the metallicity via the age-metallicity relation).                      
+    :param age: Age (in case of the disk, age is linked to the metallicity via the AMR).                      
     :type age: scalar
     :param mass: Total mass that was converted into stars of the chosen metallicity and age (isochrone). 
     :type mass: scalar 
     :param imf: IMF PDF function returning the probability to form a star 
-        with a mass between mass1 and mass2. 
-    :type imf: function(mass1,mass2)
+        with a mass between *mass1* and *mass2*. 
+    :type imf: *function(mass1,mass2)*
     
     :return: Isochrone table for the given metallicity and age, with several additional columns.
     :rtype: dict            
@@ -265,46 +267,46 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf):
 def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_system,**kwargs):
     """
     Constructs a list of the semi-(metallicity,age,mass) 
-    'stellar assemblies' at Galactocentric distance R. 
+    'stellar assemblies' at some given Galactocentric distance. 
         
     :param R: Galactocentric distance, kpc. 
     :type R: scalar
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
-    :param amrd: Thin-disk age-metallicity relation at this R 
-        (only metallicity column, without the corresponding time a.t).
+    :param amrd: Thin-disk AMR at this **R** 
+        (only metallicity column, without the corresponding time ``a.t``).
     :type amrd: array-like 
-    :param amrt: Thick-disk age-metallicity relation (only metallicity column).
+    :param amrt: Thick-disk AMR (again, only metallicity column).
     :type amrt: array-like 
-    :param sfrd: Thin-disk star formation rate at this R, Msun/pc^2/Gyr. 
+    :param sfrd: Thin-disk SFR at this **R**, :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`.
     :type sfrd: array-like 
-    :param sfrt: Thick-disk star formation rate at this R, Msun/pc^2/Gyr. 
+    :param sfrt: Thick-disk SFR at this **R**, :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`.  
     :type sfrt: array-like
-    :param sigmash: Present-day surface density of the stellar halo at this R, Msun/pc^2. 
+    :param sigmash: Present-day surface density of the stellar halo at this **R**, :math:`\mathrm{M_\odot \ pc^{-2}}`. 
     :type sigmash: scalar 
     :param imf: IMF PDF function returning the probability to form a star 
-        with a mass between mass1 and mass2. 
-    :type imf: function(mass1,mass2)
-    :param mode: Defines which set of isochrones is used, can be 'Padova', 'MIST', or 'BaSTI'. 
+        with a mass between *mass1* and *mass2*. 
+    :type imf: *function(mass1,mass2)*
+    :param mode: Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
     :type mode: str
     :param photometric_system: Photometric system to use, can be an integer value from 1 to 7. 
-        For the list of available systems see stellar_assmeblies_iso. 
+        For the list of available systems see :func:`jjmodel.populations.stellar_assemblies_iso`. 
     :type photometric_system: int
     :param FeH_mean_sh: Optional, mean metallicity of the halo.
     :type FeH_mean_sh: scalar 
     :param FeH_sigma_sh: Optional. Standard deviation of the Gaussian metallicity distribution of the halo. 
     :type FeH_sigma_sh: scalar 
-    :param Nmet_sh: Optional. Number of metallicity populations used to represent the halo metallicity distribution. 
+    :param Nmet_sh: Optional. Number of metallicity populations used to represent halo metallicity distribution. 
     :type Nmet_sh: int 
     :param FeH_scatter: Optional. Physical scatter in the thin- and thick-disk AMR, by default there is no scatter.  
     :type FeH_scatter: scalar 
     :param Nmet_dt: Number of metallicity populations used to represent the Gaussian distribution 
-        (FeH_scatter) around mean metallicities (the thin- and thick-disk AMR). 
+        (**FeH_scatter**) around mean metallicities (the thin- and thick-disk AMR). 
     :type Nmet_dt: int 
     
-    :return: None. Saves the calculated tables to the output directory defined in the directory tree a.T.         
+    :return: None. Saves the calculated tables to the output directory defined in the directory tree ``a.T``.         
     """ 
     
     this_function = inspect.stack()[0][3]

@@ -21,10 +21,10 @@ def read_parameters(path_to_file):
     Reads parameters from text file(s).
     
     :param path_to_file: Relative path to the parameter file(s). Main parameter file must have name 
-        'parameters' and the second, optional parameter file, must be called 'sfrd_peaks_parameters'. 
+        ``'parameters'`` and the second, optional parameter file, must be called ``'sfrd_peaks_parameters'``. 
     :type path_to_file: string
     
-    :return: Names and values of parameters given in the parameter file(s).
+    :return: Names and values of all parameters given in the parameter file(s).
     :rtype: namedtuple 
     """
     
@@ -155,10 +155,15 @@ def read_parameters(path_to_file):
 def resave_parameters(path_to_parameterfile,path_to_parameterfile_copy,p):
     """
     Reads parameters from text file(s) and saves parameter file(s) 
-    to the output folder with only those parameters which are needed for this run.
+    to the output folder with only those parameters which are needed for this run 
+    (cleans parameter files from unnecessary input). 
     
-    :param path_to_file: Relative path to the parameter file(s).
-    :type path_to_file: string 
+    :param path_to_parameterfile: Relative path to the parameter file(s).
+    :type path_to_parameterfile: string 
+    :param path_to_parameterfile_copy: Destination where the file copies should be saved.
+    :type path_to_parameterfile_copy: string 
+    :param p: Set of model parameters from the parameter file. 
+    :type p: namedtuple
     
     :return: None 
     """
@@ -238,13 +243,13 @@ def resave_parameters(path_to_parameterfile,path_to_parameterfile_copy,p):
 
 class LogFiles():
     """
-    Class for text file manipulations. Includes methods for creating 
+    Class for manipulations with text files. Includes methods for creating 
     text files and adding lines to them. Used for writing log files. 
     """
 
     def __init__(self,filename):
         """
-        Creates an instance of the class with a given file name.
+        Creates an instance of the class.
         
         :param filename: Name of the file. 
         :type filename: str 
@@ -253,7 +258,7 @@ class LogFiles():
 
     def write(self,text):
         """
-        Creates a file, writes a line, closes the file.
+        Creates a file with **filename** (current directory), writes a line, closes the file.
         
         :param text: Text to be added to the file. 
         :type text: str 
@@ -286,7 +291,7 @@ class Timer():
     
     def start(self):
         """
-        Creates an instance and fixes current time.
+        Creates an instance and checks the current time.
         """
         return time.time()
         
@@ -311,23 +316,22 @@ class Timer():
         
 class ConvertAxes():
     """
-    Interpolation methods to calculate values [new_axis1] for an 
-    array [new_axis2], given [old_axis1] and [old_axis2]. 
+    Interpolation methods. 
     """  
          
     def interpolate(self,axis1_new,axis1_old,axis2_old):
         """
-        Returns new axis2-values for a new set of axis1-values 
-        given the old (axis1,axis2). Uses linear interpolation. 
+        Returns new *axis2*-values for a new set of *axis1*-values 
+        given the old (*axis1,axis2*). Uses linear interpolation. 
         
-        :param axis1_new: New values along axis1. 
+        :param axis1_new: New values along *axis1*. 
         :type axis1_new: array-like
-        :param axis1_old: Old values along axis1. 
+        :param axis1_old: Old values along *axis1*. 
         :type axis1_old: array-like
-        :param axis2_old: Old values along axis2. 
+        :param axis2_old: Old values along *axis2*. 
         :type axis2_old: array-like
         
-        :return: New values along axis2 corresponding to the new axis1-values set. 
+        :return: New values along *axis2* corresponding to the new *axis1*-values set. 
         :rtype: 1d-array
         """ 
         
@@ -357,20 +361,20 @@ class ConvertAxes():
     
     def get_closest(self,axis1_new,axis1_old,axis2_old):
         """
-        No interpolation is applied, the new axis1-values are 
-        replaced by the closest values from the old axis1-array 
-        and the corresponding old axis2-values are returned. This 
-        method is good when the resolution of the old axis1-array 
-        is much better than the resolution of the new axis1-array. 
+        No interpolation is applied, the new *axis1*-values are 
+        replaced by the closest values from the old *axis1*-array 
+        and the corresponding old *axis2*-values are returned. This 
+        method is good when the resolution of the old *axis1*-array 
+        is much better than the resolution of the new *axis1*-array. 
         
-        :param axis1_new: New values along axis1. 
+        :param axis1_new: New values along *axis1*. 
         :type axis1_new: array-like
-        :param axis1_old: Old values along axis1. 
+        :param axis1_old: Old values along *axis1*. 
         :type axis1_old: array-like
-        :param axis2_old: Old values along axis2. 
+        :param axis2_old: Old values along *axis2*. 
         :type axis2_old: array-like
         
-        :return: New values along axis2 corresponding to the new axis1-values set. 
+        :return: New values along *axis2* corresponding to the new *axis1*-values set. 
         :rtype: 1d-array
         """  
         
@@ -396,7 +400,7 @@ def rebin_histogram(bin_edges,x_centers,counts):
     :param counts: Histogram counts corresponding to the old x-bin centers. 
     :type counts: array-like
     
-    :return: New counts corresponding to the new x-bins (len(bin_edges)-1). 
+    :return: New counts corresponding to the new x-bins (``len(bin_edges)-1``). 
     :rtype: 1d-array
     """  
 
@@ -601,17 +605,17 @@ def gauss_weights(x,mean,sigma):
 
 def reduce_table(tab,a):
     """
-    Calculates the surface number density of the mono-age sub-populations, thus, 
+    Calculates the surface number density of the mono-age subpopulations, thus, 
     reduces the length of the 'stellar assemblies' table to the number of thin- or thick-disk, 
     or halo subpopulations. 
     
     :param tab: Isochrone columns.
     :type tab: dict 
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     
-    :return: Table with wo columns: 't' and 'N', Galactic time (Gyr) 
-        and surface number densities (number/pc^2).
+    :return: Table with two columns: ``'t'`` and ``'N'``, Galactic time (Gyr) 
+        and surface number densities (:math:`\mathrm{number \ pc^{-2}}`).
     :rtype: astropy Table 
     """
     
@@ -638,10 +642,10 @@ def convolve2d_gauss(array,dxy_smooth,xy_range):
 
     :param array: Initial array.
     :type array: 2d-array.
-    :param dxy_smooth: Dispersions in x and y, [dx,dy].
+    :param dxy_smooth: Dispersions in x and y, [*dx,dy*].
     :type dxy_smooth: list 
     :param xy_range: Min and max values along the array axis, 
-        [[xmin,xmax],[ymin,ymax]].
+        [[*xmin,xmax*],[*ymin,ymax*]].
     :type xy_range: list[list]
     
     :return: New smoothed array of the same shape.
@@ -676,7 +680,7 @@ def convolve1d_gauss(array,dx_smooth,x_range):
     :type array: 1d-array.
     :param dx_smooth: Dispersion in x. 
     :type dx_smooth: scalar
-    :param x_range:  Min and max values along the array axes, [xmin,xmax].
+    :param x_range:  Min and max values along the array axes, [*xmin,xmax*].
     :type x_range: list 
     
     :return: New smoothed array of the same shape.

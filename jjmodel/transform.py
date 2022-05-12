@@ -22,20 +22,20 @@ class XVTrans():
         Initialization of the class instance is performed with reading the data table 
         and specifying parameters of the Galactic coordinate system. 
         
-        :param filename: Name of the file 
+        :param filename: Name of the data file.  
         :type filename: str 
-        :param fileformat: Format of the file
+        :param fileformat: Format of the file. 
         :type fileformat: str 
         :param gframe: Parameters describing the Galactic frame. Keys to specify are: 
             
-            - 'Rsun': Solar radius, kpc 
-            - 'Zsun': Solar distance from the Galactic plane, pc 
-            - 'Usun', 'Vsun', 'Wsun': Cartesian components of the Solar peculiar velocity, km/s 
-            - 'eRsun': Error of the Solar radius, kpc 
-            - 'eZsun': Error of the Solar distance from the Galactic plane, pc 
-            - 'eUsun', 'eVsun', 'eWsun': Errors of the Solar peculiar velocity components, km/s 
-            - 'pm_sgrA': Sgr A* proper motion, mas/yr 
-            - 'epm_sgrA': Error of Sgr A* proper motion, mas/yr 
+            - ``'Rsun'``: Solar radius, kpc
+            - ``'Zsun'``: Solar distance from the Galactic plane, pc
+            - ``'Usun'``, ``'Vsun'``, ``'Wsun'``: Cartesian components of the Solar peculiar velocity, :math:`\mathrm{km \ s^{-1}}` 
+            - ``'eRsun'``: Uncertainty of the Solar radius, kpc
+            - ``'eZsun'``: Uncertainty of the Solar distance from the Galactic plane, pc
+            - ``'eUsun'``, ``'eVsun'``, ``'eWsun'``: Uncertainties of the Solar peculiar velocity components, :math:`\mathrm{km \ s^{-1}}`
+            - ``'pm_sgrA'``: Sgr A* proper motion, :math:`\mathrm{mas \ yr^{-1}}`
+            - ``'epm_sgrA'``: Uncertainty of Sgr A* proper motion, :math:`\mathrm{mas \ yr^{-1}}`.
               
         :type gframe: dict 
 
@@ -90,10 +90,10 @@ class XVTrans():
         
         :param names: Names of columns for the following quantities: 
             
-            - 'ra': right ascention, deg 
-            - 'dec': declination, deg
-            - 'dpc' or 'dkpc': heliocentric distance, pc or kpc 
-            - 'parallax': parallax, can be given instead of distance column, mas
+            - ``'ra'``: right ascention, deg 
+            - ``'dec'``: declination, deg
+            - ``'dpc'`` or ``'dkpc'``: heliocentric distance, pc or kpc 
+            - ``'parallax'``: parallax, can be given instead of the distance column, mas.
             
         :type names: dict
             
@@ -101,12 +101,12 @@ class XVTrans():
             
             Adds columns to the table:  
             
-            - 'd': Heliocentric distance (if parallax column is given as an input). 
-            - ('l', 'b'): Galactic longitude and latitude 
-            - ('x', 'y', 'z'): 3D Cartesian coordinates in a frame located at the Solar position 
+            - ``'d'``: Heliocentric distance (if parallax column is given as an input). 
+            - (``'l'``, ``'b'``): Galactic longitude and latitude 
+            - (``'x'``, ``'y'``, ``'z'``): 3d Cartesian coordinates in a frame located at the Solar position 
               (projected on the midplane), x-axis points to the Galactic center, y corresponds to l=90 deg, 
-              z-axis points to the Northern Galactic Pole
-            - ('rg', 'phi'): Galactocentric cylindrical coordinates 
+              z-axis points to the northern Galactic pole
+            - (``'rg'``, ``'phi'``): Galactocentric cylindrical coordinates 
             
         """
         
@@ -157,13 +157,13 @@ class XVTrans():
         
         :param names: Names of columns for the following quantities: 
             
-            - 'ra': right ascention, deg 
-            - 'dec': declination, deg
-            - 'dpc' or 'dkpc': heliocentric distance, pc or kpc 
-            - 'parallax': parallax, can be given instead of distance column, mas
-            - 'pmra': proper motion in right ascention, mas/yr
-            - 'pmdec': proper motion in right declination, mas/yr
-            - 'vr': radial velocity, km/s
+            - ``'ra'``: right ascention, deg 
+            - ``'dec'``: declination, deg
+            - ``'dpc'`` or ``'dkpc'``: heliocentric distance, pc or kpc 
+            - ``'parallax'``: parallax, can be given instead of the distance column, mas
+            - ``'pmra'``: proper motion in right ascention, :math:`\mathrm{mas \ yr^{-1}}`
+            - ``'pmdec'``: proper motion in right declination, :math:`\mathrm{mas \ yr^{-1}}`
+            - ``'vr'``: radial velocity, :math:`\mathrm{km \ s^{-1}}`. 
             
         :type names: dict
         
@@ -171,14 +171,14 @@ class XVTrans():
         
             Adds columns to the table:  
             
-            - 'd': Heliocentric distance (if parallax column is given as an input).
-            - ('l', 'b'): Galactic longitude and latitude 
-            - ('x', 'y', 'z'): 3D Cartesian coordinates in a frame located at the Solar position 
+            - ``'d'``: Heliocentric distance (if parallax column is given as an input). 
+            - (``'l'``, ``'b'``): Galactic longitude and latitude 
+            - (``'x'``, ``'y'``, ``'z'``): 3d Cartesian coordinates in a frame located at the Solar position 
               (projected on the midplane), x-axis points to the Galactic center, y corresponds to l=90 deg, 
-              z-axis points to the Northern Galactic Pole
-            - ('rg', 'phi'): Galactocentric cylindrical coordinates 
-            - ('U', 'V', 'W'): 3D Cartesian velocity components (relative to LSR)
-            - ('Vr', 'Vphi'): Galactocentric velocities in cylindrical coordinates (the 3-rd component is W)
+              z-axis points to the northern Galactic pole
+            - (``'rg'``, ``'phi'``): Galactocentric cylindrical coordinates 
+            - (``'U'``, ``'V'``, ``'W'``): 3d Cartesian velocity components (relative to LSR)
+            - (``'Vr'``, ``'Vphi'``): Galactocentric velocities in cylindrical coordinates (the 3-rd component is W)
             
         """
         
@@ -236,18 +236,19 @@ class XVTrans():
     def calc_3d_err(self,names):
         """
         Calculation of the coordinate errors. 
-        Should be called only after calc_3d_gal or calc_6d_gal.
+        Should be called only after :meth:`jjmodel.transform.XVTrans.calc_3d_gal` or 
+        :meth:`jjmodel.transform.XVTrans.calc_6d_gal`.
         
         :param names: Names of columns for the following quantities: 
             
-            - 'ra': right ascention, deg 
-            - 'dec': declination, deg
-            - 'dpc' or 'dkpc': heliocentric distance, pc or kpc 
-            - 'parallax': parallax, can be given instead of distance column, mas
-            - 'era': error in right ascention, deg 
-            - 'edec': error in declination, deg
-            - 'edpc' or 'edkpc': error in heliocentric distance, pc or kpc 
-            - 'eparallax': parallax error, can be given instead of the distance error column, mas
+            - ``'ra'``: right ascention, deg 
+            - ``'dec'``: declination, deg
+            - ``'dpc'`` or ``'dkpc'``: heliocentric distance, pc or kpc 
+            - ``'parallax'``: parallax, can be given instead of the distance column, mas
+            - ``'era'``: error in right ascention, deg 
+            - ``'edec'``: error in declination, deg
+            - ``'edpc'`` or ``'edkpc'``: error in heliocentric distance, pc or kpc 
+            - ``'eparallax'``: parallax error, can be given instead of the distance error column, mas.
             
         :type names: dict
             
@@ -255,9 +256,9 @@ class XVTrans():
             
             Adds columns to the table:  
             
-            - 'ed': Distance error (if parallax and parallax error are given)
-            - ('ex', 'ey', 'ez'): Errors of 3D Cartesian coordinates 
-            - ('erg', 'ephi'): Errors of Galactocentric cylindrical coordinates 
+            - ``'ed'``: Distance error (if parallax and parallax error are given)
+            - (``'ex'``, ``'ey'``, ``'ez'``): Errors of 3d Cartesian coordinates 
+            - (``'erg'``, ``'ephi'``): Errors of Galactocentric cylindrical coordinates 
         
         """
         
@@ -298,30 +299,30 @@ class XVTrans():
         
         :param names: Names of columns for the following quantities: 
             
-            - 'ra': right ascention, deg 
-            - 'dec': declination, deg
-            - 'dpc' or 'dkpc': heliocentric distance, pc or kpc 
-            - 'parallax': parallax, can be given instead of distance, mas
-            - 'pmra': proper motion in right ascention, mas/yr
-            - 'pmdec': proper motion in right declination, mas/yr
-            - 'vr': radial velocity, km/s
-            - 'era': error in right ascention, deg 
-            - 'edec': error in declination, deg
-            - 'edpc' or 'edkpc': error in heliocentric distance, pc or kpc 
-            - 'eparallax': parallax error, can be given instead of the distance error, mas
-            - 'epmra': error in proper motion in right ascention, mas/yr
-            - 'epmdec': error in proper motion in right declination, mas/yr
-            - 'evr': error in radial velocity, km/s
+            - ``'ra'``: right ascention, deg 
+            - ``'dec'``: declination, deg
+            - ``'dpc'`` or ``'dkpc'``: heliocentric distance, pc or kpc 
+            - ``'parallax'``: parallax, can be given instead of the distance column, mas
+            - ``'pmra'``: proper motion in right ascention, :math:`\mathrm{mas \ yr^{-1}}`
+            - ``'pmdec'``: proper motion in right declination, :math:`\mathrm{mas \ yr^{-1}}`
+            - ``'vr'``: radial velocity, :math:`\mathrm{km \ s^{-1}}`
+            - ``'era'``: error in right ascention, deg 
+            - ``'edec'``: error in declination, deg
+            - ``'edpc'`` or ``'edkpc'``: error in heliocentric distance, pc or kpc 
+            - ``'eparallax'``: parallax error, can be given instead of the distance error column, mas
+            - ``'epmra'``: error in proper motion in right ascention, :math:`\mathrm{mas \ yr^{-1}}`
+            - ``'epmdec'``: error in proper motion in right declination, :math:`\mathrm{mas \ yr^{-1}}`
+            - ``'evr'``: error in radial velocity, :math:`\mathrm{km \ s^{-1}}`.
             
         :type names: dict
         
         :param cov_matrix: Optional, correlation coefficients for the error calculation. 
-            There can be maximum 10 coefficients: 'c12', 'c13', 'c14', 'c15', 'c23', 'c24', 'c25', 
-            'c34', 'c35', 'c45'. Indices correspond to the correlated quantities in the following way: 
-            (ra,dec,pmra,pmdec,parallax) = (1,2,3,4,5). Don't mess it up. Have fun:)
+            There can be maximum 10 coefficients: ``'c12'``, ``'c13'``, ``'c14'``, ``'c15'``, ``'c23'``, ``'c24'``, ``'c25'``, 
+            ``'c34'``, ``'c35'``, ``'c45'``. Indices correspond to the correlated quantities in the following way: 
+            (*ra,dec,pmra,pmdec,parallax*) = (1,2,3,4,5). Don't mess it up. Have fun:)
             Here we assume that there is no correlation between 5 astrometric parameters and 
             radial velocity as they are obtained via measurements by the different instruments. 
-            Remember that terms ('c15', 'c25', 'c35', 'c45') should not be taken into account  
+            Remember that terms (``'c15'``, ``'c25'``, ``'c35'``, ``'c45'``) should not be taken into account  
             if distances are not simple inverted parallaxes. 
         :type cov_matrix: dict
         
@@ -329,12 +330,12 @@ class XVTrans():
         
             Adds columns to the table:  
         
-            - 'ed': Distance error (if parallax and parallax error are given)
-            - ('ex', 'ey', 'ez'): Errors of 3D Cartesian coordinates 
-            - ('erg', 'ephi'): Errors of Galactocentric cylindrical coordinates 
-            - ('eU', 'eV', 'eW'): Errors of the 3D Cartesian velocity components
-            - (eUc, eVc, eWc): Random errors of the 3D Cartesian velocity components (calculated only when covarience matrix is given to check the impact of correlations). 
-            - (eVr, eVphi): Errors of Galactocentric velocities in cylindrical coordinates
+            - ``'ed'``: Distance error (if parallax and parallax error are given)
+            - (``'ex'``, ``'ey'``, ``'ez'``): Errors of 3d Cartesian coordinates 
+            - (``'erg'``, ``'ephi'``): Errors of Galactocentric cylindrical coordinates 
+            - (``'eU'``, ``'eV'``, ``'eW'``): Errors of the 3d Cartesian velocity components
+            - (``'eUc'``, ``'eVc'``, ``'eWc'``): Random errors of the 3d Cartesian velocity components (calculated only when covarience matrix is given to check the impact of correlations). 
+            - (``'eVr'``, ``'eVphi'``): Errors of Galactocentric velocities in cylindrical coordinates
               
         """
         print('Calculation of the Galactic coordinate and velocity errors:')
@@ -497,7 +498,7 @@ class XVTrans():
     def save_result(self):
         """
         Saves the data table with the new columns. 
-        Save directory is constructed as filename+'_trans.'+fileformat. 
+        Save directory is constructed as ``filename+'_trans.'+fileformat``. 
         
         :return: None. 
         """

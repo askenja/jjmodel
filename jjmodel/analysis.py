@@ -32,20 +32,20 @@ from .geometry import Volume
 class GetPopulations():
     """
     Class for selecting different stellar populations on the  
-    color-magnitude diagram (CMD) and with physical stellar parameters. 
+    color-magnitude diagram (CMD) and with applying cuts on physical stellar parameters. 
     """
     
     def __init__(self,mode_iso,R,p,a):
         """
         Initialization of the class instance. 
         
-        :param mode_iso: Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
+        :param mode_iso: Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
         :type mode_iso: str 
-        :param R: Galactocentric distance, kpc 
+        :param R: Galactocentric distance, kpc.
         :type R: scalar 
         :param p: Set of model parameters from the parameter file. 
         :type p: namedtuple
-        :param a: Collection of the fixed model parameters, useful quantities and arrays.
+        :param a: Collection of the fixed model parameters, useful quantities, and arrays.
         :type a: namedtuple
         """
         
@@ -73,13 +73,13 @@ class GetPopulations():
         Allows to select stellar population using custom cuts on the columns
         of the stellar assemblies table. 
         
-        :param mode_comp: Model component: 'd', 't' or 'sh' (thin disk, thick disk or halo).
+        :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
         :type mode_comp: str 
         :param column_list: List of column names for which the cuts will be applied.
         :type column_list: list[str]
-        :param range_list: List with ranges of values [min,max] corresponding to the columns in column_list.
+        :param range_list: List with ranges of values [*min,max*] corresponding to the columns in **column_list**.
         :type range_list: list[list] 
-        :param save: Optional. If True, the output table is saved (to the output subdirectory pop/tab).
+        :param save: Optional. If True, the output table is saved (to the output subdirectory ``/pop/tab``).
         :type save: boolean
         :param tabname: Name of the population. If not given, the table is saved 
             with the default name 'custom_population'.
@@ -121,12 +121,12 @@ class GetPopulations():
     def rc_simple(self,mode_comp,**kwargs):
         """
         Selects Red Clump (RC) population using simple cuts on 
-        T_eff, logg and logL: 4250 K  < T_eff < 5250 K && 
-        logg < 2.75 && 1.65 < log(L/L_sun) < 1.85. 
+        *T_eff*, *logg* and *logL*: 4250 K  < *T_eff* < 5250 K && 
+        *logg* < 2.75 && 1.65 < *logL* < 1.85. 
           
-        :param mode_comp: Model component: 'd', 't' or 'sh' (thin disk, thick disk or halo).
+        :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
         :type mode_comp: str 
-        :param save: Optional. If True, the output table is saved (to the output subdirectory pop/tab).
+        :param save: Optional. If True, the output table is saved (to the output subdirectory ``pop/tab``).
         :type save: boolean
         
         :return: Table of the stellar assemblies which belong to the RC population (contaminatated by HGB stars).
@@ -159,17 +159,17 @@ class GetPopulations():
         
     def rc_clean(self,mode_comp,**kwargs):
         """
-        Selects Red Clump (RC) population in the 3D parameter space {logT,logg,[Fe/H]}. 
-        This is a cleaner RC selection than the one given by rc_simple method. 
+        Selects Red Clump (RC) population in the 3d parameter space *{logT,logg,[Fe/H]}*. 
+        This is a cleaner RC selection than the one given by :meth:`jjmodel.analysis.GetPopulations.rc_simple` method. 
         
-        :param mode_comp: Model component: 'd', 't' or 'sh' (thin disk, thick disk or halo).
+        :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
         :type mode_comp: str 
-        :param fig: Optional. If True, the selected RC sample is plotted in the 3D-space {logT,logg,[Fe/H]}. 
+        :param fig: Optional. If True, the selected RC sample is plotted in the 3d-space *{logT,logg,[Fe/H]}*. 
         :type fig: boolean
-        :param close: Optional. If True, the figure is closed after plotting (active only if fig=True). 
+        :param close: Optional. If True, the figure is closed after plotting (active only if **fig** is True). 
         :type close: boolean
         :param save: Optional. If True, the output table (and figure, if plotted) is (are) saved 
-            (to the output subdirectory pop/tab and pop/plt).
+            (to the output subdirectory ``pop/tab`` and ``pop/plt``).
         :type save: boolean
         
         :return: Table of the stellar assemblies which belong to the RC population.
@@ -354,11 +354,11 @@ class GetPopulations():
             
     def a_stars(self,mode_comp,**kwargs):
         """
-        Selects A-type stars using cuts on T_eff: 7500 K < T_eff < 10000 K.
+        Selects A-type stars using cuts on *T_eff*: 7500 K < *T_eff* < 10000 K.
         
-        :param mode_comp: Model component: 'd', 't' or 'sh' (thin disk, thick disk or halo).
+        :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
         :type mode_comp: str 
-        :param save: Optional. If True, the output table is saved (to the output subdirectory pop/tab).
+        :param save: Optional. If True, the output table is saved (to the output subdirectory ``pop/tab``).
         :type save: boolean
         
         :return: Table of the stellar assemblies which belong to the A-type stellar population.
@@ -385,11 +385,11 @@ class GetPopulations():
     
     def f_stars(self,mode_comp,**kwargs):
         """
-        Selects F-type stars using cuts on T_eff: 6000 K < T_eff < 7500 K.
+        Selects F-type stars using cuts on *T_eff*: 6000 K < *T_eff* < 7500 K.
         
-        :param mode_comp: Model component: 'd', 't' or 'sh' (thin disk, thick disk or halo).
+        :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
         :type mode_comp: str 
-        :param save: Optional. If True, the output table is saved (to the output subdirectory pop/tab).
+        :param save: Optional. If True, the output table is saved (to the output subdirectory ``pop/tab``).
         :type save: boolean
         
         :return: Table of the stellar assemblies which belong to the F-type stellar population.
@@ -416,11 +416,11 @@ class GetPopulations():
            
     def g_dwarfs(self,mode_comp,**kwargs):
         """
-        Selects G-dwarfs using cuts on T_eff and logg: 5200 K < T_eff < 6000 K && 4.3 < logg < 7.
+        Selects G-dwarfs using cuts on *T_eff* and *logg*: 5200 K < *T_eff* < 6000 K && 4.3 < *logg* < 7.
          
-        :param mode_comp: Model component: 'd', 't' or 'sh' (thin disk, thick disk or halo).
+        :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
         :type mode_comp: str 
-        :param save: Optional. If True, the output table is saved (to the output subdirectory pop/tab).
+        :param save: Optional. If True, the output table is saved (to the output subdirectory ``pop/tab``).
         :type save: boolean
         
         :return: Table of the stellar assemblies which belong to the G-dwarf population.
@@ -449,11 +449,11 @@ class GetPopulations():
     
     def k_dwarfs(self,mode_comp,**kwargs):
         """
-        Selects K-dwarfs using cuts on T_eff and logg: 3700 K < T_eff < 5200 K && 4.3 < logg < 7. 
+        Selects K-dwarfs using cuts on *T_eff* and *logg*: 3700 K < *T_eff* < 5200 K && 4.3 < *logg* < 7. 
         
-        :param mode_comp: Model component: 'd', 't' or 'sh' (thin disk, thick disk or halo).
+        :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
         :type mode_comp: str 
-        :param save: Optional. If True, the output table is saved (to the output subdirectory pop/tab).
+        :param save: Optional. If True, the output table is saved (to the output subdirectory ``pop/tab``).
         :type save: boolean
         
         :return: Table of the stellar assemblies which belong to the K-dwarf population.
@@ -482,11 +482,11 @@ class GetPopulations():
     
     def m_dwarfs(self,mode_comp,**kwargs):
         """
-        Selects M-dwarfs using cuts on T_eff and logg: 2400 K < T_eff < 3700 K && 4 < logg < 7. 
+        Selects M-dwarfs using cuts on *T_eff* and *logg*: 2400 K < *T_eff* < 3700 K && 4 < *logg* < 7. 
         
-        :param mode_comp: Model component: 'd', 't' or 'sh' (thin disk, thick disk or halo).
+        :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
         :type mode_comp: str 
-        :param save: Optional. If True, the output table is saved (to the output subdirectory pop/tab).
+        :param save: Optional. If True, the output table is saved (to the output subdirectory ``pop/tab``).
         :type save: boolean
         
         :return: Table of the stellar assemblies which belong to the M-dwarf population.
@@ -573,16 +573,16 @@ class GetPopulations():
     def cepheids_type1(self,mode_comp,**kwargs):
         """
         Selects classical Cepheids. HB stars in the instability strip (IS) with masses
-        in the range 4-20 Msun. IS adopted from De Somma et al 2020a (mixing length parameter = 1.5,
-        canonical mass-luminosity relation), periods calculated according to De Somma et al.2020b.
+        in the range 4-20 :math:`\mathrm{M}_\odot`. IS adopted from De Somma et al. (2020)a (mixing length parameter = 1.5,
+        canonical mass-luminosity relation), periods calculated according to De Somma et al. (2020)b.
         Dy default, these are the fundamental pulsators, but also the first obertone 
         (FO) pulsators can be selected. 
         
-        :param mode_comp: Model component: 'd', 't' or 'sh' (thin disk, thick disk or halo).
+        :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
         :type mode_comp: str 
         :param FO: Optional. If True, the first obertone pulsators are selected.
         :type save: boolean
-        :param save: Optional. If True, the output table is saved (to the output subdirectory pop/tab).
+        :param save: Optional. If True, the output table is saved (to the output subdirectory ``pop/tab``).
         :type save: boolean
         
         :return: Table of the stellar assemblies which belong to the Cepheid type I population.
@@ -1462,110 +1462,6 @@ def _indr_(R,p,a):
     else:
         raise ValueError('R value is outside of the [Rmin,Rmax] interval.')
     
-# =============================================================================
-# Description of args and kwargs
-# =============================================================================
-
-def analysis_args_description():
-    """
-    mode_comp : str
-        Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
-        For some functions not all of the options are available. 
-    R : scalar
-        Galactocentric distance, kpc.
-    zlim : array-like
-        Range of heights to be considered, in pc. For some 
-        functions, len(zlim) can be > 2, i.e., zlim is a set of 
-        horizontal z-slices. 
-    mode_geom : str
-        Modeled geometry. Applicable for Hess diagram calculation,
-        stellar assembly table in volume, volume itself: can be 
-        'local_sphere', 'local_cylinder' or 'rphiz_box'. For the
-        calculation of disk brightness or colour profile, it is 
-        disk orientation with respect to observer: 'face-on' or 
-        'edge-on'. 
-    ages : array_like
-        Set of age-bins to be considered.
-    mets : array_like
-        Set of metallicity-bins to be considered. 
-    quantity : str
-        Name of column of the stellar assemblies table, for which 
-        the function has to be applied; for velocity dispersion
-        use 'sigw'. 
-    bands : array-like
-        List of names of photometric columns to be used in some 
-        function. For calculation of the brightness profile, 
-        give single column e.g. ['B'], for colour profile give
-        e.g. ['B','V'] for 'B-V'. For Hess diagram three column
-        names must be given, e.g. ['B','V','V'] for (B-V) versus 
-        M_V. 
-    mag_range : array-like
-        Min-max magnitudes along the x- and y-axis of the Hess 
-        diagram, [[x_min,x_max],[y_min,y_max]]. 
-    mag_step : array-like
-        Step along the x- and y-axis of the Hess diagram, [dx,dy]. 
-    volume : array-like
-        Volume in pc^3 in |z|-bins at a given R. The exact values
-        in bins depend on the chosen geometry, see mode_geom. 
-    p : namedtuple
-        Set of the model parameters from the parameter file. 
-    a : namedtuple
-        Collection of the fixed model parameters, useful 
-        quantities and arrays.
-    """
-    print(analysis_args_description.__doc__)
-    
-
-def analysis_kwargs_description():
-    """
-    save : boolean
-        If True, the calculated quantities are saved as tables  
-        to the output directory.
-    between : boolean
-        If true, the output quantity corresponds to the 
-        age bins with edges in given ages, not to the individual 
-        single ages (i.e. age-bins of width tr).
-    mode_pop : str 
-        Name of population. Can be one of the pre-defined 
-        ('a','f','rc','rc+','gdw','kdw','mdw') or custom, if 
-        it was selected and saved as table in advance. 
-    mode_iso : str
-        Stellar library, 'Padova' or 'MIST'. If not specified, 
-        Padova isochrones are used.
-    tab : dict or astropy table 
-        Stellar assemblies table, alternative to mode_pop.  
-    number : boolean
-        If true, the calculated quantity is the spatial 
-        number density of stars, not matter density. 
-        Active only when mode_pop or tab are given. 
-    sigma : boolean 
-        If True, the result is surface density in Msun/pc^2, 
-        otherwise the midplane matter density is calculated, 
-        Msun/pc^3. In combination with number=True returns the 
-        number surface density, i.e, number of stars/pc^2,
-        otherwise the number of stars/pc^3 is returned. In some
-        cases the quantity of interest is calculated as a weighted 
-        mean with the mass/surface (number) densities as weights. 
-    sigma_gauss : scalar 
-        Standard deviation of the Gaussian kernel used to smooth
-        the distribution. Same units as the calculated quantity.
-    metbins : array-like
-        Edges of metallicity bins for metallicity distribution. 
-    dz : scalar
-        Step in |z|, in pc. 
-    wmax : scalar
-        Maximum value of |W|-velocity, km/s. 
-    dw : scalar
-        Step in |W|-velocity, km/s. 
-    ages : array-like
-        Range of ages, in Gyr. 
-    mets : array-like
-        Range of metallicities. 
-    vln : str
-        String with info about chosen volume shape. 
-    """
-    print(analysis_kwargs_description.__doc__)
 
 
 # =============================================================================
@@ -1574,45 +1470,46 @@ def analysis_kwargs_description():
 
 def rhoz_monoage(mode_comp,R,ages,p,a,**kwargs):
     """
-    Vertical profiles of the mono-age disk subpopulations calculated at Galactocentric distance R.
+    Vertical profiles of the mono-age subpopulations calculated at a given Galactocentric distance.
     
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total). 
     :type mode_comp: str
-    :param R: Galactocentric distance, kpc 
+    :param R: Galactocentric distance, kpc. 
     :type R: scalar 
-    :param ages: Set of age-bins, Gyr. 
+    :param ages: Set of age bins, Gyr. 
     :type ages: array-like
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
         jjmodel.iof.TabSaver.rhoz_monoage_save. 
     :type save: boolean
-    :param between: Optional. If true, the output quantity corresponds to the age intervals 
-        specified by parameter ages. Otherwise the individual single mono-age subpopulations 
-        are returned (i.e., age-bins of width tr).
+    :param between: Optional. If True, the output quantity corresponds to the age intervals 
+        specified by parameter **ages**. Otherwise the individual single mono-age subpopulations 
+        are returned (i.e., age-bins of width ``tr``, model age resolution).
     :type between: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'dt'``, **tab** must be organized as a list of tables for the thin and thick disk: 
+        [*table_d,table_t*]. If **mode_comp** = ``'tot'``, **tab** must be [*table_d,table_t,table_sh*]. 
     :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
-         not matter density. Active only when mode_pop or tab are given. 
+    :param number: Optional. If True, calculated quantity is the spatial number density of stars in :math:`\mathrm{number \ pc^{-3}}`,
+         not matter density in :math:`\mathrm{M_\odot \ pc^{-3}}`. Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
     
-    :return: Array of the shape (len(ages),a.n) with the densities of the selected mono-age subpopulations 
-        in Msun/pc^3 or number/pc^3. Use together with the model z-grid a.z. 
-    :rtype: 2d array        
+    :return: Array of the shape ``(len(ages),a.n)`` with the densities of the selected mono-age subpopulations 
+        in :math:`\mathrm{M_\odot \ pc^{-3}}` or :math:`\mathrm{number \ pc^{-3}}`. 
+        Use together with the model vertical grid ``a.z``. 
+    :rtype: 2d-array        
     """
     
     this_function = inspect.stack()[0][3]
@@ -1711,41 +1608,42 @@ def rhoz_monoage(mode_comp,R,ages,p,a,**kwargs):
 
 def rhoz_monomet(mode_comp,R,mets,p,a,**kwargs):
     """
-    Vertical profiles of the mono-metallicity disk subpopulations calculated at Galactocentric distance R.
+    Vertical profiles of the mono-metallicity subpopulations calculated at a given Galactocentric distance.
     
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total). 
     :type mode_comp: str
-    :param R: Galactocentric distance, kpc 
+    :param R: Galactocentric distance, kpc.
     :type R: scalar 
     :param mets: Set of metallicity bins.
     :type mets: array-like
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
         jjmodel.iof.TabSaver.rhoz_monomet_save. 
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'dt'``, **tab** must be organized as a list of tables for the thin and thick disk: 
+        [*table_d,table_t*]. If **mode_comp** = ``'tot'``, **tab** must be [*table_d,table_t,table_sh*]. 
     :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
-         not matter density. Active only when mode_pop or tab are given. 
+    :param number: Optional. If True, calculated quantity is the spatial number density of stars in :math:`\mathrm{number \ pc^{-3}}`,
+         not matter density in :math:`\mathrm{M_\odot \ pc^{-3}}`. Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
        
-    :return: Array of the shape (len(ages),a.n) with the densities of the selected mono-metallicity 
-        subpopulations, in Msun/pc^3 or number/pc^3. Each profile corresponds to z-grid a.z.         
-    :rtype: 2d array  
+    :return: Array of the shape ``(len(ages),a.n)`` with the densities of the selected mono-metallicity 
+        subpopulations, in :math:`\mathrm{M_\odot \ pc^{-3}}` or :math:`\mathrm{number \ pc^{-3}}`. 
+        Each profile corresponds to the model vertical grid ``a.z``.         
+    :rtype: 2d-array  
     """
     
     this_function = inspect.stack()[0][3]
@@ -1801,44 +1699,44 @@ def agez(mode_comp,p,a,**kwargs):
     """
     Age as a function of distance from the Galactic plane calculated at the different radii. 
     
-    
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total). 
     :type mode_comp: str
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
-    :param R: Optional. Galactocentric distance, kpc. Required when parameter tab is specified. 
-        If not given, age profiles will be calculated for the whole range of radii a.R. 
-    :type R: scalar. 
+    :param R: Optional. Galactocentric distance, kpc. Required when parameter **tab** is specified. 
+        If not given, age profiles will be calculated for the whole range of modeled radii ``a.R``. 
+    :type R: scalar
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
         jjmodel.iof.TabSaver.agez_save. 
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is weighted by the spatial number density of stars,
-         not matter density. Active only when mode_pop or tab are given. 
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``. If a single Galactocentric distance is modeled with parameter **R**, 
+        then *tab* is constructed as [*table_d,table_t,table_sh*] with tables for this radius. 
+    :type tab: astropy table or list[astropy table], or list[list[astropy table]] 
+    :param number: Optional. If True, calculated quantity is weighted by the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not by matter density in (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
 
     :return: Usually, the output is a list of two arrays:
         
-        - Age as a function of height z at the different Galactocentric distances a.R. Array shape is (a.Rbins,a.n) (by default) or (a.n) (if parameter R is given). The profiles has to be used with z-grid a.z. 
-        - The same, but for the Solar radius, array of shape (a.n). 
+        - Age as a function of height z at the different Galactocentric distances ``a.R``. Array shape is ``(a.Rbins,a.n)`` (by default) or ``(a.n)`` (if parameter **R** is given). The profiles has to be used with z-grid ``a.z``. 
+        - The same, but for the Solar radius, array of shape ``(a.n)``. 
         
-        If the optional parameter R is given and R==p.Rsun, the output only contains the local age profile. 
+        If the optional parameter **R** is given and equals to ``p.Rsun``, the output only contains the local vertical age profile. 
         
-    :rtype: [2d array, 1d array], or [1d array, 1d array], or 1d array
+    :rtype: [2d-array, 1d-array] or [1d-array, 1d-array], or 1d-array
     """
     
     this_function = inspect.stack()[0][3]
@@ -1967,36 +1865,36 @@ def ager(mode_comp,zlim,p,a,**kwargs):
     """
     Age as a function of Galactocentric distance. 
     
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total). 
     :type mode_comp: str
-    :param zlim: Range of heights [zmin,zmax], pc. 
+    :param zlim: Range of heights to be considered [*zmin,zmax*], pc. 
     :type zlim: array-like 
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
         jjmodel.iof.TabSaver.ager_save. 
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is weighted by the spatial number density 
-        of stars, not matter density. Active only when mode_pop or tab are given.          
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``. 
+    :type tab: list[astropy table] or list[list[astropy table]] 
+    :param number: Optional. If True, calculated quantity is weighted by the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not by matter density (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
         
-    :return: Radial age profile, array of length a.Rbins. 
-    :rtype: 1d array
+    :return: Radial age profile, array of length ``a.Rbins``. 
+    :rtype: 1d-array
     """
     
     this_function = inspect.stack()[0][3]
@@ -2066,46 +1964,46 @@ def ager(mode_comp,zlim,p,a,**kwargs):
 
 def metz(mode_comp,p,a,**kwargs):
     """
-    Metallicity as a function of ditance from the Galactic plane z. 
+    Metallicity as a function of distance from the Galactic plane. 
     
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total). 
     :type mode_comp: str
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
-    
-    :param R: Optional. Galactocentric distance, kpc. Required when parameter tab is specified. 
-        If not given, age profiles will be calculated for the whole range of radii a.R. 
-    :type R: scalar. 
+    :param R: Optional. Galactocentric distance, kpc. Required when parameter **tab** is specified. 
+        If not given, age profiles will be calculated for the whole range of modeled radii ``a.R``. 
+    :type R: scalar
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
         jjmodel.iof.TabSaver.metz_save. 
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is weighted by the spatial number density of stars,
-         not matter density. Active only when mode_pop or tab are given. 
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``. If a single Galactocentric distance is modeled with parameter **R**, 
+        then *tab* is constructed as [*table_d,table_t,table_sh*] with tables for this radius. 
+    :type tab: astropy table or list[astropy table], or list[list[astropy table]] 
+    :param number: Optional. If True, calculated quantity is weighted by the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not by matter density (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
    
     :return: Usually, the output is a list of two arrays:
         
-        - Metallicity as a function of height z at the different Galactocentric distances a.R. Array shape is (a.Rbins,a.n) (by default) or (a.n) (if parameter R is given). The profiles has to be used with z-grid a.z. 
-        - The same, but for the Solar radius, array of shape (a.n). 
+        - Metallicity as a function of height at the different Galactocentric distances ``a.R``. Array shape is ``(a.Rbins,a.n)`` (by default) or ``(a.n)`` (if parameter **R** is given). The profiles has to be used with z-grid ``a.z``. 
+        - The same, but for the Solar radius, array of shape ``(a.n)``. 
         
-        If the optional parameter R is given and R==p.Rsun, the output only contains the local metallicity profile. 
+        If the optional parameter **R** is given and equals to ``p.Rsun``, the output only contains the local metallicity profile. 
         
-    :rtype: [2d array, 1d array], or [1d array, 1d array], or 1d array
+    :rtype: [2d-array, 1d-array] or [1d-array, 1d-array], or 1d-array
     """
     
     this_function = inspect.stack()[0][3]
@@ -2246,36 +2144,36 @@ def metr(mode_comp,zlim,p,a,**kwargs):
     """
     Metallicity as a function of Galactocentric distance. 
             
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total). 
     :type mode_comp: str
-    :param zlim: Range of heights [zmin,zmax], pc. 
+    :param zlim: Range of heights to be considered [*zmin,zmax*], pc. 
     :type zlim: array-like 
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
         jjmodel.iof.TabSaver.metr_save. 
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is weighted by the spatial number density 
-        of stars, not matter density. Active only when mode_pop or tab are given.          
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``. 
+    :type tab: list[astropy table] or list[list[astropy table]] 
+    :param number: Optional. If True, calculated quantity is weighted by the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not by matter density (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
         
-    :return: Radial metallicity profile, array of length a.Rbins. 
-    :rtype: 1d array
+    :return: Radial metallicity profile, array of length ``a.Rbins``. 
+    :rtype: 1d-array
     """
     
     this_function = inspect.stack()[0][3]
@@ -2360,21 +2258,18 @@ def rhor(p,a,**kwargs):
     
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
-    :param sigma: Optional. If True, the result is surface density in Msun/pc^2, 
-        otherwise the midplane matter density in Msun/pc^3 is calculated. 
+    :param sigma: Optional. If True, the result is surface density in :math:`\mathrm{M_\odot \ pc^{-2}}`, 
+        otherwise the midplane mass density in :math:`\mathrm{M_\odot \ pc^{-3}}` is calculated. 
     :type sigma: boolean
     
     :return: The output consists of two quantities: 
         
-        - The midplane matter density (or surface density up to p.zmax) as a function 
-        of Galactocentric distance R. Array shape is (6,a.Rbins), columns correspond to the different 
-        model components in the following order: thin disk, molecular gas, atomic gas, thick disk, 
-        stellar halo, and DM halo. 
-        - The same, but at for the Solar radius p.Rsun, array of len 6. 
+        - The midplane mass density (or surface density up to ``p.zmax``) as a function of Galactocentric distance. Array shape is ``(6,a.Rbins)``, columns correspond to the different model components in the following order: thin disk, molecular gas, atomic gas, thick disk, stellar halo, and DM halo. 
+        - The same, but at for the Solar radius ``p.Rsun``, array of length ``(6)``. 
         
-    :rtype: [2d array, 1d array]
+    :rtype: [2d-array, 1d-array]
     """
     
     this_function = inspect.stack()[0][3]
@@ -2407,49 +2302,50 @@ def rhor_monoage(mode_comp,zlim,ages,p,a,**kwargs):
     """
     Radial density profiles of the mono-age subpopulations. 
     
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total). 
     :type mode_comp: str
-    :param zlim: Range of heights [zmin,zmax], pc. 
+    :param zlim: Range of heights to be considered [*zmin,zmax*], pc. 
     :type zlim: array-like 
-    :param ages: Set of age-bins, Gyr. 
+    :param ages: Set of age bins, Gyr. 
     :type ages: array-like
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
         jjmodel.iof.TabSaver.rhor_monoage_save. 
     :type save: boolean
-    :param sigma: Optional. If True, the result is surface density in Msun/pc^2, 
-        otherwise the midplane matter density in Msun/pc^3 is calculated. 
-        In combination with number=True returns the number surface density, i.e, number of stars/pc^2.
+    :param sigma: Optional. If True, the result is surface density in :math:`\mathrm{M_\odot \ pc^{-2}}`, 
+        otherwise the midplane mass density in :math:`\mathrm{M_\odot \ pc^{-3}}` is calculated. 
+        In combination with **number** = True, returns the *number* surface density in :math:`\mathrm{number \ pc^{-2}}`.
     :type sigma: boolean
-    :param between: Optional. If true, the output quantity corresponds to the age intervals 
-        specified by parameter ages. Otherwise the individual single mono-age subpopulations 
-        are returned (i.e., age-bins of width tr).
+    :param between: Optional. If True, the output quantity corresponds to the age intervals 
+        specified by parameter **ages**. Otherwise the individual single mono-age subpopulations 
+        are returned (i.e., age-bins of width ``tr``, model age resolution).
     :type between: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density 
-        of stars, not matter density. Active only when mode_pop or tab are given.          
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``. 
+    :type tab: list[astropy table] or list[list[astropy table]] 
+    :param number: Optional. If True, calculated quantity is the spatial number density of stars in :math:`\mathrm{number \ pc^{-3}}`,
+         not matter density in :math:`\mathrm{M_\odot \ pc^{-3}}`. Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
 
-    :return: Surface density (stellar density integrated within zlim interval) in M_sun/pc^2 or number/pc^2 or 
-        matter density in M_sun/pc^3 or number/pc^3 (summed density within zlim) 
-        as a function of Galactocentric distance R and age. 
-        Array shape is (len(ages),a.Rbins) or (len(ages)-1,a.Rbins) if between==True. 
-    :rtype: 2d array        
+    :return: Surface density (stellar mass density integrated within **zlim** interval) in :math:`\mathrm{M_\odot \ pc^{-2}}` 
+        or :math:`\mathrm{number \ pc^{-2}}` or mass density in :math:`\mathrm{M_\odot \ pc^{-3}}`
+        or :math:`\mathrm{number \ pc^{-3}}` (summed density within **zlim**) - 
+        as a function of Galactocentric distance and age. 
+        Array shape is ``(len(ages),a.Rbins)`` or ``(len(ages)-1,a.Rbins)`` if **between** = True. 
+    :rtype: 2d-array        
     """
     
     this_function = inspect.stack()[0][3]
@@ -2530,45 +2426,45 @@ def rhor_monomet(mode_comp,zlim,mets,p,a,**kwargs):
     """
     Radial density profiles of the mono-metallicity subpopulations. 
     
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total). 
     :type mode_comp: str
-    :param zlim: Range of heights [zmin,zmax], pc. 
+    :param zlim: Range of heights to be considered [*zmin,zmax*], pc. 
     :type zlim: array-like 
-    :param mets: Set of metallicity bins. 
-    :type mets: array-like
+    :param ages: Set of age bins, Gyr. 
+    :type ages: array-like
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
         jjmodel.iof.TabSaver.rhor_monomet_save. 
     :type save: boolean
-    :param sigma: Optional. If True, the result is surface density in Msun/pc^2, 
-        otherwise the midplane matter density in Msun/pc^3 is calculated. 
-        In combination with number=True returns the number surface density, i.e, number of stars/pc^2.
+    :param sigma: Optional. If True, the result is surface density in :math:`\mathrm{M_\odot \ pc^{-2}}`, 
+        otherwise the midplane mass density in :math:`\mathrm{M_\odot \ pc^{-3}}` is calculated. 
+        In combination with **number** = True, returns the *number* surface density in :math:`\mathrm{number \ pc^{-2}}`.
     :type sigma: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density 
-        of stars, not matter density. Active only when mode_pop or tab are given.          
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``. 
+    :type tab: list[astropy table] or list[list[astropy table]] 
+    :param number: Optional. If True, calculated quantity is the spatial number density of stars in :math:`\mathrm{number \ pc^{-3}}`,
+         not matter density in :math:`\mathrm{M_\odot \ pc^{-3}}`. Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
 
-    :return: Surface density (stellar density integrated within zlim interval) in M_sun/pc^2 or number/pc^2 or 
-        matter density in M_sun/pc^3 or number/pc^3 (summed density within zlim) 
-        as a function of Galactocentric distance R and metalicity. 
-        Array shape is (len(mets)-1,a.Rbins). 
-    :rtype: 2d array              
+    :return: Surface density (stellar mass density integrated within **zlim** interval) in :math:`\mathrm{M_\odot \ pc^{-2}}` 
+        or :math:`\mathrm{number \ pc^{-2}}` or mass density in :math:`\mathrm{M_\odot \ pc^{-3}}`
+        or :math:`\mathrm{number \ pc^{-3}}` (summed density within **zlim**) - 
+        as a function of Galactocentric distance and age. Array shape is ``(len(mets)-1,a.Rbins)``.         
+    :rtype: 2d-array              
     """
     
     this_function = inspect.stack()[0][3]
@@ -2623,48 +2519,44 @@ def agehist(mode_comp,zlim,p,a,**kwargs):
     """
     Age distributions at the different Galactocentric distances. 
     
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total). 
     :type mode_comp: str
-    :param zlim: Range of heights [zmin,zmax], pc. 
+    :param zlim: Range of heights to be considered [*zmin,zmax*], pc. 
     :type zlim: array-like 
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
         jjmodel.iof.TabSaver.agehist_save. 
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assembly tables, parameter alternative to mode_pop. Tables must be given for all radii, e.g.
-        if mode_comp=='d' (or 't', or 'sh'), tab=[table_Rmin,...,table_Rmax]. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [[table_d_Rmin,table_t_Rmin],...,[table_d_Rmax,table_t_Rmax]]. 
-        By analogy, if mode_comp=='tot', [[table_d_Rmin,table_t_Rmin,table_sh_Rmin],...,
-        [table_d_Rmax,table_t_Rmax,table_sh_Rmax]]. 
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``. 
     :type tab: list[astropy table] or list[list[astropy table]] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density 
-        of stars, not matter density. Active only when mode_pop or tab are given.          
+    :param number: Optional. If True, calculated quantity is weighted the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not by matter density (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
     :param sigma_gauss: Optional. Standard deviation of the Gaussian kernel used to smooth
         the age distributions, Gyr.
     :type sigma_gauss: scalar
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set.  
     :type mode_iso: str 
 
     :return: There are two types of output:
         
-        - Age distributions at the different Galactocentric distances, 
-        array shape is (a.Rbins,a.jd). 
-        - The same, but at the Solar radius, array of len a.jd. 
+        - Age distributions at the different Galactocentric distances, array shape is ``(a.Rbins,a.jd)``. 
+        - The same, but at the Solar radius, array of length ``(a.jd)``. 
         
-        Distributions are normalized to area and correspond to the time-grid a.t. 
-    :rtype: [2d array, 1d array]        
+        Distributions are normalized to area and correspond to the model time-grid ``a.t``. 
+    :rtype: [2d-array, 1d-array]        
     """
     
     this_function = inspect.stack()[0][3]
@@ -2797,36 +2689,30 @@ def agehist(mode_comp,zlim,p,a,**kwargs):
 def methist(mode_comp,zlim,p,a,**kwargs):
     """
     Metallicity distributions at the different Galactocentric distances. 
-    
-        valid keywords : save, tab, mode_pop, number, sigma_gauss, 
-        metbins, mode_iso
 
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total). 
     :type mode_comp: str
-    :param zlim: Range of heights [zmin,zmax], pc. 
+    :param zlim: Range of heights to be considered [*zmin,zmax*], pc. 
     :type zlim: array-like 
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
         jjmodel.iof.TabSaver.methist_save. 
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assembly tables, parameter alternative to mode_pop. Tables must be given for all radii, e.g.
-        if mode_comp=='d' (or 't', or 'sh'), tab=[table_Rmin,...,table_Rmax]. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [[table_d_Rmin,table_t_Rmin],...,[table_d_Rmax,table_t_Rmax]]. 
-        By analogy, if mode_comp=='tot', [[table_d_Rmin,table_t_Rmin,table_sh_Rmin],...,
-        [table_d_Rmax,table_t_Rmax,table_sh_Rmax]]. 
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``. 
     :type tab: list[astropy table] or list[list[astropy table]] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density 
-        of stars, not matter density. Active only when mode_pop or tab are given.          
+    :param number: Optional. If True, calculated quantity is weighted by the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not by matter density (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
     :param sigma_gauss: Standard deviation of the Gaussian kernel used to smooth
         the metallicity distributions, dex.
@@ -2834,18 +2720,17 @@ def methist(mode_comp,zlim,p,a,**kwargs):
     :param metbins: Optional. Set of metallicity bins. If not given, the grid is -1.1,...,0.8 dex 
         with 0.05 dex step. 
     :type metbins: array-like
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set.  
     :type mode_iso: str 
 
     :return: There are two types of output:
         
-        - Metallicity distributions at the different Galactocentric distances, 
-        array shape is (a.Rbins,38) (default) or (a.Rbins,len(metbins)-1) if metbins is in kwargs. 
-        - The same, but at the Solar radius, array of len 38 or len(metbins)-1. 
+        - Metallicity distributions at the different Galactocentric distances, array shape is ``(a.Rbins,38)`` (default) or ``(a.Rbins,len(metbins)-1)`` if metbins is in *kwargs*. 
+        - The same, but at the Solar radius, array of length ``(38)`` or ``(len(metbins)-1)``. 
         
-        Distributions are normalized to area and correspond to the time-grid a.t. 
-    :rtype: [2d array, 1d array]        
+        Distributions are normalized to area and correspond to the time-grid ``a.t``. 
+    :rtype: [2d-array, 1d-array]        
     """
     
     this_function = inspect.stack()[0][3]
@@ -3032,43 +2917,43 @@ def methist(mode_comp,zlim,p,a,**kwargs):
 
 def hr_monoage(mode_comp,ages,p,a,**kwargs):
     """
-    Scale heights of the mono-age disk subpopulations as a function of Galactocentric distance. 
+    Scale heights of the mono-age subpopulations as a function of Galactocentric distance. 
     
-    :param mode_comp: Galactic component, can be 'd', 'dt' or 'tot' 
-        (thin disk, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thin+thick disk, or total). 
     :type mode_comp: str
-    :param ages: Set of age-bins, Gyr.
+    :param ages: Set of age bins, Gyr.
     :type ages: array-like
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
         jjmodel.iof.TabSaver.hr_monoage_save. 
     :type save: boolean
-    :param between: Optional. If true, the output quantity corresponds to the age intervals 
-        specified by parameter ages. Otherwise scale heights for the individual single mono-age  
-        subpopulations are returned.
+    :param between: Optional. If True, the output quantity corresponds to the age intervals 
+        specified by parameter **ages**. Otherwise the individual single mono-age subpopulations 
+        are returned (i.e., age-bins of width ``tr``, model age resolution).
     :type between: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
-         not matter density. Active only when mode_pop or tab are given. 
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``
+    :type tab: list[astropy table] or list[list[astropy table]] 
+    :param number: Optional. If True, calculated quantity is weighted by the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not matter density (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
 
-    :return: Radial profiles of scale heights for age bins, pc. Array shape is (a.Rbins,len(ages)) 
-        or (a.Rbins,len(ages)-1) if between==True.
-    :rtype: 2d array.         
+    :return: Radial profiles of scale heights for age bins, pc. Array shape is ``(a.Rbins,len(ages))`` 
+        or ``(a.Rbins,len(ages)-1)`` if **between** is True.
+    :rtype: 2d-array.         
     """
     
     this_function = inspect.stack()[0][3]
@@ -3164,8 +3049,8 @@ def hr_monomet(mode_comp,mets,p,a,**kwargs):
     """
     Scale heights of the mono-metallicity subpopulations as a function of Galactocentric distance. 
     
-    :param mode_comp: Galactic component, can be 'd', 'dt' or 'tot' 
-        (thin disk, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thin+thick disk, or total). 
     :type mode_comp: str
     :param mets: Set of metallicity bins.
     :type mets: array-like
@@ -3177,23 +3062,23 @@ def hr_monomet(mode_comp,mets,p,a,**kwargs):
         to the output directory. The output path and table name are predcribed by 
         jjmodel.iof.TabSaver.hr_monomet_save. 
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
-         not matter density. Active only when mode_pop or tab are given. 
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``
+    :type tab: list[astropy table] or list[list[astropy table]] 
+    :param number: Optional. If True, calculated quantity is weighted by the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not matter density (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
-
-    :return: Radial profiles of scale heights for metallicity bins, pc. Array shape is (a.Rbins,len(mets)-1). 
-    :rtype: 2d array.         
+    
+    :return: Radial profiles of scale heights for metallicity bins, pc. Array shape is ``(a.Rbins,len(mets)-1)``. 
+    :rtype: 2d-array.         
     """
     
     this_function = inspect.stack()[0][3]
@@ -3209,12 +3094,12 @@ def hr_monomet(mode_comp,mets,p,a,**kwargs):
         rhozd = _rhoz_d_(p,a,**kwargs,local=False)
         sigmazd = _rhoz_d_(p,a,sigma=True,**kwargs,local=False)
         AMRd = tab_reader(['AMRd'],p,a.T)[0]
-        times = np.zeros((a.Rbins,nmet,a.jd))
+        #times = np.zeros((a.Rbins,nmet,a.jd))
         for i in range(a.Rbins):
             indt = _ind_amr2t_(AMRd[i+1],mets)
-            for k in range(nmet):
-                if indt[k]!=-999 and indt[k+1]!=-999:
-                    times[i][k][indt[k]:indt[k+1]] = np.sum(sigmazd[i],axis=0)[indt[k]:indt[k+1]]
+            #for k in range(nmet):
+            #    if indt[k]!=-999 and indt[k+1]!=-999:
+            #        times[i][k][indt[k]:indt[k+1]] = np.sum(sigmazd[i],axis=0)[indt[k]:indt[k+1]]
             rhod0 = _rhoz_ages_(rhozd[i],indt,this_function,a,between=True,**kwargs)
             sigmad = _rhoz_ages_(sigmazd[i],indt,this_function,a,between=True,**kwargs)
             for k in range(nmet):
@@ -3295,44 +3180,52 @@ def hr_monomet(mode_comp,mets,p,a,**kwargs):
         ts = TabSaver(p,a,**kwargs)
         ts.hr_monomet_save(H,mode_comp,mets)                 
     
-    return (H, times)
+    return H
 
 
 def sigwz(mode_comp,p,a,**kwargs):
     """
-    W-velocity dispersion as a function of distance from the Galactic plane z. 
+    W-velocity dispersion as a function of distance from the Galactic plane. 
     
-    :param mode_comp: Galactic component, can be 'd', 'dt' or 'tot' (thin disk, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thin+thick disk, or total). 
     :type mode_comp: str
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
+    :param R: Optional. Galactocentric distance, kpc. Required when parameter **tab** is specified. 
+        If not given, velocity dispersion profiles will be calculated for the whole range of modeled radii ``a.R``. 
+    :type R: scalar
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
         jjmodel.iof.TabSaver.sigwz_save.  
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
-         not matter density. Active only when mode_pop or tab are given. 
+    :param tab: Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``. If a single Galactocentric distance is modeled with parameter **R**, 
+        then *tab* is constructed as [*table_d,table_t,table_sh*] with tables for this radius. 
+    :type tab: astropy table or list[astropy table], or list[list[astropy table]] 
+    :param number: Optional. If True, calculated quantity is weighted by the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not by matter density (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
 
-    :return: There are two arrays in the output: 
+    :return: There are usually two arrays in the output: 
         
-        - Vertical profile of the W-velocity dispersion at different R, km/s. Array shape is (a.Rbins, a.n).
-        - Same, but for the Solar radius p.Rsun, array of len a.n. 
+        - Vertical profile of the W-velocity dispersion at ``a.R``, :math:`\mathrm{km \ s^{-1}}`. Array shape is ``(a.Rbins, a.n)`` (by default) or ``(a.n)`` (if parameter **R** is given). The profiles has to be used with z-grid ``a.z``. 
+        - Same, but for the Solar radius ``p.Rsun``, array of length ``(a.n)``. 
         
-    :rtype: [2d array, 1d array]        
+    If the optional parameter **R** is given and equals to ``p.Rsun``, the output only contains the local vertical 
+    W-velocity dispersion profile. 
+        
+    :rtype: [2d-array, 1d-array] or [1d-array, 1d-array], or 1d-array   
     """
     
     this_function = inspect.stack()[0][3]
@@ -3448,35 +3341,36 @@ def sigwr(mode_comp,zlim,p,a,**kwargs):
     """
     W-velocity dispersion as a function of Galactocentric distance. 
     
-    :param mode_comp: Galactic component, can be 'd', 'dt' or 'tot' (thin disk, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thin+thick disk, or total). 
     :type mode_comp: str
-    :param zlim: Range of heights [zmin,zmax], pc. 
+    :param zlim: Range of heights [*zmin,zmax*], pc. 
     :type zlim: array-like 
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
         jjmodel.iof.TabSaver.sigwr_save.  
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
-         not matter density. Active only when mode_pop or tab are given. 
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``
+    :type tab: list[astropy table] or list[list[astropy table]] 
+    :param number: Optional. If True, calculated quantity is weighted by the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not by matter density (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
 
-    :return: Radial profile of the W-velocity dispersion, km/s. Array of len a.Rbins. 
-    :rtype: 1d array
+    :return: Radial profile of the W-velocity dispersion, :math:`\mathrm{km \ s^{-1}}`. Array of length ``a.Rbins``. 
+    :rtype: 1d-array
     """    
     
     this_function = inspect.stack()[0][3]
@@ -3551,45 +3445,46 @@ def sigwr(mode_comp,zlim,p,a,**kwargs):
                                                 
 def sigwr_monoage(mode_comp,zlim,ages,p,a,**kwargs):
     """
-    W-velocity dispersion for the mono-age subpoplations as a function of Galactocentric 
+    W-velocity dispersion for the mono-age subpopulations as a function of Galactocentric 
     distance. 
     
-    :param mode_comp: Galactic component, can be 'd', 'dt' or 'tot' (thin disk, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thin+thick disk, or total). 
     :type mode_comp: str
-    :param zlim: Range of heights [zmin,zmax], pc. 
+    :param zlim: Range of heights [*zmin,zmax*], pc. 
     :type zlim: array-like 
-    :param ages: Set of age-bins, Gyr.
+    :param ages: Set of age bins, Gyr.
     :type ages: array-like
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
         jjmodel.iof.TabSaver.sigwr_monoage_save.  
     :type save: boolean
-    :param between: Optional. If true, the output quantity corresponds to the age intervals 
-        specified by parameter ages. Otherwise scale heights for the individual single mono-age  
-        subpopulations are returned.
+    :param between: Optional. If True, the output quantity corresponds to the age intervals 
+        specified by parameter **ages**. Otherwise the individual single mono-age subpopulations 
+        are returned (i.e., age-bins of width ``tr``, model age resolution).
     :type between: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
-         not matter density. Active only when mode_pop or tab are given. 
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``
+    :type tab: list[astropy table] or list[list[astropy table]] 
+    :param number: Optional. If True, calculated quantity is weighted by the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not matter density (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
 
-    :return: Radial profiles of the W-velocity dispersion of mono-age subpopulations, km/s. 
-        Array shape is (a.Rbins,len(ages)) or (a.Rbins,len(ages)-1) if between==True. 
-    :rtype: 2d array
+    :return: Radial profiles of the W-velocity dispersion of mono-age subpopulations, :math:`\mathrm{km \ s^{-1}}`. 
+        Array shape is ``(a.Rbins,len(ages))`` or ``(a.Rbins,len(ages)-1)`` if **between** is True. 
+    :rtype: 2d-array
     """
 
     this_function = inspect.stack()[0][3]
@@ -3698,10 +3593,11 @@ def sigwr_monomet(mode_comp,zlim,mets,p,a,**kwargs):
     """
     W-velocity dispersion for the mono-metallicity subpoplations as a function 
     of Galactocentric distance.
-
-    :param mode_comp: Galactic component, can be 'd', 'dt' or 'tot' (thin disk, thin+thick disk or total). 
+    
+    :param mode_comp: Galactic component, can be ``'d'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thin+thick disk, or total). 
     :type mode_comp: str
-    :param zlim: Range of heights [zmin,zmax], pc. 
+    :param zlim: Range of heights [*zmin,zmax*], pc. 
     :type zlim: array-like 
     :param mets: Set of metallicity bins.
     :type mets: array-like
@@ -3713,24 +3609,24 @@ def sigwr_monomet(mode_comp,zlim,mets,p,a,**kwargs):
         to the output directory. The output path and table name are predcribed by 
         jjmodel.iof.TabSaver.sigwr_monomet_save.  
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
-         not matter density. Active only when mode_pop or tab are given. 
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``
+    :type tab: list[astropy table] or list[list[astropy table]] 
+    :param number: Optional. If True, calculated quantity is weighted by the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not matter density (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
-    :type mode_iso: str
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
+    :type mode_iso: str 
 
-    :return: Radial profile of the W-velocity dispersion for the mono-metallicity bins, km/s. 
-        Array shape is (a.Rbins,len(mets)-1).   
-    sigwmet : 2d array
+    :return: Radial profile of the W-velocity dispersion for the mono-metallicity bins, :math:`\mathrm{km \ s^{-1}}`. 
+        Array shape is ``(a.Rbins,len(mets)-1)``.   
+    :rtype: 2d-array
     """
     
     this_function = inspect.stack()[0][3]
@@ -3828,21 +3724,21 @@ def sigwr_monomet(mode_comp,zlim,mets,p,a,**kwargs):
 def mean_quantity(mode_comp,R,zlim,quantity,p,a,**kwargs):
     """
     Calculates mean value of some quantity as a function of height z
-    weighted by the spatial number densities of the stellar assemblies. 
+    weighted by the spatial number densities of 'stellar assemblies'. 
     
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total). 
     :type mode_comp: str
-    :param R: Galactocentric distance, kpc 
+    :param R: Galactocentric distance, kpc.
     :type R: scalar 
-    :param zlim: Range of heights [zmin,zmax], pc. 
+    :param zlim: Range of heights [*zmin,zmax*], pc. 
     :type zlim: array-like 
-    :param quantity: Name of column of the stellar assemblies table for which 
-        the function has to be applied; for velocity dispersion use 'sigw'. 
+    :param quantity: Name of the column in a stellar assemblies table to which 
+        the function has to be applied; for velocity dispersion use ``'sigw'``. 
     :type quantity: str
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param ages: Optional. Set of age bins, Gyr. 
     :type ages: array-like
@@ -3852,21 +3748,21 @@ def mean_quantity(mode_comp,R,zlim,quantity,p,a,**kwargs):
         to the output directory. The output path and table name are predcribed by 
         jjmodel.iof.TabSaver.mean_quantity_save.  
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+    :param tab: Optional. Stellar assemblies table, parameter alternative to **mode_pop**. 
+        If mode_comp=='tot', **tab** must be organized as a list of tables corresponding to this **R**:  
+        [*table_d*,*table_t*,table_sh*]. 
     :type tab: astropy table or list[astropy table] 
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
-    :type mode_iso: str
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
+    :type mode_iso: str 
  
     :return: Vertical profile of the given quantity in the selected 
-        horizontal slice zlim. Array of len (zlim[1]-zlim[0])//p.dz. 
-    :rtype: 1d array
+        horizontal slice **zlim**. Array of length ``(zlim[1]-zlim[0])//p.dz``. 
+    :rtype: 1d-array
     """    
     
     this_function = inspect.stack()[0][3]
@@ -3996,48 +3892,49 @@ def pops_in_volume(mode_comp,R,volume,p,a,**kwargs):
     """
     Calculates the number of stars in a volume.  
 
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total). 
     :type mode_comp: str
     :param R: Galactocentric distance, kpc. 
     :type R: scalar 
     :param volume: 
-        If scalar, then this volume is the same for all z-slices, e.g. cylinder can be modeled  
-        in this way. If value is an array (must match the model grid a.z or be consistent with 
-        the assumed zlim and zmax in kwargs, see below), then each volumes of z-slices can be different. 
-        This is suitable for the modeling of a sphere or a cone. Units are pc^3. Note that if the modeled 
-        volume is located at both positive and negative z, this must be included here, as the function
+        If scalar, then volume is the same for all z-bins, e.g. cylinder can be modeled  
+        in this way. If **volume** is an array (must match the model grid ``a.z`` or be consistent with  
+        the assumed **zlim** in *kwargs*, see below), then volumes of the different z-bins can also be different. 
+        This is suitable for the modeling of a sphere or a cone. Units are :math:`\mathrm{pc}^3`. Note that if the modeled 
+        volume is located at both positive and negative z, **volume** must include their sum, as this function 
         works with the absolute z-values. 
     :type volume: scalar or array-like 
+    :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
         jjmodel.iof.TabSaver.mean_quantity_save.  
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+    :param tab: Optional. Stellar assemblies table, parameter alternative to **mode_pop**. 
+        If mode_comp=='tot', **tab** must be organized as a list of tables corresponding to this **R**:  
+        [*table_d*,*table_t*,table_sh*]. 
     :type tab: astropy table or list[astropy table] 
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
-    :type mode_iso: str
-    :param zlim: optional. Range of heights [zmim,zmax] to be processed. Note that zmax-zmin > p.dz, 
-        the slice cannot be thinner than the model z-resolution. If this parameter is given, and volume 
-        is an array, be sure that len(volume) equals to (zmax-zlim)//p.dz. If no zlim is given, then 
-        all z from 0 to p.zmax are considered.
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
+    :type mode_iso: str 
+    :param zlim: Optional. Range of heights [*zmim,zmax*] to be considered. Note that *zmax*-*zmin* > `p.dz`, 
+        the slice cannot be thinner than the model vertical resolution. If **zlim** is given, and **volume** 
+        is an array, be sure that length of **volume** equals to ``(zmax-zlim)//p.dz``. If no **zlim** is given, then 
+        all heights from 0 to ``p.zmax`` are considered.
     :type zlim: array-like
     :param vln: Info about the chosen volume shape. 
     :type vln: str
     
-    :return: Table. Column 'Nz' contains the number of stars (stellar assembly populations) located 
-        in the volume specified by the parameters R (where in the disk), zlim (which z range),
-        and volume (what is the volume of a z-slice = allows to model different shapes). 
+    :return: Table. Column ``'Nz'`` contains the number of stars (stellar assembly populations) located 
+        in the volume specified by the parameters **R** (where in the disk), **zlim** (range of heights),
+        and **volume** (what are volumes of z-slices - allows to model different shapes). 
     :rtype: astropy table   
     """
     
@@ -4170,49 +4067,44 @@ def pops_in_volume(mode_comp,R,volume,p,a,**kwargs):
 
 def disk_brightness(mode_comp,mode_geom,bands,p,a,**kwargs):
     """
-    MW as an external galaxy. Calculates the surface brightness or colour profile of the MW if it is viewed 
+    MW as an external galaxy. Function calculates the surface brightness or colour profile of the MW if it is viewed 
     edge-on or face-on (individual model components and stellar populations can be selected). 
     
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total). 
     :type mode_comp: str
-    :param mode_geom: Modeled geometry. Applicable for Hess diagram calculation, stellar assembly 
-        table in volume, volume itself: can be 'local_sphere', 'local_cylinder' or 'rphiz_box'. 
-        For the calculation of disk brightness or colour profile, it is disk orientation with respect 
-        to observer: 'face-on' or 'edge-on'. 
+    :param mode_geom: Modeled geometry. Disk orientation with respect to the observer: ``'face-on'`` or ``'edge-on'``. 
     :type mode_geom: str
-    :param bands: If bands is a string, it corresponds to the band of the surface brightness profile. 
-        If it is a list, then it gives the two band names to be used for the colour profilie - e.g. 
-        ['U','V'] for U-V.
-    :type bands: string or list
+    :param bands: If a string, this parameter corresponds to the band for the surface brightness profile. 
+        If it is a list, then **bands** gives the names of two bands to be used for the color profile - e.g. 
+        ``['U','V']`` for *U-V*.
+    :type bands: str or list
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
         jjmodel.iof.TabSaver.disk_brightness_save.  
     :type save: boolean
-    :param zlim: optional. Range of heights [zmim,zmax] to be processed. Note that zmax-zmin > p.dz, 
-        the slice cannot be thinner than the model z-resolution. If this parameter is given, and volume 
-        is an array, be sure that len(volume) equals to (zmax-zlim)//p.dz. If no zlim is given, then 
-        all z from 0 to p.zmax are considered.
+    :param zlim: Optional. Range of heights [*zmim,zmax*] to be considered, pc. If not given, 
+        all heights up to ``p.zmax`` are taken into account.
     :type zlim: array-like
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
-    :type mode_iso: str
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``
+    :type tab: list[astropy table] or list[list[astropy table]] 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
+    :type mode_iso: str 
     
-    :return: Disk surface brightness profile (mag/arcsec^2) or colour 
-        profile (mag). Use together with a.R array. 
-    :rtype: 1d array
+    :return: Disk surface brightness profile (:math:`\mathrm{mag \ arcsec^{-2}}`) or color 
+        profile (mag). Use together with ``a.R`` array. 
+    :rtype: 1d-array
     """
     
     this_function = inspect.stack()[0][3]
@@ -4358,42 +4250,42 @@ def disk_brightness(mode_comp,mode_geom,bands,p,a,**kwargs):
     
 def rz_map(mode_comp,p,a,**kwargs):
     """
-    Matter (or number) volume density map in Rz coordinates. 
+    Mass (or number) density map in R and z Galactic coordinates. 
     
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total).
     :type mode_comp: str
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
         jjmodel.iof.TabSaver.rz_map_save.  
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
-         not matter density. Active only when mode_pop or tab are given. 
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``. 
+    :type tab: list[astropy table] or list[list[astropy table]
+    :param number: Optional. If True, calculated quantity is weighted by the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not matter density (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
+    :type mode_iso: str 
     :param ages: Optional. Set of age bins, Gyr. 
     :type ages: array-like
     :param mets: Optional. Set of metallicity bins.
     :type mets: array-like
     :param dz: Optional. Vertical resolution, pc. 
     :type dz: scalar
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
-    :type mode_iso: str
 
-    :return: Map of matter or stellar density in Galactic coordinates.
-    :rtype: 2d array        
+    :return: Map of stellar mass or number density in Galactic coordinates.
+    :rtype: 2d-array        
     """
     
     this_function = inspect.stack()[0][3]
@@ -4513,43 +4405,42 @@ def rz_map(mode_comp,p,a,**kwargs):
 
 def rz_map_quantity(mode_comp,quantity,p,a,**kwargs):
     """
-    Calculates mean value of some quantity in Rz-bins (use 'sigw'
-    or names of stellar assemblies tables' columns). 
+    Calculates mean value of some quantity in R and z Galactic coordinates. 
     
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total).
     :type mode_comp: str
-    :param quantity: Name of column of the stellar assemblies table for which 
-        the function has to be applied; for velocity dispersion use 'sigw'. 
+    :param quantity: :param quantity: Name of the column in a stellar assemblies table to which 
+        the function has to be applied; for velocity dispersion use ``'sigw'``. 
     :type quantity: str
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
         jjmodel.iof.TabSaver.rz_map_quantity_save.  
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
-    :type tab: astropy table or list[astropy table] 
+    :param tab: Optional. Stellar assemblies table(s), parameter alternative to **mode_pop**. 
+        If **mode_comp** = ``'tot'``, **tab** must be [[*table_d,table_t,table_sh*]_ *rmin*,...,[*table_d,table_t,table_sh*]_ *rmax*], 
+        where *rmin* and *rmax* are ``p.Rmin`` and ``p.Rmax``. 
+    :type tab: list[astropy table] or list[list[astropy table]
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
+    :type mode_iso: str     
     :param ages: Optional. Set of age bins, Gyr. 
     :type ages: array-like
     :param mets: Optional. Set of metallicity bins.
     :type mets: array-like
     :param dz: Vertical resolution, pc. 
     :type dz: scalar
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
-    :type mode_iso: str
 
-    :return: Map of chosen quantity in Galactic coordinates.
-    :rtype: 2d array        
+    :return: Map of the chosen quantity in Galactic coordinates.
+    :rtype: 2d-array        
     """
     
     this_function = inspect.stack()[0][3]
@@ -4592,48 +4483,48 @@ def rz_map_quantity(mode_comp,quantity,p,a,**kwargs):
  
 def fw_hist(mode_comp,R,zlim,p,a,**kwargs):
     """
-    |W|-velocity distribution function. 
+    W-velocity distribution function at a given Galactocentric distance. 
     
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total).
     :type mode_comp: str
     :param R: Galactocentric distance, kpc. 
     :type R: scalar 
-    :param zlim: Range of heights [zmin,zmax], pc. 
+    :param zlim: Range of heights [*zmin,zmax*], pc. 
     :type zlim: array-like 
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
         jjmodel.iof.TabSaver.fw_save.  
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param tab: Optional. Stellar assemblies table, parameter alternative to mode_pop. 
-        If mode_comp=='dt', tab must be organized as a list of tables for the thin and thick disk: 
-        [table_d,table_t]. If mode_comp=='tot', tab=[table_d,table_t,table_sh]. 
+    :param tab: Optional. Stellar assemblies table, parameter alternative to **mode_pop**. 
+        If mode_comp=='tot', **tab** must be organized as a list of tables corresponding to this **R**:  
+        [*table_d*,*table_t*,table_sh*]. 
     :type tab: astropy table or list[astropy table] 
-    :param number: Optional. If true, the calculated quantity is the spatial number density of stars,
-         not matter density. Active only when mode_pop or tab are given. 
+    :param number: Optional. If True, calculated quantity is weighted by the spatial number density of stars (:math:`\mathrm{number \ pc^{-3}}`),
+         not matter density (:math:`\mathrm{M_\odot \ pc^{-3}}`). Active only when **mode_pop** or **tab** is given. 
     :type number: boolean
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
-    :type mode_iso: str
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
+    :type mode_iso: str     
     :param ages: Optional. Set of age-bins, Gyr. 
     :type ages: array-like
     :param mets: Optional. Set of metallicity bins. 
     :type mets: array-like
-    :param wmax: Maximum value of |W|-velocity, km/s. 
+    :param wmax: Maximum value of W-velocity, :math:`\mathrm{km \ s^{-1}}`. 
     :type wmax: scalar
-    :param dw: Step in |W|-velocity, km/s. 
+    :param dw: Step in W-velocity, :math:`\mathrm{km \ s^{-1}}`. 
     :type dw: scalar
     
-    :return: Normalized on area W-velocity distribution (histogram) and |W|-grid (bin centers), km/s. 
-    :rtype: [1d array, 1d array]
+    :return: Normalized on area W-velocity distribution (histogram) and W-grid (bin centers), :math:`\mathrm{km \ s^{-1}}`. 
+    :rtype: [1d-array, 1d-array]
     """
     
     this_function = inspect.stack()[0][3]
@@ -4702,49 +4593,48 @@ def hess_simple(mode_comp,mode_geom,bands,mag_range,mag_step,p,a,**kwargs):
     """
     Hess diagram for the simple volumes. 
     
-    :param mode_comp: Galactic component, can be 'd', 't', 'sh', 'dt' or 'tot' 
-        (thin disk, thick disk, halo, thin+thick disk or total). 
+    :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+        (thin disk, thick disk, halo, thin+thick disk, or total).
     :type mode_comp: str
-    :param mode_geom: Modeled geometry. Can be 'local_sphere', 'local_cylinder' or 'rphiz_box'. 
+    :param mode_geom: Modeled geometry. Can be ``'local_sphere'``, ``'local_cylinder'``, or ``'rphiz_box'``. 
     :type mode_geom: str
     :param bands: List of names of photometric columns. 
-        Three column names must be given, e.g. ['B','V','V'] for (B-V) versus M_V. 
+        Three column names must be given, e.g. ``['B','V','V']`` for (*B-V*) versus :math:`M_\mathrm{V}`. 
     :type bands: list[str]
-    :param mag_range: Min-max magnitudes along the x- and y-axis of the Hess 
-        diagram, [[x_min,x_max],[y_min,y_max]]. 
-    :type mag_range: list[list]
-    :param mag_step: Step along the x- and y-axis of the Hess diagram, [dx,dy]. 
+    :param mag_range: Minimal and maximal magnitude along the x- and y-axis of the Hess 
+        diagram, [[*x_min,x_max*],[*y_min,y_max*]]. 
+    :type mag_range: list[list[scalar]]
+    :param mag_step: Step along the x- and y-axis of the Hess diagram, [*dx,dy*]. 
     :type mag_step: array-like
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
-
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
         jjmodel.iof.TabSaver.hess_save.  
     :type save: boolean
-    :param mode_pop: Optional. Name of stellar population. Can a pre-defined one 
-        ('a','f','ceph','rc','rc+','gdw','kdw','mdw') or custom (if it was selected 
-        and saved as a table in advance). 
+    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+        (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+        (if it was selected and saved as a table in advance). 
     :type mode_pop: str
-    :param mode_iso: Optional. Defines which set of isochrones is used, can be 'Padova', 'MIST' or 'BaSTI'. 
-        If not specified, 'Padova' is the default isochrone set. 
+    :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+        If not specified, Padova is the default isochrone set. 
     :type mode_iso: str
-    :param r_minmax: Optional. Minimal and maximal radius of the spherical shell if mode_geom=='sphere' 
-        or minimal and maximal radius of the cylindrical shell if mode_geom=='cylinder', pc.   
+    :param r_minmax: Optional. Minimal and maximal radius of the spherical shell if **mode_geom** is ``'sphere'`` 
+        or minimal and maximal radius of the cylindrical shell if **mode_geom** is ``'cylinder'``, pc.   
     :type r_minmax: array-like
-    :param R_minmax: Optional. Minimal and maximal Galactocentric distance if mode_geom=='rphiz_box', kpc. 
+    :param R_minmax: Optional. Minimal and maximal Galactocentric distance if **mode_geom** is ``'rphiz_box'``, kpc. 
     :type R_minmax: array-like
-    :param dphi: Optional. Minimal and maximal Galactic angle phi if mode_geom=='rphiz_box', deg.
+    :param dphi: Optional. Minimal and maximal Galactic angle :math:`\\phi` if **mode_geom** is 'rphiz_box', deg.
     :type dphi: array-like
-    :param smooth: Optional. Width of smoothing window in x and y, mag. 
+    :param smooth: Optional. Width of the smoothing window in x and y, mag. 
     :type smooth: array-like
-    :param zlim: Optional. Range of heights [zmim,zmax] to be processed, pc.
+    :param zlim: Optional. Range of heights [*zmim,zmax*] to be considered, pc.
     :type zlim: array-like
 
     :return: Hess diagram. 
-    :rtype: 2d array 
+    :rtype: 2d-array 
     """
         
     this_function = inspect.stack()[0][3]
@@ -4846,13 +4736,13 @@ def hess_simple(mode_comp,mode_geom,bands,mag_range,mag_step,p,a,**kwargs):
 def fi_iso(ah,p,a,**kwargs):
     """
     Calculates the normalized vertical gravitational potential as 
-    a function of R.
+    a function of Galactocentric distance.
     
     :param ah: DM scaling parameter, kpc. 
     :type ah: scalar 
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
@@ -4860,7 +4750,7 @@ def fi_iso(ah,p,a,**kwargs):
     :type save: boolean
     
     :return: Total graviatational potential. 
-    :rtype: 2d array
+    :rtype: 2d-array
     """
     
     this_function = inspect.stack()[0][3]
@@ -4899,13 +4789,14 @@ def fi_iso(ah,p,a,**kwargs):
 
 def rot_curve(ah,p,a,**kwargs):
     """
-    Calculatess the circular velocity Vc as a function of R.
+    Calculatess the circular velocity :math:`\\upsilon_\mathrm{c}` as a function of 
+    Galactocentric distance.
     
     :param ah: DM scaling parameter, kpc. 
     :type ah: scalar 
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
-    :param a: Collection of the fixed model parameters, useful quantities and arrays.
+    :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
@@ -4914,9 +4805,8 @@ def rot_curve(ah,p,a,**kwargs):
     :param R: Radial grid, kpc. 
     :type R: array-like
     
-    :return: Galactic rotation curve, km/s. 
+    :return: Galactic rotation curve, :math:`\mathrm{km / s^{-1}}`. 
     :rtype: dict
-
     """
     
     this_function = inspect.stack()[0][3]
