@@ -12,6 +12,7 @@ sphinx:
 # Explicitly set the version of Python and its requirements
 python:
   install:
+    - requirements: jjmodel/docs/requirements.txt
     - method: setuptools
       path: .
-    - requirements: jjmodel/docs/requirements.txt
+
