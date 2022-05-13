@@ -1,0 +1,1760 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Plotting tools &#8212; jjmodel 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorials" href="tutorials.html" />
+    <link rel="prev" title="Output analysis" href="analysis.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="plotting-tools">
+<h1>Plotting tools<a class="headerlink" href="#plotting-tools" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="jjmodel.plotting.Plotting">
+<em class="property">class </em><code class="sig-prename descclassname">jjmodel.plotting.</code><code class="sig-name descname">Plotting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">inp</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for plotting. 
+All methods of this class return figure and axes (f, ax).</p>
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">inp</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class instance is initialized by three basic parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<em>namedtuple</em>) -- Set of model parameters from the parameter file.</p></li>
+<li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
+<li><p><strong>inp</strong> (<em>dict</em>) -- Collection of the input functions including SFR, AVR, AMR, and IMF.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.agehist_plt">
+<code class="sig-name descname">agehist_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.agehist_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.agehist_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Age distribution (normalized on area) as a function of height and Galactocentric distance. 
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.agehist" title="jjmodel.analysis.agehist"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.agehist()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights [<em>zmin,zmax</em>], pc.</p></li>
+<li><p><strong>cumulative</strong> (<em>boolean</em>) -- Optional. If True, the normalized cumulative age distributions will be plotted.</p></li>
+<li><p><strong>sigma_gauss</strong> (<em>scalar</em>) -- Optional. Standard deviation of the Gaussian kernel used to smooth
+the age distributions, Gyr.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not by matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> (<em>boolean</em>) -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.agehist_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.agehist_rsun_plt">
+<code class="sig-name descname">agehist_rsun_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.agehist_rsun_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.agehist_rsun_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Age distribution (normalized on area) as a function of height for the Solar neighbourhood, <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>.
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.agehist" title="jjmodel.analysis.agehist"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.agehist()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights [<em>zmin,zmax</em>], pc. Or set of z-bin edges, pc.</p></li>
+<li><p><strong>cumulative</strong> (<em>boolean</em>) -- Optional. If True, the normalized cumulative age distributions will be plotted.</p></li>
+<li><p><strong>sigma_gauss</strong> (<em>scalar</em>) -- Optional. Standard deviation of the Gaussian kernel used to smooth
+the age distributions, Gyr.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>astropy table</em><em> or </em><em>list</em><em>[</em><em>astropy table</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [<em>table_d,table_t,table_sh</em>] with tables for <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not by matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name. Needed only when <strong>zlim</strong> is not a single 
+slice, but a set of z-bins.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.agehist_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.ager_plt">
+<code class="sig-name descname">ager_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.ager_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.ager_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radial age profiles. Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.ager" title="jjmodel.analysis.ager"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.ager()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights [<em>zmin,zmax</em>], pc.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not by matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> (<em>boolean</em>) -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.ager_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.agez_plt">
+<code class="sig-name descname">agez_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.agez_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.agez_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean age as a function of height z and Galactocentric distance R.
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.agez" title="jjmodel.analysis.agez"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.agez()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not by matter density in (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> (<em>boolean</em>) -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.agez_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.agez_rsun_plt">
+<code class="sig-name descname">agez_rsun_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.agez_rsun_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.agez_rsun_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean age as a function of height z for the Solar neighbourhood, <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>.
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.agez" title="jjmodel.analysis.agez"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.agez()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>astropy table</em><em> or </em><em>list</em><em>[</em><em>astropy table</em><em>]</em>) -- Optional. Stellar assemblies table, parameter alternative to mode_pop. 
+For <strong>mode_pop</strong> = <code class="docutils literal notranslate"><span class="pre">tot</span></code>, <em>tab</em> is constructed as [<em>table_d,table_t,table_sh</em>] with tables for <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not by matter density in (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.agez_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.amr_rsun_plt">
+<code class="sig-name descname">amr_rsun_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.amr_rsun_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.amr_rsun_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Age-metallicity relation (AMR) for the Solar neighbourhood, <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component. Can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code> (thin disk), <code class="docutils literal notranslate"><span class="pre">'t'</span></code> (thick disk), or 
+<code class="docutils literal notranslate"><span class="pre">'dt'</span></code> (thin + thick disk).</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved (call <code class="docutils literal notranslate"><span class="pre">a.T['inpplt']</span></code> 
+to display the folder name).</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.amrr_plt">
+<code class="sig-name descname">amrr_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.amrr_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.amrr_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Age-metallicity relation (AMR) of the disk as a function of Galactocentric distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component. Can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code> (thin disk), <code class="docutils literal notranslate"><span class="pre">'t'</span></code> (thick disk), or 
+<code class="docutils literal notranslate"><span class="pre">'dt'</span></code> (thin + thick disk).</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> (<em>boolean</em>) -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved (call <code class="docutils literal notranslate"><span class="pre">a.T['inpplt']</span></code> 
+to display the folder name).</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.avr_plt">
+<code class="sig-name descname">avr_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.avr_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.avr_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots age - W-velocity dispersion relation (AVR).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If true, the figure will be saved. 
+The output directory is <code class="docutils literal notranslate"><span class="pre">a.T['kinplt']</span></code>.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.avr_rsun_plt">
+<code class="sig-name descname">avr_rsun_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.avr_rsun_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.avr_rsun_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots age - W-velocity dispersion relation (AVR) 
+for the Solar neighbourhood, at <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory is <code class="docutils literal notranslate"><span class="pre">a.T['kinplt']</span></code>.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.disk_brightness_plt">
+<code class="sig-name descname">disk_brightness_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">mode_geom</span></em>, <em class="sig-param"><span class="n">bands</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.disk_brightness_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.disk_brightness_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface brightness or colour profile of the MW viewed edge-on or face-on. 
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.disk_brightness" title="jjmodel.analysis.disk_brightness"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.disk_brightness()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>mode_geom</strong> (<em>str</em>) -- Modeled geometry. Disk orientation with respect to the observer: <code class="docutils literal notranslate"><span class="pre">'face-on'</span></code> or <code class="docutils literal notranslate"><span class="pre">'edge-on'</span></code>.</p></li>
+<li><p><strong>bands</strong> (<em>str</em><em> or </em><em>list</em>) -- If a string, this parameter corresponds to the band for the surface brightness profile. 
+If it is a list, then <strong>bands</strong> gives the names of two bands to be used for the color profile - e.g. 
+<code class="docutils literal notranslate"><span class="pre">['U','V']</span></code> for <em>U-V</em>.</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Optional. Range of heights [<em>zmim,zmax</em>] to be considered, pc. If not given, 
+all heights up to <code class="docutils literal notranslate"><span class="pre">p.zmax</span></code> are taken into account.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code></p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.disk_brightness_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.fi_iso_plt">
+<code class="sig-name descname">fi_iso_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.fi_iso_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.fi_iso_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>2d map (R-z plane) of the normalized gravitational potential with isolines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory is <code class="docutils literal notranslate"><span class="pre">a.T['fiplt']</span></code>.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.fi_plt">
+<code class="sig-name descname">fi_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.fi_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.fi_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vertical gravitational potential as a function of Galactocentric distance. 
+Potential is normalized to <code class="docutils literal notranslate"><span class="pre">SIGMA_E^2</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory is <code class="docutils literal notranslate"><span class="pre">a.T['fiplt']</span></code>.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.fi_rsun_plt">
+<code class="sig-name descname">fi_rsun_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.fi_rsun_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.fi_rsun_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>The normalized vertical gravitational potential  
+for the Solar neighbourhood, at <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory is <code class="docutils literal notranslate"><span class="pre">a.T['fiplt']</span></code>.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.fw_hist_plt">
+<code class="sig-name descname">fw_hist_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.fw_hist_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.fw_hist_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id1"><span class="problematic" id="id2">|W|</span></a>-velocity distribution function. Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.fw_hist" title="jjmodel.analysis.fw_hist"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.fw_hist()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component. Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>R</strong> (<em>scalar</em><em> or </em><em>array-like</em>) -- Galactocentric distance, kpc. Can be a single distance bin or a set of bins.</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights, pc. Can be a single slice [<em>zmin,zmax</em>] or a set of z-bin edges.</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Optional. Set of age bins, Gyr.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Optional. Set of metallicity bins.</p></li>
+<li><p><strong>wmax</strong> (<em>scalar</em>) -- Maximum value of <a href="#id3"><span class="problematic" id="id4">|W|</span></a>-velocity, <span class="math notranslate nohighlight">\(\mathrm{km \ s^{-1}}\)</span>.</p></li>
+<li><p><strong>dw</strong> (<em>scalar</em>) -- Step in <a href="#id5"><span class="problematic" id="id6">|W|</span></a>-velocity, <span class="math notranslate nohighlight">\(\mathrm{km \ s^{-1}}\)</span>.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>astropy table</em><em> or </em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>, or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table, parameter alternative to <strong>mode_pop</strong>. 
+For a single radius <strong>R</strong> and <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, 
+<strong>tab</strong> must be organized as a list of tables corresponding to this <strong>R</strong>: [<em>table_d</em>,*table_t*,table_sh*]. 
+If <strong>R</strong> is an array, then <strong>tab</strong> is [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are the minimum and maximum values from <strong>R</strong>. If <strong>R</strong> is not specified, <em>rmin</em> and <em>rmax</em> 
+correspond to <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.fw_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.g_rsun_plt">
+<code class="sig-name descname">g_rsun_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.g_rsun_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.g_rsun_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots mass loss function for the Solar neighbourhood, <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component. Can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code> (thin disk), <code class="docutils literal notranslate"><span class="pre">'t'</span></code> (thick disk), or 
+<code class="docutils literal notranslate"><span class="pre">'dt'</span></code> (thin + thick disk).</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved (call <code class="docutils literal notranslate"><span class="pre">a.T['inpplt']</span></code> 
+to display the folder name).</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.gr_plt">
+<code class="sig-name descname">gr_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.gr_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.gr_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mass loss as a function of time and Galactocentric distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component. Can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code> (thin disk), <code class="docutils literal notranslate"><span class="pre">'t'</span></code> (thick disk), or 
+<code class="docutils literal notranslate"><span class="pre">'dt'</span></code> (thin + thick disk).</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> (<em>boolean</em>) -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved (call <code class="docutils literal notranslate"><span class="pre">a.T['inpplt']</span></code> 
+to display the folder name).</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.h_plt">
+<code class="sig-name descname">h_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.h_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.h_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>MW thin-disk's scale height as a function of time (and age).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colomap name.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory is <code class="docutils literal notranslate"><span class="pre">a.T['heightplt']</span></code>.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.h_rsun_plt">
+<code class="sig-name descname">h_rsun_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.h_rsun_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.h_rsun_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>MW thin-disk's scale height as a function of time (and age)
+for the Solar neighbourhood, at <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory is <code class="docutils literal notranslate"><span class="pre">a.T['heightplt']</span></code>.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.hess_simple_plt">
+<code class="sig-name descname">hess_simple_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">mode_geom</span></em>, <em class="sig-param"><span class="n">bands</span></em>, <em class="sig-param"><span class="n">mag_range</span></em>, <em class="sig-param"><span class="n">mag_step</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.hess_simple_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.hess_simple_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hess diagram for the simple volumes. PLotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.hess_simple" title="jjmodel.analysis.hess_simple"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.hess_simple()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>mode_geom</strong> (<em>str</em>) -- Modeled geometry. Can be <code class="docutils literal notranslate"><span class="pre">'local_sphere'</span></code>, <code class="docutils literal notranslate"><span class="pre">'local_cylinder'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'rphiz_box'</span></code>.</p></li>
+<li><p><strong>bands</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) -- List of names of photometric columns. 
+Three column names must be given, e.g. <code class="docutils literal notranslate"><span class="pre">['B','V','V']</span></code> for (<em>B-V</em>) versus <span class="math notranslate nohighlight">\(M_\mathrm{V}\)</span>.</p></li>
+<li><p><strong>mag_range</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>scalar</em><em>]</em><em>]</em>) -- Minimal and maximal magnitude along the x- and y-axis of the Hess 
+diagram, [[<em>x_min,x_max</em>],[<em>y_min,y_max</em>]].</p></li>
+<li><p><strong>mag_step</strong> (<em>array-like</em>) -- Step along the x- and y-axis of the Hess diagram, [<em>dx,dy</em>].</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>r_minmax</strong> (<em>array-like</em>) -- Optional. Minimal and maximal radius of the spherical shell if <strong>mode_geom</strong> is <code class="docutils literal notranslate"><span class="pre">'sphere'</span></code> 
+or minimal and maximal radius of the cylindrical shell if <strong>mode_geom</strong> is <code class="docutils literal notranslate"><span class="pre">'cylinder'</span></code>, pc.</p></li>
+<li><p><strong>R_minmax</strong> (<em>array-like</em>) -- Optional. Minimal and maximal Galactocentric distance if <strong>mode_geom</strong> is <code class="docutils literal notranslate"><span class="pre">'rphiz_box'</span></code>, kpc.</p></li>
+<li><p><strong>dphi</strong> (<em>array-like</em>) -- Optional. Minimal and maximal Galactic angle <span class="math notranslate nohighlight">\(\phi\)</span> if <strong>mode_geom</strong> is 'rphiz_box', deg.</p></li>
+<li><p><strong>smooth</strong> (<em>array-like</em>) -- Optional. Width of the smoothing window in x and y, mag.</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Optional. Range of heights [<em>zmim,zmax</em>] to be considered, pc.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.hess_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.hr_gas_plt">
+<code class="sig-name descname">hr_gas_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.hr_gas_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.hr_gas_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale heights of molecular and atomic gas as functions of Galactocentric distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory is <code class="docutils literal notranslate"><span class="pre">a.T['inpplt']</span></code>.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.hr_monoage_plt">
+<code class="sig-name descname">hr_monoage_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">ages</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.hr_monoage_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.hr_monoage_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale heights of the disk's mono-age subpopulations as a function of Galactocentric distance.
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.hr_monoage" title="jjmodel.analysis.hr_monoage"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.hr_monoage()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thin+thick disk, or total).</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Set of age bins, Gyr.</p></li>
+<li><p><strong>between</strong> (<em>boolean</em>) -- Optional. If True, the output quantity corresponds to the age intervals 
+specified by parameter <strong>ages</strong>. Otherwise the individual single mono-age subpopulations 
+are returned (i.e., age-bins of width <code class="docutils literal notranslate"><span class="pre">tr</span></code>, model age resolution).</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code></p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.hr_monoage_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.hr_monomet_plt">
+<code class="sig-name descname">hr_monomet_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">mets</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.hr_monomet_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.hr_monomet_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale heights of the disk's mono-metallicity sub-populations as a function of Galactocentric distance.
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.hr_monomet" title="jjmodel.analysis.hr_monomet"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.hr_monomet()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thin+thick disk, or total).</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Set of metallicity bins.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code></p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.hr_monomet_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.kz_plt">
+<code class="sig-name descname">kz_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.kz_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.kz_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vertical gravitational force of the different model components calculated 
+for a fixed Galactocentric distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory is <code class="docutils literal notranslate"><span class="pre">a.T['fiplt']</span></code>.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.methist_plt">
+<code class="sig-name descname">methist_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.methist_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.methist_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Metallicity distribution (normalized on area) as a function of height and Galactocentric distance. 
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.methist" title="jjmodel.analysis.methist"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.methist()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights [<em>zmin,zmax</em>], pc.</p></li>
+<li><p><strong>metbins</strong> (<em>array-like</em>) -- Optional. Set of metallicity bins. If not given, the grid is -1.1,...,0.8 dex 
+with 0.05 dex step.</p></li>
+<li><p><strong>cumulative</strong> (<em>boolean</em>) -- Optional. If True, the normalized cumulative metallicity distributions will be plotted.</p></li>
+<li><p><strong>sigma_gauss</strong> (<em>scalar</em>) -- Optional. Standard deviation of the Gaussian kernel used to smooth
+the metallicity distributions, dex.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not by matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.methist_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.methist_rsun_plt">
+<code class="sig-name descname">methist_rsun_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.methist_rsun_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.methist_rsun_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Metallicity distribution (normalized on area) as a function of height 
+for the Solar neighbourhood, p. Rsun. Plotting for jjmodel.analysis.methist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights [<em>zmin,zmax</em>], pc. Or set of z-bin edges, pc.</p></li>
+<li><p><strong>metbins</strong> (<em>array-like</em>) -- Optional. Set of metallicity bins. If not given, the grid is -1.1,...,0.8 dex 
+with 0.05 dex step.</p></li>
+<li><p><strong>cumulative</strong> (<em>boolean</em>) -- Optional. If True, the normalized cumulative age distributions will be plotted.</p></li>
+<li><p><strong>sigma_gauss</strong> (<em>scalar</em>) -- Optional. Standard deviation of the Gaussian kernel used to smooth
+the metallicity distributions, dex.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>astropy table</em><em> or </em><em>list</em><em>[</em><em>astropy table</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [<em>table_d,table_t,table_sh</em>] with tables for <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not by matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name. Needed only when <strong>zlim</strong> is not a single 
+slice, but a set of z-bins.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.methist_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.metr_plt">
+<code class="sig-name descname">metr_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.metr_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.metr_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radial metallicity profiles. Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.metr" title="jjmodel.analysis.metr"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.metr()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component. Can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code> (thin disk), <code class="docutils literal notranslate"><span class="pre">'dt'</span></code> (thin + thick disk), 
+or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> (total: thin + thick disk + stellar halo).</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights [<em>zmin,zmax</em>], pc.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not by matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> (<em>boolean</em>) -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.metr_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.metz_plt">
+<code class="sig-name descname">metz_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.metz_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.metz_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean metallicity as a function of height z and Galactocentric distance R.
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.metz" title="jjmodel.analysis.metz"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.metz()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not by matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> (<em>boolean</em>) -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.metz_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.metz_rsun_plt">
+<code class="sig-name descname">metz_rsun_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.metz_rsun_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.metz_rsun_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean metallicity as a function of height z for the Solar neighbourhood, p.Rsun.
+Plotting for jjmodel.analysis.metz.</p>
+<dl class="simple">
+<dt>:param mode_comp:Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> </dt><dd><p>(thin disk, thick disk, halo, thin+thick disk, or total).</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>astropy table</em><em> or </em><em>list</em><em>[</em><em>astropy table</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+For <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">tot</span></code>,  
+<em>tab</em> is constructed as [<em>table_d,table_t,table_sh</em>] with tables for <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not by matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.metz_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.nsfr_plt">
+<code class="sig-name descname">nsfr_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.nsfr_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.nsfr_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalized star formation rate (NSFR) as a function of Galactocentric distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component. Can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code> (thin disk), <code class="docutils literal notranslate"><span class="pre">'t'</span></code> (thick disk), or 
+<code class="docutils literal notranslate"><span class="pre">'dt'</span></code> (thin + thick disk).</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> (<em>boolean</em>) -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved (call <code class="docutils literal notranslate"><span class="pre">a.T['inpplt']</span></code> 
+to display the folder name).</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.nsfr_rsun_plt">
+<code class="sig-name descname">nsfr_rsun_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.nsfr_rsun_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.nsfr_rsun_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalized star formation rate (NSFR) for the Solar neighbourhood, <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component. Can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code> (thin disk), <code class="docutils literal notranslate"><span class="pre">'t'</span></code> (thick disk), or 
+<code class="docutils literal notranslate"><span class="pre">'dt'</span></code> (thin + thick disk).</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved (call <code class="docutils literal notranslate"><span class="pre">a.T['inpplt']</span></code> 
+to display the folder name).</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.rhor_monoage_plt">
+<code class="sig-name descname">rhor_monoage_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="n">ages</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.rhor_monoage_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.rhor_monoage_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radial densiy profiles of the mono-age subpopulations. 
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.rhor_monoage" title="jjmodel.analysis.rhor_monoage"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.rhor_monoage()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights [<em>zmin,zmax</em>], pc.</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Set of age bins, Gyr.</p></li>
+<li><p><strong>sigma</strong> (<em>boolean</em>) -- Optional. If True, the result is surface density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-2}}\)</span>, 
+otherwise the midplane mass density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span> is calculated. 
+In combination with <strong>number</strong> = True, returns the <em>number</em> surface density in <span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-2}}\)</span>.</p></li>
+<li><p><strong>between</strong> (<em>boolean</em>) -- Optional. If True, the output quantity corresponds to the age intervals 
+specified by parameter <strong>ages</strong>. Otherwise the individual single mono-age subpopulations 
+are returned (i.e., age-bins of width <code class="docutils literal notranslate"><span class="pre">tr</span></code>, model age resolution).</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is the spatial number density of stars in <span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>,
+not matter density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>. Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> (<em>boolean</em>) -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.rhor_monoage_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.rhor_monomet_plt">
+<code class="sig-name descname">rhor_monomet_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="n">mets</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.rhor_monomet_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.rhor_monomet_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radial densiy profiles of the mono-metallicity subpopulations. 
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.rhor_monomet" title="jjmodel.analysis.rhor_monomet"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.rhor_monomet()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights [<em>zmin,zmax</em>], pc.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Set of metallicity bins, dex.</p></li>
+<li><p><strong>sigma</strong> (<em>boolean</em>) -- Optional. If True, the result is surface density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-2}}\)</span>, 
+otherwise the midplane mass density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span> is calculated. 
+In combination with <strong>number</strong> = True, returns the <em>number</em> surface density in <span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-2}}\)</span>.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is the spatial number density of stars in <span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>,
+not matter density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>. Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> (<em>boolean</em>) -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.rhor_monomet_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.rhor_plt">
+<code class="sig-name descname">rhor_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.rhor_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.rhor_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radial density profiles of the Galactic components 
+(thin and thick disk, molecular and atomic gas, DM and stellar halo).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sigma</strong> (<em>boolean</em>) -- Optional. If True, surface density profiles (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-2}}\)</span>) will be plotted. 
+By default, the plot displayes midplane densities (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>).</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved (call <code class="docutils literal notranslate"><span class="pre">a.T['inpplt']</span></code> 
+to display the folder name).</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.rhoz_monoage_plt">
+<code class="sig-name descname">rhoz_monoage_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">ages</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.rhoz_monoage_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.rhoz_monoage_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vertical density profiles of the mono-age subpopulations
+(plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.rhoz_monoage" title="jjmodel.analysis.rhoz_monoage"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.rhoz_monoage()</span></code></a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc.</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Set of age bins, Gyr.</p></li>
+<li><p><strong>between</strong> (<em>boolean</em>) -- Optional. If True, the output quantity corresponds to the age intervals 
+specified by parameter <strong>ages</strong>. Otherwise the individual single mono-age subpopulations 
+are returned (i.e., age-bins of width <code class="docutils literal notranslate"><span class="pre">tr</span></code>, model age resolution).</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>astropy table</em><em> or </em><em>list</em><em>[</em><em>astropy table</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, <strong>tab</strong> must be organized as a list of tables for the thin and thick disk: 
+[<em>table_d,table_t</em>]. If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [<em>table_d,table_t,table_sh</em>].</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is the spatial number density of stars in <span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>,
+not matter density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>. Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> (<em>boolean</em>) -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.rhoz_monoage_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.rhoz_monomet_plt">
+<code class="sig-name descname">rhoz_monomet_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">mets</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.rhoz_monomet_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.rhoz_monomet_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vertical density profiles of the mono-metallicity subpopulations
+(plotting for jjmodel.analysis.rhoz_monomet).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Set of metallicity bins, dex.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>astropy table</em><em> or </em><em>list</em><em>[</em><em>astropy table</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, <strong>tab</strong> must be organized as a list of tables for the thin and thick disk: 
+[<em>table_d,table_t</em>]. If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [<em>table_d,table_t,table_sh</em>].</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is the spatial number density of stars in <span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>,
+not matter density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>. Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> (<em>boolean</em>) -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.rhoz_monomet_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.rhoz_plt">
+<code class="sig-name descname">rhoz_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.rhoz_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.rhoz_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vertical density profiles of the Galactic components (thin and thick disk, 
+molecular and atomic gas, DM and stellar halo) at some radius.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc.</p></li>
+<li><p><strong>normalized</strong> (<em>boolean</em>) -- Optional. If True, the profiles are normalized at each height  
+on the total density at this height.</p></li>
+<li><p><strong>cumulative</strong> (<em>boolean</em>) -- Optional. If True, the normalized cumulative mass profiles are plotted. 
+At each height z, profiles are normalized on the total mass up to this z.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved (call <code class="docutils literal notranslate"><span class="pre">a.T['densplt']</span></code> 
+to display the folder name).</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.rot_curve_plt">
+<code class="sig-name descname">rot_curve_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.rot_curve_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.rot_curve_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotation curve as follows from the assumed MW mass model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R</strong> (<em>array-like</em>) -- Optional. Galactocentric distance grid, kpc.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory is <code class="docutils literal notranslate"><span class="pre">a.T['kinplt']</span></code>.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.rz_map_plt">
+<code class="sig-name descname">rz_map_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.rz_map_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.rz_map_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Density distribution in R and z Galactic coordinates. Can be matter or number density. 
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.rz_map" title="jjmodel.analysis.rz_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.rz_map()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Optional. Set of age bins, Gyr.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Optional. Set of metallicity bins.</p></li>
+<li><p><strong>dz</strong> (<em>scalar</em>) -- Vertical resolution, pc.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.rz_map_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.rz_map_quantity_plt">
+<code class="sig-name descname">rz_map_quantity_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">quantity</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.rz_map_quantity_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.rz_map_quantity_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distribution of some quantity Q in Rz-plane. Q can be W-velocity dispersion or 
+stellar physical parameter from isochrones. Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.rz_map_quantity" title="jjmodel.analysis.rz_map_quantity"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.rz_map_quantity()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>quantity</strong> (<em>str</em>) -- <dl class="field-list simple">
+<dt class="field-odd">param quantity</dt>
+<dd class="field-odd"><p>Name of the column in a stellar assemblies table to which</p>
+</dd>
+</dl>
+<p>the function has to be applied; for velocity dispersion use <code class="docutils literal notranslate"><span class="pre">'sigw'</span></code>.</p>
+</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code>.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Optional. Set of age bins, Gyr.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Optional. Set of metallicity bins.</p></li>
+<li><p><strong>dz</strong> (<em>scalar</em>) -- Vertical resolution, pc.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.rz_map_quantity_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.sigwr_gas_plt">
+<code class="sig-name descname">sigwr_gas_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.sigwr_gas_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.sigwr_gas_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>W-velocity dispersion of the atomic and molecular gas as a function of Galactocentric distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory is <code class="docutils literal notranslate"><span class="pre">a.T['kinplt']</span></code>.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.sigwr_monoage_plt">
+<code class="sig-name descname">sigwr_monoage_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="n">ages</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.sigwr_monoage_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.sigwr_monoage_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>W-velocity dispersion of mono-age sub-populations as a function of Galactocentric distance.
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.sigwr_monoage" title="jjmodel.analysis.sigwr_monoage"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.sigwr_monoage()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thin+thick disk, or total).</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights [<em>zmin,zmax</em>], pc. Or set of z-bin edges, pc.</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Set of age bins, Gyr.</p></li>
+<li><p><strong>between</strong> (<em>boolean</em>) -- Optional. If True, the output quantity corresponds to the age intervals 
+specified by parameter <strong>ages</strong>. Otherwise the individual single mono-age subpopulations 
+are returned (i.e., age-bins of width <code class="docutils literal notranslate"><span class="pre">tr</span></code>, model age resolution).</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code></p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.sigwr_monoage_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.sigwr_monomet_plt">
+<code class="sig-name descname">sigwr_monomet_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="n">mets</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.sigwr_monomet_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.sigwr_monomet_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>W-velocity dispersion of mono-metallicity subpopulations as a function of Galactocentric distance.
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.sigwr_monomet" title="jjmodel.analysis.sigwr_monomet"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.sigwr_monomet()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thin+thick disk, or total).</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights [<em>zmin,zmax</em>], pc. Or set of z-bin edges, pc.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Set of metallicity bins.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code></p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.sigwr_monomet_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.sigwr_plt">
+<code class="sig-name descname">sigwr_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.sigwr_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.sigwr_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>W-velocity dispersion as a function of Galactocentric distance.
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.sigwr" title="jjmodel.analysis.sigwr"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.sigwr()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thin+thick disk, or total).</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights [<em>zmin,zmax</em>], pc. Or set of z-bin edges, pc.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Optional. Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code></p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not by matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colormap name.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.sigwr_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.sigwr_thick_plt">
+<code class="sig-name descname">sigwr_thick_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.sigwr_thick_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.sigwr_thick_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Thick-disk W-velocity dispersion as a function of Galactocentric distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. 
+The output directory is <code class="docutils literal notranslate"><span class="pre">a.T['kinplt']</span></code>.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.sigwz_plt">
+<code class="sig-name descname">sigwz_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.sigwz_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.sigwz_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>W-velocity dispersion as a function of height z and Galactocentric distance. 
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.sigwz" title="jjmodel.analysis.sigwz"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.sigwz()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thin+thick disk, or total).</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>list</em><em>[</em><em>astropy table</em><em>] or </em><em>list</em><em>[</em><em>list</em><em>[</em><em>astropy table</em><em>]</em><em>]</em>) -- Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [[<em>table_d,table_t,table_sh</em>]_ <em>rmin</em>,...,[<em>table_d,table_t,table_sh</em>]_ <em>rmax</em>], 
+where <em>rmin</em> and <em>rmax</em> are <code class="docutils literal notranslate"><span class="pre">p.Rmin</span></code> and <code class="docutils literal notranslate"><span class="pre">p.Rmax</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not by matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>cbar</strong> (<em>str</em>) -- Optional. Matplotlib colomap name.</p></li>
+<li><p><strong>cbar_bins</strong> -- Optional. If True, the colorbar will be discrete. 
+By default, it is continious.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.sigwz_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.Plotting.sigwz_rsun_plt">
+<code class="sig-name descname">sigwz_rsun_plt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#Plotting.sigwz_rsun_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.Plotting.sigwz_rsun_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>W-velocity dispersion as a function of height z for the Solar neighbourhood, at <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>. 
+Plotting for <a class="reference internal" href="analysis.html#jjmodel.analysis.sigwz" title="jjmodel.analysis.sigwz"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.sigwz()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thin+thick disk, or total).</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance).</p></li>
+<li><p><strong>tab</strong> (<em>astropy table</em><em> or </em><em>list</em><em>[</em><em>astropy table</em><em>]</em>) -- Stellar assemblies table(s), parameter alternative to <strong>mode_pop</strong>. 
+If <strong>mode_comp</strong> = <code class="docutils literal notranslate"><span class="pre">'tot'</span></code>, <strong>tab</strong> must be [<em>table_d,table_t,table_sh</em>] with tables for <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is weighted by the spatial number density of stars (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>),
+not by matter density (<span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>). Active only when <strong>mode_pop</strong> or <strong>tab</strong> is given.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the figure will be saved. The output directory and figure name 
+are prescribed by jjmodel.iof.TabSaver.sigwz_save.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure window is closed in the end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure and axes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="jjmodel.plotting.PlotBlocks">
+<em class="property">class </em><code class="sig-prename descclassname">jjmodel.plotting.</code><code class="sig-name descname">PlotBlocks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">inp</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#PlotBlocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.PlotBlocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to plot and save many figures automatically.</p>
+<dl class="py method">
+<dt id="jjmodel.plotting.PlotBlocks.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">inp</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#PlotBlocks.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.PlotBlocks.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class is initialized with tuples p and a and dictionary <code class="docutils literal notranslate"><span class="pre">inp</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<em>namedtuple</em>) -- Set of model parameters from the parameter file.</p></li>
+<li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
+<li><p><strong>inp</strong> (<em>dict</em>) -- Collection of the input functions including SFR, AVR, AMR, and IMF.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.PlotBlocks.ages">
+<code class="sig-name descname">ages</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">zlim_set</span></em>, <em class="sig-param"><span class="n">age_sm</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwgs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#PlotBlocks.ages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.PlotBlocks.ages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots and saves disk's age distributions at different heights and Galactocentric distances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>zlim_set</strong> (<em>array-like</em>) -- Edges of z-bins where the quantity will be calculated.</p></li>
+<li><p><strong>age_sm</strong> (<em>scalar</em>) -- Standard deviation of the Gaussian kernel, which is used 
+to smooth age distributions, Gyr.</p></li>
+<li><p><strong>print_time</strong> (<em>boolean</em>) -- Optional. If True, calculation time is printed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.PlotBlocks.basic_output">
+<code class="sig-name descname">basic_output</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">zlim_set</span></em>, <em class="sig-param"><span class="n">ages</span></em>, <em class="sig-param"><span class="n">mets</span></em>, <em class="sig-param"><span class="n">age_sm</span></em>, <em class="sig-param"><span class="n">met_sm</span></em>, <em class="sig-param"><span class="n">rmax</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#PlotBlocks.basic_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.PlotBlocks.basic_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots and saves all figures (basic output of the model).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>zlim_set</strong> (<em>array-like</em>) -- Edges of z-bins where the quantities will be calculated.</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Set of age bins, Gyr.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Set of meallicity bins.</p></li>
+<li><p><strong>age_sm</strong> (<em>scalar</em>) -- Standard deviation of the Gaussian kernel, which is used 
+to smooth age distributions, Gyr.</p></li>
+<li><p><strong>met_sm</strong> (<em>scalar</em>) -- Standard deviation of the Gaussian kernel, which is used 
+to smooth metallicity distributions.</p></li>
+<li><p><strong>rmax</strong> (<em>scalar</em>) -- Radius of the local sphere or cylinder (for calculation of Hess diagram), pc.</p></li>
+<li><p><strong>dz</strong> (<em>scalar</em>) -- Optional. Vertical resolution for Rz maps, pc. If not specified, <strong>dz</strong> = 25 pc.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.PlotBlocks.densities">
+<code class="sig-name descname">densities</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="n">ages</span></em>, <em class="sig-param"><span class="n">mets</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwgs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#PlotBlocks.densities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.PlotBlocks.densities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots and saves predicted vertical and radial profiles  
+of the Galactic components and of the disk's mono-age and mono-metallicity subpopulations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Single z-bin [<em>zmin,zmax</em>], where the quantity will be calculated, pc.</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Set of age bins, Gyr.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Set of meallicity bins.</p></li>
+<li><p><strong>print_time</strong> (<em>boolean</em>) -- Optional. If True, calculation time is printed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.PlotBlocks.heights">
+<code class="sig-name descname">heights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ages</span></em>, <em class="sig-param"><span class="n">mets</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwgs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#PlotBlocks.heights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.PlotBlocks.heights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots and saves disk's scale heights as a function of age and Galactocentric distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Set of meallicity bins.</p></li>
+<li><p><strong>print_time</strong> (<em>boolean</em>) -- Optional. If True, calculation time is printed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.PlotBlocks.kinematics">
+<code class="sig-name descname">kinematics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">zlim_set</span></em>, <em class="sig-param"><span class="n">ages</span></em>, <em class="sig-param"><span class="n">mets</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwgs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#PlotBlocks.kinematics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.PlotBlocks.kinematics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots and saves disk's kinematic functions: AVR, W-velocity 
+dispersion of the thick disk and gas at different Galactocentric distances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>zlim_set</strong> (<em>array-like</em>) -- Edges of z-bins where the quantity will be calculated.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Set of meallicity bins.</p></li>
+<li><p><strong>print_time</strong> (<em>boolean</em>) -- Optional. If True, calculation time is printed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.PlotBlocks.metallicities">
+<code class="sig-name descname">metallicities</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">zlim_set</span></em>, <em class="sig-param"><span class="n">met_sm</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwgs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#PlotBlocks.metallicities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.PlotBlocks.metallicities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots and saves disk's age distributions at different heights and Galactocentric distances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>zlim_set</strong> (<em>array-like</em>) -- Edges of z-bins where the quantity will be calculated.</p></li>
+<li><p><strong>met_sm</strong> (<em>scalar</em>) -- Standard deviation of the Gaussian kernel, which is used 
+to smooth metallicity distributions.</p></li>
+<li><p><strong>print_time</strong> (<em>boolean</em>) -- Optional. If True, calculation time is printed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.PlotBlocks.model_input">
+<code class="sig-name descname">model_input</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwgs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#PlotBlocks.model_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.PlotBlocks.model_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots and saves all model input: radial density profiles 
+of the Galactic components, SFR, mass loss, gas scale heights.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>print_time</strong> (<em>boolean</em>) -- Optional. If True, calculation time is printed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.PlotBlocks.populations">
+<code class="sig-name descname">populations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="n">ages</span></em>, <em class="sig-param"><span class="n">mets</span></em>, <em class="sig-param"><span class="n">age_sm</span></em>, <em class="sig-param"><span class="n">met_sm</span></em>, <em class="sig-param"><span class="n">rmax</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwgs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#PlotBlocks.populations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.PlotBlocks.populations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots and saves radial density profiles, age, metallicity , and f(<a href="#id7"><span class="problematic" id="id8">|W|</span></a>) distributions, 
+Hess diagrams and Rz-maps for the different populations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Set of age bins, Gyr.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Set of meallicity bins.</p></li>
+<li><p><strong>age_sm</strong> (<em>scalar</em>) -- Standard deviation of the Gaussian kernel, which is used 
+to smooth age distributions, Gyr.</p></li>
+<li><p><strong>met_sm</strong> (<em>scalar</em>) -- Standard deviation of the Gaussian kernel, which is used 
+to smooth metallicity distributions.</p></li>
+<li><p><strong>rmax</strong> (<em>scalar</em>) -- Radius of the local sphere or cylinder (for calculation of Hess diagram), pc.</p></li>
+<li><p><strong>dz</strong> (<em>scalar</em>) -- Optional. Vertical resolution, pc. If not specified, <strong>dz</strong> = 25 pc.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>print_time</strong> (<em>boolean</em>) -- Optional. If True, calculation time is printed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.PlotBlocks.potential">
+<code class="sig-name descname">potential</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwgs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#PlotBlocks.potential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.PlotBlocks.potential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots and saves vertical grvitational potential and gravitational force.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>print_time</strong> (<em>boolean</em>) -- Optional. If True, calculation time is printed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.plotting.PlotBlocks.rz_maps">
+<code class="sig-name descname">rz_maps</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dz</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwgs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/plotting.html#PlotBlocks.rz_maps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.plotting.PlotBlocks.rz_maps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots and saves density/age/[Fe/H]/sigw maps in Rz plane.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dz</strong> (<em>scalar</em>) -- Optional. Vertical resolution, pc.</p></li>
+<li><p><strong>print_time</strong> (<em>boolean</em>) -- Optional. If True, calculation time is printed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">jjmodel</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="funcs.html">Physical functions (input)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_core.html">Radial and vertical MW structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="populations.html">Stellar populations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometry.html">Geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trans.html">Coordinates and velocities (from data)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Useful tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Output analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Plotting tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contacts.html">Authors and contact</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="analysis.html" title="previous chapter">Output analysis</a></li>
+      <li>Next: <a href="tutorials.html" title="next chapter">Tutorials</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Sysoliatina.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/plotting.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

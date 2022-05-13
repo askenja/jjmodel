@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>jjmodel.mwdisk &#8212; jjmodel 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for jjmodel.mwdisk</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Wed May  9 18:21:36 2018</span>
+<span class="sd">@author: Skevja</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> 
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">from</span> <span class="nn">.funcs</span> <span class="kn">import</span> <span class="n">heffr</span>
+<span class="kn">from</span> <span class="nn">.iof</span> <span class="kn">import</span> <span class="n">dir_tree</span><span class="p">,</span> <span class="n">TabSaver</span>
+<span class="kn">from</span> <span class="nn">.tools</span> <span class="kn">import</span> <span class="n">Timer</span><span class="p">,</span> <span class="n">LogFiles</span>
+<span class="kn">from</span> <span class="nn">.poisson</span> <span class="kn">import</span> <span class="n">_fimax_optimal_</span><span class="p">,</span> <span class="n">poisson_solver</span><span class="p">,</span> <span class="n">vertical_force</span>
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">tr</span><span class="p">,</span> <span class="n">SIGMA_E</span>
+
+
+<div class="viewcode-block" id="rbin_builder"><a class="viewcode-back" href="../../model_core.html#jjmodel.mwdisk.rbin_builder">[docs]</a><span class="k">def</span> <span class="nf">rbin_builder</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">SFRd</span><span class="p">,</span><span class="n">SFRt</span><span class="p">,</span><span class="n">gd</span><span class="p">,</span><span class="n">gt</span><span class="p">,</span><span class="n">Sigma</span><span class="p">,</span><span class="n">sigW</span><span class="p">,</span><span class="n">hg</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Predicts the vertical structure of the MW disk at a given Galactocentric distance.  </span>
+<span class="sd">    </span>
+<span class="sd">    :param R: Galactocentric distance, kpc. </span>
+<span class="sd">    :type R: scalar</span>
+<span class="sd">    :param a: Collection of the fixed model parameters, useful quantities, and arrays.</span>
+<span class="sd">    :type a: namedtuple</span>
+<span class="sd">    :param SFRd: Thin-disk star formation rate function, :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`. </span>
+<span class="sd">        Array length is equal to the number of thin-disk subpopulations: ``a.jd = int((tp-p.td1)/tr)``,</span>
+<span class="sd">        where ``tp`` is a present-day MW disk age and ``tr`` is the model age resolution. </span>
+<span class="sd">    :type SFRd: array-like</span>
+<span class="sd">    :param SFRt: Thick-disk star formation rate function, :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`. </span>
+<span class="sd">        Length of the array is ``a.jt = int(p.tt2/tr)``. </span>
+<span class="sd">    :type SFRt: array-like</span>
+<span class="sd">    :param gd: Thin-disk mass loss function, ``len(gd)==len(SFRd)``.</span>
+<span class="sd">    :type gd: array-like</span>
+<span class="sd">    :param gt: Thick-disk mass loss function, ``len(gt)==len(SFRt)``.</span>
+<span class="sd">    :type gt: array-like</span>
+<span class="sd">    :param Sigma: Present-day surface densities of non-disk components </span>
+<span class="sd">        (molecular gas, atomic gas, DM, stellar halo), :math:`\mathrm{M_\odot \ pc^{-2}}`.</span>
+<span class="sd">    :type Sigma: array-like</span>
+<span class="sd">    :param sigW: Set of parameters defining W-velocity dispersions of the Galactic components: </span>
+<span class="sd">        (*sige, alpha, sigt, sigdh, sigsh*). *sige* and *alpha* are the AVR scaling parameter (:math:`\mathrm{km \ s^{-1}}`) </span>
+<span class="sd">        and power index (dim). *sigt*, *sigdh*, *sigsh* (:math:`\mathrm{km \ s^{-1}}`) are W-velocity dispersions </span>
+<span class="sd">        of the thick disk, DM, and stellar halo, respectively.</span>
+<span class="sd">    :type sigW: array-like</span>
+<span class="sd">    :param hg: Scale heights of the molecular and atomic gas (*hg1*, *hg2*), pc.</span>
+<span class="sd">    :type hg: array-like</span>
+<span class="sd">    :param fp: Optional. Relative contributions of the additional thin-disk SFR peaks to the total thin-disk SFR, </span>
+<span class="sd">        :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}` (output *Fp* in :meth:`jjmodel.funcs.SFR.sfrr`). </span>
+<span class="sd">        Must be given if ``p.pkey=1`` or ``p.pkey=2``. </span>
+<span class="sd">    :type fp: array-like</span>
+<span class="sd">    :param sigp: Optional. W-velocity dispersions (:math:`\mathrm{km \ s^{-1}}`) of the thin-disk populations associated with </span>
+<span class="sd">        the stellar density excess in the additional peaks. Must be given when ``p.pkey=1``. </span>
+<span class="sd">    :type sigp: array-like</span>
+<span class="sd">    :param heffd: Optional. Thin-disk half-thickness (effective scale height), pc. If fixed by this parameter, </span>
+<span class="sd">        additional iterations will be performed to adapt AVR to fulfill this requirement. </span>
+<span class="sd">    :type heffd: scalar </span>
+<span class="sd">    :param hefft: Optional. Thick-disk half-thickness (effective scale height), pc. If fixed by this parameter, </span>
+<span class="sd">        additional iterations will be performed to adapt thick-disk W-velocity dispersion *sigt* </span>
+<span class="sd">        to fulfill this requirement. </span>
+<span class="sd">    :type hefft: scalar</span>
+<span class="sd">    :param status_equation: Optional. If True, the iteration details are printed to console.</span>
+<span class="sd">    :type status_equation: boolean</span>
+<span class="sd">    :param status_progress: Optional. If True, the overall progress details are printed to console.</span>
+<span class="sd">    :type status_progress: boolean</span>
+<span class="sd">    :param log: Optional. If given, the details of the iteration are written to the file.</span>
+<span class="sd">    :type log: file</span>
+<span class="sd">    :param plot: Optional. If True, the derived potential is plotted for each iteration.  </span>
+<span class="sd">    :type plot: boolean</span>
+<span class="sd">    :param save: Optional. If True, the output tables (and plot with converging potential if **plot** is True), </span>
+<span class="sd">        is (are) saved to the specified directory, ``a.dir``. </span>
+<span class="sd">    :type save: boolean</span>
+<span class="sd">            </span>
+<span class="sd">    :return: Dictionary with all sorts of output (mainly the output of :func:`jjmodel.poisson.poisson_solver`).  </span>
+<span class="sd">    </span>
+<span class="sd">        Keys of the standard output:</span>
+<span class="sd">            </span>
+<span class="sd">        - ``&#39;hd&#39;``: 1d-array of length ``a.jd``, scale heights of the thin-disk subpopulations (pc).                   </span>
+<span class="sd">        - ``&#39;ht&#39;``, ``&#39;hdh&#39;``, ``&#39;hsh&#39;`` : float, thick-disk, DM, and halo scale heights (pc).          </span>
+<span class="sd">        - ``&#39;heffd&#39;``, ``&#39;hefft&#39;`` : float, half-thickness of the thin and thick disk (pc).             </span>
+<span class="sd">        - ``&#39;sigg1&#39;``, ``&#39;sigg2&#39;``, ``&#39;sigt&#39;`` : molecular and atomic gas and thick-disk W-velocity dispersions (:math:`\mathrm{km \ s^{-1}}`). </span>
+<span class="sd">        - ``&#39;sige&#39;`` : float, scaling parameter of the thin-disk AVR (:math:`\mathrm{km \ s^{-1}}`).               </span>
+<span class="sd">        - ``&#39;avr&#39;`` : 1d-array of length ``a.jd``, thin-disk AVR (:math:`\mathrm{km \ s^{-1}}`). </span>
+<span class="sd">        - ``&#39;fie&#39;``, ``&#39;phi&#39;`` : total vertical gravitational potential (corresponds to ``a.z`` grid). ``fie`` is the normalized potential multiplied by the constant ``SIGMA_E^2`` (:math:`\mathrm{km^2 \ s^{-2}}`), useful for further calculations of potential-dependend quantities. ``phi`` is the potential in physical units, :math:`\mathrm{m^2 \ s^{-2}}`. </span>
+<span class="sd">        - ``&#39;rhodtot&#39;``, ``&#39;rhot&#39;``, ``&#39;rhog1&#39;``, ``&#39;rhog2&#39;``, ``&#39;rhodh&#39;``, ``&#39;rhosh&#39;`` : Mass density vertical profiles of the Galactic components (correspond to ``a.z`` grid), :math:`\mathrm{M_\odot \ pc^{-3}}`. ``&#39;rhodtot&#39;``&#39; is the total thin-disk density, that includes subpopulations characterized by W-velocity dispersion prescribed by the AVR and SFR-peaks&#39; subpopulations with special kinematics, if any.</span>
+<span class="sd">        - ``&#39;Kzdtot&#39;``, ``&#39;Kzt&#39;``, ``&#39;Kzg1&#39;``, ``&#39;Kzg2&#39;``, ``&#39;Kzdh&#39;``, ``&#39;Kzsh&#39;`` : Vertical force from *i*-th model component, :math:`\mathrm{m^2 \ s^{-2} \ pc^{-1}}`. ``Kzdtot`` corresponds to the total thin disk, as ``rhodtot``. </span>
+<span class="sd">        </span>
+<span class="sd">        Keys of the optional output (depending on *kwargs*):</span>
+<span class="sd">            </span>
+<span class="sd">        - ``&#39;hdp&#39;`` : Scale height(s) of the SFR-peak(s)&#39; subpopulations, pc. </span>
+<span class="sd">        - ``&#39;rhodp&#39;``, ``&#39;rhod0&#39;`` : Mass density vertical profiles of the SFR-peak(s)&#39; subpopulations, and of the thin-disk subpopulations with the vertical kinematics described by the AVR, :math:`\mathrm{M_\odot \ pc^{-3}}`. In this case total density profile is ``rhodtot = rhod0 + sum(rhodp,axis=0)``. </span>
+<span class="sd">        - ``&#39;Kzd0&#39;``, ``&#39;Kzdp&#39;`` : Analogically to ``rhodp`` and ``rhod0``, thin-disk vertical graditational force components, :math:`\mathrm{m^2 \ s^{-2} \ pc^{-1}}`.   </span>
+<span class="sd">        </span>
+<span class="sd">    :rtype: dict </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">()</span>
+    <span class="n">t_start</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="s1">&#39;status_progress&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;status_progress&#39;</span><span class="p">]</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">{:&lt;2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
+                                       <span class="s1">&#39;</span><span class="si">{:&lt;14}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Process for R = </span><span class="si">%s</span><span class="s1"> kpc&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">R</span><span class="p">)),</span> 
+                                       <span class="s1">&#39;</span><span class="si">{:&lt;14}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;: start&#39;</span><span class="p">)))</span>
+                         <span class="p">)</span>        
+    
+    <span class="c1"># Firstly, fimax value is optimized.  </span>
+    <span class="k">if</span> <span class="s1">&#39;log&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">fimax</span><span class="p">,</span> <span class="n">dfi</span> <span class="o">=</span> <span class="n">_fimax_optimal_</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">SFRd</span><span class="p">,</span><span class="n">SFRt</span><span class="p">,</span><span class="n">gd</span><span class="p">,</span><span class="n">gt</span><span class="p">,</span><span class="n">Sigma</span><span class="p">,</span><span class="n">sigW</span><span class="p">,</span><span class="n">hg</span><span class="p">,</span><span class="n">log</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fimax</span><span class="p">,</span><span class="n">dfi</span> <span class="o">=</span> <span class="n">_fimax_optimal_</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">SFRd</span><span class="p">,</span><span class="n">SFRt</span><span class="p">,</span><span class="n">gd</span><span class="p">,</span><span class="n">gt</span><span class="p">,</span><span class="n">Sigma</span><span class="p">,</span><span class="n">sigW</span><span class="p">,</span><span class="n">hg</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s1">&#39;status_progress&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;status_progress&#39;</span><span class="p">]</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">{:&lt;4}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
+                                       <span class="s1">&#39;</span><span class="si">{:&lt;14}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Process for R = </span><span class="si">%s</span><span class="s1"> kpc&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">R</span><span class="p">)),</span>
+                                       <span class="s1">&#39;</span><span class="si">{:&lt;14}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;: fimax optimized&#39;</span><span class="p">)))</span>
+                         <span class="p">)</span>
+    
+    <span class="c1"># Secondly, the Poisson-Boltzmann eq. is solved.     </span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">poisson_solver</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">fimax</span><span class="p">,</span><span class="n">dfi</span><span class="p">,</span><span class="n">SFRd</span><span class="p">,</span><span class="n">SFRt</span><span class="p">,</span><span class="n">gd</span><span class="p">,</span><span class="n">gt</span><span class="p">,</span><span class="n">Sigma</span><span class="p">,</span><span class="n">sigW</span><span class="p">,</span><span class="n">hg</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s1">&#39;status_progress&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;status_progress&#39;</span><span class="p">]</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>                                 
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">{:&lt;6}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
+                                       <span class="s1">&#39;</span><span class="si">{:&lt;14}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Process for R = </span><span class="si">%s</span><span class="s1"> kpc&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">R</span><span class="p">)),</span>
+                                       <span class="s1">&#39;</span><span class="si">{:&lt;14}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;: PE solved&#39;</span><span class="p">)))</span>
+                         <span class="p">)</span>
+    
+    <span class="c1"># Finally, we prepare the output. </span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">S</span>
+    <span class="k">if</span> <span class="s1">&#39;sigp&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">out</span><span class="p">[</span><span class="s1">&#39;Kzdtot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertical_force</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">fimax</span><span class="p">,</span><span class="n">SFRd</span><span class="o">*</span><span class="n">gd</span><span class="o">*</span><span class="n">tr</span><span class="p">,</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;avr&#39;</span><span class="p">],</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;hd&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fp0</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fp&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">out</span><span class="p">[</span><span class="s1">&#39;Kzd0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertical_force</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">fimax</span><span class="p">,</span><span class="n">SFRd</span><span class="o">*</span><span class="n">fp0</span><span class="o">*</span><span class="n">gd</span><span class="o">*</span><span class="n">tr</span><span class="p">,</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;avr&#39;</span><span class="p">],</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;hd&#39;</span><span class="p">])</span>
+        <span class="n">out</span><span class="p">[</span><span class="s1">&#39;Kzdp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">vertical_force</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">fimax</span><span class="p">,</span><span class="n">SFRd</span><span class="o">*</span><span class="n">i</span><span class="o">*</span><span class="n">gd</span><span class="o">*</span><span class="n">tr</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">l</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fp&#39;</span><span class="p">],</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;sigp&#39;</span><span class="p">],</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;hdp&#39;</span><span class="p">])]</span>
+        <span class="n">out</span><span class="p">[</span><span class="s1">&#39;Kzdtot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;Kzd0&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;Kzdp&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">out</span><span class="p">[</span><span class="s1">&#39;Kzt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertical_force</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">fimax</span><span class="p">,</span><span class="n">SFRt</span><span class="o">*</span><span class="n">gt</span><span class="o">*</span><span class="n">tr</span><span class="p">,</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;sigt&#39;</span><span class="p">],</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;ht&#39;</span><span class="p">])</span>
+    <span class="n">out</span><span class="p">[</span><span class="s1">&#39;Kzg1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertical_force</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">fimax</span><span class="p">,</span><span class="n">Sigma</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;sigg1&#39;</span><span class="p">],</span><span class="n">hg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">out</span><span class="p">[</span><span class="s1">&#39;Kzg2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertical_force</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">fimax</span><span class="p">,</span><span class="n">Sigma</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;sigg2&#39;</span><span class="p">],</span><span class="n">hg</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">out</span><span class="p">[</span><span class="s1">&#39;Kzdh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertical_force</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">fimax</span><span class="p">,</span><span class="n">Sigma</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">sigW</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;hdh&#39;</span><span class="p">])</span>
+    <span class="n">out</span><span class="p">[</span><span class="s1">&#39;Kzsh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertical_force</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">fimax</span><span class="p">,</span><span class="n">Sigma</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">sigW</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;hsh&#39;</span><span class="p">])</span>
+               
+    <span class="n">t_exit</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">t_start</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">{:&lt;8}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
+                                   <span class="s1">&#39;</span><span class="si">{:&lt;14}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Process </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">R</span><span class="p">)),</span>
+                                   <span class="s1">&#39;</span><span class="si">{:&lt;14}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;: exit, time: &#39;</span><span class="p">,</span> <span class="n">t_exit</span><span class="p">)))))</span>
+                     <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s1">&#39;log&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">Density in the Galactic plane [Msun/pc^3]:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Thin.d&#39;</span><span class="p">),</span>
+                                      <span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Thick.d&#39;</span><span class="p">),</span>
+                                      <span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Mol.gas&#39;</span><span class="p">),</span>
+                                      <span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;At.gas&#39;</span><span class="p">),</span>
+                                      <span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;DM.halo&#39;</span><span class="p">),</span>
+                                      <span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;St.halo&#39;</span><span class="p">),</span>
+                                      <span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Total&#39;</span><span class="p">),</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span>
+                             <span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;rhodtot&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="mi">4</span><span class="p">)),</span>
+                                      <span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;rhot&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="mi">4</span><span class="p">)),</span>
+                                      <span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;rhog1&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="mi">4</span><span class="p">)),</span>
+                                      <span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;rhog2&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="mi">4</span><span class="p">)),</span>
+                                      <span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;rhodh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="mi">4</span><span class="p">)),</span>
+                                      <span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;rhosh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="mi">5</span><span class="p">)),</span>
+                                      <span class="s1">&#39;</span><span class="si">{:&lt;11}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;rhodtot&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">S</span><span class="p">[</span><span class="s1">&#39;rhot&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                                                          <span class="o">+</span> <span class="n">S</span><span class="p">[</span><span class="s1">&#39;rhog1&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">S</span><span class="p">[</span><span class="s1">&#39;rhog2&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                                                          <span class="o">+</span> <span class="n">S</span><span class="p">[</span><span class="s1">&#39;rhodh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">S</span><span class="p">[</span><span class="s1">&#39;rhosh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="mi">3</span><span class="p">)),</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span>
+                             <span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Time: &#39;</span><span class="p">,</span><span class="n">t_exit</span><span class="p">)))</span>
+    
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="local_run"><a class="viewcode-back" href="../../model_core.html#jjmodel.mwdisk.local_run">[docs]</a><span class="k">def</span> <span class="nf">local_run</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Builds the local JJ model based on the given parameters and input functions.</span>
+<span class="sd">    Accepts optional parameters of :func:`jjmodel.mwdisk.rbin_builder`. </span>
+<span class="sd">    </span>
+<span class="sd">    :param p: Set of model parameters from the parameter file. </span>
+<span class="sd">    :type p: namedtuple</span>
+<span class="sd">    :param a: Collection of the fixed model parameters, useful quantities, and arrays.</span>
+<span class="sd">    :type a: namedtuple</span>
+<span class="sd">    :param inp: Collection of the input functions including SFR, AVR, AMR, and IMF.</span>
+<span class="sd">    :type inp: dict      </span>
+
+<span class="sd">    :return: Output of the function :func:`jjmodel.mwdisk.rbin_builder` for ``p.Rsun``.</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">f</span> <span class="o">=</span> <span class="n">LogFiles</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="s1">&#39;stat&#39;</span><span class="p">],</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;log_R&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">),</span><span class="s1">&#39;kpc.txt&#39;</span><span class="p">))))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;Galactocentric distance = &#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">),</span><span class="s1">&#39; kpc</span><span class="se">\n\n</span><span class="s1"> --- fimax optimization ---</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)))</span>
+    
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;sigp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">sigp</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inp</span><span class="p">[</span><span class="s1">&#39;Fp0&#39;</span><span class="p">]</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">rbin_builder</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;SFRd0&#39;</span><span class="p">],</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;SFRt0&#39;</span><span class="p">],</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;gd0&#39;</span><span class="p">],</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;gt&#39;</span><span class="p">],</span>
+                       <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">sigmag1</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">sigmag2</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">sigmadh</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">sigmash</span><span class="p">],</span>
+                       <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">sige</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">sigt</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">sigdh</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">sigsh</span><span class="p">],[</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;hg10&#39;</span><span class="p">],</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;hg20&#39;</span><span class="p">]],</span>
+                       <span class="n">log</span><span class="o">=</span><span class="n">f</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>                      
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="extended_run"><a class="viewcode-back" href="../../model_core.html#jjmodel.mwdisk.extended_run">[docs]</a><span class="k">def</span> <span class="nf">extended_run</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">out_local</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the JJ-model predictions at a given Galactocentric distance. </span>
+<span class="sd">    Accepts optional parameters of :func:`jjmodel.mwdisk.rbin_builder`. </span>
+<span class="sd">        </span>
+<span class="sd">    :param inp: Collection of the input functions including SFR, AVR, AMR, and IMF.</span>
+<span class="sd">    :type inp: dict   </span>
+<span class="sd">    :param i: Index of the current radial bin in ``a.R`` array.</span>
+<span class="sd">    :type i: int</span>
+<span class="sd">    :param out_local: Output of the function :func:`jjmodel.mwdisk.local_run`.</span>
+<span class="sd">    :type out_local: dict</span>
+<span class="sd">    :param status_progress: Optional. If True, the overall progress details are printed to console.</span>
+<span class="sd">    :type status_progress: boolean</span>
+<span class="sd">            </span>
+<span class="sd">    :return: Output of the function Accepts optional parameters of :func:`jjmodel.mwdisk.rbin_builder` </span>
+<span class="sd">        for the *i*-th radial bin.</span>
+<span class="sd">    :rtype: dict        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="kn">from</span> <span class="nn">.input_</span> <span class="kn">import</span> <span class="n">p</span><span class="p">,</span> <span class="n">a</span>
+        
+    <span class="n">f</span> <span class="o">=</span> <span class="n">LogFiles</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="s1">&#39;stat&#39;</span><span class="p">],</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;log_R&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span><span class="s1">&#39;kpc.txt&#39;</span><span class="p">))))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;Galactocentric distance = &#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span><span class="s1">&#39; kpc</span><span class="se">\n\n</span><span class="s1"> --- fimax optimization ---</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)))</span>
+    
+    <span class="c1"># Initial guess for sige and sigt at this Galactocentric distance. </span>
+    <span class="c1"># Locally, sigt is by construction the value from parameter file. </span>
+    <span class="n">sige</span> <span class="o">=</span> <span class="n">SIGMA_E</span> <span class="o">+</span> <span class="mf">3.125</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span> <span class="o">-</span> <span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">sigt</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">sigt</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="o">/</span><span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">**</span><span class="mf">0.4</span> 
+    
+    <span class="c1"># From the local model we extract the thin-disk half-thickness and use it to define it as </span>
+    <span class="c1"># a function of R, depending on the model parameters (without or with thin-disk flaring). </span>
+    <span class="n">hdeff</span> <span class="o">=</span> <span class="n">heffr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">out_local</span><span class="p">[</span><span class="s1">&#39;heffd&#39;</span><span class="p">])</span>
+    
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;sigp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">sigp</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inp</span><span class="p">[</span><span class="s1">&#39;Fp&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+    
+    <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;hefft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_local</span><span class="p">[</span><span class="s1">&#39;hefft&#39;</span><span class="p">]</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="n">rbin_builder</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">a</span><span class="p">,</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;SFRd&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;SFRt&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;gd&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;gt&#39;</span><span class="p">],</span>
+                       <span class="p">[</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;SigmaR&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="n">i</span><span class="p">],</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;SigmaR&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">,</span><span class="n">i</span><span class="p">],</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;SigmaR&#39;</span><span class="p">][</span><span class="mi">4</span><span class="p">,</span><span class="n">i</span><span class="p">],</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;SigmaR&#39;</span><span class="p">][</span><span class="mi">5</span><span class="p">,</span><span class="n">i</span><span class="p">]],</span>
+                       <span class="p">[</span><span class="n">sige</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span><span class="n">sigt</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">sigdh</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">sigsh</span><span class="p">],</span>
+                       <span class="p">[</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;hg1&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span><span class="n">inp</span><span class="p">[</span><span class="s1">&#39;hg2&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]],</span>
+                       <span class="n">heffd</span><span class="o">=</span><span class="n">hdeff</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">log</span><span class="o">=</span><span class="n">f</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+<span class="k">def</span> <span class="nf">_starmap_with_kwargs_</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">args_iter</span><span class="p">,</span> <span class="n">kwargs_iter</span><span class="p">):</span>
+    <span class="n">args_for_starmap</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">repeat</span><span class="p">(</span><span class="n">fn</span><span class="p">),</span> <span class="n">args_iter</span><span class="p">,</span> <span class="n">kwargs_iter</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pool</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">_apply_args_and_kwargs_</span><span class="p">,</span> <span class="n">args_for_starmap</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_apply_args_and_kwargs_</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="disk_builder"><a class="viewcode-back" href="../../model_core.html#jjmodel.mwdisk.disk_builder">[docs]</a><span class="k">def</span> <span class="nf">disk_builder</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constructs the disk (vertical structure at some Galactocentric distance). </span>
+<span class="sd">    Can work in two modes (depending on the parameter ``p.run_mode``):</span>
+<span class="sd">        </span>
+<span class="sd">        1. models the Solar neighbourhood only;</span>
+<span class="sd">        2. starts with the Solar neighbourhood and then extends the local JJ model to other radii. </span>
+<span class="sd">        </span>
+<span class="sd">    Input data (e.g. SFR and AMR) and results (e.g. potential, densities, scale heights, AVR) </span>
+<span class="sd">    are saved as txt files to the output directory ``a.dir``. </span>
+<span class="sd">    Accepts optional parameters of :func:`jjmodel.mwdisk.rbin_builder`. </span>
+<span class="sd">    </span>
+<span class="sd">    :param p: Set of model parameters from the parameter file. </span>
+<span class="sd">    :type p: namedtuple</span>
+<span class="sd">    :param a: Collection of the fixed model parameters, useful quantities, and arrays.</span>
+<span class="sd">    :type a: namedtuple</span>
+<span class="sd">    :param inp: Collection of the input functions including SFR, AVR, AMR, and IMF.</span>
+<span class="sd">    :type inp: dict     </span>
+<span class="sd">    :param status_progress: Optional. If True, the overall progress details are printed to console.</span>
+<span class="sd">    :type status_progress: boolean</span>
+
+<span class="sd">    :return: None. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">()</span>
+    <span class="n">t_run</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    
+    <span class="n">dir_tree</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">make</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+    
+    <span class="c1"># First, the code must be run for R == Rsun in order to find the half-thickness </span>
+    <span class="c1"># of the thin and thick disk. </span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">---Local run---&#39;</span><span class="p">)</span>
+    <span class="n">out_local</span> <span class="o">=</span> <span class="n">local_run</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">tabsaver</span> <span class="o">=</span> <span class="n">TabSaver</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">tabsaver</span><span class="o">.</span><span class="n">input_local_save</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+    <span class="n">tabsaver</span><span class="o">.</span><span class="n">output_local_save</span><span class="p">(</span><span class="n">out_local</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">---Local run ended sucessfully---</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Then all other distances are processed. </span>
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">run_mode</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">---Global run---&#39;</span><span class="p">)</span>
+        
+        <span class="n">args_iter</span> <span class="o">=</span> <span class="p">[(</span><span class="n">inp</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">out_local</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">R_array</span><span class="p">]</span>
+        <span class="n">kwargs_iter</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        
+        <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">nprocess</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">_starmap_with_kwargs_</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span><span class="n">extended_run</span><span class="p">,</span><span class="n">args_iter</span><span class="p">,</span><span class="n">kwargs_iter</span><span class="p">)</span>
+        <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">tabsaver</span><span class="o">.</span><span class="n">input_extended_save</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+        <span class="n">tabsaver</span><span class="o">.</span><span class="n">output_extended_save</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">---Global run ended sucessfully---</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">t_run</span><span class="p">))</span></div>
+    
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">jjmodel</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../funcs.html">Physical functions (input)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model_core.html">Radial and vertical MW structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../populations.html">Stellar populations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../geometry.html">Geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../trans.html">Coordinates and velocities (from data)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tools.html">Useful tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Output analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plotting.html">Plotting tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contacts.html">Authors and contact</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Sysoliatina.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
