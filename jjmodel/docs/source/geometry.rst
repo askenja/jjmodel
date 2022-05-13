@@ -11,9 +11,6 @@ Geometry
 Spatial grids
 --------------
 
-.. autoclass:: jjmodel.funcs.AMR
-   :members:
-
 .. autoclass:: jjmodel.geometry.Grid
    :members: 
 
