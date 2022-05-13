@@ -8,6 +8,9 @@
 Geometry
 ======================================
 
+.. autoclass:: jjmodel.funcs.AMR
+   :members:
+
 Spatial grids
 --------------
 
