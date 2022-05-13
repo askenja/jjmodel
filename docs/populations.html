@@ -1,0 +1,535 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Stellar populations &#8212; jjmodel 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Geometry" href="geometry.html" />
+    <link rel="prev" title="Radial and vertical MW structure" href="model_core.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="stellar-populations">
+<h1>Stellar populations<a class="headerlink" href="#stellar-populations" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="jjmodel.populations.ColumnsIso">
+<em class="property">class </em><code class="sig-prename descclassname">jjmodel.populations.</code><code class="sig-name descname">ColumnsIso</code><a class="reference internal" href="_modules/jjmodel/populations.html#ColumnsIso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.populations.ColumnsIso" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collection of methods to work with the columns of Padova, MIST, and BaSTI isochrones.</p>
+<dl class="py method">
+<dt id="jjmodel.populations.ColumnsIso.apply_IMF">
+<code class="sig-name descname">apply_IMF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">imf</span></em>, <em class="sig-param"><span class="n">iso_masses</span></em>, <em class="sig-param"><span class="n">mass</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/populations.html#ColumnsIso.apply_IMF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.populations.ColumnsIso.apply_IMF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies IMF to the isochrone mass column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>imf</strong> (<em>function(mass1,mass2)</em>) -- IMF PDF function returning the probability to form a 
+star with a mass between <em>mass1</em> and <em>mass2</em>.</p></li>
+<li><p><strong>iso_masses</strong> (<em>array-like</em>) -- Mass column from the isochrone table.</p></li>
+<li><p><strong>mass</strong> (<em>scalar</em>) -- Total mass that was converted into stars of the chosen 
+metallicity and age (this isochrone), <span class="math notranslate nohighlight">\(\mathrm{M}_\odot\)</span>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New column with the present-day surface number densities of the semi-(metallicity-age-mass)
+'stellar assemblies',  <span class="math notranslate nohighlight">\(\mathrm{number \ pc}^{-2}\)</span>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>1d-array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.populations.ColumnsIso.column_namespace">
+<code class="sig-name descname">column_namespace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">photometric_system</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/populations.html#ColumnsIso.column_namespace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.populations.ColumnsIso.column_namespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Names of the useful isochrone columns to be extracted from 
+the stellar library (or calculated from them).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>photometric_system</strong> (<em>str</em>) -- Name of the photometric system to be used. 
+Valid names are: <code class="docutils literal notranslate"><span class="pre">'UBVRIplus'</span></code>, <code class="docutils literal notranslate"><span class="pre">'GaiaDR2_MAW'</span></code>, <code class="docutils literal notranslate"><span class="pre">'GaiaEDR3'</span></code>, <code class="docutils literal notranslate"><span class="pre">'UBVRIplus+GaiaDR2_MAW'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'UBVRIplus+GaiaEDR3'</span></code>, <code class="docutils literal notranslate"><span class="pre">'GaiaDR2_MAW+GaiaEDR3'</span></code>, <code class="docutils literal notranslate"><span class="pre">'UBVRIplus+GaiaDR2_MAW+GaiaEDR3'</span></code>. 
+For MIST isochrones <code class="docutils literal notranslate"><span class="pre">'UBVRIplus'</span></code> is UBV(RI)c + 2MASS, for 
+Padova <code class="docutils literal notranslate"><span class="pre">'UBVRIplus'</span></code> is UBVRIJHK. For BaSTI, only <code class="docutils literal notranslate"><span class="pre">'GaiaEDR3'</span></code> system is available.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Dictionary with column names.</p>
+<dl class="simple">
+<dt>Keys are:    </dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'all'</span></code>: list of all columns that will be eventually saved.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'basic'</span></code>: list of columns independent from the chosen photometric system.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'basic_short'</span></code>: same as <code class="docutils literal notranslate"><span class="pre">'basic'</span></code>, but only columns initially present in the isochrones.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'phot'</span></code>: columns with photometry corresponding to the chosen photometric system).</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.populations.ColumnsIso.column_positions">
+<code class="sig-name descname">column_positions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">get</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/populations.html#ColumnsIso.column_positions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.populations.ColumnsIso.column_positions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets position of columns in the isochrone tables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<em>str</em>) -- Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>.</p></li>
+<li><p><strong>get</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) -- List names of the columns to be extracted from the isochrone tables.</p></li>
+<li><p><strong>printnames</strong> (<em>boolean</em>) -- Optional. If True, prints all useful columns available in the isochrones.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of positions of the columns given in parameter <strong>get</strong>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.populations.ColumnsIso.read_columns">
+<code class="sig-name descname">read_columns</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">isochrone</span></em>, <em class="sig-param"><span class="n">columns</span></em>, <em class="sig-param"><span class="n">indices</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/populations.html#ColumnsIso.read_columns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.populations.ColumnsIso.read_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts columns from the isochrone tables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<em>str</em>) -- Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>.</p></li>
+<li><p><strong>isochrone</strong> (<em>array</em>) -- Isochrone table which has been read from the input directory.</p></li>
+<li><p><strong>columns</strong> (<em>array-like</em>) -- Names of the columns to be extracted from the isochrone.</p></li>
+<li><p><strong>indices</strong> (<em>1d-array</em>) -- Positions of the columns.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Isochrone columns with an age column in units of Gyr.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.populations.ColumnsIso.sort_mass_column">
+<code class="sig-name descname">sort_mass_column</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iso</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/populations.html#ColumnsIso.sort_mass_column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.populations.ColumnsIso.sort_mass_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reshuffles isochrone rows to order the mass column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>iso</strong> (<em>dict</em>) -- Isochrone (output of read_columns).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Isochrone with the reshuffled rows, such that the column <code class="docutils literal notranslate"><span class="pre">'Mini'</span></code> (initial mass) is ordered.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="jjmodel.populations.stellar_assemblies_iso">
+<code class="sig-prename descclassname">jjmodel.populations.</code><code class="sig-name descname">stellar_assemblies_iso</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">photometric_system</span></em>, <em class="sig-param"><span class="n">met</span></em>, <em class="sig-param"><span class="n">age</span></em>, <em class="sig-param"><span class="n">mass</span></em>, <em class="sig-param"><span class="n">imf</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/populations.html#stellar_assemblies_iso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.populations.stellar_assemblies_iso" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a table with the semi-(metallicity,age,mass) 'stellar assemblies'.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<em>str</em>) -- Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>.</p></li>
+<li><p><strong>photometric_system</strong> (<em>int</em>) -- <p>Photometric system. 
+Name of the photometric system to use, can be:</p>
+<blockquote>
+<div><ul>
+<li><p>1 = <code class="docutils literal notranslate"><span class="pre">'UBVRIplus'</span></code> (UBVRIJHK - for Padova; UBV(RI)c+2MASS - for MIST),</p></li>
+<li><p>2 = <code class="docutils literal notranslate"><span class="pre">'GaiaDR2_MAW'</span></code></p></li>
+<li><p>3 = <code class="docutils literal notranslate"><span class="pre">'GaiaEDR3'</span></code></p></li>
+<li><p>4 = <code class="docutils literal notranslate"><span class="pre">'UBVRIplus</span> <span class="pre">+</span> <span class="pre">GaiaDR2_MAW'</span></code></p></li>
+<li><p>5 = <code class="docutils literal notranslate"><span class="pre">'UBVRIplus</span> <span class="pre">+</span> <span class="pre">GaiaEDR3'</span></code></p></li>
+<li><p>6 = <code class="docutils literal notranslate"><span class="pre">'GaiaDR2_MAW</span> <span class="pre">+</span> <span class="pre">GaiaEDR3'</span></code></p></li>
+<li><p>7 = <code class="docutils literal notranslate"><span class="pre">'UBVRIplus</span> <span class="pre">+</span> <span class="pre">GaiaDR2_MAW</span> <span class="pre">+</span> <span class="pre">GaiaEDR3'</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>For BaSTI the only option at the moment is 3.</p>
+</p></li>
+<li><p><strong>met</strong> (<em>scalar</em>) -- Metallicity [Fe/H].</p></li>
+<li><p><strong>age</strong> (<em>scalar</em>) -- Age (in case of the disk, age is linked to the metallicity via the AMR).</p></li>
+<li><p><strong>mass</strong> (<em>scalar</em>) -- Total mass that was converted into stars of the chosen metallicity and age (isochrone).</p></li>
+<li><p><strong>imf</strong> (<em>function(mass1,mass2)</em>) -- IMF PDF function returning the probability to form a star 
+with a mass between <em>mass1</em> and <em>mass2</em>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Isochrone table for the given metallicity and age, with several additional columns.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="jjmodel.populations.stellar_assemblies_r">
+<code class="sig-prename descclassname">jjmodel.populations.</code><code class="sig-name descname">stellar_assemblies_r</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">amrd</span></em>, <em class="sig-param"><span class="n">amrt</span></em>, <em class="sig-param"><span class="n">sfrd</span></em>, <em class="sig-param"><span class="n">sfrt</span></em>, <em class="sig-param"><span class="n">sigmash</span></em>, <em class="sig-param"><span class="n">imf</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">photometric_system</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/populations.html#stellar_assemblies_r"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.populations.stellar_assemblies_r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a list of the semi-(metallicity,age,mass) 
+'stellar assemblies' at some given Galactocentric distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc.</p></li>
+<li><p><strong>p</strong> (<em>namedtuple</em>) -- Set of model parameters from the parameter file.</p></li>
+<li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
+<li><p><strong>amrd</strong> (<em>array-like</em>) -- Thin-disk AMR at this <strong>R</strong> 
+(only metallicity column, without the corresponding time <code class="docutils literal notranslate"><span class="pre">a.t</span></code>).</p></li>
+<li><p><strong>amrt</strong> (<em>array-like</em>) -- Thick-disk AMR (again, only metallicity column).</p></li>
+<li><p><strong>sfrd</strong> (<em>array-like</em>) -- Thin-disk SFR at this <strong>R</strong>, <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}\)</span>.</p></li>
+<li><p><strong>sfrt</strong> (<em>array-like</em>) -- Thick-disk SFR at this <strong>R</strong>, <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}\)</span>.</p></li>
+<li><p><strong>sigmash</strong> (<em>scalar</em>) -- Present-day surface density of the stellar halo at this <strong>R</strong>, <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-2}}\)</span>.</p></li>
+<li><p><strong>imf</strong> (<em>function(mass1,mass2)</em>) -- IMF PDF function returning the probability to form a star 
+with a mass between <em>mass1</em> and <em>mass2</em>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>.</p></li>
+<li><p><strong>photometric_system</strong> (<em>int</em>) -- Photometric system to use, can be an integer value from 1 to 7. 
+For the list of available systems see <a class="reference internal" href="#jjmodel.populations.stellar_assemblies_iso" title="jjmodel.populations.stellar_assemblies_iso"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.populations.stellar_assemblies_iso()</span></code></a>.</p></li>
+<li><p><strong>FeH_mean_sh</strong> (<em>scalar</em>) -- Optional, mean metallicity of the halo.</p></li>
+<li><p><strong>FeH_sigma_sh</strong> (<em>scalar</em>) -- Optional. Standard deviation of the Gaussian metallicity distribution of the halo.</p></li>
+<li><p><strong>Nmet_sh</strong> (<em>int</em>) -- Optional. Number of metallicity populations used to represent halo metallicity distribution.</p></li>
+<li><p><strong>FeH_scatter</strong> (<em>scalar</em>) -- Optional. Physical scatter in the thin- and thick-disk AMR, by default there is no scatter.</p></li>
+<li><p><strong>Nmet_dt</strong> (<em>int</em>) -- Number of metallicity populations used to represent the Gaussian distribution 
+(<strong>FeH_scatter</strong>) around mean metallicities (the thin- and thick-disk AMR).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None. Saves the calculated tables to the output directory defined in the directory tree <code class="docutils literal notranslate"><span class="pre">a.T</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="jjmodel.analysis.GetPopulations">
+<em class="property">class </em><code class="sig-prename descclassname">jjmodel.analysis.</code><code class="sig-name descname">GetPopulations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_iso</span></em>, <em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">a</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#GetPopulations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.analysis.GetPopulations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for selecting different stellar populations on the  
+color-magnitude diagram (CMD) and with applying cuts on physical stellar parameters.</p>
+<dl class="py method">
+<dt id="jjmodel.analysis.GetPopulations.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_iso</span></em>, <em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">a</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#GetPopulations.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.analysis.GetPopulations.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization of the class instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>.</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc.</p></li>
+<li><p><strong>p</strong> (<em>namedtuple</em>) -- Set of model parameters from the parameter file.</p></li>
+<li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.analysis.GetPopulations.a_stars">
+<code class="sig-name descname">a_stars</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#GetPopulations.a_stars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.analysis.GetPopulations.a_stars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects A-type stars using cuts on <em>T_eff</em>: 7500 K &lt; <em>T_eff</em> &lt; 10000 K.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Model component: <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'sh'</span></code> (thin disk, thick disk, or halo).</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the output table is saved (to the output subdirectory <code class="docutils literal notranslate"><span class="pre">pop/tab</span></code>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Table of the stellar assemblies which belong to the A-type stellar population.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>astropy table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.analysis.GetPopulations.cepheids_type1">
+<code class="sig-name descname">cepheids_type1</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#GetPopulations.cepheids_type1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.analysis.GetPopulations.cepheids_type1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects classical Cepheids. HB stars in the instability strip (IS) with masses
+in the range 4-20 <span class="math notranslate nohighlight">\(\mathrm{M}_\odot\)</span>. IS adopted from De Somma et al. (2020)a (mixing length parameter = 1.5,
+canonical mass-luminosity relation), periods calculated according to De Somma et al. (2020)b.
+Dy default, these are the fundamental pulsators, but also the first obertone 
+(FO) pulsators can be selected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Model component: <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'sh'</span></code> (thin disk, thick disk, or halo).</p></li>
+<li><p><strong>FO</strong> -- Optional. If True, the first obertone pulsators are selected.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the output table is saved (to the output subdirectory <code class="docutils literal notranslate"><span class="pre">pop/tab</span></code>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Table of the stellar assemblies which belong to the Cepheid type I population.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>astropy table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.analysis.GetPopulations.custom_population">
+<code class="sig-name descname">custom_population</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="n">column_list</span></em>, <em class="sig-param"><span class="n">range_list</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#GetPopulations.custom_population"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.analysis.GetPopulations.custom_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows to select stellar population using custom cuts on the columns
+of the stellar assemblies table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Model component: <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'sh'</span></code> (thin disk, thick disk, or halo).</p></li>
+<li><p><strong>column_list</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) -- List of column names for which the cuts will be applied.</p></li>
+<li><p><strong>range_list</strong> (<em>list</em><em>[</em><em>list</em><em>]</em>) -- List with ranges of values [<em>min,max</em>] corresponding to the columns in <strong>column_list</strong>.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the output table is saved (to the output subdirectory <code class="docutils literal notranslate"><span class="pre">/pop/tab</span></code>).</p></li>
+<li><p><strong>tabname</strong> (<em>str</em>) -- Name of the population. If not given, the table is saved 
+with the default name 'custom_population'.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Selected population.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>astropy table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.analysis.GetPopulations.f_stars">
+<code class="sig-name descname">f_stars</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#GetPopulations.f_stars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.analysis.GetPopulations.f_stars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects F-type stars using cuts on <em>T_eff</em>: 6000 K &lt; <em>T_eff</em> &lt; 7500 K.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Model component: <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'sh'</span></code> (thin disk, thick disk, or halo).</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the output table is saved (to the output subdirectory <code class="docutils literal notranslate"><span class="pre">pop/tab</span></code>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Table of the stellar assemblies which belong to the F-type stellar population.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>astropy table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.analysis.GetPopulations.g_dwarfs">
+<code class="sig-name descname">g_dwarfs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#GetPopulations.g_dwarfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.analysis.GetPopulations.g_dwarfs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects G-dwarfs using cuts on <em>T_eff</em> and <em>logg</em>: 5200 K &lt; <em>T_eff</em> &lt; 6000 K &amp;&amp; 4.3 &lt; <em>logg</em> &lt; 7.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Model component: <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'sh'</span></code> (thin disk, thick disk, or halo).</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the output table is saved (to the output subdirectory <code class="docutils literal notranslate"><span class="pre">pop/tab</span></code>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Table of the stellar assemblies which belong to the G-dwarf population.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>astropy table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.analysis.GetPopulations.k_dwarfs">
+<code class="sig-name descname">k_dwarfs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#GetPopulations.k_dwarfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.analysis.GetPopulations.k_dwarfs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects K-dwarfs using cuts on <em>T_eff</em> and <em>logg</em>: 3700 K &lt; <em>T_eff</em> &lt; 5200 K &amp;&amp; 4.3 &lt; <em>logg</em> &lt; 7.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Model component: <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'sh'</span></code> (thin disk, thick disk, or halo).</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the output table is saved (to the output subdirectory <code class="docutils literal notranslate"><span class="pre">pop/tab</span></code>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Table of the stellar assemblies which belong to the K-dwarf population.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>astropy table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.analysis.GetPopulations.m_dwarfs">
+<code class="sig-name descname">m_dwarfs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#GetPopulations.m_dwarfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.analysis.GetPopulations.m_dwarfs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects M-dwarfs using cuts on <em>T_eff</em> and <em>logg</em>: 2400 K &lt; <em>T_eff</em> &lt; 3700 K &amp;&amp; 4 &lt; <em>logg</em> &lt; 7.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Model component: <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'sh'</span></code> (thin disk, thick disk, or halo).</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the output table is saved (to the output subdirectory <code class="docutils literal notranslate"><span class="pre">pop/tab</span></code>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Table of the stellar assemblies which belong to the M-dwarf population.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>astropy table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.analysis.GetPopulations.rc_clean">
+<code class="sig-name descname">rc_clean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#GetPopulations.rc_clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.analysis.GetPopulations.rc_clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects Red Clump (RC) population in the 3d parameter space <em>{logT,logg,[Fe/H]}</em>. 
+This is a cleaner RC selection than the one given by <a class="reference internal" href="#jjmodel.analysis.GetPopulations.rc_simple" title="jjmodel.analysis.GetPopulations.rc_simple"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.analysis.GetPopulations.rc_simple()</span></code></a> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Model component: <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'sh'</span></code> (thin disk, thick disk, or halo).</p></li>
+<li><p><strong>fig</strong> (<em>boolean</em>) -- Optional. If True, the selected RC sample is plotted in the 3d-space <em>{logT,logg,[Fe/H]}</em>.</p></li>
+<li><p><strong>close</strong> (<em>boolean</em>) -- Optional. If True, the figure is closed after plotting (active only if <strong>fig</strong> is True).</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the output table (and figure, if plotted) is (are) saved 
+(to the output subdirectory <code class="docutils literal notranslate"><span class="pre">pop/tab</span></code> and <code class="docutils literal notranslate"><span class="pre">pop/plt</span></code>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Table of the stellar assemblies which belong to the RC population.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>astropy table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.analysis.GetPopulations.rc_simple">
+<code class="sig-name descname">rc_simple</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode_comp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#GetPopulations.rc_simple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.analysis.GetPopulations.rc_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects Red Clump (RC) population using simple cuts on 
+<em>T_eff</em>, <em>logg</em> and <em>logL</em>: 4250 K  &lt; <em>T_eff</em> &lt; 5250 K &amp;&amp; 
+<em>logg</em> &lt; 2.75 &amp;&amp; 1.65 &lt; <em>logL</em> &lt; 1.85.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Model component: <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'sh'</span></code> (thin disk, thick disk, or halo).</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the output table is saved (to the output subdirectory <code class="docutils literal notranslate"><span class="pre">pop/tab</span></code>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Table of the stellar assemblies which belong to the RC population (contaminatated by HGB stars).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>astropy table</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">jjmodel</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="funcs.html">Physical functions (input)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_core.html">Radial and vertical MW structure</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Stellar populations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometry.html">Geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trans.html">Coordinates and velocities (from data)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Useful tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Output analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contacts.html">Authors and contact</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="model_core.html" title="previous chapter">Radial and vertical MW structure</a></li>
+      <li>Next: <a href="geometry.html" title="next chapter">Geometry</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Sysoliatina.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/populations.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
