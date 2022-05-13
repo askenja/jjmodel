@@ -31,13 +31,6 @@ Contents
    
    installation
    funcs
-   model_core
-   populations
-   geometry
-   trans
-   tools
-   analysis
-   plotting
    tutorials
    acknowledgements
    contacts
@@ -48,5 +41,4 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
