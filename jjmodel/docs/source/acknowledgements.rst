@@ -7,7 +7,7 @@
 Acknowledgements
 ****************
 
-If you use the **jjmodel** code in your work, please cite our paper describing the latest version of the JJ model - `Sysoliatina and Just (2022) in prep <Link>`_. 
+If you use the **jjmodel** code in your work, please cite our paper describing the latest version of the JJ model - `Sysoliatina and Just (2022) in prep (link will be added soon). 
 
 Optionally, cite some of our other papers:
 
@@ -23,8 +23,11 @@ Optionally, cite some of our other papers:
 
 If you used **jjmodel** facilities for the stellar population synthesis with isochrones, we also kindly ask you to cite papers of the corresponding research groups:
 
-1. *Padova* (*PARSEC*): `Bressan et al. (2012) <https://ui.adsabs.harvard.edu/abs/2012MNRAS.427..127B/abstract>`_, optionally `Marigo et al. (2013) <https://ui.adsabs.harvard.edu/abs/2013MNRAS.434..488M/abstract>`_, `Marigo et al. (2017) <https://ui.adsabs.harvard.edu/abs/2017ApJ...835...77M/abstract>`_.
-2. *MIST*: `Dotter (2016) <https://ui.adsabs.harvard.edu/abs/2016ApJS..222....8D/abstract>`_ and `Choi et al. (2016) <https://ui.adsabs.harvard.edu/abs/2016ApJ...823..102C/abstract>`_, optionally some of `Paxton et al. (2011) <https://ui.adsabs.harvard.edu/abs/2011ApJS..192....3P/abstract>`_, `Paxton et al. (2013) <https://ui.adsabs.harvard.edu/abs/2013ApJS..208....4P/abstract>`_, `Paxton et al. (2015) <https://ui.adsabs.harvard.edu/abs/2015ApJS..220...15P/abstract>`_, `Paxton et al. (2018) <https://ui.adsabs.harvard.edu/abs/2018ApJS..234...34P/abstract>`_. 
+1. PARSEC (Padova): `Bressan et al. (2012) <https://ui.adsabs.harvard.edu/abs/2012MNRAS.427..127B/abstract>`_, optionally `Marigo et al. (2013) <https://ui.adsabs.harvard.edu/abs/2013MNRAS.434..488M/abstract>`_, `Marigo et al. (2017) <https://ui.adsabs.harvard.edu/abs/2017ApJ...835...77M/abstract>`_.
+2. MIST: `Dotter (2016) <https://ui.adsabs.harvard.edu/abs/2016ApJS..222....8D/abstract>`_ and `Choi et al. (2016) <https://ui.adsabs.harvard.edu/abs/2016ApJ...823..102C/abstract>`_, optionally some of `Paxton et al. (2011) <https://ui.adsabs.harvard.edu/abs/2011ApJS..192....3P/abstract>`_, `Paxton et al. (2013) <https://ui.adsabs.harvard.edu/abs/2013ApJS..208....4P/abstract>`_, `Paxton et al. (2015) <https://ui.adsabs.harvard.edu/abs/2015ApJS..220...15P/abstract>`_, `Paxton et al. (2018) <https://ui.adsabs.harvard.edu/abs/2018ApJS..234...34P/abstract>`_. 
+3. BaSTI: `Hidalgo et al. (2018) <https://ui.adsabs.harvard.edu/abs/2018ApJ...856..125H/abstract>`_. 
 
+If you use our separately published isochrone sets not in the framework of the JJ model, please refer to them as following: 
 
+Sysoliatina, Kseniia, 2022, "JJ-model isochrone set: PARSEC, MIST, and BaSTI stellar evolution", `<https://doi.org/10.11588/data/ZCXHOE>`_, heiDATA, V1. 
 
