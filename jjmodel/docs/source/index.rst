@@ -28,13 +28,18 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   
    installation
    funcs
+   model_core
+   populations
+   geometry
+   trans
+   tools
+   analysis
+   plotting
    tutorials
    acknowledgements
    contacts
-
 
 
 Indices and tables
