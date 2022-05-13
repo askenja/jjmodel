@@ -8,8 +8,43 @@
 Physical functions (input)
 ======================================
 
+SFR, AVR, IMF, and AMR
+----------------------------
+
 .. autoclass:: jjmodel.funcs.AMR
    :members:
+   
+.. autoclass:: jjmodel.funcs.AVR
+   :members:
+   
+.. autoclass:: jjmodel.funcs.IMF
+   :members:
+   
+.. autoclass:: jjmodel.funcs.SFR
+   :members:   
 
    
+Radial structure
+-------------------------
+
+.. autoclass:: jjmodel.funcs.RadialDensity
+   :members:
+
+.. autoclass:: jjmodel.funcs.RadialPotential
+   :members:
+   
+.. autoclass:: jjmodel.funcs.RotCurve
+   :members:
+  
+
+.. autofunction:: jjmodel.funcs.hgr
+   
+.. autofunction:: jjmodel.funcs.heffr
+   
+
+
+Some physical quantities
+-------------------------
+
+.. autofunction:: jjmodel.funcs.log_surface_gravity 
 
