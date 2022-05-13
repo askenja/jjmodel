@@ -30,6 +30,10 @@ def readme():
     with open('README.md') as f:
         return f.read()
 
+# read __version__
+with open('jjmodel/version.py') as f:  
+	exec(f.read())
+
 setup(name = "jjmodel",
       version = __version__,
       description = "Dynamical model of the MW disk (Just-Jahreiss model)",
