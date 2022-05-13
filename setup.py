@@ -31,7 +31,7 @@ def readme():
         return f.read()
 
 setup(name = "jjmodel",
-      version = 1.2,
+      version = __version__,
       description = "Dynamical model of the MW disk (Just-Jahreiss model)",
       long_description = readme(),
       author = "Kseniia Sysoliatina",
