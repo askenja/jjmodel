@@ -5,7 +5,8 @@ has been recently calibrated against the stellar populations selected from the G
 
 The latest model version is presented in Sysoliatina and Just (2022) in prep (link will be added soon). 
 
-An extended documentation on the code installation and usage, as well as more information about the JJ model, can be found [here]  (https://jjmodel.readthedocs.io/en/latest/analysis.html). 
+An extended documentation on the code installation and usage, as well as more information about the JJ model, can be found 
+[here](https://jjmodel.readthedocs.io/en/latest/analysis.html). 
 
 
 
