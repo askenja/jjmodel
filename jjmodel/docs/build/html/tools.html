@@ -4,15 +4,15 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
     <title>Useful tools &#8212; jjmodel 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Output analysis" href="analysis.html" />
@@ -33,24 +33,323 @@
 
           <div class="body" role="main">
             
-  <section id="useful-tools">
+  <div class="section" id="useful-tools">
 <h1>Useful tools<a class="headerlink" href="#useful-tools" title="Permalink to this headline">¶</a></h1>
-<section id="reading-parameters">
+<div class="section" id="reading-parameters">
 <h2>Reading parameters<a class="headerlink" href="#reading-parameters" title="Permalink to this headline">¶</a></h2>
-</section>
-<section id="smoothing-distributions">
+<dl class="py function">
+<dt id="jjmodel.tools.read_parameters">
+<code class="sig-prename descclassname">jjmodel.tools.</code><code class="sig-name descname">read_parameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path_to_file</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#read_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.read_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads parameters from text file(s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path_to_file</strong> (<em>string</em>) -- Relative path to the parameter file(s). Main parameter file must have name 
+<code class="docutils literal notranslate"><span class="pre">'parameters'</span></code> and the second, optional parameter file, must be called <code class="docutils literal notranslate"><span class="pre">'sfrd_peaks_parameters'</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Names and values of all parameters given in the parameter file(s).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>namedtuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="jjmodel.tools.resave_parameters">
+<code class="sig-prename descclassname">jjmodel.tools.</code><code class="sig-name descname">resave_parameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path_to_parameterfile</span></em>, <em class="sig-param"><span class="n">path_to_parameterfile_copy</span></em>, <em class="sig-param"><span class="n">p</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#resave_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.resave_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads parameters from text file(s) and saves parameter file(s) 
+to the output folder with only those parameters which are needed for this run 
+(cleans parameter files from unnecessary input).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_to_parameterfile</strong> (<em>string</em>) -- Relative path to the parameter file(s).</p></li>
+<li><p><strong>path_to_parameterfile_copy</strong> (<em>string</em>) -- Destination where the file copies should be saved.</p></li>
+<li><p><strong>p</strong> (<em>namedtuple</em>) -- Set of model parameters from the parameter file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="smoothing-distributions">
 <h2>Smoothing distributions<a class="headerlink" href="#smoothing-distributions" title="Permalink to this headline">¶</a></h2>
-</section>
-<section id="interpolation-tools">
+<dl class="py function">
+<dt id="jjmodel.tools.gauss_weights">
+<code class="sig-prename descclassname">jjmodel.tools.</code><code class="sig-name descname">gauss_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">mean</span></em>, <em class="sig-param"><span class="n">sigma</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#gauss_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.gauss_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws instances from the Gaussian PDF.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array-like</em>) -- Set of points, where probability density (PD) has to be calculated.</p></li>
+<li><p><strong>mean</strong> (<em>scalar</em>) -- Mean of the Gaussian distribution.</p></li>
+<li><p><strong>sigma</strong> (<em>scalar</em>) -- Standard deviation of the Gaussian distribution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>PD values at x, normalized to unity.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array-like</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="jjmodel.tools.convolve1d_gauss">
+<code class="sig-prename descclassname">jjmodel.tools.</code><code class="sig-name descname">convolve1d_gauss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em>, <em class="sig-param"><span class="n">dx_smooth</span></em>, <em class="sig-param"><span class="n">x_range</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#convolve1d_gauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.convolve1d_gauss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Smoothing a 1d-array with a Gaussian kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>1d-array.</em>) -- Initial array.</p></li>
+<li><p><strong>dx_smooth</strong> (<em>scalar</em>) -- Dispersion in x.</p></li>
+<li><p><strong>x_range</strong> (<em>list</em>) -- Min and max values along the array axes, [<em>xmin,xmax</em>].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New smoothed array of the same shape.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>1d-array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="jjmodel.tools.convolve2d_gauss">
+<code class="sig-prename descclassname">jjmodel.tools.</code><code class="sig-name descname">convolve2d_gauss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em>, <em class="sig-param"><span class="n">dxy_smooth</span></em>, <em class="sig-param"><span class="n">xy_range</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#convolve2d_gauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.convolve2d_gauss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Smoothing a 2d-array with a Gaussian kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>2d-array.</em>) -- Initial array.</p></li>
+<li><p><strong>dxy_smooth</strong> (<em>list</em>) -- Dispersions in x and y, [<em>dx,dy</em>].</p></li>
+<li><p><strong>xy_range</strong> (<em>list</em><em>[</em><em>list</em><em>]</em>) -- Min and max values along the array axis, 
+[[<em>xmin,xmax</em>],[<em>ymin,ymax</em>]].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New smoothed array of the same shape.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>2d-array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="jjmodel.tools.cumhist_smooth_savgol">
+<code class="sig-prename descclassname">jjmodel.tools.</code><code class="sig-name descname">cumhist_smooth_savgol</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">m</span></em>, <em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#cumhist_smooth_savgol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.cumhist_smooth_savgol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Smoothes a normalized cumulative distribution of some quantity 
+with the Savitzky-Golay filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> (<em>array-like</em>) -- y-coordinates of the normalized cumulative distribution.</p></li>
+<li><p><strong>m</strong> (<em>int</em>) -- Parameter window_length of scipy.signal.savgol_filter.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) -- Parameter polyorder of scipy.signal.savgol_filter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return y_sm</dt>
+<dd class="field-even"><p>Smoothed y.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>1d-array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="interpolation-tools">
 <h2>Interpolation tools<a class="headerlink" href="#interpolation-tools" title="Permalink to this headline">¶</a></h2>
-</section>
-<section id="retrieving-status">
+<dl class="py class">
+<dt id="jjmodel.tools.ConvertAxes">
+<em class="property">class </em><code class="sig-prename descclassname">jjmodel.tools.</code><code class="sig-name descname">ConvertAxes</code><a class="reference internal" href="_modules/jjmodel/tools.html#ConvertAxes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.ConvertAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interpolation methods.</p>
+<dl class="py method">
+<dt id="jjmodel.tools.ConvertAxes.get_closest">
+<code class="sig-name descname">get_closest</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axis1_new</span></em>, <em class="sig-param"><span class="n">axis1_old</span></em>, <em class="sig-param"><span class="n">axis2_old</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#ConvertAxes.get_closest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.ConvertAxes.get_closest" title="Permalink to this definition">¶</a></dt>
+<dd><p>No interpolation is applied, the new <em>axis1</em>-values are 
+replaced by the closest values from the old <em>axis1</em>-array 
+and the corresponding old <em>axis2</em>-values are returned. This 
+method is good when the resolution of the old <em>axis1</em>-array 
+is much better than the resolution of the new <em>axis1</em>-array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis1_new</strong> (<em>array-like</em>) -- New values along <em>axis1</em>.</p></li>
+<li><p><strong>axis1_old</strong> (<em>array-like</em>) -- Old values along <em>axis1</em>.</p></li>
+<li><p><strong>axis2_old</strong> (<em>array-like</em>) -- Old values along <em>axis2</em>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New values along <em>axis2</em> corresponding to the new <em>axis1</em>-values set.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>1d-array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.tools.ConvertAxes.interpolate">
+<code class="sig-name descname">interpolate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axis1_new</span></em>, <em class="sig-param"><span class="n">axis1_old</span></em>, <em class="sig-param"><span class="n">axis2_old</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#ConvertAxes.interpolate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.ConvertAxes.interpolate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns new <em>axis2</em>-values for a new set of <em>axis1</em>-values 
+given the old (<em>axis1,axis2</em>). Uses linear interpolation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis1_new</strong> (<em>array-like</em>) -- New values along <em>axis1</em>.</p></li>
+<li><p><strong>axis1_old</strong> (<em>array-like</em>) -- Old values along <em>axis1</em>.</p></li>
+<li><p><strong>axis2_old</strong> (<em>array-like</em>) -- Old values along <em>axis2</em>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New values along <em>axis2</em> corresponding to the new <em>axis1</em>-values set.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>1d-array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="jjmodel.tools.rebin_histogram">
+<code class="sig-prename descclassname">jjmodel.tools.</code><code class="sig-name descname">rebin_histogram</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bin_edges</span></em>, <em class="sig-param"><span class="n">x_centers</span></em>, <em class="sig-param"><span class="n">counts</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#rebin_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.rebin_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses existing histogram to create a new histogram for the 
+different set of x-bins, such that the overall counts are 
+conserved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bin_edges</strong> (<em>array-like</em>) -- Edges of the new x-bins.</p></li>
+<li><p><strong>x_centers</strong> (<em>array-like</em>) -- Centers of the old x-bins.</p></li>
+<li><p><strong>counts</strong> (<em>array-like</em>) -- Histogram counts corresponding to the old x-bin centers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New counts corresponding to the new x-bins (<code class="docutils literal notranslate"><span class="pre">len(bin_edges)-1</span></code>).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>1d-array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="retrieving-status">
 <h2>Retrieving status<a class="headerlink" href="#retrieving-status" title="Permalink to this headline">¶</a></h2>
-</section>
-<section id="other">
+<dl class="py class">
+<dt id="jjmodel.tools.Timer">
+<em class="property">class </em><code class="sig-prename descclassname">jjmodel.tools.</code><code class="sig-name descname">Timer</code><a class="reference internal" href="_modules/jjmodel/tools.html#Timer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.Timer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for measuring time intervals.</p>
+<dl class="py method">
+<dt id="jjmodel.tools.Timer.start">
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#Timer.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.Timer.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an instance and checks the current time.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.tools.Timer.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">moment</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#Timer.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.Timer.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns time interval between the current and some previous 
+moment. Output in fractions of hours, minutes and seconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>moment</strong> (<em>float</em>) -- Time record (in the format of output of time.time()).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Time interval in hms.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="jjmodel.tools.LogFiles">
+<em class="property">class </em><code class="sig-prename descclassname">jjmodel.tools.</code><code class="sig-name descname">LogFiles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#LogFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.LogFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for manipulations with text files. Includes methods for creating 
+text files and adding lines to them. Used for writing log files.</p>
+<dl class="py method">
+<dt id="jjmodel.tools.LogFiles.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#LogFiles.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.LogFiles.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an instance of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) -- Name of the file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.tools.LogFiles.append">
+<code class="sig-name descname">append</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#LogFiles.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.LogFiles.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens the file, adds a line, closes the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) -- Text to be added to the file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.tools.LogFiles.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#LogFiles.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.LogFiles.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a file with <strong>filename</strong> (current directory), writes a line, closes the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) -- Text to be added to the file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="other">
 <h2>Other<a class="headerlink" href="#other" title="Permalink to this headline">¶</a></h2>
-</section>
-</section>
+<dl class="py function">
+<dt id="jjmodel.tools.reduce_table">
+<code class="sig-prename descclassname">jjmodel.tools.</code><code class="sig-name descname">reduce_table</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tab</span></em>, <em class="sig-param"><span class="n">a</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/tools.html#reduce_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.tools.reduce_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the surface number density of the mono-age subpopulations, thus, 
+reduces the length of the 'stellar assemblies' table to the number of thin- or thick-disk, 
+or halo subpopulations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tab</strong> (<em>dict</em>) -- Isochrone columns.</p></li>
+<li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Table with two columns: <code class="docutils literal notranslate"><span class="pre">'t'</span></code> and <code class="docutils literal notranslate"><span class="pre">'N'</span></code>, Galactic time (Gyr) 
+and surface number densities (<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-2}}\)</span>).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>astropy Table</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
 
 
           </div>
@@ -104,7 +403,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -126,7 +425,7 @@
       &copy;2022, Sysoliatina.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

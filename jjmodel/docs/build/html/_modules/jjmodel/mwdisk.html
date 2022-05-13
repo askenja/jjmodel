@@ -51,77 +51,78 @@
 
 <div class="viewcode-block" id="rbin_builder"><a class="viewcode-back" href="../../model_core.html#jjmodel.mwdisk.rbin_builder">[docs]</a><span class="k">def</span> <span class="nf">rbin_builder</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">SFRd</span><span class="p">,</span><span class="n">SFRt</span><span class="p">,</span><span class="n">gd</span><span class="p">,</span><span class="n">gt</span><span class="p">,</span><span class="n">Sigma</span><span class="p">,</span><span class="n">sigW</span><span class="p">,</span><span class="n">hg</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Predicts the vertical structure of the MW disk at a given Galactocentric distance R.  </span>
+<span class="sd">    Predicts the vertical structure of the MW disk at a given Galactocentric distance.  </span>
 <span class="sd">    </span>
 <span class="sd">    :param R: Galactocentric distance, kpc. </span>
 <span class="sd">    :type R: scalar</span>
-<span class="sd">    :param p: Set of model parameters from the parameter file. </span>
-<span class="sd">    :type p: namedtuple</span>
-<span class="sd">    :param a: Collection of the fixed model parameters, useful quantities and arrays.</span>
+<span class="sd">    :param a: Collection of the fixed model parameters, useful quantities, and arrays.</span>
 <span class="sd">    :type a: namedtuple</span>
-<span class="sd">    :param SFRd: Thin-disk star formation rate function, Msun/pc^2/Gyr. </span>
-<span class="sd">        Array length is equal to the number of thin-disk subpopulations: a.jd = int((tp-p.td1)/tr).</span>
+<span class="sd">    :param SFRd: Thin-disk star formation rate function, :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`. </span>
+<span class="sd">        Array length is equal to the number of thin-disk subpopulations: ``a.jd = int((tp-p.td1)/tr)``,</span>
+<span class="sd">        where ``tp`` is a present-day MW disk age and ``tr`` is the model age resolution. </span>
 <span class="sd">    :type SFRd: array-like</span>
-<span class="sd">    :param SFRt: Thick-disk star formation rate function, Msun/pc^2/Gyr. </span>
-<span class="sd">        Length of the array is a.jt = int(p.tt2/tr). </span>
+<span class="sd">    :param SFRt: Thick-disk star formation rate function, :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`. </span>
+<span class="sd">        Length of the array is ``a.jt = int(p.tt2/tr)``. </span>
 <span class="sd">    :type SFRt: array-like</span>
-<span class="sd">    :param gd: Thin-disk mass loss function, len(gd)==len(SFRd).</span>
+<span class="sd">    :param gd: Thin-disk mass loss function, ``len(gd)==len(SFRd)``.</span>
 <span class="sd">    :type gd: array-like</span>
-<span class="sd">    :param gt: Thick-disk mass loss function, len(gt)==len(SFRt).</span>
+<span class="sd">    :param gt: Thick-disk mass loss function, ``len(gt)==len(SFRt)``.</span>
 <span class="sd">    :type gt: array-like</span>
 <span class="sd">    :param Sigma: Present-day surface densities of non-disk components </span>
-<span class="sd">        (molecular gas, atomic gas, DM, stellar halo), Msun/pc^2.</span>
+<span class="sd">        (molecular gas, atomic gas, DM, stellar halo), :math:`\mathrm{M_\odot \ pc^{-2}}`.</span>
 <span class="sd">    :type Sigma: array-like</span>
 <span class="sd">    :param sigW: Set of parameters defining W-velocity dispersions of the Galactic components: </span>
-<span class="sd">        (sige, alpha, sigt, sigdh, sigsh). sige and alpha are the AVR scaling parameter (km/s) </span>
-<span class="sd">        and power index (dim). sigt, sigdh, sigsh (km/s) are W-velocity dispersions of the thick disk, </span>
-<span class="sd">        DM and stellar halo, respectively.  </span>
+<span class="sd">        (*sige, alpha, sigt, sigdh, sigsh*). *sige* and *alpha* are the AVR scaling parameter (:math:`\mathrm{km \ s^{-1}}`) </span>
+<span class="sd">        and power index (dim). *sigt*, *sigdh*, *sigsh* (:math:`\mathrm{km \ s^{-1}}`) are W-velocity dispersions </span>
+<span class="sd">        of the thick disk, DM, and stellar halo, respectively.</span>
 <span class="sd">    :type sigW: array-like</span>
-<span class="sd">    :param hg: Scale heights of the molecular and atomic gas (hg1, hg2), pc.</span>
+<span class="sd">    :param hg: Scale heights of the molecular and atomic gas (*hg1*, *hg2*), pc.</span>
 <span class="sd">    :type hg: array-like</span>
-<span class="sd">    :param fp: Optional. Amplitude-related parameters for all additional thin-disk SFR peaks. </span>
-<span class="sd">        Must be specified together sigp.</span>
+<span class="sd">    :param fp: Optional. Relative contributions of the additional thin-disk SFR peaks to the total thin-disk SFR, </span>
+<span class="sd">        :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}` (output *Fp* in :meth:`jjmodel.funcs.SFR.sfrr`). </span>
+<span class="sd">        Must be given if ``p.pkey=1`` or ``p.pkey=2``. </span>
 <span class="sd">    :type fp: array-like</span>
-<span class="sd">    :param sigp: Optional. W-velocity dispersions (km/s) of the thin-disk populations associated with </span>
-<span class="sd">        the stellar density excess in the additional peaks. Must be given together fp. </span>
+<span class="sd">    :param sigp: Optional. W-velocity dispersions (:math:`\mathrm{km \ s^{-1}}`) of the thin-disk populations associated with </span>
+<span class="sd">        the stellar density excess in the additional peaks. Must be given when ``p.pkey=1``. </span>
 <span class="sd">    :type sigp: array-like</span>
 <span class="sd">    :param heffd: Optional. Thin-disk half-thickness (effective scale height), pc. If fixed by this parameter, </span>
 <span class="sd">        additional iterations will be performed to adapt AVR to fulfill this requirement. </span>
 <span class="sd">    :type heffd: scalar </span>
 <span class="sd">    :param hefft: Optional. Thick-disk half-thickness (effective scale height), pc. If fixed by this parameter, </span>
-<span class="sd">        additional iterations will be performed to adapt sigt to fulfill this requirement. </span>
+<span class="sd">        additional iterations will be performed to adapt thick-disk W-velocity dispersion *sigt* </span>
+<span class="sd">        to fulfill this requirement. </span>
 <span class="sd">    :type hefft: scalar</span>
 <span class="sd">    :param status_equation: Optional. If True, the iteration details are printed to console.</span>
 <span class="sd">    :type status_equation: boolean</span>
 <span class="sd">    :param status_progress: Optional. If True, the overall progress details are printed to console.</span>
 <span class="sd">    :type status_progress: boolean</span>
-<span class="sd">    :param log: Optional. If given, the details of the iteration are written to a file.</span>
+<span class="sd">    :param log: Optional. If given, the details of the iteration are written to the file.</span>
 <span class="sd">    :type log: file</span>
 <span class="sd">    :param plot: Optional. If True, the derived potential is plotted for each iteration.  </span>
 <span class="sd">    :type plot: boolean</span>
-<span class="sd">    :param save: Optional. If True, the output tables (and plot with converging potential in plot==True), </span>
-<span class="sd">        is saved to the specified directory, a.dir. </span>
+<span class="sd">    :param save: Optional. If True, the output tables (and plot with converging potential if **plot** is True), </span>
+<span class="sd">        is (are) saved to the specified directory, ``a.dir``. </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">            </span>
-<span class="sd">    :return: Dictionary with all sorts of output.  </span>
+<span class="sd">    :return: Dictionary with all sorts of output (mainly the output of :func:`jjmodel.poisson.poisson_solver`).  </span>
 <span class="sd">    </span>
 <span class="sd">        Keys of the standard output:</span>
 <span class="sd">            </span>
-<span class="sd">        - &#39;hd&#39;: 1d-array of length a.jd, scale heights of the thin-disk subpopulations (pc).             </span>
-<span class="sd">        - &#39;ht&#39;, &#39;hdh&#39;, &#39;hsh&#39; : float, thick-disk DM and halo scale heights (pc).             </span>
-<span class="sd">        - &#39;heffd&#39;, &#39;hefft&#39; : float, half-thickness of the thin and thick disk (pc).             </span>
-<span class="sd">        - &#39;sigg1&#39;,&#39;sigg2&#39;,&#39;sigt&#39; : molecular and atomic gas and thick-disk W-velocity dispersions (km/s). </span>
-<span class="sd">        - &#39;sige&#39; : float, scaling parameter of the thin-disk AVR (km/s).             </span>
-<span class="sd">        - &#39;avr&#39; : 1d-array of length a.jd, thin-disk AVR (km/s). </span>
-<span class="sd">        - &#39;fie&#39;, &#39;phi&#39; : gravitational potential as a function of z (corresponds to a.z grid). fie is the normalized potential multiplied by SIGMA_E^2 (in km/s), useful for further calculations of the potential-dependend quantities. phi is the potential in physical units, m^2/s^2. </span>
-<span class="sd">        - &#39;rhodtot&#39;,&#39;rhot&#39;,&#39;rhog1&#39;,&#39;rhog2&#39;,&#39;rhodh&#39;,&#39;rhosh&#39; : Matter density vertical profiles of the Galactic components (correspond to a.z grid), Msun/pc^3. rhodtot is the total thin-disk density, that includes subpopulations characterized by W-velocity dispersion prescribed by the AVR and SFR-peaks&#39; subpopulations with special kinematics, if any.</span>
-<span class="sd">        - &#39;Kzdtot&#39;,&#39;Kzt&#39;,&#39;Kzg1&#39;,&#39;Kzg2&#39;,&#39;Kzdh&#39;,&#39;Kzsh&#39; : Vertical gravitational force from i-th model component, m^2/s^2/pc. Kzdtot corresponds to the total thin disk, as rhodtot. </span>
+<span class="sd">        - ``&#39;hd&#39;``: 1d-array of length ``a.jd``, scale heights of the thin-disk subpopulations (pc).                   </span>
+<span class="sd">        - ``&#39;ht&#39;``, ``&#39;hdh&#39;``, ``&#39;hsh&#39;`` : float, thick-disk, DM, and halo scale heights (pc).          </span>
+<span class="sd">        - ``&#39;heffd&#39;``, ``&#39;hefft&#39;`` : float, half-thickness of the thin and thick disk (pc).             </span>
+<span class="sd">        - ``&#39;sigg1&#39;``, ``&#39;sigg2&#39;``, ``&#39;sigt&#39;`` : molecular and atomic gas and thick-disk W-velocity dispersions (:math:`\mathrm{km \ s^{-1}}`). </span>
+<span class="sd">        - ``&#39;sige&#39;`` : float, scaling parameter of the thin-disk AVR (:math:`\mathrm{km \ s^{-1}}`).               </span>
+<span class="sd">        - ``&#39;avr&#39;`` : 1d-array of length ``a.jd``, thin-disk AVR (:math:`\mathrm{km \ s^{-1}}`). </span>
+<span class="sd">        - ``&#39;fie&#39;``, ``&#39;phi&#39;`` : total vertical gravitational potential (corresponds to ``a.z`` grid). ``fie`` is the normalized potential multiplied by the constant ``SIGMA_E^2`` (:math:`\mathrm{km^2 \ s^{-2}}`), useful for further calculations of potential-dependend quantities. ``phi`` is the potential in physical units, :math:`\mathrm{m^2 \ s^{-2}}`. </span>
+<span class="sd">        - ``&#39;rhodtot&#39;``, ``&#39;rhot&#39;``, ``&#39;rhog1&#39;``, ``&#39;rhog2&#39;``, ``&#39;rhodh&#39;``, ``&#39;rhosh&#39;`` : Mass density vertical profiles of the Galactic components (correspond to ``a.z`` grid), :math:`\mathrm{M_\odot \ pc^{-3}}`. ``&#39;rhodtot&#39;``&#39; is the total thin-disk density, that includes subpopulations characterized by W-velocity dispersion prescribed by the AVR and SFR-peaks&#39; subpopulations with special kinematics, if any.</span>
+<span class="sd">        - ``&#39;Kzdtot&#39;``, ``&#39;Kzt&#39;``, ``&#39;Kzg1&#39;``, ``&#39;Kzg2&#39;``, ``&#39;Kzdh&#39;``, ``&#39;Kzsh&#39;`` : Vertical force from *i*-th model component, :math:`\mathrm{m^2 \ s^{-2} \ pc^{-1}}`. ``Kzdtot`` corresponds to the total thin disk, as ``rhodtot``. </span>
 <span class="sd">        </span>
-<span class="sd">        Keys of the optional output (depend on kwargs):</span>
+<span class="sd">        Keys of the optional output (depending on *kwargs*):</span>
 <span class="sd">            </span>
-<span class="sd">        - &#39;hdp&#39; : Scale height(s) of the SFR-peak(s)&#39; subpopulations, pc. </span>
-<span class="sd">        - &#39;rhodp&#39;,&#39;rhod0&#39; : Matter density vertical profiles of the SFR-peak(s)&#39; subpopulations, and of the thin-disk subpopulations with the vertical kinematics described by the AVR, Msun/pc^3. In this case rhodtot == rhod0 + sum(rhodp,axis=0). </span>
-<span class="sd">        - &#39;Kzd0&#39;, &#39;Kzdp&#39; : Analogically to rhodp and rhod0, thin-disk vertical graditational force components, m^2/s^2/pc.   </span>
+<span class="sd">        - ``&#39;hdp&#39;`` : Scale height(s) of the SFR-peak(s)&#39; subpopulations, pc. </span>
+<span class="sd">        - ``&#39;rhodp&#39;``, ``&#39;rhod0&#39;`` : Mass density vertical profiles of the SFR-peak(s)&#39; subpopulations, and of the thin-disk subpopulations with the vertical kinematics described by the AVR, :math:`\mathrm{M_\odot \ pc^{-3}}`. In this case total density profile is ``rhodtot = rhod0 + sum(rhodp,axis=0)``. </span>
+<span class="sd">        - ``&#39;Kzd0&#39;``, ``&#39;Kzdp&#39;`` : Analogically to ``rhodp`` and ``rhod0``, thin-disk vertical graditational force components, :math:`\mathrm{m^2 \ s^{-2} \ pc^{-1}}`.   </span>
 <span class="sd">        </span>
 <span class="sd">    :rtype: dict </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -207,15 +208,16 @@
 <div class="viewcode-block" id="local_run"><a class="viewcode-back" href="../../model_core.html#jjmodel.mwdisk.local_run">[docs]</a><span class="k">def</span> <span class="nf">local_run</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Builds the local JJ model based on the given parameters and input functions.</span>
+<span class="sd">    Accepts optional parameters of :func:`jjmodel.mwdisk.rbin_builder`. </span>
 <span class="sd">    </span>
 <span class="sd">    :param p: Set of model parameters from the parameter file. </span>
 <span class="sd">    :type p: namedtuple</span>
-<span class="sd">    :param a: Collection of the fixed model parameters, useful quantities and arrays.</span>
+<span class="sd">    :param a: Collection of the fixed model parameters, useful quantities, and arrays.</span>
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param inp: Collection of the input functions including SFR, AVR, AMR, and IMF.</span>
 <span class="sd">    :type inp: dict      </span>
 
-<span class="sd">    :return: Output of the function rbin_builder for R==p.Rsun.</span>
+<span class="sd">    :return: Output of the function :func:`jjmodel.mwdisk.rbin_builder` for ``p.Rsun``.</span>
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
@@ -234,18 +236,20 @@
 
 <div class="viewcode-block" id="extended_run"><a class="viewcode-back" href="../../model_core.html#jjmodel.mwdisk.extended_run">[docs]</a><span class="k">def</span> <span class="nf">extended_run</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">out_local</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the predictions of the JJ model at a given Galactocentric distance. </span>
+<span class="sd">    Calculates the JJ-model predictions at a given Galactocentric distance. </span>
+<span class="sd">    Accepts optional parameters of :func:`jjmodel.mwdisk.rbin_builder`. </span>
 <span class="sd">        </span>
 <span class="sd">    :param inp: Collection of the input functions including SFR, AVR, AMR, and IMF.</span>
 <span class="sd">    :type inp: dict   </span>
-<span class="sd">    :param i: Index of the current R-bin in a.R array.</span>
+<span class="sd">    :param i: Index of the current radial bin in ``a.R`` array.</span>
 <span class="sd">    :type i: int</span>
-<span class="sd">    :param out_local: Output of the function local_run.</span>
+<span class="sd">    :param out_local: Output of the function :func:`jjmodel.mwdisk.local_run`.</span>
 <span class="sd">    :type out_local: dict</span>
 <span class="sd">    :param status_progress: Optional. If True, the overall progress details are printed to console.</span>
 <span class="sd">    :type status_progress: boolean</span>
 <span class="sd">            </span>
-<span class="sd">    :return: Output of the function rbin_builder (for the i-th R-bin).</span>
+<span class="sd">    :return: Output of the function Accepts optional parameters of :func:`jjmodel.mwdisk.rbin_builder` </span>
+<span class="sd">        for the *i*-th radial bin.</span>
 <span class="sd">    :rtype: dict        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
@@ -279,7 +283,7 @@
 
 <span class="k">def</span> <span class="nf">_starmap_with_kwargs_</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">args_iter</span><span class="p">,</span> <span class="n">kwargs_iter</span><span class="p">):</span>
     <span class="n">args_for_starmap</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">repeat</span><span class="p">(</span><span class="n">fn</span><span class="p">),</span> <span class="n">args_iter</span><span class="p">,</span> <span class="n">kwargs_iter</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pool</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">apply_args_and_kwargs</span><span class="p">,</span> <span class="n">args_for_starmap</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pool</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">_apply_args_and_kwargs_</span><span class="p">,</span> <span class="n">args_for_starmap</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">_apply_args_and_kwargs_</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -287,18 +291,19 @@
 
 <div class="viewcode-block" id="disk_builder"><a class="viewcode-back" href="../../model_core.html#jjmodel.mwdisk.disk_builder">[docs]</a><span class="k">def</span> <span class="nf">disk_builder</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Constructs the disk (vertical structure at some Galactocentric distance R). </span>
-<span class="sd">    Can work in two modes (depending on the parameter p.run_mode):</span>
+<span class="sd">    Constructs the disk (vertical structure at some Galactocentric distance). </span>
+<span class="sd">    Can work in two modes (depending on the parameter ``p.run_mode``):</span>
 <span class="sd">        </span>
 <span class="sd">        1. models the Solar neighbourhood only;</span>
 <span class="sd">        2. starts with the Solar neighbourhood and then extends the local JJ model to other radii. </span>
 <span class="sd">        </span>
 <span class="sd">    Input data (e.g. SFR and AMR) and results (e.g. potential, densities, scale heights, AVR) </span>
-<span class="sd">    are saved as txt files to the output directory a.dir. </span>
+<span class="sd">    are saved as txt files to the output directory ``a.dir``. </span>
+<span class="sd">    Accepts optional parameters of :func:`jjmodel.mwdisk.rbin_builder`. </span>
 <span class="sd">    </span>
 <span class="sd">    :param p: Set of model parameters from the parameter file. </span>
 <span class="sd">    :type p: namedtuple</span>
-<span class="sd">    :param a: Collection of the fixed model parameters, useful quantities and arrays.</span>
+<span class="sd">    :param a: Collection of the fixed model parameters, useful quantities, and arrays.</span>
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param inp: Collection of the input functions including SFR, AVR, AMR, and IMF.</span>
 <span class="sd">    :type inp: dict     </span>

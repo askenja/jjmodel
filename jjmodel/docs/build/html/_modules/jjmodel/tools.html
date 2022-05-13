@@ -55,10 +55,10 @@
 <span class="sd">    Reads parameters from text file(s).</span>
 <span class="sd">    </span>
 <span class="sd">    :param path_to_file: Relative path to the parameter file(s). Main parameter file must have name </span>
-<span class="sd">        &#39;parameters&#39; and the second, optional parameter file, must be called &#39;sfrd_peaks_parameters&#39;. </span>
+<span class="sd">        ``&#39;parameters&#39;`` and the second, optional parameter file, must be called ``&#39;sfrd_peaks_parameters&#39;``. </span>
 <span class="sd">    :type path_to_file: string</span>
 <span class="sd">    </span>
-<span class="sd">    :return: Names and values of parameters given in the parameter file(s).</span>
+<span class="sd">    :return: Names and values of all parameters given in the parameter file(s).</span>
 <span class="sd">    :rtype: namedtuple </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
@@ -189,10 +189,15 @@
 <div class="viewcode-block" id="resave_parameters"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.resave_parameters">[docs]</a><span class="k">def</span> <span class="nf">resave_parameters</span><span class="p">(</span><span class="n">path_to_parameterfile</span><span class="p">,</span><span class="n">path_to_parameterfile_copy</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads parameters from text file(s) and saves parameter file(s) </span>
-<span class="sd">    to the output folder with only those parameters which are needed for this run.</span>
+<span class="sd">    to the output folder with only those parameters which are needed for this run </span>
+<span class="sd">    (cleans parameter files from unnecessary input). </span>
 <span class="sd">    </span>
-<span class="sd">    :param path_to_file: Relative path to the parameter file(s).</span>
-<span class="sd">    :type path_to_file: string </span>
+<span class="sd">    :param path_to_parameterfile: Relative path to the parameter file(s).</span>
+<span class="sd">    :type path_to_parameterfile: string </span>
+<span class="sd">    :param path_to_parameterfile_copy: Destination where the file copies should be saved.</span>
+<span class="sd">    :type path_to_parameterfile_copy: string </span>
+<span class="sd">    :param p: Set of model parameters from the parameter file. </span>
+<span class="sd">    :type p: namedtuple</span>
 <span class="sd">    </span>
 <span class="sd">    :return: None </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -272,13 +277,13 @@
 
 <div class="viewcode-block" id="LogFiles"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.LogFiles">[docs]</a><span class="k">class</span> <span class="nc">LogFiles</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class for text file manipulations. Includes methods for creating </span>
+<span class="sd">    Class for manipulations with text files. Includes methods for creating </span>
 <span class="sd">    text files and adding lines to them. Used for writing log files. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="LogFiles.__init__"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.LogFiles.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates an instance of the class with a given file name.</span>
+<span class="sd">        Creates an instance of the class.</span>
 <span class="sd">        </span>
 <span class="sd">        :param filename: Name of the file. </span>
 <span class="sd">        :type filename: str </span>
@@ -287,7 +292,7 @@
 
 <div class="viewcode-block" id="LogFiles.write"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.LogFiles.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">text</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates a file, writes a line, closes the file.</span>
+<span class="sd">        Creates a file with **filename** (current directory), writes a line, closes the file.</span>
 <span class="sd">        </span>
 <span class="sd">        :param text: Text to be added to the file. </span>
 <span class="sd">        :type text: str </span>
@@ -320,7 +325,7 @@
     
 <div class="viewcode-block" id="Timer.start"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.Timer.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates an instance and fixes current time.</span>
+<span class="sd">        Creates an instance and checks the current time.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
         
@@ -345,23 +350,22 @@
         
 <div class="viewcode-block" id="ConvertAxes"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.ConvertAxes">[docs]</a><span class="k">class</span> <span class="nc">ConvertAxes</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Interpolation methods to calculate values [new_axis1] for an </span>
-<span class="sd">    array [new_axis2], given [old_axis1] and [old_axis2]. </span>
+<span class="sd">    Interpolation methods. </span>
 <span class="sd">    &quot;&quot;&quot;</span>  
          
 <div class="viewcode-block" id="ConvertAxes.interpolate"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.ConvertAxes.interpolate">[docs]</a>    <span class="k">def</span> <span class="nf">interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">axis1_new</span><span class="p">,</span><span class="n">axis1_old</span><span class="p">,</span><span class="n">axis2_old</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns new axis2-values for a new set of axis1-values </span>
-<span class="sd">        given the old (axis1,axis2). Uses linear interpolation. </span>
+<span class="sd">        Returns new *axis2*-values for a new set of *axis1*-values </span>
+<span class="sd">        given the old (*axis1,axis2*). Uses linear interpolation. </span>
 <span class="sd">        </span>
-<span class="sd">        :param axis1_new: New values along axis1. </span>
+<span class="sd">        :param axis1_new: New values along *axis1*. </span>
 <span class="sd">        :type axis1_new: array-like</span>
-<span class="sd">        :param axis1_old: Old values along axis1. </span>
+<span class="sd">        :param axis1_old: Old values along *axis1*. </span>
 <span class="sd">        :type axis1_old: array-like</span>
-<span class="sd">        :param axis2_old: Old values along axis2. </span>
+<span class="sd">        :param axis2_old: Old values along *axis2*. </span>
 <span class="sd">        :type axis2_old: array-like</span>
 <span class="sd">        </span>
-<span class="sd">        :return: New values along axis2 corresponding to the new axis1-values set. </span>
+<span class="sd">        :return: New values along *axis2* corresponding to the new *axis1*-values set. </span>
 <span class="sd">        :rtype: 1d-array</span>
 <span class="sd">        &quot;&quot;&quot;</span> 
         
@@ -391,20 +395,20 @@
     
 <div class="viewcode-block" id="ConvertAxes.get_closest"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.ConvertAxes.get_closest">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">axis1_new</span><span class="p">,</span><span class="n">axis1_old</span><span class="p">,</span><span class="n">axis2_old</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        No interpolation is applied, the new axis1-values are </span>
-<span class="sd">        replaced by the closest values from the old axis1-array </span>
-<span class="sd">        and the corresponding old axis2-values are returned. This </span>
-<span class="sd">        method is good when the resolution of the old axis1-array </span>
-<span class="sd">        is much better than the resolution of the new axis1-array. </span>
+<span class="sd">        No interpolation is applied, the new *axis1*-values are </span>
+<span class="sd">        replaced by the closest values from the old *axis1*-array </span>
+<span class="sd">        and the corresponding old *axis2*-values are returned. This </span>
+<span class="sd">        method is good when the resolution of the old *axis1*-array </span>
+<span class="sd">        is much better than the resolution of the new *axis1*-array. </span>
 <span class="sd">        </span>
-<span class="sd">        :param axis1_new: New values along axis1. </span>
+<span class="sd">        :param axis1_new: New values along *axis1*. </span>
 <span class="sd">        :type axis1_new: array-like</span>
-<span class="sd">        :param axis1_old: Old values along axis1. </span>
+<span class="sd">        :param axis1_old: Old values along *axis1*. </span>
 <span class="sd">        :type axis1_old: array-like</span>
-<span class="sd">        :param axis2_old: Old values along axis2. </span>
+<span class="sd">        :param axis2_old: Old values along *axis2*. </span>
 <span class="sd">        :type axis2_old: array-like</span>
 <span class="sd">        </span>
-<span class="sd">        :return: New values along axis2 corresponding to the new axis1-values set. </span>
+<span class="sd">        :return: New values along *axis2* corresponding to the new *axis1*-values set. </span>
 <span class="sd">        :rtype: 1d-array</span>
 <span class="sd">        &quot;&quot;&quot;</span>  
         
@@ -430,7 +434,7 @@
 <span class="sd">    :param counts: Histogram counts corresponding to the old x-bin centers. </span>
 <span class="sd">    :type counts: array-like</span>
 <span class="sd">    </span>
-<span class="sd">    :return: New counts corresponding to the new x-bins (len(bin_edges)-1). </span>
+<span class="sd">    :return: New counts corresponding to the new x-bins (``len(bin_edges)-1``). </span>
 <span class="sd">    :rtype: 1d-array</span>
 <span class="sd">    &quot;&quot;&quot;</span>  
 
@@ -635,17 +639,17 @@
 
 <div class="viewcode-block" id="reduce_table"><a class="viewcode-back" href="../../tools.html#jjmodel.tools.reduce_table">[docs]</a><span class="k">def</span> <span class="nf">reduce_table</span><span class="p">(</span><span class="n">tab</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the surface number density of the mono-age sub-populations, thus, </span>
+<span class="sd">    Calculates the surface number density of the mono-age subpopulations, thus, </span>
 <span class="sd">    reduces the length of the &#39;stellar assemblies&#39; table to the number of thin- or thick-disk, </span>
 <span class="sd">    or halo subpopulations. </span>
 <span class="sd">    </span>
 <span class="sd">    :param tab: Isochrone columns.</span>
 <span class="sd">    :type tab: dict </span>
-<span class="sd">    :param a: Collection of the fixed model parameters, useful quantities and arrays.</span>
+<span class="sd">    :param a: Collection of the fixed model parameters, useful quantities, and arrays.</span>
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    </span>
-<span class="sd">    :return: Table with wo columns: &#39;t&#39; and &#39;N&#39;, Galactic time (Gyr) </span>
-<span class="sd">        and surface number densities (number/pc^2).</span>
+<span class="sd">    :return: Table with two columns: ``&#39;t&#39;`` and ``&#39;N&#39;``, Galactic time (Gyr) </span>
+<span class="sd">        and surface number densities (:math:`\mathrm{number \ pc^{-2}}`).</span>
 <span class="sd">    :rtype: astropy Table </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
@@ -672,10 +676,10 @@
 
 <span class="sd">    :param array: Initial array.</span>
 <span class="sd">    :type array: 2d-array.</span>
-<span class="sd">    :param dxy_smooth: Dispersions in x and y, [dx,dy].</span>
+<span class="sd">    :param dxy_smooth: Dispersions in x and y, [*dx,dy*].</span>
 <span class="sd">    :type dxy_smooth: list </span>
 <span class="sd">    :param xy_range: Min and max values along the array axis, </span>
-<span class="sd">        [[xmin,xmax],[ymin,ymax]].</span>
+<span class="sd">        [[*xmin,xmax*],[*ymin,ymax*]].</span>
 <span class="sd">    :type xy_range: list[list]</span>
 <span class="sd">    </span>
 <span class="sd">    :return: New smoothed array of the same shape.</span>
@@ -710,7 +714,7 @@
 <span class="sd">    :type array: 1d-array.</span>
 <span class="sd">    :param dx_smooth: Dispersion in x. </span>
 <span class="sd">    :type dx_smooth: scalar</span>
-<span class="sd">    :param x_range:  Min and max values along the array axes, [xmin,xmax].</span>
+<span class="sd">    :param x_range:  Min and max values along the array axes, [*xmin,xmax*].</span>
 <span class="sd">    :type x_range: list </span>
 <span class="sd">    </span>
 <span class="sd">    :return: New smoothed array of the same shape.</span>

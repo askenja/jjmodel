@@ -47,7 +47,7 @@
 
 <div class="viewcode-block" id="Volume"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Volume">[docs]</a><span class="k">class</span> <span class="nc">Volume</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class for calculating the volume of different spatial cells. </span>
+<span class="sd">    Class for calculating volumes of the different spatial cells. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Volume.__init__"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Volume.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -55,7 +55,7 @@
 <span class="sd">        </span>
 <span class="sd">        :param p: Set of model parameters from the parameter file. </span>
 <span class="sd">        :type p: namedtuple</span>
-<span class="sd">        :param a: Collection of the fixed model parameters, useful quantities and arrays.</span>
+<span class="sd">        :param a: Collection of the fixed model parameters, useful quantities, and arrays.</span>
 <span class="sd">        :type a: namedtuple</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
@@ -147,7 +147,7 @@
 <span class="sd">        but equation is kept general with the volume term. </span>
 <span class="sd">        In this case, the volume array can be simply filled with ones. </span>
 <span class="sd">        </span>
-<span class="sd">        :retrun: z-grid array (of len a.n) filled with ones. </span>
+<span class="sd">        :retrun: z-grid array of the length ``a.n`` filled with ones. </span>
 <span class="sd">        :rtype: 1d-array</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="p">)</span></div>
@@ -157,10 +157,10 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fills z-cells laying outside of the chosen range with zeros. </span>
 <span class="sd">        </span>
-<span class="sd">        :param v: z-grid with volume of the cells. z-grid is of len a.n </span>
-<span class="sd">            (absolute z from 0 to p.zmax with a step of p.dz). </span>
+<span class="sd">        :param v: z-grid with volume of the cells. z-grid has length ``a.n`` </span>
+<span class="sd">            (absolute z from 0 to ``p.zmax`` with a step of ``p.dz``). </span>
 <span class="sd">        :type v: 1d-array</span>
-<span class="sd">        :param zlim: Min and max absolute z. </span>
+<span class="sd">        :param zlim: Minimal and maximal absolute z. </span>
 <span class="sd">        :type zlim: list </span>
 <span class="sd">        </span>
 <span class="sd">        :return: z-grid with volume of the cells. </span>
@@ -175,8 +175,8 @@
         
 <div class="viewcode-block" id="Volume.local_sphere"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Volume.local_sphere">[docs]</a>    <span class="k">def</span> <span class="nf">local_sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r_min</span><span class="p">,</span><span class="n">r_max</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns z-grid with volume of the cells for the local sphere of radius </span>
-<span class="sd">        r_max with an inner hole of radius r_min. For testing, do: </span>
+<span class="sd">        Returns z-grid with volume of the cells for the local sphere  </span>
+<span class="sd">        with an inner hole. For testing, do: </span>
 <span class="sd">            </span>
 <span class="sd">        .. code-block:: python </span>
 <span class="sd">        </span>
@@ -188,15 +188,15 @@
 <span class="sd">           v1 = V.local_sphere(0,850) </span>
 <span class="sd">           print(np.sum(v1[0])/(4/3*np.pi*850**3))</span>
 <span class="sd">        </span>
-<span class="sd">        :param r_min: Inner radii of the spherical shell, pc.</span>
+<span class="sd">        :param r_min: Inner radius of the spherical shell, pc.</span>
 <span class="sd">        :type r_min: scalar </span>
-<span class="sd">        :param r_max: Outer radii of the spherical shell, pc.</span>
+<span class="sd">        :param r_max: Outer radius of the spherical shell, pc.</span>
 <span class="sd">        :type r_max: scalar </span>
 <span class="sd">        </span>
-<span class="sd">        :return: Three quantities: </span>
+<span class="sd">        :return: Three quantities are calculated: </span>
 <span class="sd">            </span>
-<span class="sd">            - z-grid with volumes of the cells (pc^3). If the outer radius of the sphere is larger than the model radial resolution p.dR, then the sphere will be splitted over several radial bins, and z-grid with volumes will be given separately for each R-bin.       </span>
-<span class="sd">            - Indices of R-bins for which z-grids are calculated (to get radii, use indices with a.R array).</span>
+<span class="sd">            - z-grid with volumes of the cells, :math:`\mathrm{pc}^3`. If the outer radius of the sphere is larger than the model radial resolution ``p.dR``, then the sphere will be splitted over several radial bins, and z-grid with volumes will be given separately for each radial bin.       </span>
+<span class="sd">            - Indices of radial bins for which z-grids are calculated (to get the radii, use these indices with ``a.R`` array).</span>
 <span class="sd">            - Reference line with information about the input parameters. </span>
 <span class="sd">                    </span>
 <span class="sd">        :rtype: [array-like, array-like, str]</span>
@@ -229,8 +229,8 @@
     
 <div class="viewcode-block" id="Volume.local_cylinder"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Volume.local_cylinder">[docs]</a>    <span class="k">def</span> <span class="nf">local_cylinder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r_min</span><span class="p">,</span><span class="n">r_max</span><span class="p">,</span><span class="n">z_min</span><span class="p">,</span><span class="n">z_max</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns z-grid with volume of the cells for the local cylinder of radius </span>
-<span class="sd">        r_max with an inner hole of radius r_min. For testing, do: </span>
+<span class="sd">        Returns z-grid with volume of the cells for the local cylinder  </span>
+<span class="sd">        with an inner hole. For testing, do: </span>
 <span class="sd">            </span>
 <span class="sd">        .. code-block:: python </span>
 <span class="sd">        </span>
@@ -251,10 +251,10 @@
 <span class="sd">        :param z_max: Maximal absolute z, pc.</span>
 <span class="sd">        :type z_max: scalar</span>
 <span class="sd">        </span>
-<span class="sd">        :return: Three quantities: </span>
+<span class="sd">        :return: Three quantities are calculated: </span>
 <span class="sd">            </span>
-<span class="sd">                    - z-grid with volumes of the cells (pc^3). If the outer radius of the cylinder is larger than the model radial resolution p.dR, then the cylinder will be splitted over several radial bins, and z-grid with volumes will be given separately for each R-bin. </span>
-<span class="sd">                    - Indices of R-bins for which z-grids are calculated (to get radii, use indices with a.R array).</span>
+<span class="sd">                    - z-grid with volumes of the cells, :math:`\mathrm{pc}^3`. If the outer radius of the cylinder is larger than the model radial resolution ``p.dR``, then the cylinder will be splitted over several radial bins, and z-grid with volumes will be given separately for each radial bin. </span>
+<span class="sd">                    - Indices of the radial bins for which z-grids are calculated (to get radii, use these indices with ``a.R`` array).</span>
 <span class="sd">                    - Reference line with information about the input parameters. </span>
 <span class="sd">                    </span>
 <span class="sd">        :rtype: [array-like, array-like, str]</span>
@@ -289,7 +289,7 @@
     
 <div class="viewcode-block" id="Volume.rphiz_box"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Volume.rphiz_box">[docs]</a>    <span class="k">def</span> <span class="nf">rphiz_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">R_min</span><span class="p">,</span><span class="n">R_max</span><span class="p">,</span><span class="n">dphi</span><span class="p">,</span><span class="n">z_min</span><span class="p">,</span><span class="n">z_max</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns volume z-grid for the &#39;box&#39; in the Galactic cylindrical coordinates (R,phi,z). </span>
+<span class="sd">        Returns volume z-grid for the &#39;box&#39; in the Galactic cylindrical coordinates (R,:math:`\\phi`,z). </span>
 <span class="sd">        For testing, do: </span>
 <span class="sd">            </span>
 <span class="sd">        .. code-block:: python </span>
@@ -315,8 +315,8 @@
 
 <span class="sd">        :return: Three quantities: </span>
 <span class="sd">            </span>
-<span class="sd">                    - z-grid with volumes of the cells (pc^3). If the radial span of the volume is larger than the model radial resolution p.dR, then it will be splitted over several radial bins, and z-grid with volumes will be given separately for each R-bin. </span>
-<span class="sd">                    - Indices of R-bins for which z-grids are calculated (to get radii, use indices with a.R array).</span>
+<span class="sd">                    - z-grid with volumes of the cells, :math:`\mathrm{pc}^3`. If the radial span of the volume is larger than the model radial resolution ``p.dR``, then it will be splitted over several radial bins, and z-grid with volumes will be given separately for each radial bin. </span>
+<span class="sd">                    - Indices of the radial bins for which z-grids are calculated (to get radii, use these indices with ``a.R`` array).</span>
 <span class="sd">                    - Reference line with information about the input parameters. </span>
 <span class="sd">                    </span>
 <span class="sd">        :rtype: [array-like, array-like, str]</span>
@@ -358,9 +358,9 @@
 <span class="sd">        :type rmax: scalar </span>
 <span class="sd">        :param rnum: Number of bins along r axis (in xy plane).</span>
 <span class="sd">        :type rnum: int </span>
-<span class="sd">        :param rlog: Optional. If True, binning aling r is in log space.</span>
+<span class="sd">        :param rlog: Optional. If True, binning along r axis is in log space.</span>
 <span class="sd">        :type rlog: boolean</span>
-<span class="sd">        :param dl: Step in angle (longitude), deg. </span>
+<span class="sd">        :param dl: Optional. Step in angle (longitude), deg. </span>
 <span class="sd">        :type dl: scalar </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
@@ -402,7 +402,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Puts all grid elements into a namedtuple. </span>
 <span class="sd">        </span>
-<span class="sd">        :return: Grid along z and r axis (optionally also in angle l).</span>
+<span class="sd">        :return: Grid along z and r axes (optionally also in angle l).</span>
 <span class="sd">        :rtype: namedtuple</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
@@ -441,14 +441,16 @@
         <span class="k">return</span> <span class="n">r_array</span></div>
     
     
-<div class="viewcode-block" id="Grid.indl"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Grid.indl">[docs]</a>    <span class="k">def</span> <span class="nf">indl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lmin</span><span class="p">,</span><span class="n">lmax</span><span class="p">):</span>
+<div class="viewcode-block" id="Grid.indl"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Grid.indl">[docs]</a>    <span class="k">def</span> <span class="nf">indl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lmin</span><span class="p">,</span><span class="n">lmax</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates indices of the part of l-array (indices correspond to the full l-grid). </span>
 <span class="sd">        </span>
-<span class="sd">        :param lmin: Minimal l, deg. </span>
+<span class="sd">        :param lmin: Minimal longitude, deg. </span>
 <span class="sd">        :type lmin: scalar </span>
-<span class="sd">        :param lmax: Maximal l, deg. </span>
-<span class="sd">        :type lmax: scalar </span>
+<span class="sd">        :param lmax: Maximal longitude, deg. </span>
+<span class="sd">        :type lmax: scalar</span>
+<span class="sd">        :dl: Optional. Step in angle, deg.</span>
+<span class="sd">        :type dl: scalar </span>
 
 <span class="sd">        :return: Index array. </span>
 <span class="sd">        :rtype: 1d-array </span>
@@ -473,15 +475,14 @@
         
 <div class="viewcode-block" id="Grid.ind_part"><a class="viewcode-back" href="../../geometry.html#jjmodel.geometry.Grid.ind_part">[docs]</a>    <span class="k">def</span> <span class="nf">ind_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zcent</span><span class="p">,</span><span class="n">zwidth</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns indices corresponding to a z-slice with the central </span>
-<span class="sd">        height zcent and a half-width of the slice zwidth. </span>
+<span class="sd">        Returns indices corresponding to a z-slice. </span>
 <span class="sd">        </span>
 <span class="sd">        :param zcent: Mean z of the slice, pc. </span>
 <span class="sd">        :type zcent: scalar </span>
 <span class="sd">        :param zwidth: Half-width of the slice, pc. </span>
 <span class="sd">        :type zwidth: scalar </span>
 
-<span class="sd">        :return: Index array corresponding to the full z-grid. </span>
+<span class="sd">        :return: Index array of the full z-grid corresponding to the selected slice. </span>
 <span class="sd">        :rtype: 1d-array  </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
