@@ -8,7 +8,7 @@
 Physical functions (input)
 ======================================
 
-.. autoclass:: jjmodel.geometry.Grid
+.. autoclass:: jjmodel.funcs.AMR
    :members:
 
    
