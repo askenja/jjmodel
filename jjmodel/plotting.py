@@ -3988,7 +3988,7 @@ class Plotting():
 
     def fw_hist_plt(self,mode_comp,R,zlim,**kwargs):
         """
-        |W|-velocity distribution function. Plotting for :func:`jjmodel.analysis.fw_hist`. 
+        W-velocity distribution function. Plotting for :func:`jjmodel.analysis.fw_hist`. 
         
         :param mode_comp: Galactic component. Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
             (thin disk, thick disk, halo, thin+thick disk, or total).
@@ -4001,9 +4001,9 @@ class Plotting():
         :type ages: array-like
         :param mets: Optional. Set of metallicity bins. 
         :type mets: array-like
-        :param wmax: Maximum value of |W|-velocity, :math:`\mathrm{km \ s^{-1}}`. 
+        :param wmax: Maximum value of W-velocity, :math:`\mathrm{km \ s^{-1}}`. 
         :type wmax: scalar
-        :param dw: Step in |W|-velocity, :math:`\mathrm{km \ s^{-1}}`. 
+        :param dw: Step in W-velocity, :math:`\mathrm{km \ s^{-1}}`. 
         :type dw: scalar
         :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
             (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -4783,7 +4783,7 @@ class PlotBlocks():
             
     def populations(self,zlim,ages,mets,age_sm,met_sm,rmax,**kwgs):
         """
-        Plots and saves radial density profiles, age, metallicity , and f(|W|) distributions, 
+        Plots and saves radial density profiles, age, metallicity , and f(W) distributions, 
         Hess diagrams and Rz-maps for the different populations. 
     
         :param ages: Set of age bins, Gyr. 
