@@ -8,20 +8,17 @@
 Geometry
 ======================================
 
-.. autoclass:: jjmodel.funcs.AMR
-   :members:
-
 Spatial grids
 --------------
 
+.. autoclass:: jjmodel.funcs.AMR
+   :members:
+
 .. autoclass:: jjmodel.geometry.Grid
    :members: 
- 
 
 Modeling volumes
 -----------------
 
 .. autoclass:: jjmodel.geometry.Volume
    :members: 
-
-
