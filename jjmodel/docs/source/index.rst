@@ -12,7 +12,7 @@ for modeling Galactocentric distances from approximately 4 kpc to 14 kpc and hei
 This code is complemented by three alternative sets of isochrones (PARSEC, MIST, and BaSTI), 
 such that users can synthesize stellar populations and select observable samples on the colour-magnitude diagram.
 
-Check out the :doc:`content` section for further information, including :doc:`installation` for instructions on how to install the package. Also read section :doc:`acknowledgements` for the list of publications and the way of acknowledging this code. 
+Check out :doc:`installation` for instructions on how to install the package. Also read section :doc:`acknowledgements` for the list of publications and the way of acknowledging this code. 
 
 .. note::
 
