@@ -102,6 +102,9 @@ def read_parameters(path_to_file):
             if keys[i] not in pnames_nonlocal:
                 paramd_reduced[keys[i]] = paramd[keys[i]]
         paramd = paramd_reduced
+    else: 
+        if type(paramd['dR'])==int:
+            paramd['dR'] = float(paramd['dR'])
         
     pnames_imf = ['a0','a1','a2','a3','m0','m1','m2']
     if paramd['imfkey']==1:

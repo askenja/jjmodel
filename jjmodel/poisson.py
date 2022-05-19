@@ -66,20 +66,24 @@ def vertical_force(a,fimax,Sigma,sigW,h):
     fieq1 = np.concatenate(([fi1],fieq),axis=0)
     
     # Intergration of the Poisson-Boltzman eq. 
-    rho0 = Sigma/2/h
-    Ar1 = rho0*(sigW/SIGMA_E)**2/RHO_D0
-    Ar2 = (SIGMA_E/sigW)**2
-    dz_offset = np.sqrt(SIGMA_E**2*fi1*KM**2*PC/(2*np.pi*G*np.sum(rho0)*M_SUN))/ZN
-    integrator = lambda x: 1/np.sqrt(np.sum(Ar1*(1-np.exp(-Ar2*x))))
-    dzi = np.add(dz_offset,cumtrapz([integrator(k) for k in fieq1],fieq1))  
     
-    # i-th component of the potential and the corresponding vertical force. 
-    dzeq1 = np.concatenate((a.dzeq,[a.ddz]),axis=0)
-    #popt,pcov = curve_fit(z_potential,dzi,fieq) 
-    #fii = z_potential(dzeq1,*popt)
-    interpolation_tool = ConvertAxes()
-    fii = interpolation_tool.interpolate(dzeq1,zoom(dzi,4),zoom(fieq,4))
-    Kzi = np.diff(fii)*SIGMA_E**2/(np.diff(dzeq1*ZN)/KM)   
+    if type(Sigma)!=np.ndarray and Sigma==0:    # for gas
+        Kzi = np.zeros((a.n))
+    else: 
+        rho0 = Sigma/2/h
+        Ar1 = rho0*(sigW/SIGMA_E)**2/RHO_D0
+        Ar2 = (SIGMA_E/sigW)**2
+        dz_offset = np.sqrt(SIGMA_E**2*fi1*KM**2*PC/(2*np.pi*G*np.sum(rho0)*M_SUN))/ZN
+        integrator = lambda x: 1/np.sqrt(np.sum(Ar1*(1-np.exp(-Ar2*x))))
+        dzi = np.add(dz_offset,cumtrapz([integrator(k) for k in fieq1],fieq1))  
+        
+        # i-th component of the potential and the corresponding vertical force. 
+        dzeq1 = np.concatenate((a.dzeq,[a.ddz]),axis=0)
+        #popt,pcov = curve_fit(z_potential,dzi,fieq) 
+        #fii = z_potential(dzeq1,*popt)
+        interpolation_tool = ConvertAxes()
+        fii = interpolation_tool.interpolate(dzeq1,zoom(dzi,4),zoom(fieq,4))
+        Kzi = np.diff(fii)*SIGMA_E**2/(np.diff(dzeq1*ZN)/KM)   
     
     return Kzi
 
@@ -453,7 +457,7 @@ def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
         interpolation_tool = ConvertAxes()
         fi = interpolation_tool.interpolate(a.dzeq,dz,fieq)
         fie = fi*SIGMA_E**2
-        
+                
         if 'plot' in kwargs:
             plt.plot(dz*ZN,fieq,marker='o',markersize=4,
                      label='$\mathrm{initial \ grid, \ d \phi=const}$')

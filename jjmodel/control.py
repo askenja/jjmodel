@@ -353,6 +353,12 @@ def inpcheck_parameters(p):
         wrns += "-> Got unexpected value for the Solar height 'zsun'. "+\
                 "Check units (must be pc). Expected positive value of ~0-25 pc.\n"
         n_warnings += 1 
+        
+    if p.Vsun < 0 or p.Vsun > 25: 
+        wrns += "-> Got unexpected value for the Solar peculoar velocity 'Vsun'. "+\
+                "Check units (must be km/s). Expected positive value of ~0-25 km/s "+\
+                "(upper liimit is very approximate and probably very overestimated).\n"
+        n_warnings += 1 
     
     if p.td1!=0:
         nts += "-> When parameter 'td1' is not equal to zero, "+\
@@ -454,7 +460,8 @@ def inpcheck_parameters(p):
                         "you're trying to assign all mass to a Gaussian peak.\n"
                 n_errors += 1    
                     
-            if p.run_mode==1:
+            if p.run_mode==1 and (p.Rmin <= p.Rmax):
+                
                 indr = np.where(np.abs(p.Rp[i]-R)==np.amin(np.abs(p.Rp[i]-R)))[0][0]
                 if  p.sigmap[i] > SigmaR[indr]:
                     errs += "->  Peak#"+str(i+1)+": Value of SFR parameter 'sigmap' is too large, "+\
@@ -563,6 +570,7 @@ def inpcheck_parameters(p):
             errs += "-> Got unexpected value for parameter 'Rmin', "+\
                     "it must be larger or equal to 4 kpc, as the bulge zone is not included into "+\
                     "the current version of the JJ model.\n"
+            n_errors += 1 
                 
         if p.Rmax > 15:
             wrns += "-> Got unexpected value for parameter 'Rmax'. "+\
@@ -572,11 +580,16 @@ def inpcheck_parameters(p):
             n_warnings += 1 
                 
         if p.Rmin >= p.Rmax:
-            errs += "-> Value of parameter 'Rmin' cannot be larger than 'Rmax'.\n"
+            errs += "-> Value of parameter 'Rmin' cannot be larger or equal 'Rmax'.\n"
             n_errors += 1 
             
         if p.dR <= 0 or p.dR > p.Rmax - p.Rmin:
-            errs += "-> Parameter 'dR' must be positive and at maximum (Rmax - Rmin) kpc.\n"                         
+            errs += "-> Parameter 'dR' must be positive and its maximum allowed value is (Rmax - Rmin) kpc.\n"                         
+            n_errors += 1 
+            
+        if (p.Rmax - p.Rmin)%p.dR != 0: 
+            errs += "-> Parameter 'dR' is not consistent with the chosen range of Galactocentric"+\
+                    "distances ['Rmin', 'Rmax']. An interval (Rmax - Rmin) must contain an int number of bins 'dR'.\n"                         
             n_errors += 1 
             
         if p.Rd < 1.8 or p.Rd > 3.2:
@@ -608,6 +621,16 @@ def inpcheck_parameters(p):
             errs += "-> You set the molecular gas scale length 'Rg1' larger than "+\
                     "the atomic gas scale length 'Rg2', which is inconsistent with observations.\n"                
             n_errors += 1 
+            
+        if p.Rg10 < 0: 
+            errs += "-> Parameter 'Rg10', radius of the inner hole for molecular gas, "+\
+                    "must be positive.\n"                
+            n_errors += 1 
+            
+        if p.Rg20 < 0: 
+            errs += "-> Parameter 'Rg20', radius of the inner hole for atomic gas, "+\
+                    "must be positive.\n"                
+            n_errors += 1 
                 
         if p.Rdf <= 0:
             errs += "-> Parameter 'Rdf' must be positive.\n"
@@ -638,19 +661,23 @@ def inpcheck_parameters(p):
             errs += "-> Got unexpected value for slope of the inner halo profile 'a_in'. "+\
                     "Expected -2.5 ± 0.5.\n"
             n_errors += 1 
-          
-    if p.zmax < 50:
-        errs += "-> Do you really want to calculate the disk structure up to less than "+\
-                "50 pc only? Try larger value.\n"
+    
+    if p.zmax%p.dz != 0: 
+        errs += "-> Parameter 'zmax' must contain an int number of vertical steps 'dz'.\n"
+        n_errors += 1 
+    
+    if p.zmax < 1500:
+        errs += "-> We do not recommend to use 'zmax' smaller than 1.5 kpc as otherwise vertical "+\
+                "structure of the disk can be not properly reconstructed.\n"
         n_errors += 1 
             
-    if p.zmax > 3000:
-        errs += "-> The maximum height 'zmax' cannot be very large, because the JJ model "+\
-                "solves Poisson eq. in the thin-disk approximation. Set zmax less than 3000 pc.\n"
+    if p.zmax > 2000:
+        errs += "-> The maximum height 'zmax' cannot be very large. It is not recommended to use the model "+\
+                "at heights larger than 2000 pc.\n"
         n_errors += 1 
             
-    if p.dz <=0 or p.dz >= p.zmax:
-        errs += "-> Parameter 'dz' must be positive and less than zmax (units are pc).\n"                         
+    if p.dz <=0 or p.dz > 20:
+        errs += "-> Parameter 'dz' must be positive and not too large, please use something less than 20 pc.\n"                         
         n_errors += 1 
             
     if p.alpha < 0.3 or p.alpha > 0.5:

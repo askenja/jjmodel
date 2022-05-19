@@ -223,7 +223,7 @@ class RadialDensity():
         self.R = R
         
         
-    def rho_disk(self,rho0,Rd):
+    def rho_disk(self,rho0,Rd,**kwargs):
         """
         Midplane mass density of an exponential disk.
     
@@ -231,16 +231,21 @@ class RadialDensity():
         :type rho0: scalar
         :param Rd: Radial scale length of the disk, kpc. 
         :type Rd: scalar
+        :param R0: Opional. Radius of the inner hole, kpc. 
+        :type R0: scalar
         
         :return: Mass density of the disk calculated at the given Galactocentric distance(s) **R**, 
             :math:`\mathrm{M_\odot \ pc^{-3}}`.             
         :rtype: float or array-like  
         """
         rho = rho0*np.exp(-(np.subtract(self.R,self.Rsun))/Rd)
+        if 'R0' in kwargs and kwargs['R0']>self.R[0]:
+            indr0 = np.where(self.R < kwargs['R0'])[0]
+            rho[indr0] = 0 
         return rho
     
     
-    def sigma_disk(self,sigma0,Rd):
+    def sigma_disk(self,sigma0,Rd,**kwargs):
         """
         Surface density of an exponential disk.
     
@@ -248,6 +253,8 @@ class RadialDensity():
         :type sigma0: scalar
         :param Rd: Radial scale length of the disk, kpc. 
         :type Rd: scalar
+        :param R0: Opional. Radius of the inner hole, kpc. 
+        :type R0: scalar
         
         :return: Surface density of the disk calculated at the given Galactocentric distance(s) **R**, 
             :math:`\mathrm{M_\odot \ pc^{-2}}`. 
@@ -255,6 +262,9 @@ class RadialDensity():
         """
         
         sigma = sigma0*np.exp(-(np.subtract(self.R,self.Rsun))/Rd)
+        if 'R0' in kwargs and kwargs['R0']>self.R[0]:
+            indr0 = np.where(self.R < kwargs['R0'])[0]
+            sigma[indr0] = 0 
         return sigma
         
     

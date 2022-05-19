@@ -46,8 +46,9 @@ if p.run_mode!=0:
 dzmax = p.zmax/ZN 
 ddz = p.dz/ZN 
 n = int(p.zmax/p.dz) 
-dzeq = np.arange(ddz/2,dzmax+ddz/2,ddz)
+#dzeq = np.arange(ddz/2,dzmax+ddz/2,ddz)
 z = np.arange(p.dz/2,p.zmax+p.dz/2,p.dz)
+dzeq = z/ZN
 n_array = np.arange(n) 
 
 T = dir_tree(p)     # Directory tree where all output will be stored. 
@@ -137,8 +138,8 @@ if p.run_mode!=0:
     # Radial surface density profiles of the Galactic components. 
     SR = RadialDensity(p.Rsun,p.zsun,R)
     SigmaR = np.array([SR.sigma_disk(p.sigmad,p.Rd),                             # thin d.
-                       SR.sigma_disk(p.sigmag1,p.Rg1),                           # mol. gas 
-                       SR.sigma_disk(p.sigmag2,p.Rg2),                           # at. gas
+                       SR.sigma_disk(p.sigmag1,p.Rg1,R0=p.Rg10),                    # mol. gas 
+                       SR.sigma_disk(p.sigmag2,p.Rg2,R0=p.Rg20),                    # at. gas
                        SR.sigma_disk(p.sigmat,p.Rt),                             # thick d.
                        SR.sigma_dm_halo(p.zmax*1e-3,p.sigmadh,ah),               # DM
                        SR.sigma_stellar_halo(p.zmax*1e-3,p.sigmash,p.a_in)])     # Halo
