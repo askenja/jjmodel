@@ -28,6 +28,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
+   
    installation
    funcs
    model_core
@@ -35,11 +36,13 @@ Contents
    geometry
    trans
    tools
+   iof
    analysis
    plotting
    tutorials
    acknowledgements
    contacts
+
 
 
 Indices and tables
