@@ -15,7 +15,7 @@ from .tools import resave_parameters
 
 def dir_tree(p,**kwargs):
     """
-    Builds directory tree defined (name suffix of the main output directory 
+    Builds an output directory tree (name suffix of the main output directory 
     can be specified in the parameter file).
      
     :param p: Set of model parameters from the parameter file. 
@@ -135,10 +135,12 @@ def tab_sorter(name,p,T,**kwargs):
         contributions of the additional peaks to the thin-disk SFR (``'Fp'``), 
         and peaks' scale heights (``'Hdp'``). 
     :type R: scalar 
+    :param print: Optional. If True, the full list of names is printed. 
+    :type print: boolean 
 
     :return: Path to the directory where the quantity given by **name** will be saved
-        as txt table. 
-    :rtype: str
+        as txt table. Or, if **print** is True, none. 
+    :rtype: str or none
     """
     
     namespace = {'SR':os.path.join(T['inptab'],'Sigma.txt'),
@@ -188,13 +190,18 @@ def tab_sorter(name,p,T,**kwargs):
                  'Fp0':os.path.join(T['inptab'],''.join(('F_dp_R',str(p.Rsun),'.txt')))
                  }
     
-    if 'R' in kwargs:
-        namespace['rhoz'] = os.path.join(T['denstab'],''.join(('Rhoz_R',str(kwargs['R']),'.txt')))
-        namespace['Kz'] = os.path.join(T['fitab'],''.join(('Kz_R',str(kwargs['R']),'.txt')))
-        namespace['Fp'] = os.path.join(T['inptab'],''.join(('F_dp_R',str(kwargs['R']),'.txt')))
-        namespace['Hdp'] = os.path.join(T['heighttab'],''.join(('H_dp_R',str(kwargs['R']),'.txt')))
+    if 'print' not in kwargs or kwargs['print']==False: 
+        if 'R' in kwargs:
+            namespace['rhoz'] = os.path.join(T['denstab'],''.join(('Rhoz_R',str(kwargs['R']),'.txt')))
+            namespace['Kz'] = os.path.join(T['fitab'],''.join(('Kz_R',str(kwargs['R']),'.txt')))
+            namespace['Fp'] = os.path.join(T['inptab'],''.join(('F_dp_R',str(kwargs['R']),'.txt')))
+            namespace['Hdp'] = os.path.join(T['heighttab'],''.join(('H_dp_R',str(kwargs['R']),'.txt')))
+            
+        return namespace[name]
+    
+    else: 
+        print(namespace.keys())
         
-    return namespace[name]
     
  
     
@@ -287,15 +294,45 @@ class TabSaver():
         :type fig: boolean
         :param save_format: Optional. Format of the figure. Can be used only when **fig** is True. 
         :type save_format: str
-        normalized 
-        cumulative
-        mode_pop
-        tab 
-        between
+        :param normalized: Optional. Applicable in case if vertical density profiles will be saved. 
+            If True, the profiles are normalized at each height  
+            on the total density at this height. Also the file name will start from 
+            ``'NRhoz'`` instead of ``'Rhoz'``. 
+        :type normalized: boolean
+        :param cumulative: Optional. Applicable to density profiles, age and metallicity distributions. 
+            If True, the normalized cumulative quantities are saved. In general, ``'C'`` is added in front 
+            of a standard file name; in case of density profiles, file will be called ``'NCMassz'``. 
+        :type cumulative: boolean
+        :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
+            (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
+            (if it was selected and saved as a table in advance). Adds a suffix with the name of 
+            population to the standard file name. 
+        :type mode_pop: str
+        :param number: Optional. If True, this indicates that the quantity to save was calculated with 
+            the help of stellar assembly tables (contains stellar number densities or something weighted 
+            by them). Usually adds a suffix ``'(nw)'`` (stands for 'number-weighted') to the standard file name. 
+            Otherwise, the suffix is ``'(rw)'`` ('rho', i.e., 'density-weighted'). 
+        :type number: boolean
+        :param between: Optional. If True, the output quantity corresponds to the age intervals, not  
+            to individual single mono-age subpopulations. Applicable to methods with parameter **ages**. 
+            If False, a suffix ``'sgl'`` will be added to the standard file name 
+            (stands for 'single-age populations').  
+        :type between: boolean
+        :param dz: Optional. Vertical resolution, pc. Applicable to methods which save R-z maps, 
+            adds a suffix ``'dz'`` with **z** in kpc. 
+        :type dz: scalar
         :param R: Optional. Galactocentric distance, kpc. Suffix ``'_R'`` with the given value of radis 
             is added to the output file name. 
         :type R: scalar
-        
+        :param ages: Set of age bins, Gyr. If specified, a suffix ``'age'`` with the range of ages 
+            (or min age, max age, and step) is added to the file name. 
+        :type ages: array-like
+        :param mets: Set of metallicity bins. If specified, a suffix ``'FeH'`` with the range of metallicities 
+            (or min metallicity, max metallicity, and step) is added to the file name. 
+        :type mets: array-like
+        :param vln: Optional. A string with information about the volume. Applicable to methods 
+            which save Hess diagrams and stellar number densitites corresponding to some volume. 
+        :type vln: str
         """
         
         self.p, self.a = p, a
@@ -1001,7 +1038,7 @@ class TabSaver():
     def hr_monoage_save(self,H,mode,ages):
         """
         Saves scale heights calculated for the mono-age subpopulations for the different Galactocentric 
-        distances. Output subfolder ``a.T['height']``. File name base is ``'H'``. 
+        distances. Output subfolder is ``a.T['height']``. File name base is ``'H'``. 
         
         :param H: Table with scale heights (radial profiles in columns, age changes from column to column). 
             Radial grid ``a.R`` is not included into **H**.
@@ -1040,7 +1077,7 @@ class TabSaver():
     def hr_monomet_save(self,H,mode,mets):
         """
         Saves scale heights calculated for the mono-metallicity subpopulations (bins) 
-        for the different Galactocentric distances. Output subfolder ``a.T['height']``. 
+        for the different Galactocentric distances. Output subfolder is ``a.T['height']``. 
         File name base is ``'H'``. 
         
         :param H: Table with scale heights (radial profiles in columns, metallicity changes 
@@ -1182,7 +1219,7 @@ class TabSaver():
     def sigwr_monoage_save(self,profiles,mode,zlim,ages):
         """
         Saves radial W-velocity dispersion profiles calculated for the mono-age subpopulations. 
-        Output subfolder ``a.T['kinem']``. File name base is ``'SigW'``. 
+        Output subfolder is ``a.T['kinem']``. File name base is ``'SigW'``. 
         
         :param profiles: Radial velocity dispersion profiles (ages change from column to column). 
             Tables contain only kinematics, without the radial grid column ``a.R``. 
@@ -1226,7 +1263,7 @@ class TabSaver():
     def sigwr_monomet_save(self,profiles,mode,zlim,mets):
         """
         Saves radial W-velocity dispersion profiles calculated for the mono-metallicity subpopulations (bins). 
-        Output subfolder ``a.T['kinem']``. File name base is ``'SigW'``. 
+        Output subfolder is ``a.T['kinem']``. File name base is ``'SigW'``. 
         
         :param profiles: Radial velocity dispersion profiles (metallicity changes from column to column). 
             Tables contain only kinematics, without the radial grid column ``a.R``. 
@@ -1265,6 +1302,31 @@ class TabSaver():
         
         
     def mean_quantity_save(self,profiles,mode,R,zlim,quantity):
+        """
+        Saves vertical profiles of some quantity calculated based on the stellar assemblies. 
+        Output subfolder is ``a.T['pop']``. File name base is ``'Mean_'``. 
+        
+        :param profiles: Vertical profiles of **quantity**. 
+            Tables do not contain vertical grid ``a.z``. 
+        :type profiles: array-like
+        :param mode: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+            (thin disk, thick disk, halo, thin+thick disk, or total). 
+            Adds suffix ``'_'+mode`` to the file name. 
+        :type mode: str
+        :param R: Galactocentric distance, kpc. Suffix ``'_R'`` with the given value of radis 
+            is added to the output file name. 
+        :type R: scalar
+        :param zlim: Range of heights to be considered [*zmin,zmax*], pc. 
+            Adds to the file name suffix ``'_z'`` 
+            with the given heights (converted for shortness into kpc). 
+        :type zlim: array-like 
+        :param quantity: Name of the column in a stellar assemblies table for which 
+            the profile was calculated; use ``'sigw'`` for velocity dispersion, 
+            ``'age``` for age, and ``'FeH'`` for metallicity. 
+        :type quantity: str
+        
+        :return: None. 
+        """         
         
         if quantity=='age' or quantity=='FeH' or quantity=='sigw':
             if quantity=='age':
@@ -1276,7 +1338,7 @@ class TabSaver():
         else:
             Q3 = '<' + quantity + '>[same units as in the stellar assemblies tables]'
         savepath = ''.join(('Mean_',quantity,'_R',str(R),'_z',
-                                         str(zlim).replace(' ', ''),'_',mode,'_'))
+                                         str(zlim/1e3).replace(' ', ''),'_',mode,'_'))
         label = self.lb[mode]                        
         if 'tab' not in self.kwargs:
             savepath += self.kwargs['mode_pop']
@@ -1295,6 +1357,28 @@ class TabSaver():
             
         
     def pops_in_volume_save(self,table,mode,R,mode_pop_name):
+        """
+        Saves table(s) with number densities of stellar assemblies for some volume.
+        Output subfolder is ``a.T['pop']``. File name base is ``'SSP_R'``. 
+        
+        :param table: Saves stellar assemblies table(s) with a column ``'Nz'`` containing the number 
+            of stars located in the specified volume (described by parameter ``'vln'`` in *kwargs*  
+            of the class instance). Can be a single table or a list of tables, depending on **mode**. 
+            Output of :func:`jjmodel.analysis.pops_in_volume`. 
+        :type table: astropy table or list[astropy table]
+        :param mode: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+            (thin disk, thick disk, halo, thin+thick disk, or total). 
+        :type mode: str
+        :param R: Galactocentric distance, kpc. Suffix ``'_R'`` with the given value of radis 
+            is added to the output file name. 
+        :type R: scalar
+        :param mode_pop_name: Short name of the population (see :func:`jjmodel.iof.tab_reader`) 
+            or any custom name for the table. 
+        :type mode_pop_name: str 
+        
+        :return: None. 
+        """
+        
         mode_iso = 'Padova'
         if 'mode_iso' in self.kwargs:
             mode_iso = self.kwargs['mode_iso']
@@ -1341,6 +1425,20 @@ class TabSaver():
     
         
     def rz_map_save(self,profiles,mode):
+        """
+        Saves R-z map of some **quantity**.  
+        Output subfolder is ``a.T['maps']``. File name is ``'Rho'``, ``'N'``, ``'Sigma'``, 
+        or ``'SigmaN'``, depending on *kwargs* of the class instance. 
+        
+        :param profiles: Map of stellar mass or number density in R-z Galactic coordinates.
+        :type profiles: 2d-array
+        :param mode: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+            (thin disk, thick disk, halo, thin+thick disk, or total). 
+        :type mode: str
+        
+        :return: None. 
+        """
+        
         savepath = ''.join((self.Q0,'Rz_dz'))
         label = self.lb[mode]     
         if 'mode_pop' in self.kwargs:
@@ -1371,6 +1469,23 @@ class TabSaver():
                    
     
     def rz_map_quantity_save(self,profiles,mode,quantity):
+        """
+        Saves R-z map of some **quantity**.  
+        Output subfolder is ``a.T['maps']``. File name begins with **quantity**. 
+        
+        :param profiles: Map of the chosen **quantity** in R-z Galactic coordinates.
+        :type profiles: 2d-array
+        :param mode: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+            (thin disk, thick disk, halo, thin+thick disk, or total). 
+        :type mode: str
+        :param quantity: Name of the column in a stellar assemblies table to which 
+            the function has to be applied; for velocity dispersion use ``'sigw'``, 
+            ``'age``` for age, and ``'FeH'`` for metallicity. 
+        :type quantity: str
+        
+        :return: None. 
+        """
+        
         savepath = ''.join((quantity,'(',self.w0,')Rz_dz'))
         label = self.lb[mode]
         if 'mode_pop' in self.kwargs:
@@ -1409,6 +1524,25 @@ class TabSaver():
         
         
     def fw_save(self,profiles,mode,R,zlim):
+        """
+        Saves W-velocity dostribution function. 
+        Output subfolder is ``a.T['kinem']``. File name base is ``'f(|W|)'``. 
+        
+        :param profiles: Normalized on area W-velocity distribution (histogram) and W-grid (bin centers), 
+            :math:`\mathrm{km \ s^{-1}}`. 
+        :type profiles: [1d-array, 1d-array]
+        :type profiles: array-like
+        :param mode: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+            (thin disk, thick disk, halo, thin+thick disk, or total).
+        :type mode_comp: str
+        :param R: Galactocentric distance, kpc. 
+        :type R: scalar 
+        :param zlim: Range of heights [*zmin,zmax*], pc. 
+        :type zlim: array-like 
+        
+        :return: None. 
+        """
+        
         savepath = ''.join(('f(|W|)(',self.w0,')'))
         label = self.lb[mode]
         if type(R)==list:
@@ -1461,6 +1595,29 @@ class TabSaver():
                
                     
     def hess_save(self,profiles,mode,mode_geom,bands,mag_range,mag_step):
+        """
+        Hess diagram for the simple volumes. 
+        Output subfolder is ``a.T['hess']``. File name base is ``'Hess_'``. 
+        
+        :param profiles: Hess diagram, output of :func:`jjmodel.analysis.hess_simple`.  
+        :type profiles: 2d-array 
+        :param mode: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+            (thin disk, thick disk, halo, thin+thick disk, or total).
+        :type mode: str
+        :param mode_geom: Modeled geometry. Can be ``'local_sphere'``, ``'local_cylinder'``, or ``'rphiz_box'``. 
+        :type mode_geom: str
+        :param bands: List of names of photometric columns. 
+            Three column names must be given, e.g. ``['B','V','V']`` for (*B-V*) versus :math:`M_\mathrm{V}`. 
+        :type bands: list[str]
+        :param mag_range: Minimal and maximal magnitude along the x- and y-axis of the Hess 
+            diagram, [[*x_min,x_max*],[*y_min,y_max*]]. 
+        :type mag_range: list[list[scalar]]
+        :param mag_step: Step along the x- and y-axis of the Hess diagram, [*dx,dy*]. 
+        :type mag_step: array-like
+        
+        :return: None. 
+        """
+        
         savepath = ''.join(('Hess_(',bands[0],'-',bands[1],',',bands[2],')_',mode,'_',mode_geom,'_in[',
                             str(mag_range[0][0]),':',str(mag_range[0][1]),',',str(mag_step[0]),';',
                             str(mag_range[1][0]),':',str(mag_range[1][1]),',',str(mag_step[1]),']'))                                                 
@@ -1485,6 +1642,27 @@ class TabSaver():
                                    
                           
     def disk_brightness_save(self,profiles,mode,mode_geom,band):
+        """
+        Saves surface brightness or colour profile of the MW if it is viewed 
+        edge-on or face-on. Output subfolder is ``a.T['pop']``. File name base is ``'MagR_'``. 
+        
+        :param profile: Disk surface brightness profile (:math:`\mathrm{mag \ arcsec^{-2}}`) or color 
+            profile (mag), output of :func:`jjmodel.analysis.disk_brightness`.  
+        :type profile: 1d-array
+        :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
+            (thin disk, thick disk, halo, thin+thick disk, or total). 
+        :type mode_comp: str
+        :param mode_geom: Modeled geometry. Disk orientation with respect to the observer: 
+            ``'face-on'`` or ``'edge-on'``. 
+        :type mode_geom: str
+        :param bands: If a string, this parameter corresponds to the band for the surface brightness profile. 
+            If it is a list, then **bands** gives the names of two bands to be used for the color profile - e.g. 
+            ``['U','V']`` for *U-V*.
+        :type bands: str or list
+        
+        :return: None. 
+        """
+        
         mode_iso = 'Padova'
         if 'mode_iso' in self.kwargs:
             mode_iso = self.kwargs['mode_iso']
@@ -1519,6 +1697,17 @@ class TabSaver():
                                        ' pc calculated with ',mode_iso,' isochrones')))                                                           
         
     def input_local_save(self,inp):
+        """
+        Saves a set of the local model input data: SFR, mass loss function, and AMR 
+        (for the thin and thick disk). 
+        The output directory is ``a.T['inp']``, and file names are prescribed by :func:`jjmodel.iof.tab_sorter`. 
+        
+        :param inp: Collection of the input functions including SFR, AVR, AMR, and IMF.
+        :type inp: dict   
+        
+        :return: None. 
+        """
+        
         p, a = self.p, self.a
         # SFR
         np.savetxt(tab_sorter('SFRd0',p,a.T),np.stack((a.t,inp['SFRd0']),axis=-1),
@@ -1549,6 +1738,18 @@ class TabSaver():
         
              
     def output_local_save(self,out):
+        """
+        Saves a set of the local model output data: AVR, scale heights for all model components, 
+        vertical potential, force, and density profiles.  
+        The output directory and file name for each quantity are prescribed by :func:`jjmodel.iof.tab_sorter` 
+        and :meth:`jjmodel.iof.TabSaver.rhoz_save` (for density profiles). 
+        
+        :param out: Output of :func:`jjmodel.mwdisk.local_run`.
+        :type out: dict
+        
+        :return: None. 
+        """
+        
         p, a = self.p, self.a
         # Vertical density profiles     
         rhoz0_profiles = np.stack((a.z,out['rhodtot'],out['rhog1'],out['rhog2'],
@@ -1585,6 +1786,16 @@ class TabSaver():
         
         
     def output_extended_save(self,res):
+        """ 
+        Same as :meth:`jjmodel.iof.TabSaver.output_local`, but for the model extending over 
+        some range of Galactocentric distances. 
+        
+        :param res: Output of :func:`jjmodel.mwdisk.extended_run`.
+        :type res: dict
+        
+        :return: None. 
+        """
+        
         p, a = self.p, self.a
         # Vertical density profiles                    
         for i in range(a.Rbins):
@@ -1647,6 +1858,16 @@ class TabSaver():
         
     
     def input_extended_save(self,inp):
+        """ 
+        Same as :meth:`jjmodel.iof.TabSaver.input_local`, but for the model extending over 
+        some range of Galactocentric distances. 
+        
+        :param inp: Collection of the input functions including SFR, AVR, AMR, and IMF.
+        :type inp: dict   
+        
+        :return: None. 
+        """
+        
         p, a = self.p, self.a
         # Input data
         np.savetxt(tab_sorter('SFRd',p,a.T),np.hstack((a.t.reshape(a.jd,1),inp['SFRd'].T)),

@@ -847,7 +847,7 @@ class Plotting():
             By default, it is continious.  
         :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.rhoz_monoage_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.rhoz_monoage_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -948,7 +948,7 @@ class Plotting():
             By default, it is continious.  
         :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.rhoz_monomet_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.rhoz_monomet_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -1044,7 +1044,7 @@ class Plotting():
         :param cbar: Optional. Matplotlib colormap name. 
         :type cbar: str
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.rz_map_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.rz_map_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -1152,7 +1152,7 @@ class Plotting():
         :param cbar: Optional. Matplotlib colormap name. 
         :type cbar: str
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.rz_map_quantity_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.rz_map_quantity_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -1271,7 +1271,7 @@ class Plotting():
             By default, it is continious.  
         :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.agez_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.agez_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -1358,7 +1358,7 @@ class Plotting():
             If not specified, Padova is the default isochrone set. 
         :type mode_iso: str 
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.agez_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.agez_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -1462,7 +1462,7 @@ class Plotting():
             By default, it is continious.  
         :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.ager_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.ager_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -1562,7 +1562,7 @@ class Plotting():
             By default, it is continious.  
         :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.metz_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.metz_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -1648,7 +1648,7 @@ class Plotting():
             If not specified, Padova is the default isochrone set. 
         :type mode_iso: str 
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.metz_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.metz_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -1754,7 +1754,7 @@ class Plotting():
             By default, it is continious.  
         :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.metr_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.metr_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -1868,7 +1868,7 @@ class Plotting():
             By default, it is continious.  
         :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.rhor_monoage_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.rhor_monoage_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -1984,7 +1984,7 @@ class Plotting():
             By default, it is continious.  
         :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.rhor_monomet_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.rhor_monomet_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -2094,7 +2094,7 @@ class Plotting():
             By default, it is continious.  
         :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.agehist_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.agehist_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -2212,7 +2212,7 @@ class Plotting():
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.agehist_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.agehist_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -2398,7 +2398,7 @@ class Plotting():
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.methist_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.methist_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -2514,7 +2514,7 @@ class Plotting():
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.methist_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.methist_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -2828,7 +2828,7 @@ class Plotting():
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.hr_monoage_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.hr_monoage_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -2930,7 +2930,7 @@ class Plotting():
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.hr_monomet_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.hr_monomet_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -3243,7 +3243,7 @@ class Plotting():
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.sigwz_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.sigwz_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -3324,7 +3324,7 @@ class Plotting():
             If not specified, Padova is the default isochrone set. 
         :type mode_iso: str 
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.sigwz_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.sigwz_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -3396,7 +3396,7 @@ class Plotting():
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.sigwr_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.sigwr_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -3515,7 +3515,7 @@ class Plotting():
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.sigwr_monoage_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.sigwr_monoage_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -3629,7 +3629,7 @@ class Plotting():
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.sigwr_monomet_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.sigwr_monomet_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -4028,7 +4028,7 @@ class Plotting():
             By default, it is continious.  
         :param save: Optional. If True, the figure will be saved. 
             The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.fw_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.fw_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -4265,7 +4265,7 @@ class Plotting():
         :type mode_iso: str 
         :param save: Optional. If True, the figure will be saved. 
             The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.disk_brightness_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.disk_brightness_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 
@@ -4379,7 +4379,7 @@ class Plotting():
             By default, it is continious.  
         :param save: Optional. If True, the figure will be saved. 
             The output directory and figure name 
-            are prescribed by jjmodel.iof.TabSaver.hess_save. 
+            are prescribed by :meth:`jjmodel.iof.TabSaver.hess_save`. 
         :type save: boolean
         :param save_format: Optional. Format of the figure. 
         :type save_format: str 

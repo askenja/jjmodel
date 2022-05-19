@@ -160,7 +160,8 @@ class GetPopulations():
     def rc_clean(self,mode_comp,**kwargs):
         """
         Selects Red Clump (RC) population in the 3d parameter space *{logT,logg,[Fe/H]}*. 
-        This is a cleaner RC selection than the one given by :meth:`jjmodel.analysis.GetPopulations.rc_simple` method. 
+        This is a cleaner RC selection than the one given by 
+        :meth:`jjmodel.analysis.GetPopulations.rc_simple` method. 
         
         :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
         :type mode_comp: str 
@@ -1485,7 +1486,7 @@ def rhoz_monoage(mode_comp,R,ages,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
-        jjmodel.iof.TabSaver.rhoz_monoage_save. 
+        :meth:`jjmodel.iof.TabSaver.rhoz_monoage_save`. 
     :type save: boolean
     :param between: Optional. If True, the output quantity corresponds to the age intervals 
         specified by parameter **ages**. Otherwise the individual single mono-age subpopulations 
@@ -1623,7 +1624,7 @@ def rhoz_monomet(mode_comp,R,mets,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
-        jjmodel.iof.TabSaver.rhoz_monomet_save. 
+        :meth:`jjmodel.iof.TabSaver.rhoz_monomet_save`. 
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -1711,7 +1712,7 @@ def agez(mode_comp,p,a,**kwargs):
     :type R: scalar
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
-        jjmodel.iof.TabSaver.agez_save. 
+        :meth:`jjmodel.iof.TabSaver.agez_save`. 
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -1876,7 +1877,7 @@ def ager(mode_comp,zlim,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
-        jjmodel.iof.TabSaver.ager_save. 
+        :meth:`jjmodel.iof.TabSaver.ager_save`. 
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -1978,7 +1979,7 @@ def metz(mode_comp,p,a,**kwargs):
     :type R: scalar
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
-        jjmodel.iof.TabSaver.metz_save. 
+        :meth:`jjmodel.iof.TabSaver.metz_save`. 
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -2155,7 +2156,7 @@ def metr(mode_comp,zlim,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
-        jjmodel.iof.TabSaver.metr_save. 
+        :meth:`jjmodel.iof.TabSaver.metr_save`. 
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -2315,7 +2316,7 @@ def rhor_monoage(mode_comp,zlim,ages,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
-        jjmodel.iof.TabSaver.rhor_monoage_save. 
+        :meth:`jjmodel.iof.TabSaver.rhor_monoage_save`. 
     :type save: boolean
     :param sigma: Optional. If True, the result is surface density in :math:`\mathrm{M_\odot \ pc^{-2}}`, 
         otherwise the midplane mass density in :math:`\mathrm{M_\odot \ pc^{-3}}` is calculated. 
@@ -2439,7 +2440,7 @@ def rhor_monomet(mode_comp,zlim,mets,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
-        jjmodel.iof.TabSaver.rhor_monomet_save. 
+        :meth:`jjmodel.iof.TabSaver.rhor_monomet_save`. 
     :type save: boolean
     :param sigma: Optional. If True, the result is surface density in :math:`\mathrm{M_\odot \ pc^{-2}}`, 
         otherwise the midplane mass density in :math:`\mathrm{M_\odot \ pc^{-3}}` is calculated. 
@@ -2530,7 +2531,7 @@ def agehist(mode_comp,zlim,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
-        jjmodel.iof.TabSaver.agehist_save. 
+        :meth:`jjmodel.iof.TabSaver.agehist_save`. 
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -2701,7 +2702,7 @@ def methist(mode_comp,zlim,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are prescribed by 
-        jjmodel.iof.TabSaver.methist_save. 
+        :meth:`jjmodel.iof.TabSaver.methist_save`. 
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -2930,7 +2931,7 @@ def hr_monoage(mode_comp,ages,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.hr_monoage_save. 
+        :meth:`jjmodel.iof.TabSaver.hr_monoage_save`. 
     :type save: boolean
     :param between: Optional. If True, the output quantity corresponds to the age intervals 
         specified by parameter **ages**. Otherwise the individual single mono-age subpopulations 
@@ -3060,7 +3061,7 @@ def hr_monomet(mode_comp,mets,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.hr_monomet_save. 
+        :meth:`jjmodel.iof.TabSaver.hr_monomet_save`. 
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -3199,7 +3200,7 @@ def sigwz(mode_comp,p,a,**kwargs):
     :type R: scalar
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.sigwz_save.  
+        :meth:`jjmodel.iof.TabSaver.sigwz_save`.  
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -3352,7 +3353,7 @@ def sigwr(mode_comp,zlim,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.sigwr_save.  
+        :meth:`jjmodel.iof.TabSaver.sigwr_save`.  
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -3461,7 +3462,7 @@ def sigwr_monoage(mode_comp,zlim,ages,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.sigwr_monoage_save.  
+        :meth:`jjmodel.iof.TabSaver.sigwr_monoage_save`.  
     :type save: boolean
     :param between: Optional. If True, the output quantity corresponds to the age intervals 
         specified by parameter **ages**. Otherwise the individual single mono-age subpopulations 
@@ -3607,7 +3608,7 @@ def sigwr_monomet(mode_comp,zlim,mets,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.sigwr_monomet_save.  
+        :meth:`jjmodel.iof.TabSaver.sigwr_monomet_save`.  
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -3746,7 +3747,7 @@ def mean_quantity(mode_comp,R,zlim,quantity,p,a,**kwargs):
     :type mets: array-like
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.mean_quantity_save.  
+        :meth:`jjmodel.iof.TabSaver.mean_quantity_save`.  
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -3911,7 +3912,7 @@ def pops_in_volume(mode_comp,R,volume,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.mean_quantity_save.  
+        :meth:`jjmodel.iof.TabSaver.mean_quantity_save`.  
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -3935,7 +3936,7 @@ def pops_in_volume(mode_comp,R,volume,p,a,**kwargs):
     :return: Table. Column ``'Nz'`` contains the number of stars (stellar assembly populations) located 
         in the volume specified by the parameters **R** (where in the disk), **zlim** (range of heights),
         and **volume** (what are volumes of z-slices - allows to model different shapes). 
-    :rtype: astropy table   
+    :rtype: astropy table or list[astropy table]
     """
     
     this_function = inspect.stack()[0][3]
@@ -4085,7 +4086,7 @@ def disk_brightness(mode_comp,mode_geom,bands,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.disk_brightness_save.  
+        :meth:`jjmodel.iof.TabSaver.disk_brightness_save`.  
     :type save: boolean
     :param zlim: Optional. Range of heights [*zmim,zmax*] to be considered, pc. If not given, 
         all heights up to ``p.zmax`` are taken into account.
@@ -4261,7 +4262,7 @@ def rz_map(mode_comp,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.rz_map_save.  
+        :meth:`jjmodel.iof.TabSaver.rz_map_save`.  
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -4410,7 +4411,7 @@ def rz_map_quantity(mode_comp,quantity,p,a,**kwargs):
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
         (thin disk, thick disk, halo, thin+thick disk, or total).
     :type mode_comp: str
-    :param quantity: :param quantity: Name of the column in a stellar assemblies table to which 
+    :param quantity: Name of the column in a stellar assemblies table to which 
         the function has to be applied; for velocity dispersion use ``'sigw'``. 
     :type quantity: str
     :param p: Set of model parameters from the parameter file. 
@@ -4419,7 +4420,7 @@ def rz_map_quantity(mode_comp,quantity,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.rz_map_quantity_save.  
+        :meth:`jjmodel.iof.TabSaver.rz_map_quantity_save`.  
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -4498,7 +4499,7 @@ def fw_hist(mode_comp,R,zlim,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.fw_save.  
+        :meth:`jjmodel.iof.TabSaver.fw_save`.  
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -4612,7 +4613,7 @@ def hess_simple(mode_comp,mode_geom,bands,mag_range,mag_step,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.hess_save.  
+        :meth:`jjmodel.iof.TabSaver.hess_save`.  
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -4746,7 +4747,7 @@ def fi_iso(ah,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.fi_iso_save.  
+        :meth:`jjmodel.iof.TabSaver.fi_iso_save`.  
     :type save: boolean
     
     :return: Total graviatational potential. 
@@ -4800,7 +4801,7 @@ def rot_curve(ah,p,a,**kwargs):
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
         to the output directory. The output path and table name are predcribed by 
-        jjmodel.iof.TabSaver.rot_curve_save.  
+        :meth:`jjmodel.iof.TabSaver.rot_curve_save`.  
     :type save: boolean
     :param R: Radial grid, kpc. 
     :type R: array-like
@@ -4839,7 +4840,3 @@ def rot_curve(ah,p,a,**kwargs):
     return {'r':R,'d':vcd,'t':vct,'g1':vcg1,'g2':vcg2,'b':vcb,'dh':vcdh,
             'tot':vc,'vc0':vc0}
     
-
-
-
-
