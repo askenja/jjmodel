@@ -339,6 +339,9 @@ def inpcheck_parameters(p):
     n_errors, n_warnings, n_notes = 0, 0, 0  
     errs, wrns, nts = '', '', ''
     
+    # Solar parameters
+    # -----------------------------------------------------------
+    
     if p.Rsun <= 0:
         errs += "Parameter 'Rsun' must be positive.\n"
         n_errors += 1 
@@ -360,11 +363,31 @@ def inpcheck_parameters(p):
                 "(upper liimit is very approximate and probably very overestimated).\n"
         n_warnings += 1 
     
+    # Thin-disk SFR
+    # -----------------------------------------------------------
+    
     if p.td1!=0:
         nts += "-> When parameter 'td1' is not equal to zero, "+\
                "start of the thin-disk formation is delayed by td1 Gyr.\n"
         n_notes += 1
-            
+        
+    if p.td2 < 0:
+        errs += "-> Got unexpected value for parameter 'td2', "+\
+                "it must be positive. \n"
+        n_errors += 1 
+        
+    if p.dzeta < -10 or p.dzeta > 10:
+        wrns += "-> Got unexpected value for parameter 'dzeta'. "+\
+                "This is SFR power index, do you really want to have sfr ~ t^(2*dzeta) with dzeta > 10 "+\
+                "or dzeta < -10?. \n"
+        n_warnings += 1 
+        
+    if p.eta < -10 or p.eta > 10:
+        wrns += "-> Got unexpected value for parameter 'eta'. "+\
+                "This is SFR power index, do you really want to have sfr ~ t^(-eta) with eta > 10 "+\
+                "or eta < -10?. \n"
+        n_warnings += 1 
+                    
     if p.pkey!=0 and p.pkey!=1 and p.pkey!=2:
         errs += "-> Got unexpected value for parameter 'pkey'. "+\
                 "Allowed options are 0 (no Gaussian peaks in SFR), "+\
@@ -421,11 +444,6 @@ def inpcheck_parameters(p):
         if p.Rbr2 < p.Rbr1 or p.Rbr1 >= p.Rbr3:
             errs += "->  Parameter 'Rbr1' must be less than 'Rbr2' and 'Rbr3'.\n"
             n_errors += 1 
-
-    if p.imfkey!=0:
-        nts += "-> You want to use a custom IMF. Don't forget to specify IMF parameters "+\
-               "(can be added directly to the main parameter file).\n"
-        n_notes += 1 
     
     if p.pkey==1 or p.pkey==2:
         
@@ -460,7 +478,7 @@ def inpcheck_parameters(p):
                         "you're trying to assign all mass to a Gaussian peak.\n"
                 n_errors += 1    
                     
-            if p.run_mode==1 and (p.Rmin <= p.Rmax):
+            if p.run_mode==1 and (p.Rmin < p.Rmax):
                 
                 indr = np.where(np.abs(p.Rp[i]-R)==np.amin(np.abs(p.Rp[i]-R)))[0][0]
                 if  p.sigmap[i] > SigmaR[indr]:
@@ -482,12 +500,74 @@ def inpcheck_parameters(p):
                 if p.sigp[i] < 0:
                     errs += "->  Peak#"+str(i+1)+": Parameter 'sigp' must be positive.\n"
                     n_errors += 1 
-           
+    
+    # Thick-disk SFR
+    # -----------------------------------------------------------
+    if p.tt1 < 0:
+        errs += "-> Thick-disk parameter 'tt1' must be positive.\n"
+        n_errors += 1
+    
     if p.tt2 > 5:
         wrns += "-> Your thick-disk formation duration 'tt2' is larger than 5 Gyr. "+\
                 "Are you sure? Thick disk is a quickly formed MW component.\n"
         n_warnings += 1 
-            
+        
+    if p.gamma < -10 or p.gamma > 10:
+        errs += "-> Please, do not input crazy values for the thick-disk parameter 'gamma' :)\n"
+        n_errors += 1
+        
+    if p.beta < 0 or p.beta > 10:
+        errs += "-> Parameter 'beta' must be positive and not too large. If you want to supress "+\
+                "thick-disk formation faster, decrease parameter 'tt2'. \n"
+        n_errors += 1
+    
+    # IMF
+    # -----------------------------------------------------------
+    
+    if p.imfkey!=0:
+        nts += "-> You want to use a custom IMF. Don't forget to specify IMF parameters "+\
+               "(can be added directly to the main parameter file).\n"
+        n_notes += 1 
+    
+    if p.a0 < 0 or p.a0 > 5:
+        errs += "-> IMF parameter 'a0' must be positive and not very large (upper limit is 5 here, "+\
+                "which is also far too large). \n"
+        n_errors += 1   
+        
+    if p.a1 < 0 or p.a1 > 5:
+        errs += "-> IMF parameter 'a1' must be positive and not very large (upper limit is 5 here, "+\
+                "which is also far too large). \n"
+        n_errors += 1   
+        
+    if p.a2 < 0 or p.a2 > 5:
+        errs += "-> IMF parameter 'a2' must be positive and not very large (upper limit is 5 here, "+\
+                "which is also far too large). \n"
+        n_errors += 1   
+    
+    if p.a3 < 0 or p.a3 > 5:
+        errs += "-> IMF parameter 'a3' must be positive and not very large (upper limit is 5 here, "+\
+                "which is also far too large). \n"
+        n_errors += 1   
+        
+    if p.m0 < 0 or p.m0 > 100:
+        errs += "-> Do not input negative or crazy values for the IMF parameter 'm0'.\n"
+        n_errors += 1  
+        
+    if p.m1 < 0 or p.m1 > 100:
+        errs += "-> Do not input negative or crazy values for the IMF parameter 'm1'.\n"
+        n_errors += 1  
+        
+    if p.m2 < 0 or p.m2 > 100:
+        errs += "-> Do not input negative or crazy values for the IMF parameter 'm2'.\n"
+        n_errors += 1  
+        
+    if p.m0 >= p.m1 or p.m1 >= p.m2:
+        errs += "-> IMF parameters 'm' must satisfy 'm0 < m1 < m2'.\n"
+        n_errors += 1  
+    
+    # Metallicities
+    # -----------------------------------------------------------
+    
     if p.fehkey!=2 and (p.FeHd0 > -0.6 or p.FeHd0 < -0.9):
         wrns += "-> Got unexpected value for the initial thin-disk metallicity at Rsun 'FeHd0'. "+\
                 "Expected value between -0.9 and -0.6 dex.\n"
@@ -503,7 +583,25 @@ def inpcheck_parameters(p):
                 "Expected value between -0.2 and 0.1 dex "+\
                 "(depending on the AMR calibration, errors treatment...).\n"
         n_warnings += 1 
-            
+        
+    if p.FeHd0 > p.FeHdp: 
+        errs += "-> Present-day thin-disk metallicity 'FeHdp' must be larger than "+\
+                "the initial one 'FeHd0'.\n"
+        n_errors += 1 
+        
+    if p.FeHt0 > p.FeHtp: 
+        errs += "-> Present-day thick-disk metallicity 'FeHtp' must be larger than "+\
+                "the initial one 'FeHt0'.\n"
+        n_errors += 1 
+    
+    if p.t0 <= 0:
+        errs += "-> Thick-disk AMR parameter 't0' must be positive.\n"
+        n_errors += 1 
+    
+    if p.q <= -1:
+        errs += "-> Thin-disk AMR parameter 'q' must be > -1.\n"
+        n_errors += 1 
+    
     if p.FeHsh > -1.1 or p.FeHsh < -1.9:
         wrns += "-> Got unexpected value for the mean halo metallicity 'FeHsh'. "+\
                 "Expected value between -1.9 and -1.1 dex "+\
@@ -546,6 +644,13 @@ def inpcheck_parameters(p):
                 "Think again whether you really want this large spread in AMR.\n"
         n_warnings += 1 
         
+        if p.dFeHdt > 0.3:
+            errs += "-> Do not input too large value for the dispersion of the disk "+\
+                "mono-metallicity subpopulations 'dFeHdt'. "+\
+                "Maximum allowed value is 0.3 dex.\n"
+            n_errors += 1 
+            
+        
     if p.dFeHdt==0 and p.n_FeHdt>1:
         wrns += "-> You set the number of the disk mono-metallicity subpopulations 'n_FeHdt' "+\
                 "larger than 1, but you don't allow any dispersion at fixed metallicity, "+\
@@ -554,8 +659,12 @@ def inpcheck_parameters(p):
         n_warnings += 1 
         
     if p.dFeHdt==0 and p.n_FeHdt<1:
-        wrns += "-> Got unexpected value for parameter 'nmetdt', it must be equal to 1 when dFeHdt=0.\n"
+        wrns += "-> Got unexpected value for parameter 'n_FeHdt', it must be equal to 1 when dFeHdt=0.\n"
         n_warnings += 1 
+        
+    if p.n_FeHdt < 1: 
+        errs += "-> Got unexpected value for parameter 'n_FeHdt', it cannot be less than 1.\n"
+        n_errors += 1 
             
     if p.dFeHdt!=0 and (p.n_FeHdt > 9 or p.n_FeHdt%2!=1 or p.n_FeHdt < 3):
         wrns += "-> Got unexpected value for the number of the disk mono-metallicity "+\
@@ -565,7 +674,13 @@ def inpcheck_parameters(p):
                 "When dFeHdt > 0, n_FeHdt must be > 3 to sample the Gaussian PDF.\n"
         n_warnings += 1 
     
+    # Radially extended model 
+    # -----------------------------------------------------------
+    
     if p.run_mode==1:                
+        
+        # Radial grid
+    
         if p.Rmin < 4:
             errs += "-> Got unexpected value for parameter 'Rmin', "+\
                     "it must be larger or equal to 4 kpc, as the bulge zone is not included into "+\
@@ -591,7 +706,9 @@ def inpcheck_parameters(p):
             errs += "-> Parameter 'dR' is not consistent with the chosen range of Galactocentric"+\
                     "distances ['Rmin', 'Rmax']. An interval (Rmax - Rmin) must contain an int number of bins 'dR'.\n"                         
             n_errors += 1 
-            
+        
+        # Scale lengths 
+        
         if p.Rd < 1.8 or p.Rd > 3.2:
             errs += "-> Got unexpected value for the thin-disk scale length 'Rd'. "+\
                     "Expected value is ~2.5 ± 0.7 kpc.\n"
@@ -608,14 +725,14 @@ def inpcheck_parameters(p):
             n_warnings += 1 
                 
         if p.Rg1 < 2.0 or p.Rg1 > 4.0:
-            errs += "-> Got unexpected value for the molecular gas scale length 'Rg1'. "+\
+            wrns += "-> Got unexpected value for the molecular gas scale length 'Rg1'. "+\
                     "Expected value is ~3.0 ± 1 kpc.\n"
-            n_errors += 1 
+            n_warnings += 1 
                 
         if p.Rg2 < 4.0:
-            errs += "-> Got unexpected value for the atomic gas scale length 'Rg2'. "+\
+            wrns += "-> Got unexpected value for the atomic gas scale length 'Rg2'. "+\
                     "Expected value larger than 4.0 kpc.\n"
-            n_errors += 1 
+            n_warnings += 1 
                 
         if p.Rg1 > p.Rg2:
             errs += "-> You set the molecular gas scale length 'Rg1' larger than "+\
@@ -627,9 +744,19 @@ def inpcheck_parameters(p):
                     "must be positive.\n"                
             n_errors += 1 
             
+        if p.Rg10 > 4: 
+            errs += "-> Parameter 'Rg10', radius of the inner hole for molecular gas, "+\
+                    "is not allowed to be larger than 4 kpc (inconsistent with observations).\n"                
+            n_errors += 1 
+                        
         if p.Rg20 < 0: 
             errs += "-> Parameter 'Rg20', radius of the inner hole for atomic gas, "+\
                     "must be positive.\n"                
+            n_errors += 1 
+            
+        if p.Rg20 > 4: 
+            errs += "-> Parameter 'Rg20', radius of the inner hole for atomic gas, "+\
+                    "is not allowed to be larger than 4 kpc (inconsistent with observations).\n"                
             n_errors += 1 
                 
         if p.Rdf <= 0:
@@ -657,10 +784,40 @@ def inpcheck_parameters(p):
                     "1 (thick-disk flaring allowed).\n"
             n_errors += 1 
         '''        
-        if p.a_in < -3 or p.a_in > -2:
+        if p.a_in < -4 or p.a_in > -2:
             errs += "-> Got unexpected value for slope of the inner halo profile 'a_in'. "+\
-                    "Expected -2.5 ± 0.5.\n"
+                    "Expected value from -4 to -2.\n"
             n_errors += 1 
+            
+        if p.Mb < 0 or p.Mb > 5e11: 
+            errs += "-> Got unexpected value for the bulge mass 'Mb'. "+\
+                    "Cannot be negative or too large.\n"
+            n_errors += 1 
+        
+        # Thin-disk SFR
+        
+        if (p.Rmin < p.Rmax):
+            R = np.arange(p.Rmin,p.Rmax+p.dR,p.dR)
+            td2_R = p.td2*(R/p.Rsun)**p.k_td2
+            if True in (td2_R < 0):
+                errs += "-> Got unexpected value for parameter 'td2' at some distance R, "+\
+                        "'td2' must be positive, choose anouther value for 'k_td2'.\n"
+                n_errors += 1 
+            
+            dzeta_R = p.dzeta*(R/p.Rsun)**p.k_dzeta
+            if (True in (dzeta_R < -10)) or (True in (dzeta_R > 10)):
+                wrns += "-> Got unexpected value for parameter 'dzeta' at some distance R, "+\
+                        "'dzeta' should be not too small or too large (-10,10), "+\
+                        "choose anouther value for 'k_dzeta'.\n"
+                n_warnings += 1 
+            
+            eta_R = p.eta*(R/p.Rsun)**p.k_eta
+            if (True in (eta_R < -10)) or (True in (eta_R > 10)):
+                wrns += "-> Got unexpected value for parameter 'eta' at some distance R, "+\
+                        "'eta' should be not too small or too large (-10,10), "+\
+                        "choose anouther value for 'k_eta'.\n"
+                n_warnings += 1 
+            
     
     if p.zmax%p.dz != 0: 
         errs += "-> Parameter 'zmax' must contain an int number of vertical steps 'dz'.\n"
@@ -679,7 +836,10 @@ def inpcheck_parameters(p):
     if p.dz <=0 or p.dz > 20:
         errs += "-> Parameter 'dz' must be positive and not too large, please use something less than 20 pc.\n"                         
         n_errors += 1 
-            
+    
+    # Vertical kinematics
+    # -----------------------------------------------------------
+    
     if p.alpha < 0.3 or p.alpha > 0.5:
         errs += "-> Got unexpected value for the AVR power index at Rsun 'alpha'. "+\
                 "Expected value ~0.3-0.5.\n"
@@ -704,37 +864,43 @@ def inpcheck_parameters(p):
         errs += "-> Got unexpected value for the halo velocity dispersion 'sigsh'. "+\
                 "Expected value is in the range ~70-130 km/s.\n"
         n_errors += 1 
-                      
-    if p.sigmad < 0 and p.sigmad > 45:
+    
+    # Local density normalizations 
+    # -----------------------------------------------------------
+    
+    if p.sigmad < 15 or p.sigmad > 45:
         errs += "-> Got unexpected value for the thin-disk surface density at Rsun 'sigmad'. "+\
-                "Expected value ~0-45 Msun/pc^2.\n"
+                "Expected value ~15-45 Msun/pc^2.\n"
         n_errors += 1 
         
-    if p.sigmat < 0 and p.sigmat > 15:
+    if p.sigmat < 1 or p.sigmat > 15:
         errs += "-> Got unexpected value for the thick-disk surface density at Rsun 'sigmat'. "+\
-                "Expected value ~0-15 Msun/pc^2.\n"
+                "Expected value ~1-15 Msun/pc^2.\n"
         n_errors += 1 
     
-    if p.sigmag1 < 0 and p.sigmag1 > 15:
+    if p.sigmag1 < 1 or p.sigmag1 > 15:
         errs += "-> Got unexpected value for the molecular gas surface density at Rsun 'sigmag1'. "+\
-                "Expected value ~0-15 Msun/pc^2.\n"
+                "Expected value ~1-15 Msun/pc^2.\n"
         n_errors += 1 
             
-    if p.sigmag2 < 0 and p.sigmag2 > 30:
+    if p.sigmag2 < 1 or p.sigmag2 > 30:
         errs += "-> Got unexpected value for the atomic gas surface density at Rsun 'sigmag2'. "+\
-                "Expected value ~0-30 Msun/pc^2.\n"
+                "Expected value ~1-30 Msun/pc^2.\n"
         n_errors += 1 
             
-    if p.sigmadh < 0 and p.sigmadh > 100:
+    if p.sigmadh < 1 or p.sigmadh > 100:
         errs += "-> Got unexpected value for the DM surface density at Rsun 'sigmadh'. "+\
-                "Expected value ~0-100 Msun/pc^2.\n"
+                "Expected value ~1-100 Msun/pc^2.\n"
         n_errors += 1 
             
-    if p.sigmash < 0 and p.sigmash > 5:
+    if p.sigmash < 0.001 or p.sigmash > 5:
         errs += "-> Got unexpected value for the halo surface density at Rsun 'sigmash'. "+\
-                "Expected value ~0-5 Msun/pc^2.\n"
+                "Expected value ~0.001-5 Msun/pc^2.\n"
         n_errors += 1 
-            
+    
+    # Technical staff
+    # -----------------------------------------------------------
+    
     if p.nprocess < 1 or p.nprocess > cpu_count():
         errs += "-> Got unexpected value for the number of CPU cores 'nprocess'. "+\
                 "Minimal value is 1, maximal value is the number of CPU cores of your computer "+\
@@ -751,7 +917,10 @@ def inpcheck_parameters(p):
                 "Allowed options are 0 (clean existing directory before saving the output) and "+\
                 "1 (overwrite files in the existing directory).\n"
         n_errors += 1 
-                         
+        
+    # Output
+    # -----------------------------------------------------------
+        
     print("\nParameters checked: "+str(n_notes)+" Reminders, "+str(n_warnings)+\
           " Warnings, "+str(n_errors)+" Errors.\n")
     
