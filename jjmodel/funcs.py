@@ -1551,13 +1551,13 @@ class SFR():
         :type sigma: scalar
         :param sigmap: Amplitude-related parameter(s) of the additional Gaussian peak(s), 
             :math:`\mathrm{M_\odot \ pc^{-2}}`. 
-        :type sigmap: scalar or array-like 
+        :type sigmap: array-like 
         :param tpk: Mean Galactic time(s) of the Gaussian peak(s), Gyr. 
-        :type tpk: scalar or array-like 
+        :type tpk: array-like 
         :param dtp: Dispersion(s) of the Gaussian peak(s), Gyr
-        :type dtp: scalar or array-like
+        :type dtp: array-like
         :param g: Optional, mass loss function (same length as **t**). 
-        :type g: scalar or array-like
+        :type g: array-like
             
         :return: Absolute and normalized SFR as a function of **t**, 
             :math:`\mathrm{M_\odot \ pc^{-2} \ Gyr^{-1}}`, and ratio of the peaks' contributions
@@ -1577,6 +1577,10 @@ class SFR():
             ind_peak = np.int(np.round(np.divide(tpk-t1,self.dt)))
         except:
             ind_peak = np.array(np.round(np.divide(tpk-t1,self.dt)),dtype=np.int)
+            
+        if len(sigmap)==1:
+            ind_peak = np.array([ind_peak])
+            
         ind_peak_max = np.amax(ind_peak)        # The youngest peak population
         
         if ind_peak_max >= jd:                  # Peak center can be outside of the time axis
@@ -1588,7 +1592,7 @@ class SFR():
         SFR_mono_long, normalized_sfr_mono_long = self.sfrd_sj21(t_long,dzeta,eta,t1,t2,sigma,**kwargs)
         SFR_mono_max = np.amax(SFR_mono_long)
         sfr_at_peak = normalized_sfr_mono_long[ind_peak]
-
+                
         if type(sigmap)==float or type(sigmap)==int:
             peaks = sfr_at_peak*sigmap/SFR_mono_max*\
                     np.exp(-np.subtract(t_long,tpk)**2/2/dtp**2)
@@ -1627,7 +1631,7 @@ class SFR():
         t1, t2 = 0, 7.8
         sigma = 29.3
         sigmap, tpk, dtp = [3.5,1.4], [10,12.5], [0.7,0.25]
-        return self.sfrd_sj21_multipeak(tp_,tr_,t,gamma,beta,t1,t2,sigma,sigmap,tpk,dtp)
+        return self.sfrd_sj21_multipeak(tp_,tr_,t,dzeta,eta,t1,t2,sigma,sigmap,tpk,dtp)
     
     
     def sfrt_sj21(self,t,gamma,beta,t1,t2,sigma,**kwargs):

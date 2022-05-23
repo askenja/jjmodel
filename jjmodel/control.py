@@ -8,7 +8,7 @@ import sys
 import numpy as np 
 import inspect
 from multiprocessing import cpu_count
-from .constants import tp 
+from .constants import tp, tr
 from .funcs import AVR, RadialDensity
 
 
@@ -464,12 +464,12 @@ def inpcheck_parameters(p):
                 errs += "->  Peak#"+str(i+1)+": SFR parameter 'sigmap' must be positive.\n"
                 n_errors += 1 
             
-            if (p.tpk[i] > tp + 3*abs(p.dtp[i])) or (p.tpk[i] < 0):
+            if (p.tpk[i] > tp + 3*abs(p.dtp[i])) or (p.tpk[i] < 0) or (p.tpk[i] > tp):
                 errs += "->  Peak#"+str(i+1)+": Mean time (age) of a Gaussian peak at SFR is outside "+\
-                        "of the modeled time range, such that it will not influence the model predictions.\n"
+                        "of the modeled time range. Parameter 'taup' must be positive. \n"
                 n_errors += 1 
             
-            if p.dtp[i] < 0:
+            if p.dtp[i] <= 0:
                 errs += "->  Peak#"+str(i+1)+": SFR parameter 'dtaup' must be positive.\n"
                 n_errors += 1    
             
@@ -496,9 +496,24 @@ def inpcheck_parameters(p):
                     n_errors += 1 
                             
         if p.pkey==1:
+            sigg1 = 3 
+            tau0 = tp/((sigg1/p.sige)**(-1/p.alpha)-1)
+            t = np.arange(tr/2,tp+tr/2,tr)
+            age_velocity = AVR()
+            AVR0 = age_velocity.avr_jj10(t,tp,p.sige,tau0,p.alpha)     
+            
             for i in range(npeak):
                 if p.sigp[i] < 0:
                     errs += "->  Peak#"+str(i+1)+": Parameter 'sigp' must be positive.\n"
+                    n_errors += 1 
+                    
+                indt = np.where(np.abs(t-p.tpk[i])==np.amin(np.abs(t-p.tpk[i])))[0][0]
+                if p.sigp[i] < AVR0[indt]:
+                    errs += "The value of parameter sigp = " + str(p.sigp[i]) + " km/s "+\
+                              "from the file 'sfrd_peaks_parameters' is "+\
+                              "smaller than AVR0(t), which is not allowed in this model. "+\
+                              "Here t = tp - tauc, and tauc is a mean age corresponding to this SF peak "+\
+                              "given in the same file. Increase the value of 'sigp'.\n"                      
                     n_errors += 1 
     
     # Thick-disk SFR
@@ -584,7 +599,7 @@ def inpcheck_parameters(p):
                 "(depending on the AMR calibration, errors treatment...).\n"
         n_warnings += 1 
         
-    if p.FeHd0 > p.FeHdp: 
+    if p.fehkey==0 and p.FeHd0 > p.FeHdp: 
         errs += "-> Present-day thin-disk metallicity 'FeHdp' must be larger than "+\
                 "the initial one 'FeHd0'.\n"
         n_errors += 1 
@@ -598,9 +613,37 @@ def inpcheck_parameters(p):
         errs += "-> Thick-disk AMR parameter 't0' must be positive.\n"
         n_errors += 1 
     
-    if p.q <= -1:
+    if p.rt < 0:
+        errs += "-> Thick-disk AMR parameter 'rt' must be positive.\n"
+        n_errors += 1 
+    
+    if p.rt == 0:
+        wrns += "-> When thick-disk AMR parameter 'rt' equals 0, thick disk has no chemical evolution (same metallicity for all times). "+\
+                "Did you really mean that?\n"
+        n_warnings += 1 
+        
+    if p.rt >= 5:
+        wrns += "-> By setting large values for the thick-disk AMR parameter 'rt', you may produce unphysical models. "+\
+                "Be careful, check the AMR plot.\n"
+        n_warnings += 1 
+    
+    if p.fehkey==0 and p.q <= -1:
         errs += "-> Thin-disk AMR parameter 'q' must be > -1.\n"
         n_errors += 1 
+    
+    if p.fehkey==0 and p.rd < 0:
+        errs += "-> Thin-disk AMR parameter 'rd' must be positive.\n"
+        n_errors += 1 
+        
+    if p.fehkey==0 and p.rd >= 5:
+        wrns += "-> By setting large values for the thin-disk AMR parameter 'rd', you may produce unphysical models. "+\
+                "Be careful, check the AMR plot.\n"
+        n_warnings += 1 
+        
+    if p.fehkey==0 and p.rd == 0:
+        wrns += "-> When thin-disk AMR parameter 'rd' equals 0, thin disk has no chemical evolution (same metallicity for all times). "+\
+                "Did you really mean that?\n"
+        n_warnings += 1 
     
     if p.FeHsh > -1.1 or p.FeHsh < -1.9:
         wrns += "-> Got unexpected value for the mean halo metallicity 'FeHsh'. "+\

@@ -2687,9 +2687,10 @@ class Plotting():
         
         Hd, Hd0 = tab_reader(['Hd','Hd0'],self.p,self.a.T)
         if self.p.pkey==1:
+            npeak = len(self.p.sigp)
             Hdp = [tab_reader(['Hdp'],self.p,self.a.T,R=radius)[0] for radius in self.a.R]
             Hdp = [table[1] for table in Hdp]
-            npeak = len(self.p.sigp)
+            
         
         f, ax = plt.subplots(figsize=(10,7))
         ax.set_xlim((0,tp))

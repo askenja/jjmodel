@@ -68,16 +68,28 @@ def read_parameters(path_to_file):
         if os.path.isfile(os.path.join('.','sfrd_peaks_parameters')):
             sf_peaks = np.loadtxt(os.path.join('.','sfrd_peaks_parameters'))
             if len(sf_peaks)!=0:
-                if len(sf_peaks[0])==6 or len(sf_peaks[0])==5:
-                    paramd['sigmap'] = sf_peaks[:,0]
-                    paramd['tpk'] = tp - sf_peaks[:,1]
-                    paramd['dtp'] = sf_peaks[:,2]
-                    paramd['Rp'] = sf_peaks[:,3]
-                    paramd['dRp'] = sf_peaks[:,4]
-                    if (paramd['pkey']==1):
-                        paramd['sigp'] = sf_peaks[:,5]
+                if type(sf_peaks[0])==np.float64 or type(sf_peaks[0])==int:
+                    if len(sf_peaks)==6 or len(sf_peaks)==5:
+                        paramd['sigmap'] = np.array([sf_peaks[0]])
+                        paramd['tpk'] = np.array([tp - sf_peaks[1]])
+                        paramd['dtp'] = np.array([sf_peaks[2]])
+                        paramd['Rp'] = np.array([sf_peaks[3]])
+                        paramd['dRp'] = np.array([sf_peaks[4]])
+                        if (paramd['pkey']==1):
+                            paramd['sigp'] = np.array([sf_peaks[5]])
+                    else:
+                        print("\nSome of parameters are missing in 'sfrd_peaks_parameters'! " + message)
                 else:
-                    print("\nSome of parameters are missing in 'sfrd_peaks_parameters'! " + message)
+                    if len(sf_peaks[0])==6 or len(sf_peaks[0])==5:
+                        paramd['sigmap'] = sf_peaks[:,0]
+                        paramd['tpk'] = tp - sf_peaks[:,1]
+                        paramd['dtp'] = sf_peaks[:,2]
+                        paramd['Rp'] = sf_peaks[:,3]
+                        paramd['dRp'] = sf_peaks[:,4]
+                        if (paramd['pkey']==1):
+                            paramd['sigp'] = sf_peaks[:,5]
+                    else:
+                        print("\nSome of parameters are missing in 'sfrd_peaks_parameters'! " + message)
             else:
                 print("\nFile 'sfrd_peaks_parameters' is empty, give the parameters! " + message)
         else: 
@@ -137,9 +149,15 @@ def read_parameters(path_to_file):
     if paramd['pkey']==0:
         nparams = len(paramd.values())
     if paramd['pkey']==1:
-        nparams = len(paramd.values()) + 6*len(paramd['sigmap']-1)
+        try:
+            nparams = len(paramd.values()) + 6*len(paramd['sigmap']-1)
+        except:
+            nparams = len(paramd.values()) + 6
     if paramd['pkey']==2:
-        nparams = len(paramd.values()) + 5*len(paramd['sigmap']-1)
+        try:
+            nparams = len(paramd.values()) + 5*len(paramd['sigmap']-1)
+        except:
+            nparams = len(paramd.values()) + 5
     
     pnames_technical = ['run_mode','out_dir','out_mode','nprocess','pkey','imfkey','fkey','fehkey']
     count_technical = 0 
