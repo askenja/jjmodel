@@ -6,6 +6,7 @@ Created on Wed May  9 18:21:36 2018
 import os
 import sys
 import numpy as np 
+import matplotlib.pyplot as plt
 from itertools import repeat
 from multiprocessing import Pool
 from .funcs import heffr
@@ -64,10 +65,9 @@ def rbin_builder(R,a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
     :type status_progress: boolean
     :param log: Optional. If given, the details of the iteration are written to the file.
     :type log: file
-    :param plot: Optional. If True, the derived potential is plotted for each iteration.  
+    :param plot: Optional. If True, the derived potential is plotted for each iteration, plots are saved.  
     :type plot: boolean
-    :param save: Optional. If True, the output tables (and plot with converging potential if **plot** is True), 
-        is (are) saved to the specified directory, ``a.dir``. 
+    :param save: Optional. If True, the output tables, are saved to the specified directory, ``a.dir``. 
     :type save: boolean
             
     :return: Dictionary with all sorts of output (mainly the output of :func:`jjmodel.poisson.poisson_solver`).  
@@ -89,12 +89,18 @@ def rbin_builder(R,a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
         - ``'hdp'`` : Scale height(s) of the SFR-peak(s)' subpopulations, pc. 
         - ``'rhodp'``, ``'rhod0'`` : Mass density vertical profiles of the SFR-peak(s)' subpopulations, and of the thin-disk subpopulations with the vertical kinematics described by the AVR, :math:`\mathrm{M_\odot \ pc^{-3}}`. In this case total density profile is ``rhodtot = rhod0 + sum(rhodp,axis=0)``. 
         - ``'Kzd0'``, ``'Kzdp'`` : Analogically to ``rhodp`` and ``rhod0``, thin-disk vertical graditational force components, :math:`\mathrm{m^2 \ s^{-2} \ pc^{-1}}`.   
-        
+        - ``'plot'`` : matplotlib figure and axis for the plot of normalized potential. 
     :rtype: dict 
     """
 
     timer = Timer()
     t_start = timer.start()
+    
+    if 'plot' in kwargs and kwargs['plot']==True:
+        fig, ax = plt.subplots(figsize=(16,10))
+        figname = os.path.join(a.T['fiplt'],'fieq_iter_live_R'+str(R)+'.png')
+        del kwargs['plot']
+        kwargs['plot'] = [(fig,ax),figname]
     
     if 'status_progress' in kwargs and kwargs['status_progress']==True:
         sys.stdout.write(''.join(('\n','{:<2}'.format(''),

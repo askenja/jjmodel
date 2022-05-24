@@ -18,7 +18,7 @@ from fast_histogram import histogram2d
 from .control import (CheckIsoInput, inpcheck_radius, inpcheck_age, reduce_kwargs,
                      inpcheck_height,inpcheck_iskwargtype,inpcheck_kwargs,inpcheck_mode_comp,
                      inpcheck_kwargs_compatibility,inpcheck_dz)
-from .iof import tab_reader, tab_sorter, TabSaver
+from .iof import tab_reader, hdp_reader, tab_sorter, TabSaver
 from .constants import KM, tp, tr
 from .funcs import hgr, RotCurve, RadialPotential, AMR
 from .tools import rebin_histogram, reduce_table, _rotation_matrix_, gauss_weights, convolve2d_gauss
@@ -715,13 +715,13 @@ def _rhoz_d_(p,a,**kwargs):
     if p.pkey==1:
         npeak = len(p.sigp)
         if not only_local:
-            Hdp = [tab_reader(['Hdp'],p,a.T,R=radius)[0] for radius in Rarray]
-            sigp = [table[0] for table in Hdp]
+            sigp, Hdp = hdp_reader(p,a.T,R=a.R)
             Fp = [tab_reader(['Fp'],p,a.T,R=radius)[0] for radius in Rarray]
             fpr0 = [1 - np.sum(subarray[1:],axis=0) for subarray in Fp]
         if not inpcheck_iskwargtype(kwargs,'local',False,bool,inspect.stack()[0][3]) or only_local:
-            Fp0, Hdp0 = tab_reader(['Fp0','Hdp0'],p,a.T)
+            Fp0 = tab_reader(['Fp0'],p,a.T)[0]
             fp0 = 1 - np.sum(Fp0[1:],axis=0)
+            Hdp0 = hdp_reader(p,a.T,R=p.Rsun)[1]
             # If there are extra peaks on the thin-disk SFR, that have special kinematics, 
             # the density profile consists of two terms: standard thin-disk part and peaks. 
             if inpcheck_iskwargtype(kwargs,'sigma',True,bool,inspect.stack()[0][3]):
@@ -729,7 +729,7 @@ def _rhoz_d_(p,a,**kwargs):
                 rho_dp = [Fp0[l+1]*Sigma0 for l in np.arange(npeak)]
             else:
                 rho_d0 = fp0*Sigma0/2/Hd0[1]
-                rho_dp = [Fp0[l+1]*Sigma0/2/Hdp0[1][l] for l in np.arange(npeak)]
+                rho_dp = [Fp0[l+1]*Sigma0/2/Hdp0[l] for l in np.arange(npeak)]
             rho_d0_term = np.array([rho_d0*np.exp(-k/KM**2/AVRd0[1]**2) for k in Phi0[1][indz1:indz2]])
             rho_dp_term = np.array([[rho_dp[l]*np.exp(-k/KM**2/p.sigp[l]**2) for k in Phi0[1][indz1:indz2]]
                            for l in np.arange(npeak)])
@@ -751,7 +751,7 @@ def _rhoz_d_(p,a,**kwargs):
                     rho_dp = [Fp[i][l+1]*Sigma[i] for l in np.arange(npeak)]
                 else:
                     rho_d0 = fpr0[i]*Sigma[i]/2/Hd[Rindex[i]+1]
-                    rho_dp = [Fp[i][l+1]*Sigma[i]/2/Hdp[i][1][l] for l in np.arange(npeak)]
+                    rho_dp = [Fp[i][l+1]*Sigma[i]/2/Hdp[i][l] for l in np.arange(npeak)]
                 rho_d0_term = np.array([rho_d0*np.exp(-k/KM**2/AVRd[Rindex[i]+1]**2) 
                                         for k in Phi[Rindex[i]+1][indz1:indz2]])
                 rho_dp_term = np.array([[rho_dp[l]*np.exp(-k/KM**2/sigp[i][l]**2) 
@@ -1229,7 +1229,7 @@ def _meanq_d_(indr,indz,indt,tab,Fi,Hd,AVR,p,a,**kwargs):
     """
     if p.pkey==1:
         weight1 = kwargs['fp0']*0.5/Hd[indr]*np.exp(-Fi[indr][indz]/KM**2/AVR[indr]**2)
-        weights2 = np.array([kwargs['Fp'][l+1]*0.5/kwargs['Hdp'][1][l]*\
+        weights2 = np.array([kwargs['Fp'][l+1]*0.5/kwargs['Hdp'][l]*\
                              np.exp(-Fi[indr][indz]/KM**2/kwargs['sigp'][l]**2) 
                              for l in np.arange(kwargs['npeak'])])                    
         Nz_term1 = tab['N']*weight1[indt]
@@ -1369,7 +1369,7 @@ def _fw_d_(R,zlim,wgrid,dw,p,a,**kwargs):
             sigp = p.sigp
             Fp = tab_reader(['Fp0'],p,a.T)[0]                
         else:
-            sigp = tab_reader(['Hdp'],p,a.T,R=R)[0][0]
+            sigp = hdp_reader(p,a.T,R=R)[0]
             Fp = tab_reader(['Fp'],p,a.T,R=R)[0]                
         fp = 1 - np.sum(Fp[1:],axis=0)
         N_d0_term = N_d*fp
@@ -3246,11 +3246,10 @@ def sigwz(mode_comp,p,a,**kwargs):
     
     if p.pkey==1:
         npeak = len(p.sigp)
-        Fp0, Hdp0 = tab_reader(['Fp0','Hdp0'],p,a.T)
+        Fp0 = tab_reader(['Fp0'],p,a.T)[0]
         fp0 = 1 - np.sum(Fp0[1:],axis=0)
         if ('R' not in kwargs) or ('R' in kwargs and kwargs['R']!=p.Rsun):
-            Hdp = [tab_reader(['Hdp'],p,a.T,R=radius)[0] for radius in a.R]
-            sigp = [table[0] for table in Hdp]
+            sigp, Hdp = hdp_reader(p,a.T,R=a.R)
             Fp = [tab_reader(['Fp'],p,a.T,R=radius)[0] for radius in a.R]
             fpr0 = [1 - np.sum(subarray[1:],axis=0) for subarray in Fp]
         
@@ -3385,8 +3384,7 @@ def sigwr(mode_comp,zlim,p,a,**kwargs):
         Sigt = tab_reader(['Sigt'],p,a.T)[0]
         
     if p.pkey==1:
-        Hdp = [tab_reader(['Hdp'],p,a.T,R=radius)[0] for radius in a.R]
-        sigp = [table[0] for table in Hdp]
+        sigp, Hdp = hdp_reader(p,a.T,R=a.R)
         Fp = [tab_reader(['Fp'],p,a.T,R=radius)[0] for radius in a.R]
         fpr0 = [1 - np.sum(subarray[1:],axis=0) for subarray in Fp]
         npeak = len(p.sigp)
@@ -3501,8 +3499,7 @@ def sigwr_monoage(mode_comp,zlim,ages,p,a,**kwargs):
        Sigt = tab_reader(['Sigt'],p,a.T)[0] 
             
     if p.pkey==1:
-        Hdp = [tab_reader(['Hdp'],p,a.T,R=radius)[0] for radius in a.R]
-        sigp = [table[0] for table in Hdp]
+        sigp, Hdp = hdp_reader(p,a.T,R=a.R)
         Fp = [tab_reader(['Fp'],p,a.T,R=radius)[0] for radius in a.R]
         fpr0 = [1 - np.sum(subarray[1:],axis=0) for subarray in Fp]
         npeak = len(p.sigp)
@@ -3642,8 +3639,7 @@ def sigwr_monomet(mode_comp,zlim,mets,p,a,**kwargs):
         AMRt,Sigt = tab_reader(['AMRt','Sigt'],p,a.T)
     
     if p.pkey==1:
-        Hdp = [tab_reader(['Hdp'],p,a.T,R=radius)[0] for radius in a.R]
-        sigp = [table[0] for table in Hdp]
+        sigp, Hdp = hdp_reader(p,a.T,R=a.R)
         Fp = [tab_reader(['Fp'],p,a.T,R=radius)[0] for radius in a.R]
         fpr0 = [1 - np.sum(subarray[1:],axis=0) for subarray in Fp]
         npeak = len(p.sigp)
@@ -3789,8 +3785,7 @@ def mean_quantity(mode_comp,R,zlim,quantity,p,a,**kwargs):
     if mode_comp=='d' or mode_comp=='dt' or mode_comp=='tot':
         Hd,AVR = tab_reader(['Hd','AVR'],p,a.T)
         if p.pkey==1:
-            Hdp = tab_reader(['Hdp'],p,a.T,R=R)[0] 
-            sigp = Hdp[0]
+            sigp, Hdp = hdp_reader(p,a.T,R=R)
             Fp = tab_reader(['Fp'],p,a.T,R=R)[0] 
             fp0 = 1 - np.sum(Fp[1:],axis=0) 
             npeak = len(p.sigp)
@@ -3987,21 +3982,22 @@ def pops_in_volume(mode_comp,R,volume,p,a,**kwargs):
         if R==p.Rsun:
             Hd, AVR = tab_reader(['Hd0','AVR0'],p,a.T)
             if p.pkey==1:
-                Hdp, Fp = tab_reader(['Hdp0','Fp0'],p,a.T)
+                Fp = tab_reader(['Fp0'],p,a.T)[0]
+                sigp, Hdp = hdp_reader(p,a.T,R=p.Rsun)
         else:
             Hd, AVR = tab_reader(['Hd','AVR'],p,a.T)
             if p.pkey==1:
-                Hdp, Fp = tab_reader(['Hdp','Fp'],p,a.T,R=R)
+                Fp = tab_reader(['Fp'],p,a.T,R=R)[0]
+                sigp, Hdp = hdp_reader(p,a.T,R=R)
         
         if p.pkey==1:
-            sigp = Hdp[0]
             fpr0 = 1 - np.sum(Fp[1:],axis=0) 
             npeak = len(p.sigp)
         
             wd0 = np.array([fpr0[i]/2/Hd[indr][i]*\
                             np.sum(np.exp(-Fi[indr][indz1:indz2]/KM**2/AVR[indr][i]**2)*volume) 
                             for i in a.jd_array])
-            wdp = np.array([np.sum([Fp[k+1][i]/2/Hdp[1][k]*\
+            wdp = np.array([np.sum([Fp[k+1][i]/2/Hdp[k]*\
                             np.sum(np.exp(-Fi[indr][indz1:indz2]/KM**2/sigp[k]**2)*volume) 
                             for k in np.arange(npeak)]) for i in a.jd_array])
         else:

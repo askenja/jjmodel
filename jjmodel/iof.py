@@ -267,6 +267,55 @@ def tab_reader(names,p,T,**kwargs):
     return tables
 
 
+def hdp_reader(p,T,R):
+    """
+    Returns schale heights for peaks' subpopulations in the form of list of lists, [[]]. 
+    """
+    
+    npeak = len(p.sigp)
+    
+    only_local = False
+    r_scalar = False
+    try:
+        len(R)
+    except:
+        r_scalar = True
+        if R==p.Rsun:
+            only_local = True
+    
+    if r_scalar:
+        if only_local:
+            if npeak==1:
+                Hdp = tab_reader(['Hdp0'],p,T)[0]
+                sigp = [Hdp[0]]
+                Hdp = [Hdp[1]]
+            else:
+                Hdp = tab_reader(['Hdp0'],p,T)[0]
+                sigp = Hdp[0]
+                Hdp = Hdp[1]
+        else:
+            if npeak==1:
+                Hdp = tab_reader(['Hdp'],p,T,R=R)[0]
+                sigp = [Hdp[0]]
+                Hdp = [Hdp[1]]
+            else:
+                Hdp = tab_reader(['Hdp'],p,T,R=R)[0]
+                sigp = Hdp[0]
+                Hdp = Hdp[1]
+    else:
+        Hdp = [tab_reader(['Hdp'],p,T,R=radius)[0] for radius in R]
+       
+        if npeak==1:
+            sigp = [[table[0]] for table in Hdp]
+            Hdp = [[table[1]] for table in Hdp]
+        else:
+            sigp = [table[0] for table in Hdp]
+            Hdp = [table[1] for table in Hdp]
+    
+    return (sigp, Hdp)
+    
+
+
 class TabSaver():
     """
     Sorts and saves calculated quantities into the output subfolders. 

@@ -13,7 +13,7 @@ from scipy.ndimage import zoom
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
-from .iof import tab_sorter, tab_reader, TabSaver
+from .iof import tab_sorter, tab_reader, hdp_reader, TabSaver
 from .constants import KM, SIGMA_E, tp
 from .tools import Timer
 from .control import (inpcheck_radius,inpcheck_age,inpcheck_dz,inpcheck_height,inpcheck_iskwargtype,
@@ -2688,10 +2688,8 @@ class Plotting():
         Hd, Hd0 = tab_reader(['Hd','Hd0'],self.p,self.a.T)
         if self.p.pkey==1:
             npeak = len(self.p.sigp)
-            Hdp = [tab_reader(['Hdp'],self.p,self.a.T,R=radius)[0] for radius in self.a.R]
-            Hdp = [table[1] for table in Hdp]
-            
-        
+            sigp, Hdp = hdp_reader(self.p,self.a.T,R=self.a.R)
+
         f, ax = plt.subplots(figsize=(10,7))
         ax.set_xlim((0,tp))
         hmax = np.amax(Hd[1:,])
@@ -2758,7 +2756,7 @@ class Plotting():
                 
         Hd0 = tab_reader(['Hd0'],self.p,self.a.T)[0]
         if self.p.pkey==1:
-            Hdp = tab_reader(['Hdp0'],self.p,self.a.T)[0][1]
+            Hdp = hdp_reader(self.p,self.a.T,R=self.p.Rsun)[1]
             npeak = len(self.p.sigp)
         
         f, ax = plt.subplots(figsize=(10,7))
@@ -3077,9 +3075,8 @@ class Plotting():
         cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,**kwargs)
         
         if self.p.pkey==1:
-            Hdp = [tab_reader(['Hdp'],self.p,self.a.T,R=radius)[0] for radius in self.a.R]
-            sigp = [table[0] for table in Hdp]
             npeak = len(self.p.sigp)
+            sigp, Hdp = hdp_reader(self.p,self.a.T,R=self.a.R)
             
         f, ax = plt.subplots(figsize=(10,7))
         ax.set_xlim(0,tp)

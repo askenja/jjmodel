@@ -357,7 +357,7 @@ def inpcheck_parameters(p):
                 "Check units (must be pc). Expected positive value of ~0-25 pc.\n"
         n_warnings += 1 
         
-    if p.Vsun < 0 or p.Vsun > 25: 
+    if p.run_mode!=0 and (p.Vsun < 0 or p.Vsun > 25): 
         wrns += "-> Got unexpected value for the Solar peculoar velocity 'Vsun'. "+\
                 "Check units (must be km/s). Expected positive value of ~0-25 km/s "+\
                 "(upper liimit is very approximate and probably very overestimated).\n"

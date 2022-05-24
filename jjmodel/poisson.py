@@ -246,7 +246,7 @@ def _fimax_optimal_(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
         if 'log' in kwargs:
             kwargs['log'].append(''.join(('\n','{:<8}'.format(round(fimax,2)),'{:<8}'.format(fist))))
     
-    return (1.2*fimax, dfi)
+    return (1.3*fimax, dfi)
 
 
 
@@ -301,8 +301,9 @@ def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
     :type status_equation: boolean
     :param log: Optional. If given, the details of the iteration are written to the file.
     :type log: file
-    :param plot: Optional. If True, the derived potential is plotted for each iteration.  
-    :type plot: boolean
+    :param plot: Optional. Matplotlib figure and axis for plotting the current version of potential, 
+        and name of the plot, [(fig, ax),figure_name] . 
+    :type plot: list
         
     :return: Dictionary with all sorts of output. 
     
@@ -322,6 +323,7 @@ def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
         - ``'hdp'`` : Scale height(s) of the SFR-peak(s)' subpopulations, pc. 
         - ``'rhodp'``, ``'rhod0'`` : Mass density vertical profiles of the SFR-peak(s)' subpopulations, and of the thin-disk subpopulations with the vertical kinematics described by the AVR, :math:`\mathrm{M_\odot \ pc^{-3}}`. In this case total density profile is ``rhodtot = rhod0 + sum(rhodp,axis=0)``. 
         - ``'log'`` : file, log file with the iteration details.  
+        - ``'plot'`` : matplotlib figure and axis for the plot of normalized potential. 
         
     :rtype: dict 
         
@@ -355,6 +357,8 @@ def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
         fp0 = 1 - np.sum(kwargs['fp'],axis=0)
         indt_sigp = [np.where(np.abs(time-a.t)==np.amin(np.abs(time-a.t)))[0][0] for time in p.tpk]
 
+    if 'plot' in kwargs:
+        (fig, ax), plotname = kwargs['plot']
     
     if 'status_equation' in kwargs:
         print(''.join(('\n','{:<8}'.format('heffd'),'{:<8}'.format('hefft'),
@@ -369,15 +373,13 @@ def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
                            '{:<8}'.format('hefft'),
                            '{:<8}'.format('hg1'),'{:<8}'.format('hg2'),
                            '{:<8}'.format('hdh'),'{:<8}'.format('hsh'))))
-
-    if 'plot' in kwargs:
-        plt.figure()
                     
     count = 0           
     hddif, hg1dif, hg2dif, htdif, hdhdif, hshdif = epsh+1, epsh+1, epsh+1, epsh+1, epsh+1, epsh+1
     heffddif, hefftdif = epsh-1, epsh-1
     if 'heffd' in kwargs:
         heffddif = epsh+1
+        heffd_new = 2000
     if 'hefft' in kwargs:
         hefftdif = epsh+1
         
@@ -459,14 +461,19 @@ def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
         fie = fi*SIGMA_E**2
                 
         if 'plot' in kwargs:
-            plt.plot(dz*ZN,fieq,marker='o',markersize=4,
-                     label='$\mathrm{initial \ grid, \ d \phi=const}$')
-            plt.plot(a.z,fi,ls='--',c='k',
-                     label='$\mathrm{secondary \ grid, \ d z=const, \ iter=}$'+str(count))
-            plt.axis([0,round(a.dzmax*ZN,0),0,np.round(fimax,1)])
-            plt.xlabel('$\mathrm{|z|, \ pc}$')
-            plt.ylabel(r'$\mathrm{\phi / \sigma^2}$')
-            plt.legend(loc=2)              
+            ax.plot(dz*ZN,fieq,marker='o',markersize=5,lw=2,
+                     label='$\mathrm{initial \ grid, \ d \phi=const, iter=}$'+str(count))
+            if count==0:
+                ax.plot(a.z,fi,ls='--',c='k',lw=0.5,
+                         label='$\mathrm{secondary \ grid, \ d z=const}$')
+            else:
+                ax.plot(a.z,fi,ls='--',c='k')
+            ax.set_xlim(0,round(a.dzmax*ZN,0))
+            ax.set_ylim(0,np.round(fimax,1))
+            ax.set_xlabel('$\mathrm{|z|, \ pc}$')
+            ax.set_ylabel(r'$\mathrm{\phi / \sigma^2}$')
+            plt.legend(loc=2,ncol=2,prop={'size':8})  
+            fig.savefig(plotname)
         
         popt,pcov = curve_fit(z_potential,a.z,fie,p0=(1e-2,1e-3,1e-6,1e-9,1e-12,1e-16)) #,1e-19
         fie_smooth = z_potential(a.z,*popt)
@@ -519,13 +526,22 @@ def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
                 rhod0 = np.sum(SFRd*fp0*gd*tr/2/hd)
                 rhodp = [np.sum(SFRd*i*gd*tr/2/k) for i,k in zip(kwargs['fp'],hdp)]
                 rhodtot0 = rhod0 + np.sum(rhodp)
+                
+            heffd_old = heffd_new 
             heffd_new = np.sum(SFRd*gd*tr)/2/rhodtot0 
             heffddif = abs(kwargs['heffd'] - heffd_new) 
             #hddif = np.mean([hddif,heffddif])
             
-            sige_old = sige                             
+            sige_old = sige     
             sige = kwargs['heffd']/heffd_new*sige_old
             sige = np.mean([sige,sige_old])
+            if sige < sigg1:
+                raise ValueError("\nAVR scaling parameter 'sige' became less than velocity dispersion "+\
+                                 "of molecular gas. Something is very wrong, poisson_solver will not converge. "+\
+                                 "Probably, you have too many "+\
+                                 "SFR populations with special kinematics (additional peaks), so "+\
+                                 "the routine is unable to produce a disk of the specified thickness "+\
+                                 "by adjusting AVR. Sorry, try some other model.\n")
             
         if 'hefft' in kwargs:
             rhot0 = np.sum(SFRt*gt*tr/2/ht)
@@ -558,7 +574,7 @@ def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
             kwargs['log'].append(''.join(('\n','{:<8}'.format(round(heffd,1)),
                    '{:<8}'.format(round(hefft,1)),
                    '{:<8}'.format(round(hg1new,1)),'{:<8}'.format(round(hg2new,1)),
-                   '{:<8}'.format(round(hdhnew,1)),'{:<8}'.format(round(hshnew,1)))))
+                   '{:<8}'.format(round(hdhnew,1)),'{:<8}'.format(round(hshnew,1)),'{:<8}'.format(round(sige,2)))))
     
         count = count + 1  
            
@@ -579,7 +595,6 @@ def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
     rhosh = [sigmash/2/hsh*np.exp(-i/sigsh**2) for i in fie_smooth]
     
     if 'plot' in kwargs:
-        plt.savefig(os.path.join(a.dir,'fi_iteration.png'))
         plt.close()
 
     out = {'hd':hd,'ht':ht,'hdh':hdh,'hsh':hsh,'heffd':heffd,'hefft':hefft,
@@ -591,6 +606,8 @@ def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
         out['hdp'], out['rhodp'], out['rhod0'], out['sigp'] = hdp, rhodp, rhod0, sigp
     if 'log' in kwargs:
         out['log'] = kwargs['log']
+    if 'plot' in kwargs and kwargs['plot']==True:
+        out['plot'] = (fig,ax)
     
     return out
 
