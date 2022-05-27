@@ -30,6 +30,7 @@ Contents
 
    
    installation
+   tutorials
    funcs
    model_core
    populations
@@ -39,7 +40,6 @@ Contents
    iof
    analysis
    plotting
-   tutorials
    acknowledgements
    contacts
 
