@@ -4,15 +4,23 @@
    contain the root `toctree` directive.
 
 
+Getting started
+======================================
 
+Parameter files
+-------------------------
+
+First of all, you need to create and fill parameter file(s) whose content will define properties of your 
+model realization. You can understand parameter files' structure by looking at them in tutorials (see below). 
+Also, you can use our `manual <https://github.com/askenja/jjmodel/tree/main/jjmodel/docs/mydoc>`_ which includes description of all JJ-model parameters. It is also stored in your local ``jjmodel/docs/mydoc`` folder in *anaconda* 
+(to find your ``jjmodel`` folder, 
+execute ``print(jjmodel.__file__)`` in your python compiler). 
 
 Tutorials
-*************************
+-------------------------
 
 The code **jjmodel** includes several tutorials which should help user to familiarize himself with the code 
-syntax. After the installation, jupyter notebooks can be found in the folder ``jjmodel/tutorials``, 
-(``jjmodel`` is a directory where the code has been installed, 
-check it by executing ``print(jjmodel.__file__)`` in your python compiler). 
+syntax. After the installation, jupyter notebooks can be found in the folder ``jjmodel/tutorials``. 
 Tutorials can be also viewed on github. 
 
 - `Tutorial 1 <https://github.com/askenja/jjmodel/tree/main/jjmodel/tutorials/tutorial1>`_ . An example of basic usage of the code, modeling of the Solar neighborhood. 

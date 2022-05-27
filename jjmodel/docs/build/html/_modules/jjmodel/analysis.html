@@ -52,7 +52,7 @@
 <span class="kn">from</span> <span class="nn">.control</span> <span class="kn">import</span> <span class="p">(</span><span class="n">CheckIsoInput</span><span class="p">,</span> <span class="n">inpcheck_radius</span><span class="p">,</span> <span class="n">inpcheck_age</span><span class="p">,</span> <span class="n">reduce_kwargs</span><span class="p">,</span>
                      <span class="n">inpcheck_height</span><span class="p">,</span><span class="n">inpcheck_iskwargtype</span><span class="p">,</span><span class="n">inpcheck_kwargs</span><span class="p">,</span><span class="n">inpcheck_mode_comp</span><span class="p">,</span>
                      <span class="n">inpcheck_kwargs_compatibility</span><span class="p">,</span><span class="n">inpcheck_dz</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.iof</span> <span class="kn">import</span> <span class="n">tab_reader</span><span class="p">,</span> <span class="n">tab_sorter</span><span class="p">,</span> <span class="n">TabSaver</span>
+<span class="kn">from</span> <span class="nn">.iof</span> <span class="kn">import</span> <span class="n">tab_reader</span><span class="p">,</span> <span class="n">hdp_reader</span><span class="p">,</span> <span class="n">tab_sorter</span><span class="p">,</span> <span class="n">TabSaver</span>
 <span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">KM</span><span class="p">,</span> <span class="n">tp</span><span class="p">,</span> <span class="n">tr</span>
 <span class="kn">from</span> <span class="nn">.funcs</span> <span class="kn">import</span> <span class="n">hgr</span><span class="p">,</span> <span class="n">RotCurve</span><span class="p">,</span> <span class="n">RadialPotential</span><span class="p">,</span> <span class="n">AMR</span>
 <span class="kn">from</span> <span class="nn">.tools</span> <span class="kn">import</span> <span class="n">rebin_histogram</span><span class="p">,</span> <span class="n">reduce_table</span><span class="p">,</span> <span class="n">_rotation_matrix_</span><span class="p">,</span> <span class="n">gauss_weights</span><span class="p">,</span> <span class="n">convolve2d_gauss</span>
@@ -194,7 +194,8 @@
 <div class="viewcode-block" id="GetPopulations.rc_clean"><a class="viewcode-back" href="../../populations.html#jjmodel.analysis.GetPopulations.rc_clean">[docs]</a>    <span class="k">def</span> <span class="nf">rc_clean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Selects Red Clump (RC) population in the 3d parameter space *{logT,logg,[Fe/H]}*. </span>
-<span class="sd">        This is a cleaner RC selection than the one given by :meth:`jjmodel.analysis.GetPopulations.rc_simple` method. </span>
+<span class="sd">        This is a cleaner RC selection than the one given by </span>
+<span class="sd">        :meth:`jjmodel.analysis.GetPopulations.rc_simple` method. </span>
 <span class="sd">        </span>
 <span class="sd">        :param mode_comp: Model component: ``&#39;d&#39;``, ``&#39;t&#39;``, or ``&#39;sh&#39;`` (thin disk, thick disk, or halo).</span>
 <span class="sd">        :type mode_comp: str </span>
@@ -748,13 +749,13 @@
     <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">npeak</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sigp</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">only_local</span><span class="p">:</span>
-            <span class="n">Hdp</span> <span class="o">=</span> <span class="p">[</span><span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hdp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">radius</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">Rarray</span><span class="p">]</span>
-            <span class="n">sigp</span> <span class="o">=</span> <span class="p">[</span><span class="n">table</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">Hdp</span><span class="p">]</span>
+            <span class="n">sigp</span><span class="p">,</span> <span class="n">Hdp</span> <span class="o">=</span> <span class="n">hdp_reader</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">)</span>
             <span class="n">Fp</span> <span class="o">=</span> <span class="p">[</span><span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">radius</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">Rarray</span><span class="p">]</span>
             <span class="n">fpr0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">subarray</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">subarray</span> <span class="ow">in</span> <span class="n">Fp</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">inpcheck_iskwargtype</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span><span class="s1">&#39;local&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">])</span> <span class="ow">or</span> <span class="n">only_local</span><span class="p">:</span>
-            <span class="n">Fp0</span><span class="p">,</span> <span class="n">Hdp0</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp0&#39;</span><span class="p">,</span><span class="s1">&#39;Hdp0&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+            <span class="n">Fp0</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp0&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">fp0</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Fp0</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">Hdp0</span> <span class="o">=</span> <span class="n">hdp_reader</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
             <span class="c1"># If there are extra peaks on the thin-disk SFR, that have special kinematics, </span>
             <span class="c1"># the density profile consists of two terms: standard thin-disk part and peaks. </span>
             <span class="k">if</span> <span class="n">inpcheck_iskwargtype</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span><span class="s1">&#39;sigma&#39;</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]):</span>
@@ -762,7 +763,7 @@
                 <span class="n">rho_dp</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fp0</span><span class="p">[</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">Sigma0</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">npeak</span><span class="p">)]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">rho_d0</span> <span class="o">=</span> <span class="n">fp0</span><span class="o">*</span><span class="n">Sigma0</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Hd0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">rho_dp</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fp0</span><span class="p">[</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">Sigma0</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Hdp0</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">npeak</span><span class="p">)]</span>
+                <span class="n">rho_dp</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fp0</span><span class="p">[</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">Sigma0</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Hdp0</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">npeak</span><span class="p">)]</span>
             <span class="n">rho_d0_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rho_d0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">/</span><span class="n">KM</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">AVRd0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">Phi0</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">indz1</span><span class="p">:</span><span class="n">indz2</span><span class="p">]])</span>
             <span class="n">rho_dp_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">rho_dp</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">/</span><span class="n">KM</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">p</span><span class="o">.</span><span class="n">sigp</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">Phi0</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">indz1</span><span class="p">:</span><span class="n">indz2</span><span class="p">]]</span>
                            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">npeak</span><span class="p">)])</span>
@@ -784,7 +785,7 @@
                     <span class="n">rho_dp</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">Sigma</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">npeak</span><span class="p">)]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">rho_d0</span> <span class="o">=</span> <span class="n">fpr0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">Sigma</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Hd</span><span class="p">[</span><span class="n">Rindex</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-                    <span class="n">rho_dp</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">Sigma</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Hdp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">npeak</span><span class="p">)]</span>
+                    <span class="n">rho_dp</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">Sigma</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Hdp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">npeak</span><span class="p">)]</span>
                 <span class="n">rho_d0_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rho_d0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">/</span><span class="n">KM</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">AVRd</span><span class="p">[</span><span class="n">Rindex</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> 
                                         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">Phi</span><span class="p">[</span><span class="n">Rindex</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">indz1</span><span class="p">:</span><span class="n">indz2</span><span class="p">]])</span>
                 <span class="n">rho_dp_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">rho_dp</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">/</span><span class="n">KM</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">sigp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">l</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> 
@@ -1262,7 +1263,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">weight1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fp0&#39;</span><span class="p">]</span><span class="o">*</span><span class="mf">0.5</span><span class="o">/</span><span class="n">Hd</span><span class="p">[</span><span class="n">indr</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">Fi</span><span class="p">[</span><span class="n">indr</span><span class="p">][</span><span class="n">indz</span><span class="p">]</span><span class="o">/</span><span class="n">KM</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">AVR</span><span class="p">[</span><span class="n">indr</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">weights2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;Fp&#39;</span><span class="p">][</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mf">0.5</span><span class="o">/</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;Hdp&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">l</span><span class="p">]</span><span class="o">*</span>\
+        <span class="n">weights2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;Fp&#39;</span><span class="p">][</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mf">0.5</span><span class="o">/</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;Hdp&#39;</span><span class="p">][</span><span class="n">l</span><span class="p">]</span><span class="o">*</span>\
                              <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">Fi</span><span class="p">[</span><span class="n">indr</span><span class="p">][</span><span class="n">indz</span><span class="p">]</span><span class="o">/</span><span class="n">KM</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;sigp&#39;</span><span class="p">][</span><span class="n">l</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> 
                              <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;npeak&#39;</span><span class="p">])])</span>                    
         <span class="n">Nz_term1</span> <span class="o">=</span> <span class="n">tab</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">weight1</span><span class="p">[</span><span class="n">indt</span><span class="p">]</span>
@@ -1402,7 +1403,7 @@
             <span class="n">sigp</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">sigp</span>
             <span class="n">Fp</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp0&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>                
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">sigp</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hdp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">sigp</span> <span class="o">=</span> <span class="n">hdp_reader</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">Fp</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>                
         <span class="n">fp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Fp</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">N_d0_term</span> <span class="o">=</span> <span class="n">N_d</span><span class="o">*</span><span class="n">fp</span>
@@ -1519,7 +1520,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are prescribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.rhoz_monoage_save. </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.rhoz_monoage_save`. </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param between: Optional. If True, the output quantity corresponds to the age intervals </span>
 <span class="sd">        specified by parameter **ages**. Otherwise the individual single mono-age subpopulations </span>
@@ -1657,7 +1658,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are prescribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.rhoz_monomet_save. </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.rhoz_monomet_save`. </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -1745,7 +1746,7 @@
 <span class="sd">    :type R: scalar</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are prescribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.agez_save. </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.agez_save`. </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -1910,7 +1911,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are prescribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.ager_save. </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.ager_save`. </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -2012,7 +2013,7 @@
 <span class="sd">    :type R: scalar</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are prescribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.metz_save. </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.metz_save`. </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -2189,7 +2190,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are prescribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.metr_save. </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.metr_save`. </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -2349,7 +2350,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are prescribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.rhor_monoage_save. </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.rhor_monoage_save`. </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param sigma: Optional. If True, the result is surface density in :math:`\mathrm{M_\odot \ pc^{-2}}`, </span>
 <span class="sd">        otherwise the midplane mass density in :math:`\mathrm{M_\odot \ pc^{-3}}` is calculated. </span>
@@ -2473,7 +2474,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are prescribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.rhor_monomet_save. </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.rhor_monomet_save`. </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param sigma: Optional. If True, the result is surface density in :math:`\mathrm{M_\odot \ pc^{-2}}`, </span>
 <span class="sd">        otherwise the midplane mass density in :math:`\mathrm{M_\odot \ pc^{-3}}` is calculated. </span>
@@ -2564,7 +2565,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are prescribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.agehist_save. </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.agehist_save`. </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -2735,7 +2736,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are prescribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.methist_save. </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.methist_save`. </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -2964,7 +2965,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.hr_monoage_save. </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.hr_monoage_save`. </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param between: Optional. If True, the output quantity corresponds to the age intervals </span>
 <span class="sd">        specified by parameter **ages**. Otherwise the individual single mono-age subpopulations </span>
@@ -3094,7 +3095,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.hr_monomet_save. </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.hr_monomet_save`. </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -3233,7 +3234,7 @@
 <span class="sd">    :type R: scalar</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.sigwz_save.  </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.sigwz_save`.  </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -3279,11 +3280,10 @@
     
     <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">npeak</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sigp</span><span class="p">)</span>
-        <span class="n">Fp0</span><span class="p">,</span> <span class="n">Hdp0</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp0&#39;</span><span class="p">,</span><span class="s1">&#39;Hdp0&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">Fp0</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp0&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">fp0</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Fp0</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;R&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;R&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;R&#39;</span><span class="p">]</span><span class="o">!=</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">):</span>
-            <span class="n">Hdp</span> <span class="o">=</span> <span class="p">[</span><span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hdp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">radius</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">]</span>
-            <span class="n">sigp</span> <span class="o">=</span> <span class="p">[</span><span class="n">table</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">Hdp</span><span class="p">]</span>
+            <span class="n">sigp</span><span class="p">,</span> <span class="n">Hdp</span> <span class="o">=</span> <span class="n">hdp_reader</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">)</span>
             <span class="n">Fp</span> <span class="o">=</span> <span class="p">[</span><span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">radius</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">]</span>
             <span class="n">fpr0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">subarray</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">subarray</span> <span class="ow">in</span> <span class="n">Fp</span><span class="p">]</span>
         
@@ -3386,7 +3386,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.sigwr_save.  </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.sigwr_save`.  </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -3418,8 +3418,7 @@
         <span class="n">Sigt</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Sigt&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         
     <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-        <span class="n">Hdp</span> <span class="o">=</span> <span class="p">[</span><span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hdp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">radius</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">]</span>
-        <span class="n">sigp</span> <span class="o">=</span> <span class="p">[</span><span class="n">table</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">Hdp</span><span class="p">]</span>
+        <span class="n">sigp</span><span class="p">,</span> <span class="n">Hdp</span> <span class="o">=</span> <span class="n">hdp_reader</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">)</span>
         <span class="n">Fp</span> <span class="o">=</span> <span class="p">[</span><span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">radius</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">]</span>
         <span class="n">fpr0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">subarray</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">subarray</span> <span class="ow">in</span> <span class="n">Fp</span><span class="p">]</span>
         <span class="n">npeak</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sigp</span><span class="p">)</span>
@@ -3495,7 +3494,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.sigwr_monoage_save.  </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.sigwr_monoage_save`.  </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param between: Optional. If True, the output quantity corresponds to the age intervals </span>
 <span class="sd">        specified by parameter **ages**. Otherwise the individual single mono-age subpopulations </span>
@@ -3534,8 +3533,7 @@
        <span class="n">Sigt</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Sigt&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> 
             
     <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-        <span class="n">Hdp</span> <span class="o">=</span> <span class="p">[</span><span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hdp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">radius</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">]</span>
-        <span class="n">sigp</span> <span class="o">=</span> <span class="p">[</span><span class="n">table</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">Hdp</span><span class="p">]</span>
+        <span class="n">sigp</span><span class="p">,</span> <span class="n">Hdp</span> <span class="o">=</span> <span class="n">hdp_reader</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">)</span>
         <span class="n">Fp</span> <span class="o">=</span> <span class="p">[</span><span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">radius</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">]</span>
         <span class="n">fpr0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">subarray</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">subarray</span> <span class="ow">in</span> <span class="n">Fp</span><span class="p">]</span>
         <span class="n">npeak</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sigp</span><span class="p">)</span>
@@ -3641,7 +3639,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.sigwr_monomet_save.  </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.sigwr_monomet_save`.  </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -3675,8 +3673,7 @@
         <span class="n">AMRt</span><span class="p">,</span><span class="n">Sigt</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;AMRt&#39;</span><span class="p">,</span><span class="s1">&#39;Sigt&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
     
     <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-        <span class="n">Hdp</span> <span class="o">=</span> <span class="p">[</span><span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hdp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">radius</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">]</span>
-        <span class="n">sigp</span> <span class="o">=</span> <span class="p">[</span><span class="n">table</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">Hdp</span><span class="p">]</span>
+        <span class="n">sigp</span><span class="p">,</span> <span class="n">Hdp</span> <span class="o">=</span> <span class="n">hdp_reader</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">)</span>
         <span class="n">Fp</span> <span class="o">=</span> <span class="p">[</span><span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">radius</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">]</span>
         <span class="n">fpr0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">subarray</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">subarray</span> <span class="ow">in</span> <span class="n">Fp</span><span class="p">]</span>
         <span class="n">npeak</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sigp</span><span class="p">)</span>
@@ -3780,7 +3777,7 @@
 <span class="sd">    :type mets: array-like</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.mean_quantity_save.  </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.mean_quantity_save`.  </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -3822,8 +3819,7 @@
     <span class="k">if</span> <span class="n">mode_comp</span><span class="o">==</span><span class="s1">&#39;d&#39;</span> <span class="ow">or</span> <span class="n">mode_comp</span><span class="o">==</span><span class="s1">&#39;dt&#39;</span> <span class="ow">or</span> <span class="n">mode_comp</span><span class="o">==</span><span class="s1">&#39;tot&#39;</span><span class="p">:</span>
         <span class="n">Hd</span><span class="p">,</span><span class="n">AVR</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hd&#39;</span><span class="p">,</span><span class="s1">&#39;AVR&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">Hdp</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hdp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> 
-            <span class="n">sigp</span> <span class="o">=</span> <span class="n">Hdp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">sigp</span><span class="p">,</span> <span class="n">Hdp</span> <span class="o">=</span> <span class="n">hdp_reader</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)</span>
             <span class="n">Fp</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> 
             <span class="n">fp0</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Fp</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
             <span class="n">npeak</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sigp</span><span class="p">)</span>
@@ -3945,7 +3941,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.mean_quantity_save.  </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.mean_quantity_save`.  </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -3969,7 +3965,7 @@
 <span class="sd">    :return: Table. Column ``&#39;Nz&#39;`` contains the number of stars (stellar assembly populations) located </span>
 <span class="sd">        in the volume specified by the parameters **R** (where in the disk), **zlim** (range of heights),</span>
 <span class="sd">        and **volume** (what are volumes of z-slices - allows to model different shapes). </span>
-<span class="sd">    :rtype: astropy table   </span>
+<span class="sd">    :rtype: astropy table or list[astropy table]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">this_function</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
@@ -4020,21 +4016,22 @@
         <span class="k">if</span> <span class="n">R</span><span class="o">==</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">:</span>
             <span class="n">Hd</span><span class="p">,</span> <span class="n">AVR</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hd0&#39;</span><span class="p">,</span><span class="s1">&#39;AVR0&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">Hdp</span><span class="p">,</span> <span class="n">Fp</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hdp0&#39;</span><span class="p">,</span><span class="s1">&#39;Fp0&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+                <span class="n">Fp</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp0&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">sigp</span><span class="p">,</span> <span class="n">Hdp</span> <span class="o">=</span> <span class="n">hdp_reader</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">Hd</span><span class="p">,</span> <span class="n">AVR</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hd&#39;</span><span class="p">,</span><span class="s1">&#39;AVR&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">Hdp</span><span class="p">,</span> <span class="n">Fp</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hdp&#39;</span><span class="p">,</span><span class="s1">&#39;Fp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)</span>
+                <span class="n">Fp</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Fp&#39;</span><span class="p">],</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">sigp</span><span class="p">,</span> <span class="n">Hdp</span> <span class="o">=</span> <span class="n">hdp_reader</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">sigp</span> <span class="o">=</span> <span class="n">Hdp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">fpr0</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Fp</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
             <span class="n">npeak</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sigp</span><span class="p">)</span>
         
             <span class="n">wd0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">fpr0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Hd</span><span class="p">[</span><span class="n">indr</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">*</span>\
                             <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">Fi</span><span class="p">[</span><span class="n">indr</span><span class="p">][</span><span class="n">indz1</span><span class="p">:</span><span class="n">indz2</span><span class="p">]</span><span class="o">/</span><span class="n">KM</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">AVR</span><span class="p">[</span><span class="n">indr</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">volume</span><span class="p">)</span> 
                             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">jd_array</span><span class="p">])</span>
-            <span class="n">wdp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">Fp</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Hdp</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="p">]</span><span class="o">*</span>\
+            <span class="n">wdp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">Fp</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Hdp</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">*</span>\
                             <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">Fi</span><span class="p">[</span><span class="n">indr</span><span class="p">][</span><span class="n">indz1</span><span class="p">:</span><span class="n">indz2</span><span class="p">]</span><span class="o">/</span><span class="n">KM</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">sigp</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">volume</span><span class="p">)</span> 
                             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">npeak</span><span class="p">)])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">jd_array</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -4119,7 +4116,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.disk_brightness_save.  </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.disk_brightness_save`.  </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param zlim: Optional. Range of heights [*zmim,zmax*] to be considered, pc. If not given, </span>
 <span class="sd">        all heights up to ``p.zmax`` are taken into account.</span>
@@ -4295,7 +4292,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.rz_map_save.  </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.rz_map_save`.  </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -4444,7 +4441,7 @@
 <span class="sd">    :param mode_comp: Galactic component, can be ``&#39;d&#39;``, ``&#39;t&#39;``, ``&#39;sh&#39;``, ``&#39;dt&#39;``, or ``&#39;tot&#39;`` </span>
 <span class="sd">        (thin disk, thick disk, halo, thin+thick disk, or total).</span>
 <span class="sd">    :type mode_comp: str</span>
-<span class="sd">    :param quantity: :param quantity: Name of the column in a stellar assemblies table to which </span>
+<span class="sd">    :param quantity: Name of the column in a stellar assemblies table to which </span>
 <span class="sd">        the function has to be applied; for velocity dispersion use ``&#39;sigw&#39;``. </span>
 <span class="sd">    :type quantity: str</span>
 <span class="sd">    :param p: Set of model parameters from the parameter file. </span>
@@ -4453,7 +4450,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.rz_map_quantity_save.  </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.rz_map_quantity_save`.  </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -4532,7 +4529,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.fw_save.  </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.fw_save`.  </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -4646,7 +4643,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.hess_save.  </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.hess_save`.  </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">        (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -4780,7 +4777,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.fi_iso_save.  </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.fi_iso_save`.  </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    </span>
 <span class="sd">    :return: Total graviatational potential. </span>
@@ -4834,7 +4831,7 @@
 <span class="sd">    :type a: namedtuple</span>
 <span class="sd">    :param save: Optional. If True, the calculated quantities are saved as tables  </span>
 <span class="sd">        to the output directory. The output path and table name are predcribed by </span>
-<span class="sd">        jjmodel.iof.TabSaver.rot_curve_save.  </span>
+<span class="sd">        :meth:`jjmodel.iof.TabSaver.rot_curve_save`.  </span>
 <span class="sd">    :type save: boolean</span>
 <span class="sd">    :param R: Radial grid, kpc. </span>
 <span class="sd">    :type R: array-like</span>
@@ -4873,10 +4870,6 @@
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span><span class="n">R</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">:</span><span class="n">vcd</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">:</span><span class="n">vct</span><span class="p">,</span><span class="s1">&#39;g1&#39;</span><span class="p">:</span><span class="n">vcg1</span><span class="p">,</span><span class="s1">&#39;g2&#39;</span><span class="p">:</span><span class="n">vcg2</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">:</span><span class="n">vcb</span><span class="p">,</span><span class="s1">&#39;dh&#39;</span><span class="p">:</span><span class="n">vcdh</span><span class="p">,</span>
             <span class="s1">&#39;tot&#39;</span><span class="p">:</span><span class="n">vc</span><span class="p">,</span><span class="s1">&#39;vc0&#39;</span><span class="p">:</span><span class="n">vc0</span><span class="p">}</span></div>
     
-
-
-
-
 </pre></div>
 
           </div>
@@ -4897,15 +4890,16 @@
 <h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../funcs.html">Physical functions (input)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../model_core.html">Radial and vertical MW structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../populations.html">Stellar populations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../geometry.html">Geometry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../trans.html">Coordinates and velocities (from data)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tools.html">Useful tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iof.html">Input/output tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Output analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../plotting.html">Plotting tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../acknowledgements.html">Acknowledgements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contacts.html">Authors and contact</a></li>
 </ul>

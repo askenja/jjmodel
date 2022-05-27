@@ -47,7 +47,7 @@
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <span class="n">LineCollection</span>
-<span class="kn">from</span> <span class="nn">.iof</span> <span class="kn">import</span> <span class="n">tab_sorter</span><span class="p">,</span> <span class="n">tab_reader</span><span class="p">,</span> <span class="n">TabSaver</span>
+<span class="kn">from</span> <span class="nn">.iof</span> <span class="kn">import</span> <span class="n">tab_sorter</span><span class="p">,</span> <span class="n">tab_reader</span><span class="p">,</span> <span class="n">hdp_reader</span><span class="p">,</span> <span class="n">TabSaver</span>
 <span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">KM</span><span class="p">,</span> <span class="n">SIGMA_E</span><span class="p">,</span> <span class="n">tp</span>
 <span class="kn">from</span> <span class="nn">.tools</span> <span class="kn">import</span> <span class="n">Timer</span>
 <span class="kn">from</span> <span class="nn">.control</span> <span class="kn">import</span> <span class="p">(</span><span class="n">inpcheck_radius</span><span class="p">,</span><span class="n">inpcheck_age</span><span class="p">,</span><span class="n">inpcheck_dz</span><span class="p">,</span><span class="n">inpcheck_height</span><span class="p">,</span><span class="n">inpcheck_iskwargtype</span><span class="p">,</span>
@@ -881,7 +881,7 @@
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :type cbar_bins: boolean</span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.rhoz_monoage_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.rhoz_monoage_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -982,7 +982,7 @@
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :type cbar_bins: boolean</span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.rhoz_monomet_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.rhoz_monomet_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -1078,7 +1078,7 @@
 <span class="sd">        :param cbar: Optional. Matplotlib colormap name. </span>
 <span class="sd">        :type cbar: str</span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.rz_map_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.rz_map_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -1186,7 +1186,7 @@
 <span class="sd">        :param cbar: Optional. Matplotlib colormap name. </span>
 <span class="sd">        :type cbar: str</span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.rz_map_quantity_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.rz_map_quantity_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -1305,7 +1305,7 @@
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :type cbar_bins: boolean</span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.agez_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.agez_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -1392,7 +1392,7 @@
 <span class="sd">            If not specified, Padova is the default isochrone set. </span>
 <span class="sd">        :type mode_iso: str </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.agez_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.agez_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -1496,7 +1496,7 @@
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :type cbar_bins: boolean</span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.ager_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.ager_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -1596,7 +1596,7 @@
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :type cbar_bins: boolean</span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.metz_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.metz_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -1682,7 +1682,7 @@
 <span class="sd">            If not specified, Padova is the default isochrone set. </span>
 <span class="sd">        :type mode_iso: str </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.metz_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.metz_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -1788,7 +1788,7 @@
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :type cbar_bins: boolean</span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.metr_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.metr_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -1902,7 +1902,7 @@
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :type cbar_bins: boolean</span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.rhor_monoage_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.rhor_monoage_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -2018,7 +2018,7 @@
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :type cbar_bins: boolean</span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.rhor_monomet_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.rhor_monomet_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -2128,7 +2128,7 @@
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :type cbar_bins: boolean</span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.agehist_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.agehist_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -2246,7 +2246,7 @@
 <span class="sd">        :param cbar_bins: Optional. If True, the colorbar will be discrete. </span>
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.agehist_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.agehist_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -2432,7 +2432,7 @@
 <span class="sd">        :param cbar_bins: Optional. If True, the colorbar will be discrete. </span>
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.methist_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.methist_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -2548,7 +2548,7 @@
 <span class="sd">        :param cbar_bins: Optional. If True, the colorbar will be discrete. </span>
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.methist_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.methist_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -2721,10 +2721,9 @@
         
         <span class="n">Hd</span><span class="p">,</span> <span class="n">Hd0</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hd&#39;</span><span class="p">,</span><span class="s1">&#39;Hd0&#39;</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">Hdp</span> <span class="o">=</span> <span class="p">[</span><span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hdp&#39;</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">radius</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">]</span>
-            <span class="n">Hdp</span> <span class="o">=</span> <span class="p">[</span><span class="n">table</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">Hdp</span><span class="p">]</span>
             <span class="n">npeak</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">sigp</span><span class="p">)</span>
-        
+            <span class="n">sigp</span><span class="p">,</span> <span class="n">Hdp</span> <span class="o">=</span> <span class="n">hdp_reader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">)</span>
+
         <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="n">tp</span><span class="p">))</span>
         <span class="n">hmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">Hd</span><span class="p">[</span><span class="mi">1</span><span class="p">:,])</span>
@@ -2791,7 +2790,7 @@
                 
         <span class="n">Hd0</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hd0&#39;</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">Hdp</span> <span class="o">=</span> <span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hdp0&#39;</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">Hdp</span> <span class="o">=</span> <span class="n">hdp_reader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rsun</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">npeak</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">sigp</span><span class="p">)</span>
         
         <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span>
@@ -2862,7 +2861,7 @@
 <span class="sd">        :param cbar_bins: Optional. If True, the colorbar will be discrete. </span>
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.hr_monoage_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.hr_monoage_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -2964,7 +2963,7 @@
 <span class="sd">        :param cbar_bins: Optional. If True, the colorbar will be discrete. </span>
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.hr_monomet_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.hr_monomet_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -3110,9 +3109,8 @@
         <span class="n">cmin</span><span class="p">,</span> <span class="n">cmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cbarminmax_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rmin</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">Rmax</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">dR</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">pkey</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">Hdp</span> <span class="o">=</span> <span class="p">[</span><span class="n">tab_reader</span><span class="p">([</span><span class="s1">&#39;Hdp&#39;</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="n">radius</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">]</span>
-            <span class="n">sigp</span> <span class="o">=</span> <span class="p">[</span><span class="n">table</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">Hdp</span><span class="p">]</span>
             <span class="n">npeak</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">sigp</span><span class="p">)</span>
+            <span class="n">sigp</span><span class="p">,</span> <span class="n">Hdp</span> <span class="o">=</span> <span class="n">hdp_reader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">R</span><span class="p">)</span>
             
         <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">tp</span><span class="p">)</span>
@@ -3277,7 +3275,7 @@
 <span class="sd">        :param cbar_bins: Optional. If True, the colorbar will be discrete. </span>
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.sigwz_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.sigwz_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -3358,7 +3356,7 @@
 <span class="sd">            If not specified, Padova is the default isochrone set. </span>
 <span class="sd">        :type mode_iso: str </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.sigwz_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.sigwz_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -3430,7 +3428,7 @@
 <span class="sd">        :param cbar_bins: Optional. If True, the colorbar will be discrete. </span>
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.sigwr_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.sigwr_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -3549,7 +3547,7 @@
 <span class="sd">        :param cbar_bins: Optional. If True, the colorbar will be discrete. </span>
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.sigwr_monoage_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.sigwr_monoage_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -3663,7 +3661,7 @@
 <span class="sd">        :param cbar_bins: Optional. If True, the colorbar will be discrete. </span>
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.sigwr_monomet_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.sigwr_monomet_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -4022,7 +4020,7 @@
 
 <div class="viewcode-block" id="Plotting.fw_hist_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.fw_hist_plt">[docs]</a>    <span class="k">def</span> <span class="nf">fw_hist_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        |W|-velocity distribution function. Plotting for :func:`jjmodel.analysis.fw_hist`. </span>
+<span class="sd">        W-velocity distribution function. Plotting for :func:`jjmodel.analysis.fw_hist`. </span>
 <span class="sd">        </span>
 <span class="sd">        :param mode_comp: Galactic component. Galactic component, can be ``&#39;d&#39;``, ``&#39;t&#39;``, ``&#39;sh&#39;``, ``&#39;dt&#39;``, or ``&#39;tot&#39;`` </span>
 <span class="sd">            (thin disk, thick disk, halo, thin+thick disk, or total).</span>
@@ -4035,9 +4033,9 @@
 <span class="sd">        :type ages: array-like</span>
 <span class="sd">        :param mets: Optional. Set of metallicity bins. </span>
 <span class="sd">        :type mets: array-like</span>
-<span class="sd">        :param wmax: Maximum value of |W|-velocity, :math:`\mathrm{km \ s^{-1}}`. </span>
+<span class="sd">        :param wmax: Maximum value of W-velocity, :math:`\mathrm{km \ s^{-1}}`. </span>
 <span class="sd">        :type wmax: scalar</span>
-<span class="sd">        :param dw: Step in |W|-velocity, :math:`\mathrm{km \ s^{-1}}`. </span>
+<span class="sd">        :param dw: Step in W-velocity, :math:`\mathrm{km \ s^{-1}}`. </span>
 <span class="sd">        :type dw: scalar</span>
 <span class="sd">        :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">            (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -4062,7 +4060,7 @@
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. </span>
 <span class="sd">            The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.fw_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.fw_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -4299,7 +4297,7 @@
 <span class="sd">        :type mode_iso: str </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. </span>
 <span class="sd">            The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.disk_brightness_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.disk_brightness_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -4413,7 +4411,7 @@
 <span class="sd">            By default, it is continious.  </span>
 <span class="sd">        :param save: Optional. If True, the figure will be saved. </span>
 <span class="sd">            The output directory and figure name </span>
-<span class="sd">            are prescribed by jjmodel.iof.TabSaver.hess_save. </span>
+<span class="sd">            are prescribed by :meth:`jjmodel.iof.TabSaver.hess_save`. </span>
 <span class="sd">        :type save: boolean</span>
 <span class="sd">        :param save_format: Optional. Format of the figure. </span>
 <span class="sd">        :type save_format: str </span>
@@ -4817,7 +4815,7 @@
             
 <div class="viewcode-block" id="PlotBlocks.populations"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.populations">[docs]</a>    <span class="k">def</span> <span class="nf">populations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="n">age_sm</span><span class="p">,</span><span class="n">met_sm</span><span class="p">,</span><span class="n">rmax</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plots and saves radial density profiles, age, metallicity , and f(|W|) distributions, </span>
+<span class="sd">        Plots and saves radial density profiles, age, metallicity , and f(W) distributions, </span>
 <span class="sd">        Hess diagrams and Rz-maps for the different populations. </span>
 <span class="sd">    </span>
 <span class="sd">        :param ages: Set of age bins, Gyr. </span>
@@ -4994,15 +4992,16 @@
 <h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../funcs.html">Physical functions (input)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../model_core.html">Radial and vertical MW structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../populations.html">Stellar populations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../geometry.html">Geometry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../trans.html">Coordinates and velocities (from data)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tools.html">Useful tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iof.html">Input/output tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Output analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../plotting.html">Plotting tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../acknowledgements.html">Acknowledgements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contacts.html">Authors and contact</a></li>
 </ul>

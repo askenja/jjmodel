@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Tutorials &#8212; jjmodel 0.1 documentation</title>
+    <title>Getting started &#8212; jjmodel 0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -15,8 +15,8 @@
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Acknowledgements" href="acknowledgements.html" />
-    <link rel="prev" title="Plotting tools" href="plotting.html" />
+    <link rel="next" title="Physical functions (input)" href="funcs.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -33,12 +33,20 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="tutorials">
-<h1>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="parameter-files">
+<h2>Parameter files<a class="headerlink" href="#parameter-files" title="Permalink to this headline">¶</a></h2>
+<p>First of all, you need to create and fill parameter file(s) whose content will define properties of your
+model realization. You can understand parameter files' structure by looking at them in tutorials (see below).
+Also, you can use our <a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/docs/mydoc">manual</a> which includes description of all JJ-model parameters. It is also stored in your local <code class="docutils literal notranslate"><span class="pre">jjmodel/docs/mydoc</span></code> folder in <em>anaconda</em>
+(to find your <code class="docutils literal notranslate"><span class="pre">jjmodel</span></code> folder,
+execute <code class="docutils literal notranslate"><span class="pre">print(jjmodel.__file__)</span></code> in your python compiler).</p>
+</div>
+<div class="section" id="tutorials">
+<h2>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h2>
 <p>The code <strong>jjmodel</strong> includes several tutorials which should help user to familiarize himself with the code
-syntax. After the installation, jupyter notebooks can be found in the folder <code class="docutils literal notranslate"><span class="pre">jjmodel/tutorials</span></code>,
-(<code class="docutils literal notranslate"><span class="pre">jjmodel</span></code> is a directory where the code has been installed,
-check it by executing <code class="docutils literal notranslate"><span class="pre">print(jjmodel.__file__)</span></code> in your python compiler).
+syntax. After the installation, jupyter notebooks can be found in the folder <code class="docutils literal notranslate"><span class="pre">jjmodel/tutorials</span></code>.
 Tutorials can be also viewed on github.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/tutorials/tutorial1">Tutorial 1</a> . An example of basic usage of the code, modeling of the Solar neighborhood.</p></li>
@@ -46,6 +54,7 @@ Tutorials can be also viewed on github.</p>
 <li><p><a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/tutorials/tutorial3">Tutorial 3</a>. More detailed modeling of the Solar neighborhood: stars in the local volume (sphere), selection of the data-motivated sample (cut on absolute or aparent magnitudes).</p></li>
 <li><p><a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/tutorials/tutorial4">Tutorial 4</a>. Advanced level. Modeling of the Red Clump sample across the disk and reconstruction of the age-metallicity relation based on the APOGEE data (analysis presented in Sysoliatina and Just 2022, in prep).</p></li>
 </ul>
+</div>
 </div>
 
 
@@ -67,15 +76,20 @@ Tutorials can be also viewed on github.</p>
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-files">Parameter files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tutorials">Tutorials</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="funcs.html">Physical functions (input)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="model_core.html">Radial and vertical MW structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="populations.html">Stellar populations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="geometry.html">Geometry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trans.html">Coordinates and velocities (from data)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">Useful tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iof.html">Input/output tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Output analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting tools</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contacts.html">Authors and contact</a></li>
 </ul>
@@ -84,8 +98,8 @@ Tutorials can be also viewed on github.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="plotting.html" title="previous chapter">Plotting tools</a></li>
-      <li>Next: <a href="acknowledgements.html" title="next chapter">Acknowledgements</a></li>
+      <li>Previous: <a href="installation.html" title="previous chapter">Installation</a></li>
+      <li>Next: <a href="funcs.html" title="next chapter">Physical functions (input)</a></li>
   </ul></li>
 </ul>
 </div>

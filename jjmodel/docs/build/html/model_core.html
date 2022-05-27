@@ -75,7 +75,8 @@ additional iterations will be performed to adapt thick-disk W-velocity dispersio
 to fulfill this requirement.</p></li>
 <li><p><strong>status_equation</strong> (<em>boolean</em>) -- Optional. If True, the iteration details are printed to console.</p></li>
 <li><p><strong>log</strong> (<em>file</em>) -- Optional. If given, the details of the iteration are written to the file.</p></li>
-<li><p><strong>plot</strong> (<em>boolean</em>) -- Optional. If True, the derived potential is plotted for each iteration.</p></li>
+<li><p><strong>plot</strong> (<em>list</em>) -- Optional. Matplotlib figure and axis for plotting the current version of potential, 
+and name of the plot, [(fig, ax),figure_name] .</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -96,6 +97,7 @@ to fulfill this requirement.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'hdp'</span></code> : Scale height(s) of the SFR-peak(s)' subpopulations, pc.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'rhodp'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rhod0'</span></code> : Mass density vertical profiles of the SFR-peak(s)' subpopulations, and of the thin-disk subpopulations with the vertical kinematics described by the AVR, <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>. In this case total density profile is <code class="docutils literal notranslate"><span class="pre">rhodtot</span> <span class="pre">=</span> <span class="pre">rhod0</span> <span class="pre">+</span> <span class="pre">sum(rhodp,axis=0)</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'log'</span></code> : file, log file with the iteration details.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'plot'</span></code> : matplotlib figure and axis for the plot of normalized potential.</p></li>
 </ul>
 </p>
 </dd>
@@ -172,9 +174,8 @@ to fulfill this requirement.</p></li>
 <li><p><strong>status_equation</strong> (<em>boolean</em>) -- Optional. If True, the iteration details are printed to console.</p></li>
 <li><p><strong>status_progress</strong> (<em>boolean</em>) -- Optional. If True, the overall progress details are printed to console.</p></li>
 <li><p><strong>log</strong> (<em>file</em>) -- Optional. If given, the details of the iteration are written to the file.</p></li>
-<li><p><strong>plot</strong> (<em>boolean</em>) -- Optional. If True, the derived potential is plotted for each iteration.</p></li>
-<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the output tables (and plot with converging potential if <strong>plot</strong> is True), 
-is (are) saved to the specified directory, <code class="docutils literal notranslate"><span class="pre">a.dir</span></code>.</p></li>
+<li><p><strong>plot</strong> (<em>boolean</em>) -- Optional. If True, the derived potential is plotted for each iteration, plots are saved.</p></li>
+<li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the output tables, are saved to the specified directory, <code class="docutils literal notranslate"><span class="pre">a.dir</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -196,6 +197,7 @@ is (are) saved to the specified directory, <code class="docutils literal notrans
 <li><p><code class="docutils literal notranslate"><span class="pre">'hdp'</span></code> : Scale height(s) of the SFR-peak(s)' subpopulations, pc.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'rhodp'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rhod0'</span></code> : Mass density vertical profiles of the SFR-peak(s)' subpopulations, and of the thin-disk subpopulations with the vertical kinematics described by the AVR, <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>. In this case total density profile is <code class="docutils literal notranslate"><span class="pre">rhodtot</span> <span class="pre">=</span> <span class="pre">rhod0</span> <span class="pre">+</span> <span class="pre">sum(rhodp,axis=0)</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'Kzd0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'Kzdp'</span></code> : Analogically to <code class="docutils literal notranslate"><span class="pre">rhodp</span></code> and <code class="docutils literal notranslate"><span class="pre">rhod0</span></code>, thin-disk vertical graditational force components, <span class="math notranslate nohighlight">\(\mathrm{m^2 \ s^{-2} \ pc^{-1}}\)</span>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'plot'</span></code> : matplotlib figure and axis for the plot of normalized potential.</p></li>
 </ul>
 </p>
 </dd>
@@ -302,6 +304,8 @@ Accepts optional parameters of <a class="reference internal" href="#jjmodel.mwdi
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#tutorials">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="funcs.html">Physical functions (input)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Radial and vertical MW structure</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#potential-and-force">Potential and force</a></li>
@@ -312,9 +316,9 @@ Accepts optional parameters of <a class="reference internal" href="#jjmodel.mwdi
 <li class="toctree-l1"><a class="reference internal" href="geometry.html">Geometry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trans.html">Coordinates and velocities (from data)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">Useful tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iof.html">Input/output tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Output analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contacts.html">Authors and contact</a></li>
 </ul>

@@ -16,7 +16,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Radial and vertical MW structure" href="model_core.html" />
-    <link rel="prev" title="Installation" href="installation.html" />
+    <link rel="prev" title="Getting started" href="tutorials.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -786,6 +786,28 @@ probabilities corresponding to these mass intervals.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="jjmodel.funcs.IMF.number_stars">
+<code class="sig-name descname">number_stars</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mass1</span></em>, <em class="sig-param"><span class="n">mass2</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/funcs.html#IMF.number_stars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.funcs.IMF.number_stars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Probability of a star to have mass in the given interval 
+according to chosen IMF (yes, the method name is misleading, sorry). 
+Should be called after the IMF definition (e.g., <code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.func.IMF.BPL_4slopes()</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mass1</strong> (<em>scalar</em>) -- Lower mass limit, <span class="math notranslate nohighlight">\(\mathrm{M_\odot}\)</span>.</p></li>
+<li><p><strong>mass2</strong> (<em>scalar</em>) -- Upper mass limit, <span class="math notranslate nohighlight">\(\mathrm{M_\odot}\)</span>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Probability that stellar mass belongs to [<strong>mass1</strong>,**mass2**].</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>scalar</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -919,11 +941,11 @@ peaks. Also, see Eqs. (7)-(10) in Sysoliatina and Just (2022).</p>
 the thin disk starts to form without a delay).</p></li>
 <li><p><strong>t2</strong> (<em>scalar</em>) -- Parameter controlling the SFR shape.</p></li>
 <li><p><strong>sigma</strong> (<em>scalar</em>) -- Midplane present-day thin-disk surface density, <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-2}}\)</span>.</p></li>
-<li><p><strong>sigmap</strong> (<em>scalar</em><em> or </em><em>array-like</em>) -- Amplitude-related parameter(s) of the additional Gaussian peak(s), 
+<li><p><strong>sigmap</strong> (<em>array-like</em>) -- Amplitude-related parameter(s) of the additional Gaussian peak(s), 
 <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-2}}\)</span>.</p></li>
-<li><p><strong>tpk</strong> (<em>scalar</em><em> or </em><em>array-like</em>) -- Mean Galactic time(s) of the Gaussian peak(s), Gyr.</p></li>
-<li><p><strong>dtp</strong> (<em>scalar</em><em> or </em><em>array-like</em>) -- Dispersion(s) of the Gaussian peak(s), Gyr</p></li>
-<li><p><strong>g</strong> (<em>scalar</em><em> or </em><em>array-like</em>) -- Optional, mass loss function (same length as <strong>t</strong>).</p></li>
+<li><p><strong>tpk</strong> (<em>array-like</em>) -- Mean Galactic time(s) of the Gaussian peak(s), Gyr.</p></li>
+<li><p><strong>dtp</strong> (<em>array-like</em>) -- Dispersion(s) of the Gaussian peak(s), Gyr</p></li>
+<li><p><strong>g</strong> (<em>array-like</em>) -- Optional, mass loss function (same length as <strong>t</strong>).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1066,13 +1088,14 @@ is the mean SFR (averaged over the whole time range of the thick-disk evolution)
 
 <dl class="py method">
 <dt id="jjmodel.funcs.RadialDensity.rho_disk">
-<code class="sig-name descname">rho_disk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rho0</span></em>, <em class="sig-param"><span class="n">Rd</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/funcs.html#RadialDensity.rho_disk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.funcs.RadialDensity.rho_disk" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rho_disk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rho0</span></em>, <em class="sig-param"><span class="n">Rd</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/funcs.html#RadialDensity.rho_disk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.funcs.RadialDensity.rho_disk" title="Permalink to this definition">¶</a></dt>
 <dd><p>Midplane mass density of an exponential disk.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>rho0</strong> (<em>scalar</em>) -- Local mass density, <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>.</p></li>
 <li><p><strong>Rd</strong> (<em>scalar</em>) -- Radial scale length of the disk, kpc.</p></li>
+<li><p><strong>R0</strong> (<em>scalar</em>) -- Opional. Radius of the inner hole, kpc.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1131,13 +1154,14 @@ Flattening is ignored, profile is a power law, <span class="math notranslate noh
 
 <dl class="py method">
 <dt id="jjmodel.funcs.RadialDensity.sigma_disk">
-<code class="sig-name descname">sigma_disk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sigma0</span></em>, <em class="sig-param"><span class="n">Rd</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/funcs.html#RadialDensity.sigma_disk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.funcs.RadialDensity.sigma_disk" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">sigma_disk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sigma0</span></em>, <em class="sig-param"><span class="n">Rd</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/funcs.html#RadialDensity.sigma_disk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.funcs.RadialDensity.sigma_disk" title="Permalink to this definition">¶</a></dt>
 <dd><p>Surface density of an exponential disk.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sigma0</strong> (<em>scalar</em>) -- Local surface density, <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-2}}\)</span>.</p></li>
 <li><p><strong>Rd</strong> (<em>scalar</em>) -- Radial scale length of the disk, kpc.</p></li>
+<li><p><strong>R0</strong> (<em>scalar</em>) -- Opional. Radius of the inner hole, kpc.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1508,6 +1532,8 @@ radius <code class="docutils literal notranslate"><span class="pre">p.Rsun</span
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#tutorials">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Physical functions (input)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#sfr-avr-imf-and-amr">SFR, AVR, IMF, and AMR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#radial-structure">Radial structure</a></li>
@@ -1519,9 +1545,9 @@ radius <code class="docutils literal notranslate"><span class="pre">p.Rsun</span
 <li class="toctree-l1"><a class="reference internal" href="geometry.html">Geometry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trans.html">Coordinates and velocities (from data)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">Useful tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iof.html">Input/output tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Output analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contacts.html">Authors and contact</a></li>
 </ul>
@@ -1530,7 +1556,7 @@ radius <code class="docutils literal notranslate"><span class="pre">p.Rsun</span
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="installation.html" title="previous chapter">Installation</a></li>
+      <li>Previous: <a href="tutorials.html" title="previous chapter">Getting started</a></li>
       <li>Next: <a href="model_core.html" title="next chapter">Radial and vertical MW structure</a></li>
   </ul></li>
 </ul>

@@ -16,7 +16,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Plotting tools" href="plotting.html" />
-    <link rel="prev" title="Useful tools" href="tools.html" />
+    <link rel="prev" title="Input/output tools" href="iof.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -79,7 +79,7 @@ otherwise the midplane mass density in <span class="math notranslate nohighlight
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are prescribed by 
-jjmodel.iof.TabSaver.rhor_monoage_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.rhor_monoage_save" title="jjmodel.iof.TabSaver.rhor_monoage_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.rhor_monoage_save()</span></code></a>.</p></li>
 <li><p><strong>sigma</strong> (<em>boolean</em>) -- Optional. If True, the result is surface density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-2}}\)</span>, 
 otherwise the midplane mass density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span> is calculated. 
 In combination with <strong>number</strong> = True, returns the <em>number</em> surface density in <span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-2}}\)</span>.</p></li>
@@ -126,7 +126,7 @@ Array shape is <code class="docutils literal notranslate"><span class="pre">(len
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are prescribed by 
-jjmodel.iof.TabSaver.rhor_monomet_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.rhor_monomet_save" title="jjmodel.iof.TabSaver.rhor_monomet_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.rhor_monomet_save()</span></code></a>.</p></li>
 <li><p><strong>sigma</strong> (<em>boolean</em>) -- Optional. If True, the result is surface density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-2}}\)</span>, 
 otherwise the midplane mass density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span> is calculated. 
 In combination with <strong>number</strong> = True, returns the <em>number</em> surface density in <span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-2}}\)</span>.</p></li>
@@ -169,7 +169,7 @@ as a function of Galactocentric distance and age. Array shape is <code class="do
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are prescribed by 
-jjmodel.iof.TabSaver.rhoz_monoage_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.rhoz_monoage_save" title="jjmodel.iof.TabSaver.rhoz_monoage_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.rhoz_monoage_save()</span></code></a>.</p></li>
 <li><p><strong>between</strong> (<em>boolean</em>) -- Optional. If True, the output quantity corresponds to the age intervals 
 specified by parameter <strong>ages</strong>. Otherwise the individual single mono-age subpopulations 
 are returned (i.e., age-bins of width <code class="docutils literal notranslate"><span class="pre">tr</span></code>, model age resolution).</p></li>
@@ -211,7 +211,7 @@ Use together with the model vertical grid <code class="docutils literal notransl
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are prescribed by 
-jjmodel.iof.TabSaver.rhoz_monomet_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.rhoz_monomet_save" title="jjmodel.iof.TabSaver.rhoz_monomet_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.rhoz_monomet_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -253,7 +253,7 @@ Each profile corresponds to the model vertical grid <code class="docutils litera
 If not given, age profiles will be calculated for the whole range of modeled radii <code class="docutils literal notranslate"><span class="pre">a.R</span></code>.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are prescribed by 
-jjmodel.iof.TabSaver.agez_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.agez_save" title="jjmodel.iof.TabSaver.agez_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.agez_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -296,7 +296,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are prescribed by 
-jjmodel.iof.TabSaver.ager_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.ager_save" title="jjmodel.iof.TabSaver.ager_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.ager_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -333,7 +333,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 If not given, age profiles will be calculated for the whole range of modeled radii <code class="docutils literal notranslate"><span class="pre">a.R</span></code>.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are prescribed by 
-jjmodel.iof.TabSaver.metz_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.metz_save" title="jjmodel.iof.TabSaver.metz_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.metz_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -376,7 +376,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are prescribed by 
-jjmodel.iof.TabSaver.metr_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.metr_save" title="jjmodel.iof.TabSaver.metr_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.metr_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -412,7 +412,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are prescribed by 
-jjmodel.iof.TabSaver.agehist_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.agehist_save" title="jjmodel.iof.TabSaver.agehist_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.agehist_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -456,7 +456,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are prescribed by 
-jjmodel.iof.TabSaver.methist_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.methist_save" title="jjmodel.iof.TabSaver.methist_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.methist_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -505,7 +505,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.hr_monoage_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.hr_monoage_save" title="jjmodel.iof.TabSaver.hr_monoage_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.hr_monoage_save()</span></code></a>.</p></li>
 <li><p><strong>between</strong> (<em>boolean</em>) -- Optional. If True, the output quantity corresponds to the age intervals 
 specified by parameter <strong>ages</strong>. Otherwise the individual single mono-age subpopulations 
 are returned (i.e., age-bins of width <code class="docutils literal notranslate"><span class="pre">tr</span></code>, model age resolution).</p></li>
@@ -545,7 +545,7 @@ or <code class="docutils literal notranslate"><span class="pre">(a.Rbins,len(age
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.hr_monomet_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.hr_monomet_save" title="jjmodel.iof.TabSaver.hr_monomet_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.hr_monomet_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -585,7 +585,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 If not given, velocity dispersion profiles will be calculated for the whole range of modeled radii <code class="docutils literal notranslate"><span class="pre">a.R</span></code>.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.sigwz_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.sigwz_save" title="jjmodel.iof.TabSaver.sigwz_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.sigwz_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -631,7 +631,7 @@ W-velocity dispersion profile.</p>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.sigwr_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.sigwr_save" title="jjmodel.iof.TabSaver.sigwr_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.sigwr_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -669,7 +669,7 @@ distance.</p>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.sigwr_monoage_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.sigwr_monoage_save" title="jjmodel.iof.TabSaver.sigwr_monoage_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.sigwr_monoage_save()</span></code></a>.</p></li>
 <li><p><strong>between</strong> (<em>boolean</em>) -- Optional. If True, the output quantity corresponds to the age intervals 
 specified by parameter <strong>ages</strong>. Otherwise the individual single mono-age subpopulations 
 are returned (i.e., age-bins of width <code class="docutils literal notranslate"><span class="pre">tr</span></code>, model age resolution).</p></li>
@@ -711,7 +711,7 @@ of Galactocentric distance.</p>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.sigwr_monomet_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.sigwr_monomet_save" title="jjmodel.iof.TabSaver.sigwr_monomet_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.sigwr_monomet_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -749,7 +749,7 @@ Array shape is <code class="docutils literal notranslate"><span class="pre">(a.R
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.fw_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.fw_save" title="jjmodel.iof.TabSaver.fw_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.fw_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -788,7 +788,7 @@ Galactocentric distance.</p>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.rot_curve_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.rot_curve_save" title="jjmodel.iof.TabSaver.rot_curve_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.rot_curve_save()</span></code></a>.</p></li>
 <li><p><strong>R</strong> (<em>array-like</em>) -- Radial grid, kpc.</p></li>
 </ul>
 </dd>
@@ -817,7 +817,7 @@ jjmodel.iof.TabSaver.rot_curve_save.</p></li>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.rz_map_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.rz_map_save" title="jjmodel.iof.TabSaver.rz_map_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.rz_map_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -851,18 +851,13 @@ If not specified, Padova is the default isochrone set.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
 (thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
-<li><p><strong>quantity</strong> (<em>str</em>) -- <dl class="field-list simple">
-<dt class="field-odd">param quantity</dt>
-<dd class="field-odd"><p>Name of the column in a stellar assemblies table to which</p>
-</dd>
-</dl>
-<p>the function has to be applied; for velocity dispersion use <code class="docutils literal notranslate"><span class="pre">'sigw'</span></code>.</p>
-</p></li>
+<li><p><strong>quantity</strong> (<em>str</em>) -- Name of the column in a stellar assemblies table to which 
+the function has to be applied; for velocity dispersion use <code class="docutils literal notranslate"><span class="pre">'sigw'</span></code>.</p></li>
 <li><p><strong>p</strong> (<em>namedtuple</em>) -- Set of model parameters from the parameter file.</p></li>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.rz_map_quantity_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.rz_map_quantity_save" title="jjmodel.iof.TabSaver.rz_map_quantity_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.rz_map_quantity_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -904,7 +899,7 @@ diagram, [[<em>x_min,x_max</em>],[<em>y_min,y_max</em>]].</p></li>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.hess_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.hess_save" title="jjmodel.iof.TabSaver.hess_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.hess_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -943,7 +938,7 @@ a function of Galactocentric distance.</p>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.fi_iso_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.fi_iso_save" title="jjmodel.iof.TabSaver.fi_iso_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.fi_iso_save()</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -975,7 +970,7 @@ the function has to be applied; for velocity dispersion use <code class="docutil
 <li><p><strong>mets</strong> (<em>array-like</em>) -- Optional. Set of metallicity bins.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.mean_quantity_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.mean_quantity_save" title="jjmodel.iof.TabSaver.mean_quantity_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.mean_quantity_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -1016,7 +1011,7 @@ works with the absolute z-values.</p></li>
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.mean_quantity_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.mean_quantity_save" title="jjmodel.iof.TabSaver.mean_quantity_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.mean_quantity_save()</span></code></a>.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
 (<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
 (if it was selected and saved as a table in advance).</p></li>
@@ -1038,7 +1033,7 @@ in the volume specified by the parameters <strong>R</strong> (where in the disk)
 and <strong>volume</strong> (what are volumes of z-slices - allows to model different shapes).</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>astropy table</p>
+<dd class="field-odd"><p>astropy table or list[astropy table]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1061,7 +1056,7 @@ If it is a list, then <strong>bands</strong> gives the names of two bands to be 
 <li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
 <li><p><strong>save</strong> (<em>boolean</em>) -- Optional. If True, the calculated quantities are saved as tables  
 to the output directory. The output path and table name are predcribed by 
-jjmodel.iof.TabSaver.disk_brightness_save.</p></li>
+<a class="reference internal" href="iof.html#jjmodel.iof.TabSaver.disk_brightness_save" title="jjmodel.iof.TabSaver.disk_brightness_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.disk_brightness_save()</span></code></a>.</p></li>
 <li><p><strong>zlim</strong> (<em>array-like</em>) -- Optional. Range of heights [<em>zmim,zmax</em>] to be considered, pc. If not given, 
 all heights up to <code class="docutils literal notranslate"><span class="pre">p.zmax</span></code> are taken into account.</p></li>
 <li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
@@ -1106,12 +1101,15 @@ profile (mag). Use together with <code class="docutils literal notranslate"><spa
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#tutorials">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="funcs.html">Physical functions (input)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="model_core.html">Radial and vertical MW structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="populations.html">Stellar populations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="geometry.html">Geometry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trans.html">Coordinates and velocities (from data)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">Useful tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iof.html">Input/output tools</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Output analysis</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#density-profiles">Density profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ages-and-metallicities">Ages and metallicities</a></li>
@@ -1122,7 +1120,6 @@ profile (mag). Use together with <code class="docutils literal notranslate"><spa
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contacts.html">Authors and contact</a></li>
 </ul>
@@ -1131,7 +1128,7 @@ profile (mag). Use together with <code class="docutils literal notranslate"><spa
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="tools.html" title="previous chapter">Useful tools</a></li>
+      <li>Previous: <a href="iof.html" title="previous chapter">Input/output tools</a></li>
       <li>Next: <a href="plotting.html" title="next chapter">Plotting tools</a></li>
   </ul></li>
 </ul>

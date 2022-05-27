@@ -1,0 +1,971 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Input/output tools &#8212; jjmodel 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Output analysis" href="analysis.html" />
+    <link rel="prev" title="Useful tools" href="tools.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="input-output-tools">
+<h1>Input/output tools<a class="headerlink" href="#input-output-tools" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="jjmodel.iof.dir_tree">
+<code class="sig-prename descclassname">jjmodel.iof.</code><code class="sig-name descname">dir_tree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#dir_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.dir_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds an output directory tree (name suffix of the main output directory 
+can be specified in the parameter file).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<em>namedtuple</em>) -- Set of model parameters from the parameter file.</p></li>
+<li><p><strong>make</strong> (<em>boolean</em>) -- Optional. If True, the directory tree is created, 
+otherwise only all the folder names are defined.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Directory tree for the model output.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="jjmodel.iof.tab_sorter">
+<code class="sig-prename descclassname">jjmodel.iof.</code><code class="sig-name descname">tab_sorter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">T</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#tab_sorter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.tab_sorter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sorts all kinds of the calculated quantities into the output subdirectories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) -- Short name of the quantity.</p></li>
+<li><p><strong>p</strong> (<em>namedtuple</em>) -- Set of model parameters from the parameter file.</p></li>
+<li><p><strong>T</strong> (<em>dict</em>) -- Output directory tree (created by <a class="reference internal" href="#jjmodel.iof.dir_tree" title="jjmodel.iof.dir_tree"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.iof.dir_tree()</span></code></a>).</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Optional. Galactocentric distance, kpc. Must be specified for the vertical 
+density profiles (<strong>name</strong> = <code class="docutils literal notranslate"><span class="pre">'rhoz'</span></code>), vertical force (<code class="docutils literal notranslate"><span class="pre">'Kz'</span></code>), 
+contributions of the additional peaks to the thin-disk SFR (<code class="docutils literal notranslate"><span class="pre">'Fp'</span></code>), 
+and peaks' scale heights (<code class="docutils literal notranslate"><span class="pre">'Hdp'</span></code>).</p></li>
+<li><p><strong>print</strong> (<em>boolean</em>) -- Optional. If True, the full list of names is printed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Path to the directory where the quantity given by <strong>name</strong> will be saved
+as txt table. Or, if <strong>print</strong> is True, none.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str or none</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="jjmodel.iof.tab_reader">
+<code class="sig-prename descclassname">jjmodel.iof.</code><code class="sig-name descname">tab_reader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">names</span></em>, <em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">T</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#tab_reader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.tab_reader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads data from the output directory tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>names</strong> (<em>list</em>) -- <p>Names of the tables to read. Names of the quantites are the same 
+as for <a class="reference internal" href="#jjmodel.iof.tab_sorter" title="jjmodel.iof.tab_sorter"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.iof.tab_sorter()</span></code></a>. Also, if <strong>tab</strong> is True, 
+<strong>names</strong> can refer to stellar populations:</p>
+<blockquote>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'ceph'</span></code> - Cepheids Type I (selected by <a class="reference internal" href="populations.html#jjmodel.analysis.GetPopulations.cepheids_type1" title="jjmodel.analysis.GetPopulations.cepheids_type1"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.analysis.GetPopulations.cepheids_type1()</span></code></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'a'</span></code> - A stars (<a class="reference internal" href="populations.html#jjmodel.analysis.GetPopulations.a_stars" title="jjmodel.analysis.GetPopulations.a_stars"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.analysis.GetPopulations.a_stars()</span></code></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'f'</span></code> - F stars (<a class="reference internal" href="populations.html#jjmodel.analysis.GetPopulations.f_stars" title="jjmodel.analysis.GetPopulations.f_stars"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.analysis.GetPopulations.f_stars()</span></code></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'rc+'</span></code> - RC stars, contaminated by HGB (<a class="reference internal" href="populations.html#jjmodel.analysis.GetPopulations.rc_simple" title="jjmodel.analysis.GetPopulations.rc_simple"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.analysis.GetPopulations.rc_simple()</span></code></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'rc'</span></code> - RC stars, clean (<a class="reference internal" href="populations.html#jjmodel.analysis.GetPopulations.rc_clean" title="jjmodel.analysis.GetPopulations.rc_clean"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.analysis.GetPopulations.rc_clean()</span></code></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'gdw'</span></code> - G dwarfs (<a class="reference internal" href="populations.html#jjmodel.analysis.GetPopulations.g_dwarfs" title="jjmodel.analysis.GetPopulations.g_dwarfs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.analysis.GetPopulations.g_dwarfs()</span></code></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'kdw'</span></code> - K dwarfs (<a class="reference internal" href="populations.html#jjmodel.analysis.GetPopulations.k_dwarfs" title="jjmodel.analysis.GetPopulations.k_dwarfs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.analysis.GetPopulations.k_dwarfs()</span></code></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'mdw'</span></code> - M dwarfs (<a class="reference internal" href="populations.html#jjmodel.analysis.GetPopulations.m_dwarfs" title="jjmodel.analysis.GetPopulations.m_dwarfs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.analysis.GetPopulations.m_dwarfs()</span></code></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'ssp'</span></code> - full stellar assembly table</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>p</strong> (<em>namedtuple</em>) -- Set of model parameters from the parameter file.</p></li>
+<li><p><strong>T</strong> (<em>dict</em>) -- Output directory tree (created by <a class="reference internal" href="#jjmodel.iof.dir_tree" title="jjmodel.iof.dir_tree"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.iof.dir_tree()</span></code></a>).</p></li>
+<li><p><strong>tab</strong> (<em>boolean</em>) -- If True, tables with stellar assemblies will be read (csv tables). 
+Otherwise some model produced txt tables are read.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Optional. Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. 
+If not specified, Padova is the default isochrone set.</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Optional. Galactocentric distance, kpc. Must be specified for the vertical 
+density profiles (<strong>name</strong> = <code class="docutils literal notranslate"><span class="pre">'rhoz'</span></code>), vertical force (<code class="docutils literal notranslate"><span class="pre">'Kz'</span></code>), 
+contributions of the additional peaks to the thin-disk SFR (<code class="docutils literal notranslate"><span class="pre">'Fp'</span></code>), 
+and peaks' scale heights (<code class="docutils literal notranslate"><span class="pre">'Hdp'</span></code>). Also, has to be given if <strong>tab</strong> is True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Data tables.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[array-likes]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="jjmodel.iof.TabSaver">
+<em class="property">class </em><code class="sig-prename descclassname">jjmodel.iof.</code><code class="sig-name descname">TabSaver</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sorts and saves calculated quantities into the output subfolders.</p>
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization of the class instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<em>namedtuple</em>) -- Set of model parameters from the parameter file.</p></li>
+<li><p><strong>a</strong> (<em>namedtuple</em>) -- Collection of the fixed model parameters, useful quantities, and arrays.</p></li>
+<li><p><strong>number</strong> (<em>boolean</em>) -- Optional. If True, calculated quantity is (or is weighted by) the spatial number 
+density of stars in <span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-3}}\)</span>, 
+not matter density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span>.</p></li>
+<li><p><strong>sigma</strong> (<em>boolean</em>) -- Optional. If True, the result is (or is weighted by) surface density 
+in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-2}}\)</span>, 
+otherwise the midplane mass density in <span class="math notranslate nohighlight">\(\mathrm{M_\odot \ pc^{-3}}\)</span> is used. 
+In combination with <strong>number</strong> = True, uses the <em>number</em> surface density in 
+<span class="math notranslate nohighlight">\(\mathrm{number \ pc^{-2}}\)</span>.</p></li>
+<li><p><strong>fig</strong> (<em>boolean</em>) -- Optional. If True, a plot will be saved. By default, class methods save a table.</p></li>
+<li><p><strong>save_format</strong> (<em>str</em>) -- Optional. Format of the figure. Can be used only when <strong>fig</strong> is True.</p></li>
+<li><p><strong>normalized</strong> (<em>boolean</em>) -- Optional. Applicable in case if vertical density profiles will be saved. 
+If True, the profiles are normalized at each height  
+on the total density at this height. Also the file name will start from 
+<code class="docutils literal notranslate"><span class="pre">'NRhoz'</span></code> instead of <code class="docutils literal notranslate"><span class="pre">'Rhoz'</span></code>.</p></li>
+<li><p><strong>cumulative</strong> (<em>boolean</em>) -- Optional. Applicable to density profiles, age and metallicity distributions. 
+If True, the normalized cumulative quantities are saved. In general, <code class="docutils literal notranslate"><span class="pre">'C'</span></code> is added in front 
+of a standard file name; in case of density profiles, file will be called <code class="docutils literal notranslate"><span class="pre">'NCMassz'</span></code>.</p></li>
+<li><p><strong>mode_pop</strong> (<em>str</em>) -- Optional. Name of stellar population. Can be a pre-defined one 
+(<code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceph'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rc+'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'kdw'</span></code>, <code class="docutils literal notranslate"><span class="pre">'mdw'</span></code>) or custom 
+(if it was selected and saved as a table in advance). Adds a suffix with the name of 
+population to the standard file name.</p></li>
+<li><p><strong>number</strong> -- Optional. If True, this indicates that the quantity to save was calculated with 
+the help of stellar assembly tables (contains stellar number densities or something weighted 
+by them). Usually adds a suffix <code class="docutils literal notranslate"><span class="pre">'(nw)'</span></code> (stands for 'number-weighted') to the standard file name. 
+Otherwise, the suffix is <code class="docutils literal notranslate"><span class="pre">'(rw)'</span></code> ('rho', i.e., 'density-weighted').</p></li>
+<li><p><strong>between</strong> (<em>boolean</em>) -- Optional. If True, the output quantity corresponds to the age intervals, not  
+to individual single mono-age subpopulations. Applicable to methods with parameter <strong>ages</strong>. 
+If False, a suffix <code class="docutils literal notranslate"><span class="pre">'sgl'</span></code> will be added to the standard file name 
+(stands for 'single-age populations').</p></li>
+<li><p><strong>dz</strong> (<em>scalar</em>) -- Optional. Vertical resolution, pc. Applicable to methods which save R-z maps, 
+adds a suffix <code class="docutils literal notranslate"><span class="pre">'dz'</span></code> with <strong>z</strong> in kpc.</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Optional. Galactocentric distance, kpc. Suffix <code class="docutils literal notranslate"><span class="pre">'_R'</span></code> with the given value of radis 
+is added to the output file name.</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Set of age bins, Gyr. If specified, a suffix <code class="docutils literal notranslate"><span class="pre">'age'</span></code> with the range of ages 
+(or min age, max age, and step) is added to the file name.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Set of metallicity bins. If specified, a suffix <code class="docutils literal notranslate"><span class="pre">'FeH'</span></code> with the range of metallicities 
+(or min metallicity, max metallicity, and step) is added to the file name.</p></li>
+<li><p><strong>vln</strong> (<em>str</em>) -- Optional. A string with information about the volume. Applicable to methods 
+which save Hess diagrams and stellar number densitites corresponding to some volume.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.agehist_save">
+<code class="sig-name descname">agehist_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ages</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">zlim</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.agehist_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.agehist_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves age distributions for the different Galactocentric distances 
+to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['age']</span></code>. File name base is <code class="docutils literal notranslate"><span class="pre">'f(age)'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Can contain two tables - age distributions for the grid <code class="docutils literal notranslate"><span class="pre">a.R</span></code> and at <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>, 
+or only a single age distribution for the local volume. Tables contain only age distributions,
+without the time(age) grid column <code class="docutils literal notranslate"><span class="pre">a.t</span></code>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total). 
+Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights to be considered, pc. Adds to the file name suffix <code class="docutils literal notranslate"><span class="pre">'_z'</span></code> 
+with the given heights (converted for shortness into kpc).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.ager_save">
+<code class="sig-name descname">ager_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">zlim</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.ager_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.ager_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves radial age profile to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['age']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'Age'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Radial age profiles. Tables contain only age profiles,
+without the radial grid column <code class="docutils literal notranslate"><span class="pre">a.R</span></code>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total). 
+Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights to be considered, pc. Adds to the file name suffix <code class="docutils literal notranslate"><span class="pre">'_z'</span></code> 
+with the given heights (converted for shortness into kpc).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.agez_save">
+<code class="sig-name descname">agez_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.agez_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.agez_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves vertical age profile to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['age']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'Age'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Vertical age profiles. Can include two tables - profiles at the different R 
+and at <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>, or a single table with the local profile. Tables contain only age profiles,
+without the vertical grid column <code class="docutils literal notranslate"><span class="pre">a.z</span></code>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total). 
+Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.disk_brightness_save">
+<code class="sig-name descname">disk_brightness_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">mode_geom</span></em>, <em class="sig-param"><span class="n">band</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.disk_brightness_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.disk_brightness_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves surface brightness or colour profile of the MW if it is viewed 
+edge-on or face-on. Output subfolder is <code class="docutils literal notranslate"><span class="pre">a.T['pop']</span></code>. File name base is <code class="docutils literal notranslate"><span class="pre">'MagR_'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profile</strong> (<em>1d-array</em>) -- Disk surface brightness profile (<span class="math notranslate nohighlight">\(\mathrm{mag \ arcsec^{-2}}\)</span>) or color 
+profile (mag), output of <a class="reference internal" href="analysis.html#jjmodel.analysis.disk_brightness" title="jjmodel.analysis.disk_brightness"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.disk_brightness()</span></code></a>.</p></li>
+<li><p><strong>mode_comp</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>mode_geom</strong> (<em>str</em>) -- Modeled geometry. Disk orientation with respect to the observer: 
+<code class="docutils literal notranslate"><span class="pre">'face-on'</span></code> or <code class="docutils literal notranslate"><span class="pre">'edge-on'</span></code>.</p></li>
+<li><p><strong>bands</strong> (<em>str</em><em> or </em><em>list</em>) -- If a string, this parameter corresponds to the band for the surface brightness profile. 
+If it is a list, then <strong>bands</strong> gives the names of two bands to be used for the color profile - e.g. 
+<code class="docutils literal notranslate"><span class="pre">['U','V']</span></code> for <em>U-V</em>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.fi_iso_save">
+<code class="sig-name descname">fi_iso_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.fi_iso_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.fi_iso_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves vertical density profiles to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['dens']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'Rhoz'</span></code>, <code class="docutils literal notranslate"><span class="pre">'NRohz'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'NCMassz'</span></code> (depending on the class 
+instance <em>kwargs</em>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Vertical density profiles, where the first column is <code class="docutils literal notranslate"><span class="pre">a.z</span></code> and 
+the rest are density profiles of the thin disk, thick disk, molecular gas, atomic gas, DM halo, 
+and stellar halo.</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc. Suffix <code class="docutils literal notranslate"><span class="pre">'_R'</span></code> with the given value of radis 
+is added to the output file name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.fw_save">
+<code class="sig-name descname">fw_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">zlim</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.fw_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.fw_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves W-velocity dostribution function. 
+Output subfolder is <code class="docutils literal notranslate"><span class="pre">a.T['kinem']</span></code>. File name base is <code class="docutils literal notranslate"><span class="pre">'f(|W|)'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Normalized on area W-velocity distribution (histogram) and W-grid (bin centers), 
+<span class="math notranslate nohighlight">\(\mathrm{km \ s^{-1}}\)</span>.</p></li>
+<li><p><strong>mode</strong> -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc.</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights [<em>zmin,zmax</em>], pc.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.hess_save">
+<code class="sig-name descname">hess_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">mode_geom</span></em>, <em class="sig-param"><span class="n">bands</span></em>, <em class="sig-param"><span class="n">mag_range</span></em>, <em class="sig-param"><span class="n">mag_step</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.hess_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.hess_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hess diagram for the simple volumes. 
+Output subfolder is <code class="docutils literal notranslate"><span class="pre">a.T['hess']</span></code>. File name base is <code class="docutils literal notranslate"><span class="pre">'Hess_'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>2d-array</em>) -- Hess diagram, output of <a class="reference internal" href="analysis.html#jjmodel.analysis.hess_simple" title="jjmodel.analysis.hess_simple"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.hess_simple()</span></code></a>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>mode_geom</strong> (<em>str</em>) -- Modeled geometry. Can be <code class="docutils literal notranslate"><span class="pre">'local_sphere'</span></code>, <code class="docutils literal notranslate"><span class="pre">'local_cylinder'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'rphiz_box'</span></code>.</p></li>
+<li><p><strong>bands</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) -- List of names of photometric columns. 
+Three column names must be given, e.g. <code class="docutils literal notranslate"><span class="pre">['B','V','V']</span></code> for (<em>B-V</em>) versus <span class="math notranslate nohighlight">\(M_\mathrm{V}\)</span>.</p></li>
+<li><p><strong>mag_range</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>scalar</em><em>]</em><em>]</em>) -- Minimal and maximal magnitude along the x- and y-axis of the Hess 
+diagram, [[<em>x_min,x_max</em>],[<em>y_min,y_max</em>]].</p></li>
+<li><p><strong>mag_step</strong> (<em>array-like</em>) -- Step along the x- and y-axis of the Hess diagram, [<em>dx,dy</em>].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.hr_monoage_save">
+<code class="sig-name descname">hr_monoage_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">H</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">ages</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.hr_monoage_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.hr_monoage_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves scale heights calculated for the mono-age subpopulations for the different Galactocentric 
+distances. Output subfolder is <code class="docutils literal notranslate"><span class="pre">a.T['height']</span></code>. File name base is <code class="docutils literal notranslate"><span class="pre">'H'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>H</strong> (<em>array-like</em>) -- Table with scale heights (radial profiles in columns, age changes from column to column). 
+Radial grid <code class="docutils literal notranslate"><span class="pre">a.R</span></code> is not included into <strong>H</strong>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thin+thick disk, or total). Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Set of age bins, Gyr.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.hr_monomet_save">
+<code class="sig-name descname">hr_monomet_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">H</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">mets</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.hr_monomet_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.hr_monomet_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves scale heights calculated for the mono-metallicity subpopulations (bins) 
+for the different Galactocentric distances. Output subfolder is <code class="docutils literal notranslate"><span class="pre">a.T['height']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'H'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>H</strong> (<em>array-like</em>) -- Table with scale heights (radial profiles in columns, metallicity changes 
+from column to column). Radial grid <code class="docutils literal notranslate"><span class="pre">a.R</span></code> is not included into <strong>H</strong>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thin+thick disk, or total). Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Set of metallicity bins.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.input_extended_save">
+<code class="sig-name descname">input_extended_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inp</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.input_extended_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.input_extended_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.input_local()</span></code>, but for the model extending over 
+some range of Galactocentric distances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inp</strong> (<em>dict</em>) -- Collection of the input functions including SFR, AVR, AMR, and IMF.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.input_local_save">
+<code class="sig-name descname">input_local_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inp</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.input_local_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.input_local_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a set of the local model input data: SFR, mass loss function, and AMR 
+(for the thin and thick disk). 
+The output directory is <code class="docutils literal notranslate"><span class="pre">a.T['inp']</span></code>, and file names are prescribed by <a class="reference internal" href="#jjmodel.iof.tab_sorter" title="jjmodel.iof.tab_sorter"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.iof.tab_sorter()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inp</strong> (<em>dict</em>) -- Collection of the input functions including SFR, AVR, AMR, and IMF.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.mean_quantity_save">
+<code class="sig-name descname">mean_quantity_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="n">quantity</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.mean_quantity_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.mean_quantity_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves vertical profiles of some quantity calculated based on the stellar assemblies. 
+Output subfolder is <code class="docutils literal notranslate"><span class="pre">a.T['pop']</span></code>. File name base is <code class="docutils literal notranslate"><span class="pre">'Mean_'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Vertical profiles of <strong>quantity</strong>. 
+Tables do not contain vertical grid <code class="docutils literal notranslate"><span class="pre">a.z</span></code>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total). 
+Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc. Suffix <code class="docutils literal notranslate"><span class="pre">'_R'</span></code> with the given value of radis 
+is added to the output file name.</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights to be considered [<em>zmin,zmax</em>], pc. 
+Adds to the file name suffix <code class="docutils literal notranslate"><span class="pre">'_z'</span></code> 
+with the given heights (converted for shortness into kpc).</p></li>
+<li><p><strong>quantity</strong> (<em>str</em>) -- Name of the column in a stellar assemblies table for which 
+the profile was calculated; use <code class="docutils literal notranslate"><span class="pre">'sigw'</span></code> for velocity dispersion, 
+<code class="docutils literal notranslate"><span class="pre">'age`</span></code> for age, and <code class="docutils literal notranslate"><span class="pre">'FeH'</span></code> for metallicity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.methist_save">
+<code class="sig-name descname">methist_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mets</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">zlim</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.methist_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.methist_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves metallicity distributions for the different Galactocentric distances 
+to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['met']</span></code>. File name base is <code class="docutils literal notranslate"><span class="pre">'f(FeH)'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Can contain two tables - metallicity distributions for the grid <code class="docutils literal notranslate"><span class="pre">a.R</span></code> and at <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>, 
+or only a single metallicity distribution for the local volume. Also, 
+metallicity column must be added after the tables.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total). 
+Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights to be considered, pc. Adds to the file name suffix <code class="docutils literal notranslate"><span class="pre">'_z'</span></code> 
+with the given heights (converted for shortness into kpc).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.metr_save">
+<code class="sig-name descname">metr_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">zlim</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.metr_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.metr_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves radial metallicity profile to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['met']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'FeH'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Radial metallicity profiles. Tables contain only metallicity profiles,
+without the radial grid column <code class="docutils literal notranslate"><span class="pre">a.R</span></code>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total). 
+Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights to be considered, pc. Adds to the file name suffix <code class="docutils literal notranslate"><span class="pre">'_z'</span></code> 
+with the given heights (converted for shortness into kpc).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.metz_save">
+<code class="sig-name descname">metz_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.metz_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.metz_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves vertical netallicity profile to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['met']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'FeH'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Vertical metallicity profiles. Can include two tables - profiles at the different R 
+and at <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>, or a single table with the local profile. Tables contain only metalllicity 
+profiles, without the vertical grid column <code class="docutils literal notranslate"><span class="pre">a.z</span></code>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total). 
+Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.output_extended_save">
+<code class="sig-name descname">output_extended_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.output_extended_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.output_extended_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.output_local()</span></code>, but for the model extending over 
+some range of Galactocentric distances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>res</strong> (<em>dict</em>) -- Output of <a class="reference internal" href="model_core.html#jjmodel.mwdisk.extended_run" title="jjmodel.mwdisk.extended_run"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.mwdisk.extended_run()</span></code></a>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.output_local_save">
+<code class="sig-name descname">output_local_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">out</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.output_local_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.output_local_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a set of the local model output data: AVR, scale heights for all model components, 
+vertical potential, force, and density profiles.  
+The output directory and file name for each quantity are prescribed by <a class="reference internal" href="#jjmodel.iof.tab_sorter" title="jjmodel.iof.tab_sorter"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.iof.tab_sorter()</span></code></a> 
+and <a class="reference internal" href="#jjmodel.iof.TabSaver.rhoz_save" title="jjmodel.iof.TabSaver.rhoz_save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jjmodel.iof.TabSaver.rhoz_save()</span></code></a> (for density profiles).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>out</strong> (<em>dict</em>) -- Output of <a class="reference internal" href="model_core.html#jjmodel.mwdisk.local_run" title="jjmodel.mwdisk.local_run"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.mwdisk.local_run()</span></code></a>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.pops_in_volume_save">
+<code class="sig-name descname">pops_in_volume_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">mode_pop_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.pops_in_volume_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.pops_in_volume_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves table(s) with number densities of stellar assemblies for some volume.
+Output subfolder is <code class="docutils literal notranslate"><span class="pre">a.T['pop']</span></code>. File name base is <code class="docutils literal notranslate"><span class="pre">'SSP_R'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table</strong> (<em>astropy table</em><em> or </em><em>list</em><em>[</em><em>astropy table</em><em>]</em>) -- Saves stellar assemblies table(s) with a column <code class="docutils literal notranslate"><span class="pre">'Nz'</span></code> containing the number 
+of stars located in the specified volume (described by parameter <code class="docutils literal notranslate"><span class="pre">'vln'</span></code> in <em>kwargs</em>  
+of the class instance). Can be a single table or a list of tables, depending on <strong>mode</strong>. 
+Output of <a class="reference internal" href="analysis.html#jjmodel.analysis.pops_in_volume" title="jjmodel.analysis.pops_in_volume"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.analysis.pops_in_volume()</span></code></a>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc. Suffix <code class="docutils literal notranslate"><span class="pre">'_R'</span></code> with the given value of radis 
+is added to the output file name.</p></li>
+<li><p><strong>mode_pop_name</strong> (<em>str</em>) -- Short name of the population (see <a class="reference internal" href="#jjmodel.iof.tab_reader" title="jjmodel.iof.tab_reader"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.iof.tab_reader()</span></code></a>) 
+or any custom name for the table.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.poptab_save">
+<code class="sig-name descname">poptab_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">mode_iso</span></em>, <em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">mode_pop_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.poptab_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.poptab_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves stellar assembly table to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['poptab']</span></code> .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table</strong> (<em>astropy table</em>) -- Table with stellar assemblies, output of 
+<a class="reference internal" href="populations.html#jjmodel.populations.stellar_assemblies_iso" title="jjmodel.populations.stellar_assemblies_iso"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.populations.stellar_assemblies_iso()</span></code></a> or methods of 
+<a class="reference internal" href="populations.html#jjmodel.analysis.GetPopulations" title="jjmodel.analysis.GetPopulations"><code class="xref py py-class docutils literal notranslate"><span class="pre">jjmodel.analysis.GetPopulations</span></code></a>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total). 
+Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>mode_iso</strong> (<em>str</em>) -- Defines which set of isochrones is used, can be <code class="docutils literal notranslate"><span class="pre">'Padova'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIST'</span></code>, 
+or <code class="docutils literal notranslate"><span class="pre">'BaSTI'</span></code>. Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode_iso</span></code> to the file name.</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc. Suffix <code class="docutils literal notranslate"><span class="pre">'_R'</span></code> with the given value of radis 
+is added to the output file name.</p></li>
+<li><p><strong>mode_pop_name</strong> (<em>str</em>) -- Short name of the population (see <a class="reference internal" href="#jjmodel.iof.tab_reader" title="jjmodel.iof.tab_reader"><code class="xref py py-func docutils literal notranslate"><span class="pre">jjmodel.iof.tab_reader()</span></code></a>) 
+or any custom name for the table.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.rhor_monoage_save">
+<code class="sig-name descname">rhor_monoage_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="n">ages</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.rhor_monoage_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.rhor_monoage_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves radial mono-age density profiles to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['dens']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'Rho'</span></code>, <code class="docutils literal notranslate"><span class="pre">'N'</span></code>,``'Sigma'<code class="docutils literal notranslate"><span class="pre">,</span> <span class="pre">or</span> <span class="pre">``'SigmaN'</span></code> 
+(depending on parameters <strong>sigma</strong> and <strong>number</strong> in the class instance <em>kwargs</em>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Density profiles, where the first column is <code class="docutils literal notranslate"><span class="pre">a.R</span></code> and 
+the rest are density profiles of the mono-age subpopulations (bins) corresponding to 
+an age grid.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total). 
+Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>zlim</strong> -- Range of heights, pc. Suffix <code class="docutils literal notranslate"><span class="pre">'_z'</span></code> with the given values  
+is added to the output file name.</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Set of age bins, Gyr. Adds suffix <code class="docutils literal notranslate"><span class="pre">'_age'</span></code> with the min-max age and age step.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.rhor_monomet_save">
+<code class="sig-name descname">rhor_monomet_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="n">mets</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.rhor_monomet_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.rhor_monomet_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves radial mono-metallicity density profiles to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['dens']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'Rho'</span></code>, <code class="docutils literal notranslate"><span class="pre">'N'</span></code>,``'Sigma'<code class="docutils literal notranslate"><span class="pre">,</span> <span class="pre">or</span> <span class="pre">``'SigmaN'</span></code> 
+(depending on parameters <strong>sigma</strong> and <strong>number</strong> in the class instance <em>kwargs</em>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Density profiles, where the first column is <code class="docutils literal notranslate"><span class="pre">a.R</span></code> and 
+the rest are density profiles of the mono-metallicity subpopulations (bins) corresponding to 
+metallicity grid.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total). 
+Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>zlim</strong> -- Range of heights, pc. Suffix <code class="docutils literal notranslate"><span class="pre">'_z'</span></code> with the given values  
+is added to the output file name.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Set of metallicity bins. Adds suffix <code class="docutils literal notranslate"><span class="pre">'_FeH'</span></code> with the min-max metallicity 
+and step in metallicity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.rhoz_monoage_save">
+<code class="sig-name descname">rhoz_monoage_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">ages</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.rhoz_monoage_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.rhoz_monoage_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves vertical mono-age density profiles to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['dens']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'Rho'</span></code>, <code class="docutils literal notranslate"><span class="pre">'N'</span></code>,``'Sigma'<code class="docutils literal notranslate"><span class="pre">,</span> <span class="pre">or</span> <span class="pre">``'SigmaN'</span></code> 
+(depending on parameters <strong>sigma</strong> and <strong>number</strong> in the class instance <em>kwargs</em>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Vertical density profiles, where the first column is <code class="docutils literal notranslate"><span class="pre">a.z</span></code> and 
+the rest are density profiles of the mono-age subpopulations (bins) corresponding to 
+an age grid.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total). 
+Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc. Suffix <code class="docutils literal notranslate"><span class="pre">'_R'</span></code> with the given value of radis 
+is added to the output file name.</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Set of age bins, Gyr. Adds suffix <code class="docutils literal notranslate"><span class="pre">'_age'</span></code> with the min-max age and age step.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.rhoz_monomet_save">
+<code class="sig-name descname">rhoz_monomet_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">mets</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.rhoz_monomet_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.rhoz_monomet_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves vertical mono-metallicity density profiles to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['dens']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'Rho'</span></code>, <code class="docutils literal notranslate"><span class="pre">'N'</span></code>,``'Sigma'<code class="docutils literal notranslate"><span class="pre">,</span> <span class="pre">or</span> <span class="pre">``'SigmaN'</span></code> 
+(depending on parameters <strong>sigma</strong> and <strong>number</strong> in the class instance <em>kwargs</em>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Vertical density profiles, where the first column is <code class="docutils literal notranslate"><span class="pre">a.z</span></code> and 
+the rest are density profiles of the mono-metallicity subpopulations (bins) corresponding to 
+the metallicity grid.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total). 
+Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc. Suffix <code class="docutils literal notranslate"><span class="pre">'_R'</span></code> with the given value of radis 
+is added to the output file name.</p></li>
+<li><p><strong>mets</strong> (<em>array-like</em>) -- Set of metallicity bins. Adds suffix <code class="docutils literal notranslate"><span class="pre">'_FeH'</span></code> with the min-max metallicity and 
+step in metallicity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.rhoz_save">
+<code class="sig-name descname">rhoz_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">R</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.rhoz_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.rhoz_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves vertical density profiles to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['dens']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'Rhoz'</span></code>, <code class="docutils literal notranslate"><span class="pre">'NRohz'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'NCMassz'</span></code> (depending on the class 
+instance <em>kwargs</em>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Vertical density profiles, where the first column is <code class="docutils literal notranslate"><span class="pre">a.z</span></code> and 
+the rest are density profiles of the thin disk, thick disk, molecular gas, atomic gas, DM halo, 
+and stellar halo.</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) -- Galactocentric distance, kpc. Suffix <code class="docutils literal notranslate"><span class="pre">'_R'</span></code> with the given value of radis 
+is added to the output file name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.rot_curve_save">
+<code class="sig-name descname">rot_curve_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.rot_curve_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.rot_curve_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves rotation curve to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['kintab']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'Vc_R'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>profiles</strong> (<em>array-like</em>) -- The first column is Galactocentric distance R, kpc. 
+Other columns contain rotation velocity (<span class="math notranslate nohighlight">\(\mathrm{km \ s^{-1}}\)</span>) 
+in the following order: total, bulge, thin disk, thick disk, molecular gas, 
+atomic gas, DM halo, stellar halo.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.rz_map_quantity_save">
+<code class="sig-name descname">rz_map_quantity_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">quantity</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.rz_map_quantity_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.rz_map_quantity_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves R-z map of some <strong>quantity</strong>.  
+Output subfolder is <code class="docutils literal notranslate"><span class="pre">a.T['maps']</span></code>. File name begins with <strong>quantity</strong>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>2d-array</em>) -- Map of the chosen <strong>quantity</strong> in R-z Galactic coordinates.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+<li><p><strong>quantity</strong> (<em>str</em>) -- Name of the column in a stellar assemblies table to which 
+the function has to be applied; for velocity dispersion use <code class="docutils literal notranslate"><span class="pre">'sigw'</span></code>, 
+<code class="docutils literal notranslate"><span class="pre">'age`</span></code> for age, and <code class="docutils literal notranslate"><span class="pre">'FeH'</span></code> for metallicity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.rz_map_save">
+<code class="sig-name descname">rz_map_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.rz_map_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.rz_map_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves R-z map of some <strong>quantity</strong>.  
+Output subfolder is <code class="docutils literal notranslate"><span class="pre">a.T['maps']</span></code>. File name is <code class="docutils literal notranslate"><span class="pre">'Rho'</span></code>, <code class="docutils literal notranslate"><span class="pre">'N'</span></code>, <code class="docutils literal notranslate"><span class="pre">'Sigma'</span></code>, 
+or <code class="docutils literal notranslate"><span class="pre">'SigmaN'</span></code>, depending on <em>kwargs</em> of the class instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>2d-array</em>) -- Map of stellar mass or number density in R-z Galactic coordinates.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sh'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thick disk, halo, thin+thick disk, or total).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.sigwr_monoage_save">
+<code class="sig-name descname">sigwr_monoage_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="n">ages</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.sigwr_monoage_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.sigwr_monoage_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves radial W-velocity dispersion profiles calculated for the mono-age subpopulations. 
+Output subfolder is <code class="docutils literal notranslate"><span class="pre">a.T['kinem']</span></code>. File name base is <code class="docutils literal notranslate"><span class="pre">'SigW'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Radial velocity dispersion profiles (ages change from column to column). 
+Tables contain only kinematics, without the radial grid column <code class="docutils literal notranslate"><span class="pre">a.R</span></code>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thin+thick disk, or total). Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights to be considered, pc. Adds to the file name suffix <code class="docutils literal notranslate"><span class="pre">'_z'</span></code> 
+with the given heights (converted for shortness into kpc).</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Set of age bins, Gyr.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.sigwr_monomet_save">
+<code class="sig-name descname">sigwr_monomet_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">zlim</span></em>, <em class="sig-param"><span class="n">mets</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.sigwr_monomet_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.sigwr_monomet_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves radial W-velocity dispersion profiles calculated for the mono-metallicity subpopulations (bins). 
+Output subfolder is <code class="docutils literal notranslate"><span class="pre">a.T['kinem']</span></code>. File name base is <code class="docutils literal notranslate"><span class="pre">'SigW'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Radial velocity dispersion profiles (metallicity changes from column to column). 
+Tables contain only kinematics, without the radial grid column <code class="docutils literal notranslate"><span class="pre">a.R</span></code>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thin+thick disk, or total). Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights to be considered, pc. Adds to the file name suffix <code class="docutils literal notranslate"><span class="pre">'_z'</span></code> 
+with the given heights (converted for shortness into kpc).</p></li>
+<li><p><strong>ages</strong> (<em>array-like</em>) -- Set of metallicity bins.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.sigwr_save">
+<code class="sig-name descname">sigwr_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">zlim</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.sigwr_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.sigwr_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves radial W-velocity dispersion profiles to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['kinem']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'SigW'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Radial velocity dispersion profiles. Tables contain only kinematics,
+without the radial grid column <code class="docutils literal notranslate"><span class="pre">a.R</span></code>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thin+thick disk, or total). Adds suffix <code class="docutils literal notranslate"><span class="pre">'_'+mode</span></code> to the file name.</p></li>
+<li><p><strong>zlim</strong> (<em>array-like</em>) -- Range of heights to be considered, pc. Adds to the file name suffix <code class="docutils literal notranslate"><span class="pre">'_z'</span></code> 
+with the given heights (converted for shortness into kpc).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jjmodel.iof.TabSaver.sigwz_save">
+<code class="sig-name descname">sigwz_save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">profiles</span></em>, <em class="sig-param"><span class="n">mode</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/iof.html#TabSaver.sigwz_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jjmodel.iof.TabSaver.sigwz_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves vertical profile of W velocity dispersion to the subfolder <code class="docutils literal notranslate"><span class="pre">a.T['kinem']</span></code>. 
+File name base is <code class="docutils literal notranslate"><span class="pre">'SigW'</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profiles</strong> (<em>array-like</em>) -- Velocity dispersion profiles. Can include two tables - profiles at the different R 
+and at <code class="docutils literal notranslate"><span class="pre">p.Rsun</span></code>, or a single table with the local profile. Tables contain only 
+velocity dispersion profiles, without the vertical grid column <code class="docutils literal notranslate"><span class="pre">a.z</span></code>.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) -- Galactic component, can be <code class="docutils literal notranslate"><span class="pre">'d'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dt'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'tot'</span></code> 
+(thin disk, thin+thick disk, or total).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">jjmodel</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#tutorials">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="funcs.html">Physical functions (input)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_core.html">Radial and vertical MW structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="populations.html">Stellar populations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometry.html">Geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trans.html">Coordinates and velocities (from data)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Useful tools</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Input/output tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Output analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contacts.html">Authors and contact</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="tools.html" title="previous chapter">Useful tools</a></li>
+      <li>Next: <a href="analysis.html" title="next chapter">Output analysis</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Sysoliatina.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/iof.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
