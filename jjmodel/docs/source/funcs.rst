@@ -46,5 +46,7 @@ Radial structure
 Some physical quantities
 -------------------------
 
-.. autofunction:: jjmodel.funcs.log_surface_gravity 
+.. autofunction:: jjmodel.funcs.log_surface_gravity
+   
+
 

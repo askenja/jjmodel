@@ -13,9 +13,12 @@ Spatial grids
 
 .. autoclass:: jjmodel.geometry.Grid
    :members: 
+ 
 
 Modeling volumes
 -----------------
 
 .. autoclass:: jjmodel.geometry.Volume
    :members: 
+
+
