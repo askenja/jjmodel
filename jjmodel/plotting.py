@@ -154,7 +154,10 @@ class Plotting():
         (depend on whether the colorbar is continious or binned).
         """
         if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
-            cmin, cmax = cmin - dc/2, cmax + dc/2  
+            if ((('between_applicable' in kwargs and kwargs['between_applicable']==True) and 
+                ('between' not in kwargs or kwargs['between']==False)) or 
+                ('radius_applicable' in kwargs and kwargs['radius_applicable']==True)):
+                cmin, cmax = cmin - dc/2, cmax + dc/2  
         return (cmin, cmax)
     
   
@@ -345,7 +348,8 @@ class Plotting():
         f.subplots_adjust(left=0.11,top=0.86,bottom=0.15,right=0.86)
         if mode_comp!='t':
             colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
-            cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,**kwargs)
+            cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
+                                           **kwargs,radius_applicable=True)
             if mode_comp=='d':
                 NSFR, NSFR0 = tab_reader(['NSFRd','NSFRd0'],self.p,self.a.T)
             else:
@@ -362,8 +366,9 @@ class Plotting():
             pos = ax.get_position()
             cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
             cbar = f.colorbar(im,cax=cax,orientation='vertical')
-            cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+            #cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
             cbar.set_label(self.axts['r'],fontsize=self.fnt['main'])
+            cbar.set_ticks(self.a.R)
         else:
             NSFR = tab_reader(['NSFRt'],self.p,self.a.T)[0]
             ymax = round(np.amax(NSFR[1]),2) + 0.01
@@ -494,7 +499,8 @@ class Plotting():
         f.subplots_adjust(left=0.11,top=0.86,bottom=0.15,right=0.86)
         if mode_comp!='t':
             colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
-            cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,**kwargs)
+            cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
+                                           **kwargs,radius_applicable=True)
             ax.text(0.76,0.18,ln,transform=ax.transAxes,fontsize=self.fnt['main'])
             if mode_comp=='d':
                 AMR, AMR0 = tab_reader(['AMRd','AMRd0'],self.p,self.a.T)
@@ -511,7 +517,8 @@ class Plotting():
             pos = ax.get_position()
             cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
             cbar = f.colorbar(im,cax=cax,orientation='vertical')
-            cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+            #cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+            cbar.set_ticks(self.a.R)
             cbar.set_label(self.axts['r'],fontsize=self.fnt['main'])
             if mode_comp=='dt':
                 ax.plot(AMRt[0][:self.a.jt],AMRt[1][:self.a.jt],lw=self.lw['main'],
@@ -644,7 +651,8 @@ class Plotting():
         f.subplots_adjust(left=0.11,top=0.86,bottom=0.15,right=0.86)
         if mode_comp!='t':
             colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
-            cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,**kwargs)
+            cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
+                                           **kwargs,radius_applicable=True)
             ax.text(0.4,0.9,ln,transform=ax.transAxes,fontsize=self.fnt['main'])
             if mode_comp=='d':
                 g, g0 = tab_reader(['gd','gd0'],self.p,self.a.T)
@@ -660,7 +668,8 @@ class Plotting():
             pos = ax.get_position()
             cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
             cbar = f.colorbar(im,cax=cax,orientation='vertical')
-            cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+            #cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+            cbar.set_ticks(self.a.R)
             cbar.set_label(self.axts['r'],fontsize=self.fnt['main'])
             if mode_comp!='d':
                 ax.plot(gt[0],gt[1],lw=self.lw['main'],c='k',label=self.labs['t'])
@@ -872,8 +881,16 @@ class Plotting():
         kwargs_calc = reduce_kwargs(kwargs,['save','mode_pop','number','tab','between','mode_iso'])
         rhoz = rhoz_monoage(mode_comp,R,ages,self.p,self.a,**kwargs_calc)
         
-        colorbar = self._figcolorbar_('tau',len(ages),**kwargs)
-        cmin, cmax = self._cbarminmax_(0,tp,np.mean(np.diff(ages)),**kwargs)
+        colorbar = self._figcolorbar_('tau',nage,**kwargs)
+        cmin, cmax = self._cbarminmax_(ages[0],ages[-1],np.mean(np.diff(ages)),
+                                       **kwargs,between_applicable=True)
+        if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+            if 'between' in kwargs and kwargs['between']==True:
+                intervals = np.add(ages,np.mean(np.diff(ages))/2)[:-1]
+            else:
+                intervals = np.array(ages)
+        else:
+            intervals = np.array(ages)
 
         ylabel = self.axts['rho']
         if ('mode_pop' in kwargs) or ('tab' in kwargs):
@@ -897,14 +914,17 @@ class Plotting():
                                        linewidths=self.lw['main'],cmap = colorbar,                        
                                        norm = mpl.colors.Normalize(vmin=cmin,vmax=cmax)
                                        )
-        line_segments.set_array(np.array(ages))
+        line_segments.set_array(intervals)
         im = ax.add_collection(line_segments)
         f.subplots_adjust(left=0.14,top=0.86,bottom=0.15,right=0.86)
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(self.xt['ticks'])
-        cbar.set_ticklabels(self.xt['labels'])
+        if cmin==0 and cmax==tp and ('cbar_bins' not in kwargs or kwargs['cbar_bins']==False):
+            cbar.set_ticks(self.xt['ticks'])
+            cbar.set_ticklabels(self.xt['labels'])
+        else:
+            cbar.set_ticks(intervals)
         cbar.set_label(self.axts['tau'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -971,7 +991,7 @@ class Plotting():
         kwargs_calc = reduce_kwargs(kwargs,['save','mode_pop','number','tab','mode_iso'])
         rhoz = rhoz_monomet(mode_comp,R,mets,self.p,self.a,**kwargs_calc)
         
-        colorbar = self._figcolorbar_('feh',len(mets),**kwargs)
+        colorbar = self._figcolorbar_('feh',nage,**kwargs)
         cmin, cmax = self._cbarminmax_(mets[0],mets[-1],np.mean(np.diff(mets)),**kwargs)
 
         ylabel = self.axts['rho']
@@ -996,13 +1016,18 @@ class Plotting():
                                        linewidths=self.lw['main'],cmap = colorbar,                        
                                        norm = mpl.colors.Normalize(vmin=cmin,vmax=cmax)
                                        )
-        line_segments.set_array(np.array(mets))
+        if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+            intervals = np.add(mets,np.mean(np.diff(mets))/2)[:-1]
+        else:
+            intervals = np.array(mets)
+        line_segments.set_array(intervals)
         im = ax.add_collection(line_segments)
         f.subplots_adjust(left=0.14,top=0.86,bottom=0.15,right=0.86)
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
         cbar.set_label(self.axts['fe'],fontsize=self.fnt['main'])
+        cbar.set_ticks(intervals)
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
             format_ = self._figformat_(**kwargs)
@@ -1293,7 +1318,8 @@ class Plotting():
             ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
         if 'tab' in kwargs:
             ln += '$\mathrm{\ (custom \ population)}$'
-        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,**kwargs)
+        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
+                                       **kwargs,radius_applicable=True)
             
         kwargs_calc = reduce_kwargs(kwargs,['save','tab','mode_pop','number','mode_iso'])
         agezr, agezr0 = agez(mode_comp,self.p,self.a,**kwargs_calc)
@@ -1324,7 +1350,8 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        #cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        cbar.set_ticks(self.a.R)
         cbar.set_label(self.axts['r'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -1487,7 +1514,11 @@ class Plotting():
         
         nz = int(len(zlim) - 1)
         colorbar = self._figcolorbar_('z',nz,**kwargs)
-        cmin, cmax = 0, self.p.zmax/1e3
+        cmin, cmax = zlim[0]/1e3, zlim[-1]/1e3
+        if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+            intervals = np.add(zlim/1e3,np.mean(np.diff(zlim))/2e3)[:-1]
+        else:
+            intervals = np.array(zlim)/1e3
         
         age_r = np.zeros((nz,self.a.Rbins))
         kwargs_calc = reduce_kwargs(kwargs,['save','tab','mode_pop','number','mode_iso'])
@@ -1508,7 +1539,7 @@ class Plotting():
                                        norm = mpl.colors.Normalize(vmin=cmin,vmax=cmax)                                                                   
                                        )
         dz = np.mean(np.diff(zlim))
-        line_segments.set_array(np.add(zlim,np.mean(np.diff(zlim))/2)[:-1]/1e3)
+        line_segments.set_array(intervals)
         im = ax.add_collection(line_segments)
         if mode_comp=='dt' or mode_comp=='tot':
             agert = ager('t',[zlim[0],zlim[-1]],self.p,self.a)
@@ -1522,7 +1553,8 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(np.arange(zlim[0]+dz/2,zlim[-1]+dz/2,dz)/1e3)
+        #cbar.set_ticks(np.arange(zlim[0]+dz/2,zlim[-1]+dz/2,dz)/1e3)
+        cbar.set_ticks(intervals)
         cbar.set_label(self.axts['zkpc'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -1584,7 +1616,8 @@ class Plotting():
             ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
         if 'tab' in kwargs:
             ln += '$\mathrm{\ (custom \ population)}$'
-        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,**kwargs)
+        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
+                                       **kwargs,radius_applicable=True)
                
         kwargs_calc = reduce_kwargs(kwargs,['save','tab','mode_pop','number','mode_iso'])
         fehzr, fehzr0 = metz(mode_comp,self.p,self.a,**kwargs_calc)     
@@ -1613,7 +1646,8 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        #cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        cbar.set_ticks(self.a.R)
         cbar.set_label(self.axts['r'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -1776,7 +1810,11 @@ class Plotting():
             ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
         if 'tab' in kwargs:
             ln += '$\mathrm{\ (custom \ population)}$'
-        cmin, cmax = 0, self.p.zmax/1e3
+        cmin, cmax = zlim[0]/1e3, zlim[-1]/1e3
+        if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+            intervals = np.add(zlim/1e3,np.mean(np.diff(zlim))/2e3)[:-1]
+        else:
+            intervals = np.array(zlim)/1e3
         
         nz = int(len(zlim) - 1)
         colorbar = self._figcolorbar_('z',nz,**kwargs)
@@ -1797,8 +1835,7 @@ class Plotting():
                                        linewidths=self.lw['main'],cmap = colorbar,                        
                                        norm = mpl.colors.Normalize(vmin=cmin,vmax=cmax)                                                                  
                                        )
-        dz = np.mean(np.diff(zlim))
-        line_segments.set_array(np.add(zlim,dz/2)[:-1]/1e3)
+        line_segments.set_array(intervals)
         im = ax.add_collection(line_segments)
         if mode_comp=='dt' or mode_comp=='tot':
             if 'tab' in kwargs:
@@ -1816,7 +1853,8 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(np.arange(zlim[0]+dz/2,zlim[-1]+dz/2,dz)/1e3)
+        #cbar.set_ticks(np.arange(zlim[0]+dz/2,zlim[-1]+dz/2,dz)/1e3)
+        cbar.set_ticks(intervals)
         cbar.set_label(self.axts['zkpc'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -1897,7 +1935,15 @@ class Plotting():
             nage = len(ages) - 1 
             
         colorbar = self._figcolorbar_('tau',len(ages),**kwargs)
-        cmin, cmax = self._cbarminmax_(0,tp,np.mean(np.diff(ages)),**kwargs)
+        cmin, cmax = self._cbarminmax_(ages[0],ages[-1],np.mean(np.diff(ages)),
+                                       **kwargs,between_applicable=True)
+        if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+            if 'between' in kwargs and kwargs['between']==True:
+                intervals = np.add(ages,np.mean(np.diff(ages))/2)[:-1]
+            else:
+                intervals = np.array(ages)
+        else:
+            intervals = np.array(ages)
                                        
         kwargs_calc = reduce_kwargs(kwargs,['save','sigma','between','tab','mode_pop','number','mode_iso'])
         rhor = rhor_monoage(mode_comp,zlim,ages,self.p,self.a,**kwargs_calc)
@@ -1926,7 +1972,7 @@ class Plotting():
                                        linewidths=self.lw['main'],cmap = colorbar,                        
                                        norm = mpl.colors.Normalize(vmin=cmin,vmax=cmax)
                                        )
-        line_segments.set_array(np.array(ages))
+        line_segments.set_array(intervals)
         im = ax.add_collection(line_segments)
         ax.plot([self.p.Rsun,self.p.Rsun],[ymin,ymax],ls='--',lw=self.lw['secondary'],
                 c='darkgrey',label=self.labs['r0'])
@@ -1935,8 +1981,11 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(self.xt['ticks'])
-        cbar.set_ticklabels(self.xt['labels'])
+        if cmin==0 and cmax==tp and ('cbar_bins' not in kwargs or kwargs['cbar_bins']==False):
+            cbar.set_ticks(self.xt['ticks'])
+            cbar.set_ticklabels(self.xt['labels'])
+        else:
+            cbar.set_ticks(intervals)
         cbar.set_label(self.axts['tau'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -2011,6 +2060,10 @@ class Plotting():
         colorbar = self._figcolorbar_('feh',len(mets),**kwargs)
         cmin, cmax = self._cbarminmax_(round(np.amin(mets),2),round(np.amax(mets),2),
                                        np.mean(np.diff(mets)),**kwargs)
+        if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+            intervals = np.add(mets,np.mean(np.diff(mets))/2)[:-1]
+        else:
+            intervals = np.array(mets)
                     
         kwargs_calc = reduce_kwargs(kwargs,['save','sigma','mode_pop','tab','number','mode_iso'])
         rhomet = rhor_monomet(mode_comp,zlim,mets,self.p,self.a,**kwargs_calc)
@@ -2039,7 +2092,7 @@ class Plotting():
                                        linewidths=self.lw['main'],cmap = colorbar,                        
                                        norm = mpl.colors.Normalize(vmin=cmin,vmax=cmax)                                                                   
                                        )
-        line_segments.set_array(np.array(mets))
+        line_segments.set_array(intervals)
         im = ax.add_collection(line_segments)
         ax.plot([self.p.Rsun,self.p.Rsun],[ymin,ymax],ls='--',lw=self.lw['secondary'],
                 c='darkgrey',label=self.labs['r0'])
@@ -2048,6 +2101,7 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
+        cbar.set_ticks(intervals)
         cbar.set_label(self.axts['fe'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -2119,8 +2173,9 @@ class Plotting():
               ',' + str(zlim[1]/1e3) + '$\mathrm{] \ kpc}$'
 
         colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
-        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,**kwargs)
-        
+        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
+                                       **kwargs,radius_applicable=True)
+                
         kwargs_calc = reduce_kwargs(kwargs,['save','mode_pop','tab','sigma_gauss','number','mode_iso'])
         ages, ages0 = agehist(mode_comp,zlim,self.p,self.a,**kwargs_calc)
         
@@ -2164,7 +2219,8 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        #cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        cbar.set_ticks(self.a.R)
         cbar.set_label(self.axts['r'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -2211,6 +2267,7 @@ class Plotting():
         :type cbar: str
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
+        :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
             are prescribed by :meth:`jjmodel.iof.TabSaver.agehist_save`. 
         :type save: boolean
@@ -2239,7 +2296,11 @@ class Plotting():
         if len(zlim)>2:
             nz = int(len(zlim) - 1)
             colorbar = self._figcolorbar_('z',nz,**kwargs)
-            cmin, cmax = 0, self.p.zmax/1e3
+            cmin, cmax = zlim[0]/1e3, zlim[-1]/1e3
+            if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+                intervals = np.add(zlim/1e3,np.mean(np.diff(zlim))/2e3)[:-1]
+            else:
+                intervals = np.array(zlim)/1e3
         
         kwargs_calc = reduce_kwargs(kwargs,['save','mode_pop','tab','sigma_gauss','number','mode_iso'])
         if len(zlim)>2: 
@@ -2324,13 +2385,13 @@ class Plotting():
                                            linewidths=self.lw['main'],cmap = colorbar,
                                            norm = mpl.colors.Normalize(vmin=cmin,vmax=cmax)                                                                   
                                            )   
-            dz = np.mean(np.diff(zlim))
-            line_segments.set_array(np.add(zlim,dz/2)[:-1]/1e3)                                   
+            line_segments.set_array(intervals)                                   
             im = ax.add_collection(line_segments)
             pos = ax.get_position()
             cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
             cbar = f.colorbar(im,cax=cax,orientation='vertical')
-            cbar.set_ticks(np.arange(zlim[0]+dz/2,zlim[-1]+dz/2,dz)/1e3)
+            #cbar.set_ticks(np.arange(zlim[0]+dz/2,zlim[-1]+dz/2,dz)/1e3)
+            cbar.set_ticks(intervals)
             cbar.set_label(self.axts['zkpc'],fontsize=self.fnt['main'])
         else:
             f.subplots_adjust(left=0.11,top=0.86,bottom=0.15,right=0.91)
@@ -2397,6 +2458,7 @@ class Plotting():
         :type cbar: str
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
+        :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
             are prescribed by :meth:`jjmodel.iof.TabSaver.methist_save`. 
         :type save: boolean
@@ -2423,7 +2485,8 @@ class Plotting():
         ln += '$\mathrm{\ at \ |z|=[}$' + str(zlim[0]/1e3) + ',' + str(zlim[-1]/1e3) + '$\mathrm{] \ kpc}$'
 
         colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
-        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,**kwargs) 
+        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
+                                       **kwargs,radius_applicable=True) 
 
         mmin, mmax, dmet = -1.1, 0.8, 0.05
         metbins = np.arange(mmin,mmax+dmet,dmet)
@@ -2465,7 +2528,8 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        #cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        cbar.set_ticks(self.a.R)
         cbar.set_label(self.axts['r'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -2513,6 +2577,7 @@ class Plotting():
         :type cbar: str
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
+        :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
             are prescribed by :meth:`jjmodel.iof.TabSaver.methist_save`. 
         :type save: boolean
@@ -2541,7 +2606,11 @@ class Plotting():
         if len(zlim)>2:
             nz = int(len(zlim) - 1)
             colorbar = self._figcolorbar_('z',nz,**kwargs)
-            cmin, cmax = self._cbarminmax_(0,self.p.zmax/1e3,np.mean(np.diff(zlim)),**kwargs)
+            cmin, cmax = self._cbarminmax_(zlim[0]/1e3,zlim[-1]/1e3,np.mean(np.diff(zlim/1e3)),**kwargs)
+            if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+                intervals = np.add(zlim/1e3,np.mean(np.diff(zlim))/2e3)[:-1]
+            else:
+                intervals = np.array(zlim)/1e3
 
         mmin, mmax, dmet = -1.1, 0.8, 0.05
         metbins = np.arange(mmin,mmax+dmet,dmet)
@@ -2621,13 +2690,13 @@ class Plotting():
                                            linewidths=self.lw['main'],cmap = colorbar,
                                            norm = mpl.colors.Normalize(vmin=cmin,vmax=cmax)                                                                   
                                            )                                      
-            dz = np.mean(np.diff(zlim))
-            line_segments.set_array(np.add(zlim,dz/2)[:-1]/1e3) 
+            line_segments.set_array(intervals) 
             im = ax.add_collection(line_segments)
             pos = ax.get_position()
             cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
             cbar = f.colorbar(im,cax=cax,orientation='vertical')
-            cbar.set_ticks(np.arange(zlim[0]/1e3,(zlim[-1]+dz)/1e3,dz/1e3))
+            #cbar.set_ticks(np.arange(zlim[0]/1e3,(zlim[-1]+dz)/1e3,dz/1e3))
+            cbar.set_ticks(intervals)
             cbar.set_label(self.axts['zkpc'],fontsize=self.fnt['main'])
         else:
             f.subplots_adjust(left=0.11,top=0.86,bottom=0.15,right=0.91)
@@ -2667,6 +2736,7 @@ class Plotting():
         :type cbar: str
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
+        :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. 
             The output directory is ``a.T['heightplt']``. 
         :type save: boolean
@@ -2683,7 +2753,8 @@ class Plotting():
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         
         colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
-        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,**kwargs)
+        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
+                                       **kwargs,radius_applicable=True)
         
         Hd, Hd0 = tab_reader(['Hd','Hd0'],self.p,self.a.T)
         if self.p.pkey==1:
@@ -2723,7 +2794,8 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        #cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        cbar.set_ticks(self.a.R)
         cbar.set_label(self.axts['r'],fontsize=self.fnt['main'])
         
         format_ = self._figformat_(**kwargs)
@@ -2826,6 +2898,7 @@ class Plotting():
         :type cbar: str
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
+        :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
             are prescribed by :meth:`jjmodel.iof.TabSaver.hr_monoage_save`. 
         :type save: boolean
@@ -2849,7 +2922,15 @@ class Plotting():
             ln += '$\mathrm{\ (custom \ population)}$'
 
         colorbar = self._figcolorbar_('tau',self.a.Rbins,**kwargs)
-        cmin, cmax = self._cbarminmax_(ages[0],ages[-1],np.mean(np.diff(ages)),**kwargs)
+        cmin, cmax = self._cbarminmax_(ages[0],ages[-1],np.mean(np.diff(ages)),
+                                       **kwargs,between_applicable=True)
+        if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+            if 'between' in kwargs and kwargs['between']==True:
+                intervals = np.add(ages,np.mean(np.diff(ages))/2)[:-1]
+            else:
+                intervals = np.array(ages)
+        else:
+            intervals = np.array(ages)
         
         Heffd, Ht, Hsh = tab_reader(['Heffd','Ht','Hsh'],self.p,self.a.T)
         kwargs_calc = reduce_kwargs(kwargs,['save','mode_pop','tab','between','number','mode_iso'])
@@ -2872,7 +2953,7 @@ class Plotting():
                                        linewidths=self.lw['main'],cmap = colorbar,                        
                                        norm = mpl.colors.Normalize(vmin=0,vmax=tp)
                                        )
-        line_segments.set_array(np.array(ages))
+        line_segments.set_array(intervals)
         im = ax.add_collection(line_segments)
         ax.plot(self.a.R,Heffd[1],ls='--',lw=self.lw['main'],c=self.cols['d'],
                 label='$\mathrm{Thin}$'+'-'+'$\mathrm{disk \ half}$'+'-'+'$\mathrm{thickness}$')
@@ -2887,8 +2968,11 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(self.xt['ticks'])
-        cbar.set_ticklabels(self.xt['labels'])
+        if cmin==0 and cmax==tp and ('cbar_bins' not in kwargs or kwargs['cbar_bins']==False):
+            cbar.set_ticks(self.xt['ticks'])
+            cbar.set_ticklabels(self.xt['labels'])
+        else:
+            cbar.set_ticks(intervals)
         cbar.set_label(self.axts['tau'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -2928,6 +3012,7 @@ class Plotting():
         :type cbar: str
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
+        :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
             are prescribed by :meth:`jjmodel.iof.TabSaver.hr_monomet_save`. 
         :type save: boolean
@@ -2953,6 +3038,11 @@ class Plotting():
         colorbar = self._figcolorbar_('feh',self.a.Rbins,**kwargs)
         cmin, cmax = self._cbarminmax_(mets[0],mets[-1],np.mean(np.diff(mets)),**kwargs)
         
+        if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+            intervals = np.add(mets,np.mean(np.diff(mets))/2)[:-1]
+        else:
+            intervals = np.array(mets)
+        
         kwargs_calc = reduce_kwargs(kwargs,['save','mode_pop','tab','number','mode_iso'])
         H = hr_monomet(mode_comp,mets,self.p,self.a,**kwargs_calc)
         
@@ -2975,7 +3065,7 @@ class Plotting():
                                        linewidths=self.lw['main'],cmap = colorbar,                        
                                        norm = mpl.colors.Normalize(vmin=cmin,vmax=cmax)                                                                   
                                        )
-        line_segments.set_array(np.array(mets))
+        line_segments.set_array(intervals)
         im = ax.add_collection(line_segments)
         ax.plot(self.a.R,Heffd[1],ls='--',lw=self.lw['main'],c=self.cols['d'],
                 label='$\mathrm{Thin}$'+'-'+'$\mathrm{disk \ half}$'+'-'+'$\mathrm{thickness}$')
@@ -2990,6 +3080,7 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
+        cbar.set_ticks(intervals)
         cbar.set_label(self.axts['fe'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -3054,6 +3145,7 @@ class Plotting():
         :type cbar: str
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
+        :type cbar_bins: boolean
         :param save: Optional. If true, the figure will be saved. 
             The output directory is ``a.T['kinplt']``. 
         :type save: boolean
@@ -3072,8 +3164,8 @@ class Plotting():
         colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
         
         AVRd, AVRd0 = tab_reader(['AVR','AVR0'],self.p,self.a.T)
-        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,**kwargs)
-        
+        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
+                                       **kwargs,radius_applicable=True)        
         if self.p.pkey==1:
             npeak = len(self.p.sigp)
             sigp, Hdp = hdp_reader(self.p,self.a.T,R=self.a.R)
@@ -3109,7 +3201,8 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        #cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        cbar.set_ticks(self.a.R)
         cbar.set_label(self.axts['r'],fontsize=self.fnt['main'])
         
         format_ = self._figformat_(**kwargs)
@@ -3240,6 +3333,7 @@ class Plotting():
         :type cbar: str
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
+        :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
             are prescribed by :meth:`jjmodel.iof.TabSaver.sigwz_save`. 
         :type save: boolean
@@ -3263,7 +3357,8 @@ class Plotting():
             ln += '$\mathrm{\ (custom \ population)}$'
         
         colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
-        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,**kwargs)
+        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
+                                       **kwargs,radius_applicable=True)
 
         kwargs_calc = reduce_kwargs(kwargs,['save','mode_pop','tab','number','mode_iso'])
         sigwzr, sigwzr0 = sigwz(mode_comp,self.p,self.a,**kwargs_calc)
@@ -3288,7 +3383,8 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        #cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        cbar.set_ticks(self.a.R)
         cbar.set_label(self.axts['r'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -3393,6 +3489,7 @@ class Plotting():
         :type cbar: str
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
+        :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
             are prescribed by :meth:`jjmodel.iof.TabSaver.sigwr_save`. 
         :type save: boolean
@@ -3420,6 +3517,10 @@ class Plotting():
         if nz > 2:
             colorbar = self._figcolorbar_('z',nz,**kwargs)
             cmin, cmax = self._cbarminmax_(zlim[0]/1e3,zlim[-1]/1e3,np.mean(np.diff(zlim))/1e3,**kwargs)
+            if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+                intervals = np.add(zlim/1e3,np.mean(np.diff(zlim))/2e3)[:-1]
+            else:
+                intervals = np.array(zlim)/1e3
             '''
             sigw_r = np.zeros((nz-1,self.a.Rbins))
             for i in range(nz-1):
@@ -3450,12 +3551,13 @@ class Plotting():
                                            linewidths=self.lw['main'],cmap = colorbar,                        
                                            norm = mpl.colors.Normalize(vmin=cmin,vmax=cmax)                                                                       
                                            )
-            line_segments.set_array(np.add(zlim[:-1]/1e3,np.diff(zlim)/2e3))
+            line_segments.set_array(intervals)
             im = ax.add_collection(line_segments)
             pos = ax.get_position()
             cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
             cbar = f.colorbar(im,cax=cax,orientation='vertical')
-            cbar.set_ticks(np.arange(0,(self.p.zmax+0.2)/1e3,0.2))
+            #cbar.set_ticks(np.arange(0,(self.p.zmax+0.2)/1e3,0.2))
+            cbar.set_ticks(intervals)
             cbar.set_label(self.axts['zkpc'],fontsize=self.fnt['main'])
         else: 
             ax.set_title(ln+'$\mathrm{ \ at \ |z|=[}$'+str(round(zlim[0],0)/1e3)+','+\
@@ -3512,6 +3614,7 @@ class Plotting():
         :type cbar: str
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
+        :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
             are prescribed by :meth:`jjmodel.iof.TabSaver.sigwr_monoage_save`. 
         :type save: boolean
@@ -3542,7 +3645,15 @@ class Plotting():
             nage = int(len(ages) - 1)
                    
         colorbar = self._figcolorbar_('tau',len(ages),**kwargs)
-        cmin, cmax = self._cbarminmax_(0,tp,np.mean(np.diff(ages)),**kwargs)
+        cmin, cmax = self._cbarminmax_(0,tp,np.mean(np.diff(ages)),
+                                       **kwargs,between_applicable=True)
+        if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+            if 'between' in kwargs and kwargs['between']==True:
+                intervals = np.add(ages,np.mean(np.diff(ages))/2)[:-1]
+            else:
+                intervals = np.array(ages)
+        else:
+            intervals = np.array(ages)
         
         kwargs_calc = reduce_kwargs(kwargs,['save','mode_pop','tab','number','between','mode_iso'])
         sigw_r = sigwr_monoage(mode_comp,zlim,ages,self.p,self.a,**kwargs_calc)
@@ -3569,7 +3680,7 @@ class Plotting():
                                        linewidths=self.lw['main'],cmap = colorbar,                        
                                        norm = mpl.colors.Normalize(vmin=cmin,vmax=cmax)
                                        )
-        line_segments.set_array(np.array(ages))
+        line_segments.set_array(intervals)
         im = ax.add_collection(line_segments)
         if mode_comp=='dt' or mode_comp=='tot':
             ax.plot(self.a.R,Sigt[1],ls='--',lw=self.lw['main'],c=self.cols['t'],label=self.labs['t'])
@@ -3583,8 +3694,11 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(self.xt['ticks'])
-        cbar.set_ticklabels(self.xt['labels'])
+        if cmin==0 and cmax==tp and ('cbar_bins' not in kwargs or kwargs['cbar_bins']==False):
+            cbar.set_ticks(self.xt['ticks'])
+            cbar.set_ticklabels(self.xt['labels'])
+        else:
+            cbar.set_ticks(intervals)
         cbar.set_label(self.axts['tau'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -3626,6 +3740,7 @@ class Plotting():
         :type cbar: str
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
+        :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. The output directory and figure name 
             are prescribed by :meth:`jjmodel.iof.TabSaver.sigwr_monomet_save`. 
         :type save: boolean
@@ -3655,6 +3770,10 @@ class Plotting():
         nmet = int(len(mets)-1)
         colorbar = self._figcolorbar_('feh',len(mets),**kwargs)
         cmin, cmax = self._cbarminmax_(mets[0],mets[-1],np.mean(np.diff(mets)),**kwargs)
+        if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+            intervals = np.add(mets,np.mean(np.diff(mets))/2)[:-1]
+        else:
+            intervals = np.array(mets)
         
         kwargs_calc = reduce_kwargs(kwargs,['save','mode_pop','tab','number','mode_iso'])
         sigwmet = sigwr_monomet(mode_comp,zlim,mets,self.p,self.a,**kwargs_calc)
@@ -3681,7 +3800,7 @@ class Plotting():
                                        linewidths=self.lw['main'],cmap = colorbar,                        
                                        norm = mpl.colors.Normalize(vmin=cmin,vmax=cmax)                                                                   
                                        )
-        line_segments.set_array(np.array(mets))
+        line_segments.set_array(intervals)
         im = ax.add_collection(line_segments)
         if mode_comp=='dt' or mode_comp=='tot':
             ax.plot(self.a.R,Sigt[1],lw=self.lw['main'],color=self.cols['t'],ls='--',label=self.labs['t'])
@@ -3695,6 +3814,7 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
+        cbar.set_ticks(intervals)
         cbar.set_label(self.axts['fe'],fontsize=self.fnt['main'])
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
@@ -3759,6 +3879,7 @@ class Plotting():
         :type cbar: str
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
+        :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. 
             The output directory is ``a.T['fiplt']``. 
         :type save: boolean
@@ -3775,7 +3896,8 @@ class Plotting():
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         
         colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
-        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,**kwargs)
+        cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
+                                       **kwargs,radius_applicable=True)
         
         Phi, Phi0 = tab_reader(['Phi','Phi0'],self.p,self.a.T)
         
@@ -3798,7 +3920,8 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        #cbar.set_ticks(np.arange(self.a.R[0],self.a.R[-1]+1))
+        cbar.set_ticks(self.a.R)
         cbar.set_label(self.axts['r'],fontsize=self.fnt['main'])
         
         format_ = self._figformat_(**kwargs)
@@ -4024,6 +4147,7 @@ class Plotting():
         :type cbar: str
         :param cbar_bins: Optional. If True, the colorbar will be discrete. 
             By default, it is continious.  
+        :type cbar_bins: boolean
         :param save: Optional. If True, the figure will be saved. 
             The output directory and figure name 
             are prescribed by :meth:`jjmodel.iof.TabSaver.fw_save`. 
@@ -4124,7 +4248,12 @@ class Plotting():
                 xcols = self._figcolorbar_('tau',npop,**kwargs)
                 xname = 'ages'
                 xbar = 'tau'
-                xmin, xmax = self._cbarminmax_(0,tp,np.mean(np.diff(kwargs_calc['ages'])),**kwargs)
+                xmin, xmax = self._cbarminmax_(kwargs['ages'][0],kwargs['ages'][-1],
+                                               np.mean(np.diff(kwargs_calc['ages'])),**kwargs)
+                if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+                    intervals = np.add(kwargs['ages'],np.mean(np.diff(kwargs['ages']))/2)[:-1]
+                else:
+                    intervals = np.array(kwargs['ages'])
             else:
                 npop = len(kwargs_calc['mets']) - 1
                 xcols = self._figcolorbar_('feh',npop,**kwargs)
@@ -4132,12 +4261,17 @@ class Plotting():
                 xbar = 'fe'
                 xmin, xmax = self._cbarminmax_(kwargs_calc['mets'][0],kwargs_calc['mets'][-1],
                                                np.mean(np.diff(kwargs_calc['mets'])),**kwargs)  
+                if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
+                    intervals = np.add(kwargs['mets'],np.mean(np.diff(kwargs['mets']))/2)[:-1]
+                else:
+                    intervals = np.array(kwargs['mets'])
                 '''
                 cbar_ticks = np.arange(kwargs_calc['mets'][0],kwargs_calc['mets'][-1]+0.1,0.1)
                 if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
                     dmet = np.mean(np.diff(kwargs_calc['mets']))
                     #cbar_ticks = np.add(kwargs_calc['mets'],dmet/2)[:-1]
                 '''
+
             fw_list = [] 
             for i in range(npop):
                 kwargs_calc2 = kwargs_calc.copy()
@@ -4149,17 +4283,13 @@ class Plotting():
                                        linewidths=self.lw['main'],cmap = xcols,
                                        norm = mpl.colors.Normalize(vmin=xmin,vmax=xmax)                                                                   
                                        )                                      
-            line_segments.set_array(kwargs_calc[xname])
+            line_segments.set_array(intervals)
             im = ax.add_collection(line_segments)
             f.subplots_adjust(left=0.14,top=0.86,bottom=0.15,right=0.86)
             pos = ax.get_position()
             cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
             cbar = f.colorbar(im,cax=cax,orientation='vertical')
-            if 'ages' in kwargs_calc:
-                cbar.set_ticks(self.xt['ticks'])
-                cbar.set_ticklabels(self.xt['labels'])
-            #else:
-            #    cbar.set_ticks(cbar_ticks)
+            cbar.set_ticks(intervals)
             cbar.set_label(self.axts[xbar],fontsize=self.fnt['main'])   
             ax.set_ylim(0,round(np.nanmax(fw_list),2)+0.01)
             
@@ -4176,24 +4306,23 @@ class Plotting():
                 xcols = self._figcolorbar_('r',npop,**kwargs)
                 R_array = R
                 zlim_array = [zlim for i in np.arange(npop)]
-                xmin, xmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,**kwargs)
+                xmin, xmax = self._cbarminmax_(R[0],R[-1],np.mean(np.diff(R)),
+                                               **kwargs,radius_applicable=True)
+                intervals = np.array(R)
                 xarray = self.a.R
                 xname = 'r'
-                cbar_ticks = np.arange(self.p.Rmin,self.p.Rmax+1)
-                if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
-                    cbar_ticks = np.add(self.a.R,self.p.dR/2)[:-1]
             except:
                 npop = len(zlim) - 1
                 xcols = self._figcolorbar_('z',npop,**kwargs)
                 zlim_array = [[zlim[i],zlim[i+1]] for i in np.arange(npop)]
                 R_array = [R for i in np.arange(npop)]
-                xmin, xmax = 0, self.p.zmax/1e3
+                xmin, xmax = zlim[0]/1e3, zlim[-1]/1e3
                 xarray = np.array(zlim)/1e3
-                xname = 'zkpc'
-                dz = np.mean(np.diff(zlim))
-                cbar_ticks = np.arange(zlim[0],zlim[-1]+dz,dz)/1e3
                 if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
-                    cbar_ticks = np.arange(zlim[0]+dz/2,zlim[-1]+dz/2,dz)/1e3
+                    intervals = np.add(zlim/1e3,np.mean(np.diff(zlim))/2e3)[:-1]
+                else:
+                    intervals = np.array(zlim/1e3)
+                xname = 'zkpc'
                 
             fw_list = [] 
             for i in range(npop):
@@ -4203,14 +4332,14 @@ class Plotting():
                                        linewidths=self.lw['main'],cmap = xcols,
                                        norm = mpl.colors.Normalize(vmin=xmin,vmax=xmax)                                                                                                                                      
                                        )                                      
-            line_segments.set_array(xarray)
+            line_segments.set_array(intervals)
             f.subplots_adjust(left=0.14,top=0.86,bottom=0.15,right=0.86)
             im = ax.add_collection(line_segments)
             pos = ax.get_position()
             cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
             cbar = f.colorbar(im,cax=cax,orientation='vertical')
             cbar.set_label(self.axts[xname],fontsize=self.fnt['main'])
-            cbar.set_ticks(cbar_ticks)
+            cbar.set_ticks(intervals)
             ax.set_ylim(0,round(np.nanmax(fw_list),2)+0.01)
             
                        
@@ -4373,8 +4502,6 @@ class Plotting():
         :type zlim: array-like
         :param cbar: Optional. Matplotlib colormap name. 
         :type cbar: str
-        :param cbar_bins: Optional. If True, the colorbar will be discrete. 
-            By default, it is continious.  
         :param save: Optional. If True, the figure will be saved. 
             The output directory and figure name 
             are prescribed by :meth:`jjmodel.iof.TabSaver.hess_save`. 
@@ -4388,7 +4515,7 @@ class Plotting():
         """
         
         this_function = inspect.stack()[0][3]
-        inpcheck_kwargs(kwargs,['save','save_format','close','cbar','cbar_bins','mode_iso',
+        inpcheck_kwargs(kwargs,['save','save_format','close','cbar','mode_iso',
                                 'zlim','mode_pop','r_minmax','R_minmax','smooth','dphi'],this_function)
         kwargs_calc = reduce_kwargs(kwargs,['zlim','save','mode_pop','r_minmax','R_minmax','smooth',
                                             'dphi','mode_iso'])

@@ -1498,8 +1498,16 @@ class SFR():
             g = kwargs['g']
         else:
             g = self.gd_sj20_default
-        normalized_sfr = (np.power(t,2)-t1**2)**dzeta/np.add(t,t2)**eta
-        SFR_scale = sigma/np.sum(g[int(t1/self.dt):]*normalized_sfr*self.dt)
+            
+        normalized_sfr = np.zeros((len(t)))
+        if t1 > 0 and t[0] < t1:
+            indt0 = np.where(t < t1)[0]
+            normalized_sfr[indt0] = 0 
+            indt1 = indt0[-1]+1
+            normalized_sfr[indt1:] = (np.power(t[indt1:],2)-t1**2)**dzeta/np.add(t[indt1:],t2)**eta
+        else:
+            normalized_sfr = (np.power(t,2)-t1**2)**dzeta/np.add(t,t2)**eta
+        SFR_scale = sigma/np.sum(g*normalized_sfr*self.dt)
         SFR = SFR_scale*normalized_sfr
         SFR_mean = np.mean(SFR)
         
@@ -1565,9 +1573,7 @@ class SFR():
             (averaged over the whole time range of the disk evolution 0-**tp** Gyr). 
         :rtype: [1d-array,1d-array,list[1d-array]] or [float,float,list[float]]    
         """
-        
-        jd = int((tp-t1)/tr)
-        
+                
         if 'g' in kwargs:
             g = kwargs['g']
         else:
@@ -1583,27 +1589,24 @@ class SFR():
             
         ind_peak_max = np.amax(ind_peak)        # The youngest peak population
         
+        '''
         if ind_peak_max >= jd:                  # Peak center can be outside of the time axis
             t_max = self.dt*(ind_peak_max+1)
             t_long = np.arange(t1+self.dt/2,t_max+self.dt/2,self.dt)
         else: 
-            t_long = t
+        '''
+        t_long = t
         
         SFR_mono_long, normalized_sfr_mono_long = self.sfrd_sj21(t_long,dzeta,eta,t1,t2,sigma,**kwargs)
         SFR_mono_max = np.amax(SFR_mono_long)
         sfr_at_peak = normalized_sfr_mono_long[ind_peak]
                 
-        if type(sigmap)==float or type(sigmap)==int:
-            peaks = sfr_at_peak*sigmap/SFR_mono_max*\
-                    np.exp(-np.subtract(t_long,tpk)**2/2/dtp**2)
-            normalized_sfr = np.add(normalized_sfr_mono_long[:jd],peaks[:jd])
-        else:
-            peaks = np.array([i*k/SFR_mono_max*np.exp(-np.subtract(t_long,l)**2/2/m**2) 
-                              for i,k,l,m in zip(sfr_at_peak,sigmap,tpk,dtp)])
-            
-            normalized_sfr = np.add(normalized_sfr_mono_long[:jd],np.sum(peaks,axis=0)[:jd])
+        peaks = np.array([i*k/SFR_mono_max*np.exp(-np.subtract(t_long,l)**2/2/m**2) 
+                          for i,k,l,m in zip(sfr_at_peak,sigmap,tpk,dtp)])
+        
+        normalized_sfr = np.add(normalized_sfr_mono_long,np.sum(peaks,axis=0))
                                 
-        SFR_scale = sigma/np.sum(g[int(t1/self.dt):]*normalized_sfr*self.dt)
+        SFR_scale = sigma/np.sum(g*normalized_sfr*self.dt)
         SFR = SFR_scale*normalized_sfr
         SFR_mean = np.mean(SFR)
         
@@ -1880,6 +1883,23 @@ class IMF():
         #cut = np.where(np.logical_and(self.m_lin>=mass1,self.m_lin<mass2))
         number = np.sum(self.Nmdm[m1_ind:m2_ind])*weight
         return(number)
+    
+    
+    def number_stars(self,mass1,mass2):
+        """
+        Probability of a star to have mass in the given interval 
+        according to chosen IMF (yes, the method name is misleading, sorry). 
+        Should be called after the IMF definition (e.g., :meth:`jjmodel.func.IMF.BPL_4slopes`). 
+        
+        :param mass1: Lower mass limit, :math:`\mathrm{M_\odot}`. 
+        :type mass1: scalar 
+        :param mass2: Upper mass limit, :math:`\mathrm{M_\odot}`. 
+        :type mass2: scalar 
+        
+        :return: Probability that stellar mass belongs to [**mass1**,**mass2**]. 
+        :rtype: scalar 
+        """
+        return self._number_stars_(mass1,mass2)
     
 
     def BPL_4slopes(self,a0,a1,a2,a3,m1,m2,m3):

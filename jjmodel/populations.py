@@ -377,7 +377,7 @@ def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_
             warning_message = 'Warning. Some of modeled metallicities ('+\
                                components_outside_metrange+') are outside of '+\
                                mode+' metallicity range ['+str(round(metmin,2))+\
-                               ','+str(round(metmax,2))+'], \ni.e., the adopted best isochrones'+\
+                               ','+str(round(metmax,2))+'], i.e., the adopted best isochrones'+\
                                ' may be not representative.'
             print(warning_message)
     

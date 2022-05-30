@@ -721,7 +721,3 @@ def convolve1d_gauss(array,dx_smooth,x_range):
     
     return array
     
-
-
-
-
