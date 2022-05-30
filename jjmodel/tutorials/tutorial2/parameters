@@ -17,7 +17,7 @@
 # Run settings
 # ===================================================================================================
 run_mode	1			0 = only locally at Rsun, 1 = range of distances 
-out_dir		'tutorial2_fehkey1pkey1_dm'		Name of the output directory 
+out_dir		'tutorial2'		Name of the output directory 
 out_mode	1			Saving mode: 1 = overwrite existing files, 0 = clean first
 nprocess	4			Number of CPU cores to be used
 
@@ -35,7 +35,7 @@ Vsun		12.5	km s-1		V-component of the Solar peculiar velocity
 # ===================================================================================================
 Rmin		4	kpc		Min Galactocentric distance 
 Rmax		14	kpc		Max Galactocentric distance 
-dR		0.5	kpc		Radial resolution
+dR		1	kpc		Radial resolution
 zmax		2000	pc		Max height z 
 dz		2	pc		Vertical resolution 
 
@@ -43,8 +43,8 @@ Rd		2.5	kpc		Thin-disk radial scale length
 Rt		2.0	kpc		Thick-disk radial scale length
 Rg1		3.0	kpc		Molecular gas radial scale length
 Rg2		10	kpc		Atomic gas radial scale length
-Rg10		4.0	kpc		Molecular gas radial scale length
-Rg20		4.0	kpc		Atomic gas radial scale length
+Rg10		4.0	kpc		Radius of inner hole for molecular gas
+Rg20		4.0	kpc		Radius of inner hole for atomic gas
 Rdf		9	kpc		Thin-disk flaring scale length
 Rf		100	kpc		Distance where the thin-disk flaring starts
 a_in		-2.5 	dim		Power index of the stellar halo profile
@@ -67,7 +67,7 @@ sigmash		0.47	Msun pc-2	Stellar halo
 # ===================================================================================================
 # Thin disk
 # ---------------------------------------------------------------------------------------------------
-td1 		0 	Gyr		Start time of SF, don't change
+td1 		0 	Gyr		Start time of SF
 td2		7.8	Gyr		Parameter controlling SFR shape and peak position
 dzeta		0.83	dim		Same as td2 
 eta		5.6	dim		Same as td2
@@ -127,21 +127,21 @@ rd2		1.5	dim		Power index no.2
 Rbr1		6.0	kpc		Break radius no.1
 Rbr2		7.5	kpc		Break radius no.2
 Rbr3		9.75	kpc		Break radius no.3
-k1_FeHdp	-0.59	dex		R > Rbr1 (for R <= Rbr1 FeH=const)
+k1_FeHdp	-0.59	dex/kpc		R > Rbr1 (for R <= Rbr1 FeH=const)
 b1_FeHdp	0.85 	dex		R > Rbr1
-k_alphaw	-0.43	dim		Relative weight of the first tahn-term in AMR Eq.
+k_alphaw	-0.43	dim/kpc		Relative weight of the first tahn-term in AMR Eq.
 b_alphaw	0.99	dim		Relative weight of the first tahn-term in AMR Eq.
-k1_t01		2.04	Gyr		R <= Rbr2
+k1_t01		2.04	Gyr/kpc		R <= Rbr2
 b1_t01		-0.32	Gyr		R <= Rbr2
-k2_t01		-2.71	Gyr		Rbr2 < R <= Rbr3
+k2_t01		-2.71	Gyr/kpc		Rbr2 < R <= Rbr3
 b2_t01		4.99	Gyr		Rbr2 < R <= Rbr3
-k3_t01		-3.91	Gyr		R > Rbr3
+k3_t01		-3.91	Gyr/kpc		R > Rbr3
 b3_t01		7.14	Gyr		R > Rbr3
-k1_t02		15.89	Gyr		R <= Rbr1
+k1_t02		15.89	Gyr/kpc		R <= Rbr1
 b1_t02		-5.29	Gyr		R <= Rbr1
-k2_t02		7.77	Gyr		Rbr1 < R <= Rbr3
+k2_t02		7.77	Gyr/kpc		Rbr1 < R <= Rbr3
 b2_t02		-3.04	Gyr		Rbr1 < R <= Rbr3
-k3_t02		-2.97	Gyr		R > Rbr3
+k3_t02		-2.97	Gyr/kpc		R > Rbr3
 b3_t02		9.96 	Gyr		R > Rbr3
 
 
