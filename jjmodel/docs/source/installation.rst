@@ -17,7 +17,7 @@ To install the **jjmodel** code as *anaconda* package, do in terminal:
 
    $ pip install git+https://github.com/askenja/jjmodel.git@main
    
-To install a specific version (see releases), use the corresponding tag instead of *main*, e.g. *v.1.0.0*. 
+To install a specific version (see releases on github), use the corresponding tag instead of *main*, e.g. *v.1.0.0*. 
 
 Note that **jjmodel** requires python 3.8. Also, it depends on the following packages: 
 `Numpy (v1.18.1) <https://numpy.org/>`_, `SciPy (v1.5.0) <http://www.scipy.org/>`_, 
