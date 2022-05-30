@@ -17,7 +17,7 @@
 # Run settings
 # ===================================================================================================
 run_mode	1			0 = only locally at Rsun, 1 = range of distances 
-out_dir		'tutorial4_model+zw_newfit_dm'	Name of the output directory 
+out_dir		'tutorial4_model+zw_newfit_dm'		Name of the output directory 
 out_mode	1			Saving mode: 1 = overwrite existing files, 0 = clean first
 nprocess	4			Number of CPU cores to be used
 
@@ -43,8 +43,8 @@ Rd		2.5	kpc		Thin-disk radial scale length
 Rt		2.0	kpc		Thick-disk radial scale length
 Rg1		3.0	kpc		Molecular gas radial scale length
 Rg2		10	kpc		Atomic gas radial scale length
-Rg10		4.0	kpc		Molecular gas radial scale length
-Rg20		4.0	kpc		Atomic gas radial scale length
+Rg10		4.0	kpc		Radius of inner hole for molecular gas
+Rg20		4.0	kpc		Radius of inner hole for atomic gas
 Rdf		9	kpc		Thin-disk flaring scale length
 Rf		100	kpc		Distance where the thin-disk flaring starts
 a_in		-2.5 	dim		Power index of the stellar halo profile
