@@ -27,28 +27,13 @@ nprocess	4			Number of CPU cores to be used
 # ===================================================================================================
 Rsun		8.2	kpc		Solar Galactocentric distance 
 zsun		20	pc		Solar height above the Galactic plane 
-Vsun		12.5	km s-1		V-component of the Solar peculiar velocity
 
 
 # ===================================================================================================
 # Rz-grid and radial profiles
 # ===================================================================================================
-Rmin		4	kpc		Min Galactocentric distance 
-Rmax		14	kpc		Max Galactocentric distance 
-dR		0.5	kpc		Radial resolution
 zmax		2000	pc		Max height z 
 dz		2	pc		Vertical resolution 
-
-Rd		2.5	kpc		Thin-disk radial scale length
-Rt		2.0	kpc		Thick-disk radial scale length
-Rg1		3.0	kpc		Molecular gas radial scale length
-Rg2		10	kpc		Atomic gas radial scale length
-Rg10		4.0	kpc		Molecular gas radial scale length
-Rg20		4.0	kpc		Atomic gas radial scale length
-Rdf		9	kpc		Thin-disk flaring scale length
-Rf		100	kpc		Distance where the thin-disk flaring starts
-a_in		-2.5 	dim		Power index of the stellar halo profile
-Mb		0.8e10	Msun		Mass of the bulge
 
 
 # ===================================================================================================
@@ -67,15 +52,12 @@ sigmash		0.47	Msun pc-2	Stellar halo
 # ===================================================================================================
 # Thin disk
 # ---------------------------------------------------------------------------------------------------
-td1 		0 	Gyr		Start time of SF, don't change
+td1 		0 	Gyr		Start time of SF
 td2		7.8	Gyr		Parameter controlling SFR shape and peak position
 dzeta		0.8	dim		Same as td2 
 eta		5.6	dim		Same as td2
 pkey		1			0 = default SFR, 1 = SFR + peaks with special kinematics, 
 #					2 = SFR + peaks (fill sfrd_peaks_parameters)
-k_td2		1.5	dim		Power indices that define radial change of td2 
-k_dzeta		0.18	dim		Same as k_td2 but for dzeta 
-k_eta		-0.1	dim		Same as k_td2 but for eta 
 
 # Thick disk
 # ---------------------------------------------------------------------------------------------------
@@ -103,16 +85,16 @@ m2		6.0	Msun		Break point between the slopes a2 and a3
 # ===================================================================================================
 # Thin disk
 # ---------------------------------------------------------------------------------------------------
-FeHd0		-0.7	dex		Initial thin-disk metallicity
-FeHdp		0.29	dex		Present-day thin-disk metallicity 
-rd		0.34	dim		Parameter controlling AMR shape
-q		-0.72	dim		Same as rd
-k_FeHd0		-0.025	dim		Power index, defines radial change of FeHd0
-k_FeHdp		-0.0875	dim		Same as k_FeHd0 but for FeHdp
-k_rd		0.005	dim		Same as k_FeHd0 but for rd
-k_q		-0.03	dim		Same as k_FeHd0 but for q
-dFeHdt		0	dex		Dispersion of the disk MAPs' MD (thin and thick)
+dFeHdt		0	dex		Dispersion of the disk MAPs MD (thin and thick)
 n_FeHdt		1			Number of subpopulations used to sample the disk MAPs' MD. 
+
+fehkey		0			0=SJ21 (based on Gaia locally), 
+# 					1=SJ22 (based on APOGEE at 4-14 kpc), 2=SJ22 with default parameters
+FeHd0		-0.7	dex		Initial thin-disk metallicity at Rsun
+FeHdp		0.29	dex		Present-day thin-disk metallicity at Rsun
+rd		0.34	dim		Power index
+q		-0.72	dim		Controls AMR shape
+
 
 # Thick disk
 # ---------------------------------------------------------------------------------------------------

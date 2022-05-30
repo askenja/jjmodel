@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------
-# DTo avoid problems during the file reading, 
+# To avoid problems during the file reading, 
 # do not add emply lines with tab spaces. 
-# To add your own  commentto the files, begin lines with '#'.
+# To add your own comments, begin lines with '#'.
 
 # Each SFRd peak is described by the six parameters:
 # sigmap[Msun/pc^2]     : SF amplitude-related parameter (for R=Rsun)
