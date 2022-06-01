@@ -269,7 +269,7 @@ class XVTrans():
             if 'edkpc' in names:
                 self.edist = self.t[names['edkpc']]*1000
             if 'eparallax' in names:
-                self.edist = np.abs(-1000/self.t[names['parallax']])**2*self.t[names['eparallax']]
+                self.edist = 1000/self.t[names['parallax']]**2*self.t[names['eparallax']]
         else:
             print('Error: give errors of helio_distance[pc or kpc] or parallax[mas]!')
                     
