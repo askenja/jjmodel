@@ -40,7 +40,11 @@ tau = np.subtract(tp,t)
 if p.run_mode!=0:
     Rbins = int((p.Rmax-p.Rmin)/p.dR+1) 
     R_array = np.arange(Rbins)
-    R = np.arange(p.Rmin,p.Rmax+p.dR,p.dR)
+    lenstr1 = len(str(p.Rmin).split(".")[1])
+    lenstr2 = len(str(p.Rmax).split(".")[1])
+    lenstr3 = len(str(p.dR).split(".")[1])
+    lenstr = np.amax([lenstr1,lenstr2,lenstr3])
+    R = np.round(np.arange(p.Rmin,p.Rmax+p.dR,p.dR),lenstr)
     R_edges = np.concatenate((R-p.dR/2,[R[-1]+p.dR/2]))
 
 dzmax = p.zmax/ZN 

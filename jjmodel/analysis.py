@@ -3742,7 +3742,7 @@ def mean_quantity(mode_comp,R,zlim,quantity,p,a,**kwargs):
     :param mets: Optional. Set of metallicity bins.
     :type mets: array-like
     :param save: Optional. If True, the calculated quantities are saved as tables  
-        to the output directory. The output path and table name are predcribed by 
+        to the output directory. The output path and table name are prescribed by 
         :meth:`jjmodel.iof.TabSaver.mean_quantity_save`.  
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
@@ -3906,8 +3906,8 @@ def pops_in_volume(mode_comp,R,volume,p,a,**kwargs):
     :param a: Collection of the fixed model parameters, useful quantities, and arrays.
     :type a: namedtuple
     :param save: Optional. If True, the calculated quantities are saved as tables  
-        to the output directory. The output path and table name are predcribed by 
-        :meth:`jjmodel.iof.TabSaver.mean_quantity_save`.  
+        to the output directory. The output path and table name are prescribed by 
+        :meth:`jjmodel.iof.TabSaver.pops_in_volume_save`.  
     :type save: boolean
     :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
         (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -3915,15 +3915,14 @@ def pops_in_volume(mode_comp,R,volume,p,a,**kwargs):
     :type mode_pop: str
     :param tab: Optional. Stellar assemblies table, parameter alternative to **mode_pop**. 
         If mode_comp=='tot', **tab** must be organized as a list of tables corresponding to this **R**:  
-        [*table_d*,*table_t*,table_sh*]. 
+        [*table_d*,*table_t*,*table_sh*]. 
     :type tab: astropy table or list[astropy table] 
     :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
         If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
     :param zlim: Optional. Range of heights [*zmim,zmax*] to be considered. Note that *zmax*-*zmin* > `p.dz`, 
-        the slice cannot be thinner than the model vertical resolution. If **zlim** is given, and **volume** 
-        is an array, be sure that length of **volume** equals to ``(zmax-zlim)//p.dz``. If no **zlim** is given, then 
-        all heights from 0 to ``p.zmax`` are considered.
+        the slice cannot be thinner than the model vertical resolution. 
+        If no **zlim** is given, then all heights from 0 to ``p.zmax`` are considered.
     :type zlim: array-like
     :param vln: Info about the chosen volume shape. 
     :type vln: str

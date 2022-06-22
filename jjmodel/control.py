@@ -423,27 +423,12 @@ def inpcheck_parameters(p):
             wrns += "-> AMR parameter 'rd1' must be less than 'rd2'. "+\
                     "Check your input.\n"
             n_warnings += 1 
-            
-        if p.Rbr1 <= p.Rmin or p.Rbr1 >= p.Rmax:
-            errs += "->  Parameter 'Rbr1' must be larger than 'Rmin' and smaller than 'Rmax'.\n"
-            n_errors += 1 
-            
-        if p.Rbr2 <= p.Rmin or p.Rbr2 >= p.Rmax:
-            errs += "->  Parameter 'Rbr2' must be larger than 'Rmin' and smaller than 'Rmax'.\n"
-            n_errors += 1 
-            
-        if p.Rbr3 <= p.Rmin or p.Rbr3 >= p.Rmax:
-            errs += "->  Parameter 'Rbr3' must be larger than 'Rmin' and smaller than 'Rmax'.\n"
-            n_errors += 1 
-            
+
         if p.Rbr1 >= p.Rbr2 or p.Rbr1 >= p.Rbr3 or p.Rbr3 <= p.Rbr2:
             errs += "->  ParametersThe following condition must be fulfilled:"+\
                     "'Rbr1' < 'Rbr2' < 'Rbr3'.\n"
             n_errors += 1 
             
-        if p.Rbr2 < p.Rbr1 or p.Rbr1 >= p.Rbr3:
-            errs += "->  Parameter 'Rbr1' must be less than 'Rbr2' and 'Rbr3'.\n"
-            n_errors += 1 
     
     if p.pkey==1 or p.pkey==2:
         
@@ -745,7 +730,7 @@ def inpcheck_parameters(p):
             errs += "-> Parameter 'dR' must be positive and its maximum allowed value is (Rmax - Rmin) kpc.\n"                         
             n_errors += 1 
             
-        if (p.Rmax - p.Rmin)%p.dR != 0: 
+        if (p.Rmax - p.Rmin)/p.dR - int((p.Rmax - p.Rmin)/p.dR) != 0: 
             errs += "-> Parameter 'dR' is not consistent with the chosen range of Galactocentric"+\
                     "distances ['Rmin', 'Rmax']. An interval (Rmax - Rmin) must contain an int number of bins 'dR'.\n"                         
             n_errors += 1 

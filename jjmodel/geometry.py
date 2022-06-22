@@ -29,6 +29,18 @@ class Volume():
         
         
     def _circ_intersect_(self,R_ann,R_sph,r_sph):
+        '''
+        :param R_ann: Galactocentric distance (radius of annulus with center in Galactic center), kpc. 
+        :type R_ann: scalar
+        :param R_sph: Galactocentric distance where a sphere is located, kpc. 
+        :type R_sph: scalar
+        :param r_sph: Radius of the sphere, pc. 
+        :type r_sph: scalar 
+        
+        :return: Area of the intersection between a circle with radius **R_ann** 
+            centered at Galactic center, and a sphere (circle) of radius **r_sph** centered at 
+            **R_sph**. 
+        '''
 
         R_ann, R_sph = R_ann*1e3, R_sph*1e3 # kpc to pc
         with warnings.catch_warnings():
@@ -44,6 +56,7 @@ class Volume():
             area = 0 
         if (R_sph + r_sph) <= R_ann:
             area = np.pi*r_sph**2
+            
         return area
     
     
