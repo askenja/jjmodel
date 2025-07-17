@@ -30,7 +30,7 @@ GA = 6.67e-11*M_SUN/PC**3   # pc^3/M_SUN/GYR^2
 # SIGMA_E[kpc] - an estimate of the W-dispersion of the oldest thin-disk population. 
 # RHOD0[Msun/pc^2] - an estimate of the local thin-disk density. 
 # HEFFD[pc] - an estimate of the thin disk half-thickness. 
-# ZE[pc] and ZN[pc] are 'natural scaleheights'
+# ZE[pc] and ZN[pc] are 'natural scaleheigths'
 # -------------------------------------------------------------------------------------------------
 
 SIGMA_E = 25    

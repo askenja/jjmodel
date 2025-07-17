@@ -53,10 +53,11 @@ class Plotting():
         self.pops = {'rc':'$\mathrm{RC \ stars}$', 'rc+':'$\mathrm{RC+HGB \ stars}$',
                      'a':'$\mathrm{A \ stars}$', 'f':'$\mathrm{F \ stars}$',
                      'gdw':'$\mathrm{G \ dwarfs}$', 'kdw':'$\mathrm{K \ dwarfs}$',                     
-                     'mdw':'$\mathrm{M \ dwarfs}$','ceph':'$\mathrm{Cepheids \ Type \ I}$'}
+                     'mdw':'$\mathrm{M \ dwarfs}$','ceph':'$\mathrm{Cepheids \ Type \ I}$',
+                     'wd':'$\mathrm{White \ dwarfs}$'}
         self.popcols = {'rc':'r', 'rc+':'tomato',
                         'a':'cyan', 'f':'steelblue',
-                        'gdw':'orange', 'kdw':'magenta','ceph':'indigo'                   
+                        'gdw':'orange', 'kdw':'magenta','ceph':'indigo','wd':'brown'                   
                         }
         self.cols = {'d':'dodgerblue','g1':'cyan','g2':'lawngreen','t':'orange',
                     'dh':'darkmagenta','sh':'r','dt':'violet','tot':'k','b':'y'}
@@ -4591,7 +4592,7 @@ class PlotBlocks():
         self.modes_disk = ['d','t','dt']
         self.modes_dtot = ['d','dt','tot']
         self.kwargs = {'close':True,'save':True}
-        self.pops = ['a','f','rc','gdw','kdw']
+        self.pops = ['a','f','rc','gdw','kdw','wd']
         
         
     def model_input(self,**kwgs):

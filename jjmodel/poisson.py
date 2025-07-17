@@ -58,7 +58,7 @@ def vertical_force(a,fimax,Sigma,sigW,h):
     :rtype: 1d-array        
     """
     
-    # Grid along the potential axis. 
+    # Grid along the potential axis 
     fi1 = 1e-6
     dfi = 0.05 
     fist = int(fimax/dfi) 
@@ -77,7 +77,7 @@ def vertical_force(a,fimax,Sigma,sigW,h):
         integrator = lambda x: 1/np.sqrt(np.sum(Ar1*(1-np.exp(-Ar2*x))))
         dzi = np.add(dz_offset,cumtrapz([integrator(k) for k in fieq1],fieq1))  
         
-        # i-th component of the potential and the corresponding vertical force. 
+        # i-th component of the potential and the corresponding vertical force 
         dzeq1 = np.concatenate((a.dzeq,[a.ddz]),axis=0)
         #popt,pcov = curve_fit(z_potential,dzi,fieq) 
         #fii = z_potential(dzeq1,*popt)
@@ -186,7 +186,7 @@ def _fimax_optimal_(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
             fist = int(round(fimax/dfi,0))
         
         # Note: the log space is used for the potential grid in order to trace the ~quadratic 
-        # potential shape near the plane.
+        # potential shape near the plane
         fieq = np.logspace(np.log10(fi1),np.log10(fimax),fist,base=10) 
         
         # Create AVR of the thin disk.
@@ -194,7 +194,7 @@ def _fimax_optimal_(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
         age_velocity = AVR()
         avr = age_velocity.avr_jj10(a.t,tp,sige,tau0,alpha)
         
-        # Calculate dz = function(fi), i.e., normalized height = function(normalized potential). 
+        # Calculate dz = function(fi), i.e., normalized height = function(normalized potential)
         
         Ard1 = SFRd*gd*tr*np.divide(avr,SIGMA_E)**2/(2*hd*RHO_D0)           # Thin disk
         Ard2 = (SIGMA_E/avr)**2
@@ -235,7 +235,7 @@ def _fimax_optimal_(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
         # We are interested in max(dz) = dz[-1].
         # The new value of fimax is be chosen according to relative difference 
         # (dz[-1] - a.dzmax)/a.dzmax. After iteration, fimax is multiplied by 1.2, 
-        # which is an empirical factor added to ensure that fimax is not underestimated.   
+        # which is an empirical factor added to ensure that fimax is not underestimated   
         
         dzmaxcalc = dz[-1]
         zdif = (dzmaxcalc-a.dzmax)/a.dzmax
@@ -479,7 +479,7 @@ def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
         fie_smooth = z_potential(a.z,*popt)
         phi_smooth = fie_smooth*KM**2
     
-        # New scale heights and differences between their old and new values.
+        # New scale heights and differences between their old and new values
         hdnew = np.array([np.trapz(np.exp(-fie_smooth/avr[i]**2),x=a.z)     
                           for i in a.jd_array]                          # Thin disk
                          )

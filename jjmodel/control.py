@@ -1007,12 +1007,15 @@ class CheckIsoInput():
             ' must be `d`(thin disk) or `t`(thick disk), or `sh`(stellar halo), check your input!')))
                     
                 
-    def check_photometric_system(self,photometric_system,funcname,**kwargs):
+    def check_photometric_system(self,mode,photometric_system,funcname,**kwargs):
         """
         Checks whether parameter `photometric_system` is correct.
         
         Parameters
         ----------
+        mode : str
+            Defines which set of isochrones is used, can be 'Padova', 
+            'MIST', or 'BaSTI'. 
         photometric_system : str
             Name of the photometric system to use, can be `UBVRIplus`, 
             `GaiaDR2_MAW`, `GaiaEDR3`, `UBVRIplus+GaiaDR2_MAW`,
@@ -1033,6 +1036,10 @@ class CheckIsoInput():
                       5:'UBVRIplus+GaiaEDR3',
                       6:'GaiaDR2_MAW+GaiaEDR3',
                       7:'UBVRIplus+GaiaDR2_MAW+GaiaEDR3'}
+        
+        if mode!='Padova' and mode!='MIST' and mode!='BaSTI':
+            print(''.join(('\n',funcname,": Parameter 'mode' ",
+                  "can be 'Padova', 'MIST' or 'BaSTI', check your input!")))
         
         if 'print' in kwargs and kwargs['print']==True:
             print(photo_dict)

@@ -101,7 +101,7 @@ class GetPopulations():
         for i in range(n):
             col = column_list[i]
             colmin,colmax = range_list[i]
-            tab = tab[np.logical_and.reduce([tab[col]>colmin,tab[col]<colmax])]
+            tab = tab[np.logical_and.reduce([tab[col]>=colmin,tab[col]<colmax])]
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
             if 'tabname' in kwargs:
@@ -616,9 +616,43 @@ class GetPopulations():
             if len(ceph['logT'])==0:
                 print('\t','{:<3}'.format(mode_comp),': Cepheid Type I sample is empty.')
                 
-        return ceph     
+        return ceph   
+    
+    
+    def white_dwarfs(self,mode_comp,**kwargs):
+        """
+        Experimental method.
+        Can be DA or DB white dwarfs or a mixture, depends on the setup in stellar_assemblies_r.
+        Selects WDs. Uses the WD-MS cut from CNS5: 
+        Mg > 10 + 5*(G-RP) & G-RP < 1
 
+        :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
+        :type mode_comp: str 
+        :param save: Optional. If True, the output table is saved (to the output subdirectory ``pop/tab``).
+        :type save: boolean
 
+        :return: Table of the stellar assemblies which belong to the white dwarf population.
+        :rtype: astropy table
+        """
+        
+        this_function = inspect.stack()[0][3]
+        ln, mode_comp = inpcheck_mode_comp(mode_comp,['d','t','sh'],'White Dwarfs',this_function)
+        inpcheck_kwargs_compatibility(kwargs,this_function)
+
+        tab = self.tables[mode_comp]
+        
+        # Definition of the WD cut
+        wd = tab[np.logical_and.reduce([tab['logg'] > np.log10(10**7)])] #logg>7.0, wd have logg of about 8.0
+
+        if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
+            #tabname = tab_sorter('mdwtab',self.p,self.a.T,R=self.R,mode=mode_comp,mode_pop='mdw')
+            #mdw.write(tabname,overwrite=True)
+            ts = TabSaver(self.p,self.a,**kwargs)
+            ts.poptab_save(wd,mode_comp,self.mode_iso,self.R,'wd')
+            if len(wd['logT'])==0:
+                print('\t','{:<3}'.format(mode_comp),': White dwarf sample is empty.')
+
+        return wd
 
 
 
@@ -765,6 +799,183 @@ def _rhoz_d_(p,a,**kwargs):
                 else:
                     rho_z[i] = [Sigma[i]/2/Hd[Rindex[i]+1]*np.exp(-k/KM**2/AVRd[Rindex[i]+1]**2) 
                                 for k in Phi[Rindex[i]+1][indz1:indz2]]
+    
+    if only_local:
+        return rho_z0
+    else:
+        if not inpcheck_iskwargtype(kwargs,'local',False,bool,inspect.stack()[0][3]):                   
+            return (rho_z, rho_z0)
+        else:
+            return rho_z
+
+
+
+def _rhoz_d_developed(p,a,**kwargs):
+    """
+    Calculates densities of all thin-disk populations at all R and all z. 
+    Can work with stellar assemblies table. 
+    """
+    if 'z' in kwargs:
+        indz = int(kwargs['z']//p.dz)
+    else:
+        indz = 0 
+    if 'zlim' in kwargs:
+        zlow,zup = kwargs['zlim']
+        indz1,indz2 = int(zlow//p.dz),int(zup//p.dz)
+        nz = indz2 - indz1
+    else:
+        indz1,indz2 = 0,a.n
+        nz = a.n
+    
+    only_local = False
+    if 'R' in kwargs:
+        if kwargs['R']==p.Rsun:
+            only_local = True
+        else:
+            Rarray = [kwargs['R']]
+            Rindex = [int(kwargs['R']//p.dR - p.Rmin//p.dR)]
+    else:
+        Rarray = a.R
+        Rindex = np.arange(a.Rbins)
+        
+    if only_local:
+        Hd0,Phi0,AVRd0 = tab_reader(['Hd0','Phi0','AVR0'],p,a.T)
+    else:
+        Hd,Phi,AVRd = tab_reader(['Hd','Phi','AVR'],p,a.T)
+        if not inpcheck_iskwargtype(kwargs,'local',False,bool,inspect.stack()[0][3]):
+            Hd0,Phi0,AVRd0 = tab_reader(['Hd0','Phi0','AVR0'],p,a.T)        
+                                                               
+    if ('mode_pop' in kwargs) or ('tab' in kwargs):
+        if ('mode_pop' in kwargs):
+            if 'mode_iso' not in kwargs:
+                mode_iso = 'Padova'
+            else:
+                mode_iso = kwargs['mode_iso']
+                
+            if not only_local:
+                tabs = [tab_reader(kwargs['mode_pop'],p,a.T,R=radius,mode='d',
+                                   mode_iso=mode_iso,tab=True) for radius in Rarray]  
+                if not inpcheck_iskwargtype(kwargs,'local',False,bool,inspect.stack()[0][3]):
+                    tab0 = tab_reader(kwargs['mode_pop'],p,a.T,R=p.Rsun,
+                                      mode='d',mode_iso=mode_iso,tab=True)
+            else:
+                tab0 = tab_reader(kwargs['mode_pop'],p,a.T,R=p.Rsun,
+                                  mode='d',mode_iso=mode_iso,tab=True)
+                
+        if ('tab' in kwargs) and ('mode_pop' not in kwargs):
+            if only_local:
+                tab0 = kwargs['tab']
+            else:
+                if inpcheck_iskwargtype(kwargs,'local',False,bool,inspect.stack()[0][3]):
+                    if len(Rarray)==1:
+                        tabs = [kwargs['tab']] 
+                    else:
+                        tabs = kwargs['tab']
+                else:
+                    if len(Rarray)==1:
+                        tabs, tab0 = [kwargs['tab'][0]], kwargs['tab'][1]
+                    else:
+                        tabs, tab0 = kwargs['tab']
+        
+        if inpcheck_iskwargtype(kwargs,'number',True,bool,inspect.stack()[0][3]):
+            column = 'N'
+        else:
+            column = 'Sigma'
+        
+        if only_local:
+            tab0_rd = reduce_table(tab0,a)
+            Sigma0 = tab0_rd[column]
+        else:
+            tabs_rd = [reduce_table(table,a) for table in tabs]
+            Sigma = [table[column] for table in tabs_rd]
+            if not inpcheck_iskwargtype(kwargs,'local',False,bool,inspect.stack()[0][3]):
+                tab0_rd = reduce_table(tab0,a)
+                Sigma0 = tab0_rd[column]      
+    else:
+        if not inpcheck_iskwargtype(kwargs,'local',False,bool,inspect.stack()[0][3]) or only_local:
+            SFRd0,gd0 = tab_reader(['SFRd0','gd0'],p,a.T)
+            Sigma0 = SFRd0[1]*gd0[1]*tr
+        if not only_local:
+            SFRd,gd = tab_reader(['SFRd','gd'],p,a.T)
+            Sigma = [SFRd[i+1]*gd[i+1]*tr for i in Rindex]
+
+    # Locally at Rsun.
+    if p.pkey==1:
+        npeak = len(p.sigp)
+        if not only_local:
+            sigp, Hdp = hdp_reader(p,a.T,R=a.R)
+            Fp = [tab_reader(['Fp'],p,a.T,R=radius)[0] for radius in Rarray]
+            fpr0 = [1 - np.sum(subarray[1:],axis=0) for subarray in Fp]
+        if not inpcheck_iskwargtype(kwargs,'local',False,bool,inspect.stack()[0][3]) or only_local:
+            Fp0 = tab_reader(['Fp0'],p,a.T)[0]
+            fp0 = 1 - np.sum(Fp0[1:],axis=0)
+            Hdp0 = hdp_reader(p,a.T,R=p.Rsun)[1]
+            # If there are extra peaks on the thin-disk SFR, that have special kinematics, 
+            # the density profile consists of two terms: standard thin-disk part and peaks. 
+            if inpcheck_iskwargtype(kwargs,'sigma',True,bool,inspect.stack()[0][3]):
+                rho_d0 = fp0*Sigma0
+                rho_dp = [Fp0[l+1]*Sigma0 for l in np.arange(npeak)]
+            else:
+                rho_d0 = fp0*Sigma0/2/Hd0[1]
+                rho_dp = [Fp0[l+1]*Sigma0/2/Hdp0[l] for l in np.arange(npeak)]
+            if 'z' not in kwargs:
+                rho_d0_term = np.array([rho_d0*np.exp(-k/KM**2/AVRd0[1]**2) for k in Phi0[1][indz1:indz2]])
+                rho_dp_term = np.array([[rho_dp[l]*np.exp(-k/KM**2/p.sigp[l]**2) for k in Phi0[1][indz1:indz2]]
+                               for l in np.arange(npeak)])
+            else:
+                rho_d0_term = rho_d0*np.exp(-Phi0[1][indz]/KM**2/AVRd0[1]**2)
+                rho_dp_term = np.array([rho_dp[l]*np.exp(-Phi0[1][indz]/KM**2/p.sigp[l]**2) 
+                               for l in np.arange(npeak)])
+            rho_z0 = np.add(rho_d0_term,np.sum(rho_dp_term)) 
+    else:
+        if not inpcheck_iskwargtype(kwargs,'local',False,bool,inspect.stack()[0][3]) or only_local:
+            if inpcheck_iskwargtype(kwargs,'sigma',True,bool,inspect.stack()[0][3]):
+                if 'z' not in kwargs:
+                    rho_z0 = np.array([Sigma0*np.exp(-k/KM**2/AVRd0[1]**2) for k in Phi0[1][indz1:indz2]])
+                else:
+                    rho_z0 = Sigma0*np.exp(-Phi0[1][indz]/KM**2/AVRd0[1]**2)
+            else:
+                if 'z' not in kwargs:
+                    rho_z0 = np.array([Sigma0/2/Hd0[1]*np.exp(-k/KM**2/AVRd0[1]**2) for k in Phi0[1][indz1:indz2]])
+                else:
+                    rho_z0 = Sigma0/2/Hd0[1]*np.exp(-Phi0[1][indz]/KM**2/AVRd0[1]**2)
+                    
+    if not only_local:
+        # All other distances. 
+        rho_z = np.zeros((len(Rarray),nz,a.jd))
+        for i in range(len(Rarray)):
+            if p.pkey==1:
+                if inpcheck_iskwargtype(kwargs,'sigma',True,bool,inspect.stack()[0][3]):
+                    rho_d0 = fpr0[i]*Sigma[i]
+                    rho_dp = [Fp[i][l+1]*Sigma[i] for l in np.arange(npeak)]
+                else:
+                    rho_d0 = fpr0[i]*Sigma[i]/2/Hd[Rindex[i]+1]
+                    rho_dp = [Fp[i][l+1]*Sigma[i]/2/Hdp[i][l] for l in np.arange(npeak)]
+                if 'z' not in kwargs:
+                    rho_d0_term = np.array([rho_d0*np.exp(-k/KM**2/AVRd[Rindex[i]+1]**2) 
+                                            for k in Phi[Rindex[i]+1][indz1:indz2]])
+                    rho_dp_term = np.array([[rho_dp[l]*np.exp(-k/KM**2/sigp[i][l]**2) 
+                                             for k in Phi[Rindex[i]+1][indz1:indz2]] 
+                                             for l in np.arange(npeak)])
+                else:
+                    rho_d0_term = rho_d0*np.exp(-Phi[Rindex[i]+1][indz]/KM**2/AVRd[Rindex[i]+1]**2) 
+                    rho_dp_term = np.array([rho_dp[l]*np.exp(-Phi[Rindex[i]+1][indz]/KM**2/sigp[i][l]**2) 
+                                             for l in np.arange(npeak)])
+                rho_z[i] = np.add(rho_d0_term,np.sum(rho_dp_term)) 
+            else:
+                if inpcheck_iskwargtype(kwargs,'sigma',True,bool,inspect.stack()[0][3]):
+                    if 'z' not in kwargs:
+                        rho_z[i] = [Sigma[i]*np.exp(-k/KM**2/AVRd[Rindex[i]+1]**2) 
+                                    for k in Phi[Rindex[i]+1][indz1:indz2]]
+                    else:
+                        rho_z[i] = Sigma[i]*np.exp(-Phi[Rindex[i]+1][indz]/KM**2/AVRd[Rindex[i]+1]**2) 
+                                    
+                else:
+                    if 'z' not in kwargs:
+                        rho_z[i] = [Sigma[i]/2/Hd[Rindex[i]+1]*np.exp(-k/KM**2/AVRd[Rindex[i]+1]**2) 
+                                    for k in Phi[Rindex[i]+1][indz1:indz2]]
+                    else:
+                        rho_z[i] = Sigma[i]/2/Hd[Rindex[i]+1]*np.exp(-Phi[Rindex[i]+1][indz]/KM**2/AVRd[Rindex[i]+1]**2) 
     
     if only_local:
         return rho_z0
@@ -1196,7 +1407,10 @@ def _rhor_ages_(rhor_input,indt,this_function,a,**kwargs):
     else:
         indt_good = np.where(indt!=-999)[0]
         rho_r = rhor_input.T[indt[indt_good],:]
-    rho_r = np.sum(rho_r,axis=1)
+    if 'indz' in kwargs:
+        rho_r = rho_r[:,kwargs['indz']]
+    else:
+        rho_r = np.sum(rho_r,axis=1)
     return rho_r
 
 
@@ -1211,13 +1425,13 @@ def _ind_amr2t_(amr_array,mets):
         if (metmin<=mets[i]) and (mets[i]<=metmax):
             indt.append(np.where(np.abs(amr_array-mets[i])==np.amin(np.abs(amr_array-mets[i])))[0][0])
         else:
-            indt.append(-999)
-            '''
+            #indt.append(-999)
+        
             if (mets[i]>metmax) and (mets[i-1]<metmax):
                 indt.append(len(amr_array)-1)
             else:
                 indt.append(-999)
-            '''
+    
     indt = np.array(indt)
     return indt
 
@@ -2351,7 +2565,7 @@ def rhor_monoage(mode_comp,zlim,ages,p,a,**kwargs):
     
     this_function = inspect.stack()[0][3]
     inpcheck_kwargs(kwargs,['save','sigma','between','tab','mode_pop',
-                            'number','mode_iso'],this_function)
+                            'number','mode_iso','indz'],this_function)
     ln, mode_comp = inpcheck_mode_comp(mode_comp,['d','t','sh','dt','tot'],
                                        'radial mono-age profiles',this_function)
     ages = inpcheck_age(ages,this_function)
@@ -2373,9 +2587,11 @@ def rhor_monoage(mode_comp,zlim,ages,p,a,**kwargs):
             tabsh = kwargs['tab'][2]  
     
     if mode_comp=='d':
-        rho_z = _rhoz_d_(p,a,zlim=zlim,**kwargs,local=False)
+        rho_z = _rhoz_d_(p,a,**kwargs,local=False)     
+        
         for i in range(a.Rbins):
             rho_r[:,i] = _rhor_ages_(rho_z[i],indt,this_function,a,**kwargs)
+        
             
     if mode_comp=='t':
         rho_z = _rhoz_t_(p,a,zlim=zlim,**kwargs,local=False)

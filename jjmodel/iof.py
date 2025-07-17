@@ -65,6 +65,7 @@ def dir_tree(p,**kwargs):
     T['popftab'] = os.path.join(T['poptab'],'f')
     T['popgdwtab'] = os.path.join(T['poptab'],'gdw')
     T['popkdwtab'] = os.path.join(T['poptab'],'kdw')
+    T['popwdtab'] = os.path.join(T['poptab'],'wd')
     
     dirs_level1, dirs_level2, dirs_level3 = [], [], [] 
     keys_list = list(T.keys())
@@ -211,7 +212,7 @@ def tab_reader(names,p,T,**kwargs):
     
     :param names: Names of the tables to read. Names of the quantites are the same 
         as for :func:`jjmodel.iof.tab_sorter`. Also, if **tab** is True, 
-        **names** can refer to stellar populations: 
+        **names** can refer to stellar population: 
             
             - ``'ceph'`` - Cepheids Type I (selected by :meth:`jjmodel.analysis.GetPopulations.cepheids_type1`)
             - ``'a'`` - A stars (:meth:`jjmodel.analysis.GetPopulations.a_stars`)
@@ -223,7 +224,7 @@ def tab_reader(names,p,T,**kwargs):
             - ``'mdw'`` - M dwarfs (:meth:`jjmodel.analysis.GetPopulations.m_dwarfs`)
             - ``'ssp'`` - full stellar assembly table
             
-    :type names: list
+    :type names: str (**tab** is True) or list (other cases) 
     :param p: Set of model parameters from the parameter file. 
     :type p: namedtuple
     :param T: Output directory tree (created by :func:`jjmodel.iof.dir_tree`).
@@ -234,6 +235,8 @@ def tab_reader(names,p,T,**kwargs):
     :param mode_iso: Optional. Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
         If not specified, Padova is the default isochrone set. 
     :type mode_iso: str 
+    :param mode: Optional. Needed, when parameter **tab** is True. Specifies which population 
+        (thin disk, thick disk, or halo) needs to be read. 
     :param R: Optional. Galactocentric distance, kpc. Must be specified for the vertical 
         density profiles (**name** = ``'rhoz'``), vertical force (``'Kz'``), 
         contributions of the additional peaks to the thin-disk SFR (``'Fp'``), 
@@ -245,9 +248,9 @@ def tab_reader(names,p,T,**kwargs):
     """
     if ('tab' in kwargs) and (kwargs['tab']==True):
         Pn = {'a':'A','f':'F','rc':'RC','rc+':'RC+',
-                   'gdw':'Gdw','kdw':'Kdw','rrl':'RRL','ceph':'Ceph'}
+                   'gdw':'Gdw','kdw':'Kdw','rrl':'RRL','ceph':'Ceph','wd':'WD'}
         pn = {'a':'a','f':'f','rc':'rc','rc+':'rc',
-              'gdw':'gdw','kdw':'kdw','rrl':'rrl','ceph':'ceph'}
+              'gdw':'gdw','kdw':'kdw','rrl':'rrl','ceph':'ceph','wd':'wd'}
         
         if names=='ssp':
             savedir = 'poptab'
@@ -255,10 +258,17 @@ def tab_reader(names,p,T,**kwargs):
         else:
             savedir = ''.join(('pop',pn[names],'tab'))
             tabname = Pn[names]
+            
+        # Default isochrone set is Padova
         if 'mode_iso' not in kwargs:
             mode_iso = 'Padova'
         else:
             mode_iso = kwargs['mode_iso']
+            
+        # If we read WD, isochrones are always BaSTI
+        if names == 'wd':
+            mode_iso = 'BaSTI'
+            
         readpath = os.path.join(T[savedir],''.join((tabname,'_R',str(kwargs['R']),'_',kwargs['mode'],
                                                     '_',mode_iso,'.csv'))) 
         tables = Table.read(readpath)
@@ -417,9 +427,9 @@ class TabSaver():
         self.lb = {'d':'thin disk','t':'thick disk','sh':'stellar halo',
                    'dt':'total disk','tot':'total disk + halo'}
         self.pn = {'a':'a','f':'f','rc':'rc','rc+':'rc','rc_compl':'rc',
-                   'gdw':'gdw','kdw':'kdw','rrl':'rrl','ceph':'ceph'}
+                   'gdw':'gdw','kdw':'kdw','rrl':'rrl','ceph':'ceph','wd':'wd'}
         self.Pn = {'a':'A','f':'F','rc':'RC','rc+':'RC+','rc_compl':'RC_compl',
-                   'gdw':'Gdw','kdw':'Kdw','rrl':'RRL','ceph':'Ceph'}
+                   'gdw':'Gdw','kdw':'Kdw','rrl':'RRL','ceph':'Ceph','wd':'WD'}
         
         self.dir, self.fmt = 'tab', '.txt'
         if 'fig' in self.kwargs and self.kwargs['fig']==True:
@@ -541,6 +551,11 @@ class TabSaver():
         except: 
             savedir = 'poptab'
             tabname = mode_pop_name
+        
+        # Overwrite mode_iso in case of WDs 
+        if (mode_pop_name == 'wd') and (mode_iso != 'BaSTI'):
+            mode_iso = 'BaSTI'
+        
         savepath = os.path.join(self.a.T[savedir],''.join((tabname,'_R',str(R),'_',mode,
                                                            '_',mode_iso,'.csv')))                                                    
         table.write(savepath,overwrite=True)

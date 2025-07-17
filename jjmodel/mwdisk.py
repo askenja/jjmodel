@@ -108,7 +108,7 @@ def rbin_builder(R,a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
                                        '{:<14}'.format(': start')))
                          )        
     
-    # Firstly, fimax value is optimized.  
+    # Firstly, fimax value is optimized  
     if 'log' in kwargs:
         fimax, dfi = _fimax_optimal_(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,log=kwargs['log'])
     else:
@@ -120,7 +120,7 @@ def rbin_builder(R,a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
                                        '{:<14}'.format(': fimax optimized')))
                          )
     
-    # Secondly, the Poisson-Boltzmann eq. is solved.     
+    # Secondly, the Poisson-Boltzmann eq. is solved     
     S = poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs)
     
     if 'status_progress' in kwargs and kwargs['status_progress']==True:                                 
@@ -129,7 +129,7 @@ def rbin_builder(R,a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
                                        '{:<14}'.format(': PE solved')))
                          )
     
-    # Finally, we prepare the output. 
+    # Finally, we prepare the output 
     out = S
     if 'sigp' not in kwargs:
         out['Kzdtot'] = vertical_force(a,fimax,SFRd*gd*tr,S['avr'],S['hd'])

@@ -55,7 +55,7 @@ z = np.arange(p.dz/2,p.zmax+p.dz/2,p.dz)
 dzeq = z/ZN
 n_array = np.arange(n) 
 
-T = dir_tree(p)     # Directory tree where all output will be stored. 
+T = dir_tree(p)     # Directory tree where all output will be stored 
 
 # For convenience, we group these quantities into a touple.
 q_names = ['t','tau','jd','jt','n','jd_array','jt_array','n_array','dzmax','ddz','dzeq','z','T']
@@ -91,12 +91,12 @@ if p.fehkey==2:
     amrd0 = amr.amrd_global_sj22_default(a.t,p.Rsun,p)
     
 
-# Mass-loss function based on the adopted AMR. 
+# Mass-loss function based on the adopted AMR 
 gd0 = amr.mass_loss(a.t,amrd0)
 gt = amr.mass_loss(a.t,amrt)[:a.jt]
 
 
-# Star formation rate function based on the calculated mass loss function.
+# Star formation rate function based on the calculated mass loss function
 sfr = SFR()
 SFRt0, NSFRt0 = sfr.sfrt_sj21(a.t[:a.jt],p.gamma,p.beta,p.tt1,p.tt2,p.sigmat,g=gt)
 if p.pkey==0:
@@ -139,25 +139,25 @@ if p.run_mode!=0:
 
     (hg1,hg10), (hg2,hg20) = hgr(p,a)
     
-    # Radial surface density profiles of the Galactic components. 
+    # Radial surface density profiles of the Galactic components 
     SR = RadialDensity(p.Rsun,p.zsun,R)
     SigmaR = np.array([SR.sigma_disk(p.sigmad,p.Rd),                             # thin d.
-                       SR.sigma_disk(p.sigmag1,p.Rg1,R0=p.Rg10),                    # mol. gas 
-                       SR.sigma_disk(p.sigmag2,p.Rg2,R0=p.Rg20),                    # at. gas
+                       SR.sigma_disk(p.sigmag1,p.Rg1,R0=p.Rg10),                 # mol. gas 
+                       SR.sigma_disk(p.sigmag2,p.Rg2,R0=p.Rg20),                 # at. gas
                        SR.sigma_disk(p.sigmat,p.Rt),                             # thick d.
                        SR.sigma_dm_halo(p.zmax*1e-3,p.sigmadh,ah),               # DM
                        SR.sigma_stellar_halo(p.zmax*1e-3,p.sigmash,p.a_in)])     # Halo
 
-    # Age-metallicity relation of the thin and thick disk. 
+    # Age-metallicity relation of the thin and thick disk 
     amr = AMR()
     amrd = amr.amrr(p,a)
 
-    # Mass-loss function based on the adopted AMR. 
+    # Mass-loss function based on the adopted AMR 
     gd = np.zeros((a.Rbins,a.jd))
     for i in range(a.Rbins):
         gd[i] = amr.mass_loss(a.t,amrd[i])
 
-    # Star formation rate function based on the calculated mass loss function.
+    # Star formation rate function based on the calculated mass loss function
     sfr = SFR()
     if p.pkey==0:
         (SFRd,NSFRd,SFRd0,NSFRd0),(SFRt,NSFRt,SFRt0,NSFRt0),(SFRtot,NSFRtot,SFRtot0,NSFRtot0) =\
@@ -169,7 +169,7 @@ if p.run_mode!=0:
             sigwpeak_excess = inpcheck_sigwpeak(p,a)
         
     
-# Again, for the future use, we create a single object (dict) containing defined functions. 
+# Again, for the future use, we create a single object (dict) containing defined functions 
 inp_names = ['SFRd0','NSFRd0','SFRt0','NSFRt0','SFRtot0','NSFRtot0','gd0','gt','AMRd0','AMRt','hg10','hg20']
 inp_arrays = [SFRd0,NSFRd0,SFRt0,NSFRt0,SFRtot0,NSFRtot0,gd0,gt,amrd0,amrt,hg10,hg20]
 if p.pkey!=0:

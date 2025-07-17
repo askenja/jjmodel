@@ -7,6 +7,7 @@ Created on Mon Feb 20 18:17:18 2017
 import os 
 import inspect
 import numpy as np 
+from itertools import repeat
 from multiprocessing import Pool
 from astropy.table import Table
 from .funcs import AMR, log_surface_gravity
@@ -21,7 +22,7 @@ class ColumnsIso():
     Collection of methods to work with the columns of Padova, MIST, and BaSTI isochrones.
     """
     
-    def column_namespace(self,photometric_system):
+    def column_namespace(self,mode,photometric_system):
         """
         Names of the useful isochrone columns to be extracted from 
         the stellar library (or calculated from them).
@@ -46,9 +47,11 @@ class ColumnsIso():
         
         this_function = inspect.stack()[0][3]
         ch = CheckIsoInput()
-        photometric_system = ch.check_photometric_system(photometric_system,this_function)
+        photometric_system = ch.check_photometric_system(mode,photometric_system,this_function)
  
         basic_columns = ['Mini','Mf','logL','logT','logg']
+        if mode!='BasTI':
+            basic_columns += ['phase']
         photo_columns = {'GaiaDR2_MAW':['G_DR2','GBPbr_DR2','GBPft_DR2','GRP_DR2'],
                          'GaiaEDR3':['G_EDR3','GBP_EDR3','GRP_EDR3'],
                          'UBVRIplus':['U','B','V','R','I','J','H','K']
@@ -75,6 +78,8 @@ class ColumnsIso():
         :type get: list[str]
         :param printnames: Optional. If True, prints all useful columns available in the isochrones. 
         :type printnames: boolean
+        :param wd: Optional. Indicates whether we work with main sequence + giants isochrones or white dwarfs. 
+        :type wd: bool
          
         :return: List of positions of the columns given in parameter **get**. 
         :rtype: list             
@@ -82,25 +87,30 @@ class ColumnsIso():
 
         # After my pre-processing (only potentially useful columns left)
         namespace_padova = {'Mini':0,'Mf':1,'logL':2,'logT':3,'logg':4,
-                            'U':5,'B':6,'V':7,'R':8,'I':9,'J':10,'H':11,'K':12,
-                            'G_DR2':13,'GBPbr_DR2':14,'GBPft_DR2':15,'GRP_DR2':16,
-                            'G_EDR3':17,'GBP_EDR3':18,'GRP_EDR3':19
+                            'U':6,'B':7,'V':8,'R':9,'I':10,'J':11,'H':12,'K':13,
+                            'G_DR2':14,'GBPbr_DR2':15,'GBPft_DR2':16,'GRP_DR2':17,
+                            'G_EDR3':18,'GBP_EDR3':19,'GRP_EDR3':20,'phase':5
                             }
         namespace_mist = {'Mini':0,'Mf':1,'logT':2,'logg':3,'logL':4,
                           'U':5,'B':6,'V':7,'R':8,'I':9,'J':10,'H':11,'K':12,
-                            'G_DR2':13,'GBPbr_DR2':14,'GBPft_DR2':15,'GRP_DR2':16,
-                            'G_EDR3':17,'GBP_EDR3':18,'GRP_EDR3':19
-                            }
-        namespace_basti = {'Mini':0,'Mf':1,'logL':2,'logT':3,
-                           'G_EDR3':4,'GBP_EDR3':5,'GRP_EDR3':6
-                            }
+                          'G_DR2':13,'GBPbr_DR2':14,'GBPft_DR2':15,'GRP_DR2':16,
+                          'G_EDR3':17,'GBP_EDR3':18,'GRP_EDR3':19, 'phase':20
+                          }
+        if 'wd' in kwargs and kwargs['wd']==True:
+            namespace_basti = {'Mini':0,'Mf':1,'logL':3,'logT':2,'logg':4,
+                               'U':5,'B':6,'V':7,'R':8,'I':9,'J':10,'H':11,'K':12,
+                               'G_EDR3':13,'GBP_EDR3':14,'GRP_EDR3':15
+                               }
+        else:
+            namespace_basti = {'Mini':0,'Mf':1,'logL':2,'logT':3,'logg':4,
+                               'G_EDR3':4,'GBP_EDR3':5,'GRP_EDR3':6
+                               }
         
         if mode=='Padova':
             out = [namespace_padova[i] for i in get]
         if mode=='MIST':
             out = [namespace_mist[i] for i in get]
         if mode=='BaSTI':
-            get.remove('logg')
             out = [namespace_basti[i] for i in get]
             
         if 'printnames' in kwargs and kwargs['printnames']==True:
@@ -108,6 +118,8 @@ class ColumnsIso():
                 print(namespace_padova.keys())
             if mode=='MIST':
                 print(namespace_mist.keys())
+            if mode=='BaSTI':
+                print(namespace_basti.keys())
                 
         return out
         
@@ -154,6 +166,27 @@ class ColumnsIso():
             iso[keys[i]] = np.array(iso[keys[i]])[index_sorted]
             
         return iso
+    
+    
+    def append_iso (self, isoms, isowd):
+        """
+        Appends the white dwarf isochrone to the main isochrone. 
+        
+        :param isoms: Main isochrone.
+        :type isoms: dict 
+        :param isowd: White-dwarf isochrone.
+        :type isowd: dict 
+        
+        :return: Concatenated isochrone. 
+        :rtype: dict 
+        """
+        new ={}
+        keys = list(isoms.keys())
+
+        for i in range(len(keys)):
+            new[keys[i]] = np.concatenate((isoms[keys[i]],isowd[keys[i]]))
+
+        return new
 
 
     def apply_IMF(self,imf,iso_masses,mass):   
@@ -185,11 +218,13 @@ class ColumnsIso():
     
     
 
-def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf):
+def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
     """
     Creates a table with the semi-(metallicity,age,mass) 'stellar assemblies'.
     
-    :param mode: Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
+    :param mode: Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, 
+        or ``'BaSTI'``. This only corresponds to the main isochrone 
+        (main sequence and giants). 
     :type mode: str
     :param photometric_system: Photometric system. 
         Name of the photometric system to use, can be: 
@@ -213,57 +248,161 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf):
     :param imf: IMF PDF function returning the probability to form a star 
         with a mass between *mass1* and *mass2*. 
     :type imf: *function(mass1,mass2)*
+    :param wd: Optional. Prescribes whether white dwarf population should be created. 
+        Can be ``'ms+wd'`` (WD and other populations) or ``'wd'`` (WDs only). 
+    :type wd: str 
     
     :return: Isochrone table for the given metallicity and age, with several additional columns.
     :rtype: dict            
     """ 
     
-    if mode=='BaSTI':
-        folder_name = 'gaiaedr3'
-    else:
-        folder_name = 'multiband'
-        
-    grid_mask = np.loadtxt(os.path.join(localpath,'input','isochrones',mode,folder_name,
-                                        ''.join(('grid_mask_',mode,'.txt')))).T
-    grid_mask = np.array(grid_mask,dtype=bool)
-    # File grid_mask is a boolean mask indicating which isochrone agex are available 
-    # for a given metallicity. In fact, only needed with BaSTI isochrones, as for 
-    # Padova and MIST all ages in the range of 0-13 Gyr are available for the adopted 
-    # metallicity grid. 
-    
     met_available_table = np.loadtxt(os.path.join(localpath,'input','isochrones',
-                                                  'Metallicity_grid.txt')).T
-    met_available = met_available_table[1][grid_mask[0]]
-    age_available = np.arange(0.05,13.05,0.05)
-    
-    index_best_met = np.where(np.abs(np.subtract(met_available,met))==\
-                              np.amin(np.abs(np.subtract(met_available,met))))[0][0]
-    index_best_met2 = np.where(met_available_table[1]==met_available[index_best_met])[0][0]
-    age4met_available = age_available[grid_mask[:,index_best_met2]]
-    index_best_age = np.where(np.abs(np.subtract(age4met_available,age))==\
-                              np.amin(np.abs(np.subtract(age4met_available,age))))[0][0]                                                         
-    
-    name = os.path.join(localpath,'input','isochrones',mode,folder_name,
-                        ''.join(('iso_fe',str(round(met_available[index_best_met],2)))),
-                        ''.join(('iso_age',str(round(age4met_available[index_best_age],2)),'.txt'))) 
-    
-    isochrone = np.genfromtxt(name).T
-    
+                                                      'Metallicity_grid.txt')).T
     cols = ColumnsIso()
-    all_columns = cols.column_namespace(photometric_system)
+    all_columns = cols.column_namespace(mode,photometric_system)
     
-    indices = cols.column_positions(mode,all_columns)
-    iso = cols.read_columns(mode,isochrone,all_columns,indices)
+    if 'wd' not in kwargs or ('wd' in kwargs and kwargs['wd']=='ms+wd'):
+        if mode=='BaSTI':
+            folder_name = os.path.join('MS+','gaiaedr3')
+        else:
+            folder_name = 'multiband'
+            
+        grid_mask = np.loadtxt(os.path.join(localpath,'input','isochrones',mode,folder_name,
+                                            ''.join(('grid_mask_',mode,'.txt')))).T
+        grid_mask = np.array(grid_mask,dtype=bool)
+        # File grid_mask is a boolean mask indicating what isochrone ages are available 
+        # for a given metallicity. In fact, only needed with BaSTI isochrones, as for 
+        # Padova and MIST all ages in the range of 0-13 Gyr are available for the adopted 
+        # metallicity grid. 
+        
+        met_available = met_available_table[1][grid_mask[0]]
+        
+        # Main isochrone
+        # -----------------------------------------------------------
+        age_available = np.arange(0.05,13.05,0.05)
+        # Find closest metallicity in the grid of available metallicities
+        # for this isochrone grid (e.g. Fe/H values of +0.46 and +0.47 dex  
+        # from our standard metallicity grid are not available for BaSTI)
+        index_best_met = np.where(np.abs(np.subtract(met_available,met))==\
+                                  np.amin(np.abs(np.subtract(met_available,met))))[0][0]
+            
+        index_best_met2 = np.where(met_available_table[1]==met_available[index_best_met])[0][0]
+        
+        # Get available ages for the adopted metallicity
+        age4met_available = age_available[grid_mask[:,index_best_met2]]
+        # Find closest available age to the modelled one 
+        index_best_age = np.where(np.abs(np.subtract(age4met_available,age))==\
+                                  np.amin(np.abs(np.subtract(age4met_available,age))))[0][0]                                                         
+        
+        name = os.path.join(localpath,'input','isochrones',mode,folder_name,
+                            ''.join(('iso_fe',str(round(met_available[index_best_met],2)))),
+                            ''.join(('iso_age',str(round(age4met_available[index_best_age],2)),'.txt'))) 
     
-    iso = cols.sort_mass_column(iso)
-    iso['N'] = cols.apply_IMF(imf,iso['Mini'],mass)
-    iso['age'], iso['FeH'] = [age for i in iso['logT']],[met for i in iso['logT']]
-    if mode=='BaSTI':
-        iso['logg'] = [log_surface_gravity(mass,10**logL,10**logT) 
-                       for (mass,logL,logT) in zip(iso['Mf'],iso['logL'],iso['LogT'])]
+        isochrone = np.genfromtxt(name).T
+        
+        indices = cols.column_positions(mode,all_columns)
+        iso = cols.read_columns(mode,isochrone,all_columns,indices)
+        
+        #iso = cols.sort_mass_column(iso) # not needed any more, new isochrone grid has sorted mass column 
+        iso['N'] = cols.apply_IMF(imf,iso['Mini'],mass)
+        iso['age'], iso['FeH'] = [age for i in iso['logT']],[met for i in iso['logT']]
+        if mode=='BaSTI':
+            iso['phase'] = np.repeat(1,len(iso['N'])) #MS to AGB are 1
+
+    
+    if 'wd' in kwargs and (kwargs['wd']=='ms+wd' or kwargs['wd']=='wd'):
+                
+        index_best_met = np.where(np.abs(np.subtract(met_available_table[1],met))==\
+                                  np.amin(np.abs(np.subtract(met_available_table[1],met))))[0][0]
+        
+        # DA white-dwarf isochrone
+        # -----------------------------------------------------------
+        age_available_dawd = np.hstack((0.080,np.arange(0.100,2.700+0.050,0.050), 
+                                        np.arange(2.900,12.700,0.050)))
+
+        index_best_age_dawd = np.where(np.abs(np.subtract(age_available_dawd,age))==\
+                                  np.amin(np.abs(np.subtract(age_available_dawd,age))))[0][0] 
+        
+        # DB white-dwarf isochrone
+        # -----------------------------------------------------------
+        age_available_dbwd = age_available_dawd[:111] # only for age < 5.7 Gyr
+                
+        index_best_age_dbwd = np.where(np.abs(np.subtract(age_available_dbwd,age))==\
+                                  np.amin(np.abs(np.subtract(age_available_dbwd,age))))[0][0] 
+
+        # Check for metallicities and ages
+        '''
+        print('modeled Fe/H: ', met, ' modeled age: ',age)
+        print('DA WDs')
+        print('chosen Fe/H:', round(met_available_table[1][index_best_met],2),
+              ' chosen age:', round(age_available_dawd[index_best_age_dawd],2))
+        print('DB WDs')
+        print('chosen Fe/H:', round(met_available_table[1][index_best_met],2),
+              ' chosen age:', round(age_available_dbwd[index_best_age_dbwd],2))
+        '''
+    
+        name_dawd = os.path.join(localpath,'input','isochrones','BaSTI','WD','multiband','H',
+                            ''.join(('iso_fe',str(round(met_available_table[1][index_best_met],2)))),
+                            ''.join(('iso_age',str(round(age_available_dawd[index_best_age_dawd],2)),
+                                     '.txt')))
+        
+        name_dbwd = os.path.join(localpath,'input','isochrones','BaSTI','WD','multiband','He',
+                            ''.join(('iso_fe',str(round(met_available_table[1][index_best_met],2)))),
+                            ''.join(('iso_age',str(round(age_available_dbwd[index_best_age_dbwd],2)),
+                                     '.txt')))
+    
+        isochrone_dawd = np.genfromtxt(name_dawd).T
+        isochrone_dbwd = np.genfromtxt(name_dbwd).T
+        
+        if mode!='BaSTI':
+            all_columns.remove('phase')
+            
+        #for DAWD
+        indices_wd = cols.column_positions('BaSTI',all_columns,wd=True)
+        
+        iso_dawd = cols.read_columns('BaSTI',isochrone_dawd,all_columns,indices_wd)
+        iso_dawd = cols.sort_mass_column(iso_dawd)
+        iso_dawd['N'] = cols.apply_IMF(imf,iso_dawd['Mini'],mass)*0.8
+        #iso_dawd['N'] = iso_dawd['N']*(1 - fdb_parabola(10**iso_dawd['logT']/10**3))*0.8 
+        iso_dawd['age'], iso_dawd['FeH'] = [age for i in iso_dawd['logT']],[met for i in iso_dawd['logT']]
+        iso_dawd['phase'] = np.repeat(10,len(iso_dawd['N'])) # DA WDs are 10 
+        
+        #for DB WD
+        iso_dbwd = cols.read_columns('BaSTI',isochrone_dbwd,all_columns,indices_wd)
+        iso_dbwd = cols.sort_mass_column(iso_dbwd)
+        iso_dbwd['N'] = cols.apply_IMF(imf,iso_dbwd['Mini'],mass)*0.2
+        #iso_dbwd['N'] = iso_dbwd['N'] * (fdb_parabola(10**iso_dbwd['logT']/10**3))*0.2
+        iso_dbwd['age'], iso_dbwd['FeH'] = [age for i in iso_dbwd['logT']],[met for i in iso_dbwd['logT']]
+        iso_dbwd['phase'] = np.repeat(11,len(iso_dbwd['N'])) # DB WDs are 11
+        
+        iso_wd = cols.append_iso(iso_dawd, iso_dbwd)
+        
+    if 'wd' in kwargs:
+        if kwargs['wd']=='ms+wd':
+            iso = cols.append_iso(iso,iso_wd)
+        if kwargs['wd']=='wd':
+            iso = iso_wd
+        
     return iso
     
   
+def fdb_parabola(Teff):
+    #need Teff in 10^3 format only!!!!
+    params = np.array([ 1.40000000e-04, -1.15983436e-02,  3.11929944e-01]) #best fit parameters
+    def parabola(x, a, b, c): #function to fit
+        return a*x**2 + b*x + c
+    return parabola(np.array(Teff), *[1.40000000e-04, -1.15983436e-02,  3.11929944e-01]) #returns fraction of He dom atm, so for Da it will be 1-this frac
+
+
+def _starmap_with_kwargs_(pool, fn, args_iter, kwargs_iter):
+    args_for_starmap = zip(repeat(fn), args_iter, kwargs_iter)
+    return pool.starmap(_apply_args_and_kwargs_, args_for_starmap)
+
+def _apply_args_and_kwargs_(fn, args, kwargs):
+    return fn(*args, **kwargs)
+
+
+    
 def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_system,**kwargs):
     """
     Constructs a list of the semi-(metallicity,age,mass) 
@@ -305,6 +444,9 @@ def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_
     :param Nmet_dt: Number of metallicity populations used to represent the Gaussian distribution 
         (**FeH_scatter**) around mean metallicities (the thin- and thick-disk AMR). 
     :type Nmet_dt: int 
+    :param wd: Optional. Prescribes whether white dwarf population should be created. 
+        Can be ``'ms+wd'`` (WD and other populations) or ``'wd'`` (WDs only). 
+    :type wd: str 
     
     :return: None. Saves the calculated tables to the output directory defined in the directory tree ``a.T``.         
     """ 
@@ -316,6 +458,10 @@ def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_
     print(''.join(('\nStellar population synthesis for R = ', str(R),' kpc:')))
     # By default, the halo metalicity distribution is a Gaussian 
     # with mean at -1.5 and std=0.4 (An, Beers+2013). 
+    
+    if 'wd' in kwargs and kwargs['wd']=='wd' and mode!='BaSTI':
+        print('Warning. Note that currently the only WD isochrone set is BaSTI, \
+              and you chose mode =',mode,'. Changed mode to BaSTI.')
         
     amrsh_spread = np.linspace(p.FeHsh-3*p.dFeHsh,p.FeHsh+3*p.dFeHsh,p.n_FeHsh)
     wsh = gauss_weights(amrsh_spread,p.FeHsh,p.dFeHsh)
@@ -403,7 +549,7 @@ def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_
         popt = [tt,mett,wt]
         
     pop = [popd,popt,popsh]
-    labels=['d','t','sh']
+    labels = ['d','t','sh']
         
     for i in range(len(pop)):
         
@@ -425,17 +571,22 @@ def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_
         
         jm = len(age)
         argument_list = [(mode,photometric_system,met[k],age[k],mass[k],imf) for k in np.arange(jm)]
+        kwargs_list = repeat(kwargs)            
         
         # Create output lists
         cols = ColumnsIso()
-        columns = cols.column_namespace(photometric_system)
-        all_columns = ['N','age','FeH'] + columns + ['disk_label']
+        columns = cols.column_namespace(mode,photometric_system)
+        all_columns = ['N','age','FeH'] + columns
+        if mode == 'BaSTI':
+            all_columns += ['phase']     
+        all_columns += ['disk_label']
         
         ncols = len(all_columns)
         output = [[] for i in range(ncols)]
                 
         pool = Pool(processes=p.nprocess)
-        result = pool.starmap(stellar_assemblies_iso,argument_list)
+        #result = pool.starmap(stellar_assemblies_iso,stellar_assemblies_iso)
+        result = _starmap_with_kwargs_(pool,stellar_assemblies_iso,argument_list,kwargs_list)
         pool.close()
         pool.join()
         

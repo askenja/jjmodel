@@ -108,7 +108,7 @@ def log_surface_gravity(Mf,L,Teff):
     sigma = 5.67*10**(-8)   # Stefan-Boltzmann constant, W*m−2*K−4
     L_sun = 3.828*10**26    # Solar luminosity, W
     M_sun = 1.988*10**30    # Solar mass, kg
-    Teff_sun = 5778         # Solar temperature, K
+    #Teff_sun = 5778         # Solar temperature, K
 
     L_W = np.multiply(L,L_sun)
     M_kg = np.multiply(Mf,M_sun)
@@ -1587,9 +1587,9 @@ class SFR():
         if len(sigmap)==1:
             ind_peak = np.array([ind_peak])
             
+        '''
         ind_peak_max = np.amax(ind_peak)        # The youngest peak population
         
-        '''
         if ind_peak_max >= jd:                  # Peak center can be outside of the time axis
             t_max = self.dt*(ind_peak_max+1)
             t_long = np.arange(t1+self.dt/2,t_max+self.dt/2,self.dt)
@@ -1830,9 +1830,9 @@ class IMF():
                 rez = ka3*mass**(-a3)
         return rez
         
-    
+    """
     def _dndm_probability_(self,mass1,mass2,Nmdm):
-        """
+        '''
         Calculates the probability of a star to be born with the 
         mass in the given interval. 
         
@@ -1848,7 +1848,7 @@ class IMF():
         dndm_probability_m12 : scalar
             Probability of a star to be born with mass within the 
             given interval [mass1,mass2]. Normalized to unity. 
-        """
+        '''
         if mass1 < self.mlow:
             mass1 = self.mlow
         if mass2 > self.mup:
@@ -1863,7 +1863,7 @@ class IMF():
         dndm_probability_m12 = weight*np.trapz(dndm_probability_func[m1_ind:m2_ind],
                                                self.m_lin[m1_ind:m2_ind])
         return dndm_probability_m12
-    
+    """
     
     def _number_stars_(self,mass1,mass2):
         
