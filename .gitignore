@@ -155,6 +155,8 @@ cython_debug/
 
 # isocrhones 
 /jjmodel/input/isochrones/BaSTI
-
+/jjmodel/input/isochrones/MIST
+/jjmodel/input/isochrones/Padova
+/jjmodel/tutorials/tutorial1/output
 
 # End of https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks

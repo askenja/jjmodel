@@ -23,7 +23,7 @@ class ColumnsIso():
     """
     
     def column_namespace(self,mode,photometric_system):
-        """
+        r"""
         Names of the useful isochrone columns to be extracted from 
         the stellar library (or calculated from them).
         
@@ -50,7 +50,7 @@ class ColumnsIso():
         photometric_system = ch.check_photometric_system(mode,photometric_system,this_function)
  
         basic_columns = ['Mini','Mf','logL','logT','logg']
-        if mode!='BasTI':
+        if mode!='BaSTI':
             basic_columns += ['phase']
         photo_columns = {'GaiaDR2_MAW':['G_DR2','GBPbr_DR2','GBPft_DR2','GRP_DR2'],
                          'GaiaEDR3':['G_EDR3','GBP_EDR3','GRP_EDR3'],
@@ -69,7 +69,7 @@ class ColumnsIso():
                 
         
     def column_positions(self,mode,get,**kwargs):
-        """
+        r"""
         Gets position of columns in the isochrone tables.
             
         :param mode: Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
@@ -103,7 +103,7 @@ class ColumnsIso():
                                }
         else:
             namespace_basti = {'Mini':0,'Mf':1,'logL':2,'logT':3,'logg':4,
-                               'G_EDR3':4,'GBP_EDR3':5,'GRP_EDR3':6
+                               'G_EDR3':5,'GBP_EDR3':6,'GRP_EDR3':7
                                }
         
         if mode=='Padova':
@@ -125,7 +125,7 @@ class ColumnsIso():
         
     
     def read_columns(self,mode,isochrone,columns,indices):
-        """
+        r"""
         Extracts columns from the isochrone tables.
             
         :param mode: Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
@@ -149,7 +149,7 @@ class ColumnsIso():
     
     
     def sort_mass_column(self,iso):
-        """
+        r"""
         Reshuffles isochrone rows to order the mass column.
             
         :param iso: Isochrone (output of read_columns).
@@ -190,7 +190,7 @@ class ColumnsIso():
 
 
     def apply_IMF(self,imf,iso_masses,mass):   
-        """
+        r"""
         Applies IMF to the isochrone mass column.
         
         :param imf: IMF PDF function returning the probability to form a 
@@ -219,7 +219,7 @@ class ColumnsIso():
     
 
 def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
-    """
+    r"""
     Creates a table with the semi-(metallicity,age,mass) 'stellar assemblies'.
     
     :param mode: Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, 
@@ -404,7 +404,7 @@ def _apply_args_and_kwargs_(fn, args, kwargs):
 
     
 def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_system,**kwargs):
-    """
+    r"""
     Constructs a list of the semi-(metallicity,age,mass) 
     'stellar assemblies' at some given Galactocentric distance. 
         
@@ -554,7 +554,7 @@ def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_
     for i in range(len(pop)):
         
         age, met = np.subtract(tp,pop[i][0]), pop[i][1] 
-        indt = np.array(np.array(pop[i][0])//tr,dtype=np.int)
+        indt = np.array(np.array(pop[i][0])//tr,dtype=int)
         
         if i==0:
             print('\tthin disk',end='')

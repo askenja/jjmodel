@@ -122,7 +122,7 @@ def dir_tree(p,**kwargs):
 
 
 def tab_sorter(name,p,T,**kwargs):
-    """
+    r"""
     Sorts all kinds of the calculated quantities into the output subdirectories. 
     
     :param name: Short name of the quantity.
@@ -207,7 +207,7 @@ def tab_sorter(name,p,T,**kwargs):
  
     
 def tab_reader(names,p,T,**kwargs):
-    """
+    r"""
     Reads data from the output directory tree.
     
     :param names: Names of the tables to read. Names of the quantites are the same 
@@ -332,7 +332,7 @@ class TabSaver():
     """
     
     def __init__(self,p,a,**kwargs):
-        """
+        r"""
         Initialization of the class instance. 
         
         :param p: Set of model parameters from the parameter file. 
@@ -397,26 +397,26 @@ class TabSaver():
         self.p, self.a = p, a
         self.kwargs = kwargs
         Q0 = 'Rho'
-        Q1 = 'rho[Msun/pc^3]'
+        Q1 = r'rho[Msun/pc^3]'
         w = 'density-weighted'
         w0 = 'rw'
         if 'number' in kwargs and kwargs['number']==True:
             Q0 = 'N'  
-            Q1 = 'N[1/pc^3]'
+            Q1 = r'N[1/pc^3]'
             w = 'number-weighted'
             w0 = 'nw'
         if 'sigma' in kwargs and kwargs['sigma']==True:
             if 'number' in kwargs and kwargs['number']==True:
                 Q0 = 'SigmaN'
-                Q2 = 'N[1/pc^2]'
+                Q2 = r'N[1/pc^2]'
             else:    
                 Q0 = 'Sigma'
-                Q2 = 'Sigma[Msun/pc^2]'
+                Q2 = r'Sigma[Msun/pc^2]'
         else:
             if 'number' in kwargs and kwargs['number']==True:
-                Q2 = 'N[1/pc^3]'
+                Q2 = r'N[1/pc^3]'
             else:    
-                Q2 = 'rho[Msun/pc^3]'      
+                Q2 = r'rho[Msun/pc^3]'      
         self.Q0 = Q0
         self.Q1 = Q1
         self.Q2 = Q2
@@ -439,7 +439,7 @@ class TabSaver():
                 self.fmt2 = '.' + self.kwargs['save_format']
             
     def rhoz_save(self,profiles,R):
-        """
+        r"""
         Saves vertical density profiles to the subfolder ``a.T['dens']``. 
         File name base is ``'Rhoz'``, ``'NRohz'``, or ``'NCMassz'`` (depending on the class 
         instance *kwargs*). 
@@ -468,17 +468,17 @@ class TabSaver():
             if (('normalized' in self.kwargs and self.kwargs['normalized']==True) or
                 ('cumulative' in self.kwargs and self.kwargs['cumulative']==True)):
                 if 'normalized' in self.kwargs and self.kwargs['normalized']==True:
-                    head_rhoz += 'rho(|z|)_i/rho_tot(|z|)'
+                    head_rhoz += r'rho(|z|)_i/rho_tot(|z|)'
                 if 'cumulative' in self.kwargs and self.kwargs['cumulative']==True:
-                    head_rhoz += 'Mass(|z|)_i/Mass_tot(|z|)'
+                    head_rhoz += r'Mass(|z|)_i/Mass_tot(|z|)'
             else:
-                head_rhoz += 'rho(|z|)_i[Msun/pc^3]'
+                head_rhoz += r'rho(|z|)_i[Msun/pc^3]'
             np.savetxt(os.path.join(self.a.T[''.join(('dens',self.dir))],''.join((savepath,self.fmt))),
                        profiles,header=head_rhoz)
             
             
     def fi_iso_save(self,profiles):
-        """
+        r"""
         Saves vertical density profiles to the subfolder ``a.T['dens']``. 
         File name base is ``'Rhoz'``, ``'NRohz'``, or ``'NCMassz'`` (depending on the class 
         instance *kwargs*). 
@@ -497,12 +497,12 @@ class TabSaver():
         if 'fig' in self.kwargs and self.kwargs['fig']==True:
             plt.savefig(os.path.join(self.a.T[''.join(('fi',self.dir2))],''.join((savepath,self.fmt2))))
         np.savetxt(os.path.join(self.a.T[''.join(('fi',self.dir))],''.join((savepath,self.fmt))),
-                   profiles,header=''.join(('|z|[pc], ','Phi[m^2/s^2] at R = [',str(self.p.Rmin),',',
+                   profiles,header=''.join(('|z|[pc], ',r'Phi[m^2/s^2] at R = [',str(self.p.Rmin),',',
                                str(self.p.Rmax),'] kpc with step dR = ',str(self.p.dR),' kpc')))  
                        
 
     def rot_curve_save(self,profiles):
-        """
+        r"""
         Saves rotation curve to the subfolder ``a.T['kintab']``. 
         File name base is ``'Vc_R'``. 
         
@@ -517,11 +517,11 @@ class TabSaver():
         
         np.savetxt(os.path.join(self.a.T['kintab'],''.join(('Vc_R',self.fmt))),
                    profiles,header='R[kpc], Q_tot, Q_bulge, Vc_thin.d, Q_thick.d, Q_mol.g, '+\
-                                        'Q_at.g, Q_DM, Q_st.halo with Q = Vc[km/s]')  
+                                        r'Q_at.g, Q_DM, Q_st.halo with Q = Vc[km/s]')  
 
             
     def poptab_save(self,table,mode,mode_iso,R,mode_pop_name):
-        """
+        r"""
         Saves stellar assembly table to the subfolder ``a.T['poptab']`` . 
         
         :param table: Table with stellar assemblies, output of 
@@ -562,7 +562,7 @@ class TabSaver():
                                            
     
     def rhoz_monoage_save(self,profiles,mode,R,ages):
-        """
+        r"""
         Saves vertical mono-age density profiles to the subfolder ``a.T['dens']``. 
         File name base is ``'Rho'``, ``'N'``,``'Sigma'``, or ``'SigmaN'`` 
         (depending on parameters **sigma** and **number** in the class instance *kwargs*). 
@@ -607,7 +607,7 @@ class TabSaver():
         
                                    
     def rhoz_monomet_save(self,profiles,mode,R,mets):
-        """
+        r"""
         Saves vertical mono-metallicity density profiles to the subfolder ``a.T['dens']``. 
         File name base is ``'Rho'``, ``'N'``,``'Sigma'``, or ``'SigmaN'`` 
         (depending on parameters **sigma** and **number** in the class instance *kwargs*). 
@@ -645,13 +645,13 @@ class TabSaver():
         else:
             np.savetxt(os.path.join(self.a.T[''.join(('dens',self.dir))],''.join((savepath,self.fmt))),
                        np.hstack((self.a.z.reshape(self.a.n,1),profiles.T)),                   
-                       header=''.join(('|z|[pc], ',self.Q1,' (',label,') for [Fe/H] = [',
+                       header=''.join(('|z|[pc], ',self.Q1,' (',label,r') for [Fe/H] = [',
                                str(round(mets[0],3)),',',str(round(mets[-1],3)),'] with step = ',
                                str(round(np.mean(np.diff(mets)),3)),' at R = ',str(R),' kpc')))
                 
         
     def rhor_monoage_save(self,profiles,mode,zlim,ages):        
-        """
+        r"""
         Saves radial mono-age density profiles to the subfolder ``a.T['dens']``. 
         File name base is ``'Rho'``, ``'N'``,``'Sigma'``, or ``'SigmaN'`` 
         (depending on parameters **sigma** and **number** in the class instance *kwargs*). 
@@ -697,7 +697,7 @@ class TabSaver():
                                                                      
 
     def rhor_monomet_save(self,profiles,mode,zlim,mets):
-        """
+        r"""
         Saves radial mono-metallicity density profiles to the subfolder ``a.T['dens']``. 
         File name base is ``'Rho'``, ``'N'``,``'Sigma'``, or ``'SigmaN'`` 
         (depending on parameters **sigma** and **number** in the class instance *kwargs*). 
@@ -735,14 +735,14 @@ class TabSaver():
         else:
             np.savetxt(os.path.join(self.a.T[''.join(('dens',self.dir))],''.join((savepath,self.fmt))),
                        np.hstack((self.a.R.reshape(self.a.Rbins,1),profiles.T)),
-                       header=''.join(('R[kpc], ',self.Q2,' (',label,') for [Fe/H] = [',
+                       header=''.join(('R[kpc], ',self.Q2,' (',label,r') for [Fe/H] = [',
                                str(round(mets[0],3)),',',str(round(mets[-1],3)),'] with step = ',
                                str(round(np.mean(np.diff(mets)),3)),
                                ' at z = ',str(zlim).replace(' ', ''),' pc')))
         
                    
     def agez_save(self,profiles,mode):
-        """
+        r"""
         Saves vertical age profile to the subfolder ``a.T['age']``. 
         File name base is ``'Age'``. 
         
@@ -803,7 +803,7 @@ class TabSaver():
                                        
         
     def ager_save(self,profiles,mode,zlim):
-        """
+        r"""
         Saves radial age profile to the subfolder ``a.T['age']``. 
         File name base is ``'Age'``. 
         
@@ -847,7 +847,7 @@ class TabSaver():
     
         
     def metz_save(self,profiles,mode):
-        """
+        r"""
         Saves vertical netallicity profile to the subfolder ``a.T['met']``. 
         File name base is ``'FeH'``. 
         
@@ -898,15 +898,15 @@ class TabSaver():
             if not only_local:
                 np.savetxt(os.path.join(self.a.T[''.join(('met',self.dir))],''.join((savepath,self.fmt))),
                            np.hstack((self.a.z.reshape(self.a.n,1),fehzr.T)),                   
-                           header=''.join(('|z|[pc], <[Fe/H]> (',self.w,', ',label,') for R = [',str(self.p.Rmin),
+                           header=''.join((r'|z|[pc], <[Fe/H]> (',self.w,', ',label,') for R = [',str(self.p.Rmin),
                                            ',',str(self.p.Rmax),'] kpc with step = ',str(self.p.dR),' kpc')))
             np.savetxt(os.path.join(self.a.T[''.join(('met',self.dir))],''.join((savepath0,self.fmt))),
-                   np.stack((self.a.z,fehzr0),axis=-1),header=''.join(('|z|[pc], <[Fe/H]> (',self.w,        
+                   np.stack((self.a.z,fehzr0),axis=-1),header=''.join((r'|z|[pc], <[Fe/H]> (',self.w,        
                    ', ',label,') at R = ',str(self.p.Rsun),' kpc')))                                   
                                    
         
     def metr_save(self,profiles,mode,zlim):
-        """
+        r"""
         Saves radial metallicity profile to the subfolder ``a.T['met']``. 
         File name base is ``'FeH'``. 
         
@@ -944,12 +944,12 @@ class TabSaver():
             except:
                 out = np.stack((self.a.R,profiles),axis=-1)
             np.savetxt(os.path.join(self.a.T[''.join(('met',self.dir))],''.join((savepath,self.fmt))),
-                       out,header=''.join(('R[kpc], <[Fe/H]> (',self.w,', ',label,
+                       out,header=''.join((r'R[kpc], <[Fe/H]> (',self.w,', ',label,
                                            ') at |z| = ',str(zlim).replace(' ', ''),' pc')))                   
                                        
 
     def agehist_save(self,ages,mode,zlim):
-        """
+        r"""
         Saves age distributions for the different Galactocentric distances 
         to the subfolder ``a.T['age']``. File name base is ``'f(age)'``. 
         
@@ -1025,7 +1025,7 @@ class TabSaver():
         
             
     def methist_save(self,mets,mode,zlim):
-        """
+        r"""
         Saves metallicity distributions for the different Galactocentric distances 
         to the subfolder ``a.T['met']``. File name base is ``'f(FeH)'``. 
         
@@ -1090,17 +1090,17 @@ class TabSaver():
             if not only_local:
                 np.savetxt(os.path.join(self.a.T[''.join(('met',self.dir))],''.join((savepath,self.fmt))),
                            np.hstack((metbinsc.reshape(len(metbinsc),1),np.array(metdist).T)),
-                           header=''.join(('[Fe/H], fraction (',self.w,', ',label,') at R = [',str(self.p.Rmin),
+                           header=''.join((r'[Fe/H], fraction (',self.w,', ',label,') at R = [',str(self.p.Rmin),
                                            ',',str(self.p.Rmax),'] kpc with step = ',str(self.p.dR),' kpc and |z| = ',
                                            str(zlim).replace(' ', ''),' pc')))
             np.savetxt(os.path.join(self.a.T[''.join(('met',self.dir))],''.join((savepath0,self.fmt))),
                        np.stack((metbinsc,metdist0),axis=-1),
-                       header=''.join(('[Fe/H], fraction (',self.w,', ',label,') at R = ',str(self.p.Rsun),
+                       header=''.join((r'[Fe/H], fraction (',self.w,', ',label,') at R = ',str(self.p.Rsun),
                                        ' kpc and |z| = ',str(zlim).replace(' ', ''),' pc')))                                   
                                    
     
     def hr_monoage_save(self,H,mode,ages):
-        """
+        r"""
         Saves scale heights calculated for the mono-age subpopulations for the different Galactocentric 
         distances. Output subfolder is ``a.T['height']``. File name base is ``'H'``. 
         
@@ -1139,7 +1139,7 @@ class TabSaver():
         
         
     def hr_monomet_save(self,H,mode,mets):
-        """
+        r"""
         Saves scale heights calculated for the mono-metallicity subpopulations (bins) 
         for the different Galactocentric distances. Output subfolder is ``a.T['height']``. 
         File name base is ``'H'``. 
@@ -1171,13 +1171,13 @@ class TabSaver():
         else:
             np.savetxt(os.path.join(self.a.T[''.join(('height',self.dir))],''.join((savepath,self.fmt))),
                        np.hstack((self.a.R.reshape(self.a.Rbins,1),H)),
-                   header=''.join(('R[kpc], h[pc] (',self.w,', ',label,') for [Fe/H] = [',str(round(mets[0],3)),
+                   header=''.join(('R[kpc], h[pc] (',self.w,', ',label,r') for [Fe/H] = [',str(round(mets[0],3)),
                                    ',',str(round(mets[-1],3)),'] with step = ',
                                    str(round(np.mean(np.diff(mets)),3)))))
 
     
     def sigwz_save(self,profiles,mode):
-        """
+        r"""
         Saves vertical profile of W velocity dispersion to the subfolder ``a.T['kinem']``. 
         File name base is ``'SigW'``. 
         
@@ -1228,17 +1228,17 @@ class TabSaver():
             if not only_local:
                 np.savetxt(os.path.join(self.a.T[''.join(('kin',self.dir))],''.join((savepath,self.fmt))),
                            np.hstack((self.a.z.reshape(self.a.n,1),sigwz.T)),
-                           header=''.join(('|z|[pc], <sigma_W>[km/s] (',self.w,', ',label,') at R = [',
+                           header=''.join((r'|z|[pc], <sigma_W>[km/s] (',self.w,', ',label,') at R = [',
                                            str(self.p.Rmin),',',str(self.p.Rmax),'] kpc with step = ',
                                            str(self.p.dR),' kpc')))
             np.savetxt(os.path.join(self.a.T[''.join(('kin',self.dir))],''.join((savepath0,self.fmt))),
                        np.stack((self.a.z,sigwz0),axis=-1),                   
-                       header=''.join(('|z|[pc], <sigma_W>[km/s] (',self.w,', ',label,
+                       header=''.join((r'|z|[pc], <sigma_W>[km/s] (',self.w,', ',label,
                                        ') at R = ',str(self.p.Rsun),' kpc')))
         
     
     def sigwr_save(self,profiles,mode,zlim):
-        """
+        r"""
         Saves radial W-velocity dispersion profiles to the subfolder ``a.T['kinem']``. 
         File name base is ``'SigW'``. 
         
@@ -1276,12 +1276,12 @@ class TabSaver():
                 out = np.stack((self.a.R,profiles),axis=-1)
                 
             np.savetxt(os.path.join(self.a.T[''.join(('kin',self.dir))],''.join((savepath,self.fmt))),
-                       out,header=''.join(('R[kpc], <sigma_W>[km/s] (',self.w,', ',label,') at |z| = [',
+                       out,header=''.join((r'R[kpc], <sigma_W>[km/s] (',self.w,', ',label,') at |z| = [',
                                str(zlim[0]),',',str(zlim[1]),'] pc')))                      
         
         
     def sigwr_monoage_save(self,profiles,mode,zlim,ages):
-        """
+        r"""
         Saves radial W-velocity dispersion profiles calculated for the mono-age subpopulations. 
         Output subfolder is ``a.T['kinem']``. File name base is ``'SigW'``. 
         
@@ -1318,14 +1318,14 @@ class TabSaver():
         else:
             np.savetxt(os.path.join(self.a.T[''.join(('kin',self.dir))],''.join((savepath,self.fmt))),
                        np.hstack((self.a.R.reshape(self.a.Rbins,1),profiles)),           
-                       header=''.join(('R[kpc], <sigma_W>[km/s] (',self.w,', ',label,') for ages = [',
+                       header=''.join((r'R[kpc], <sigma_W>[km/s] (',self.w,', ',label,') for ages = [',
                                str(ages[0]),',',str(ages[-1]),'] Gyr with step = ',
                                str(round(np.mean(np.diff(ages)),3)),' Gyr at |z| = [',
                                str(zlim[0]),',',str(zlim[1]),'] pc')))
                                
         
     def sigwr_monomet_save(self,profiles,mode,zlim,mets):
-        """
+        r"""
         Saves radial W-velocity dispersion profiles calculated for the mono-metallicity subpopulations (bins). 
         Output subfolder is ``a.T['kinem']``. File name base is ``'SigW'``. 
         
@@ -1359,14 +1359,14 @@ class TabSaver():
         else:
             np.savetxt(os.path.join(self.a.T[''.join(('kin',self.dir))],''.join((savepath,self.fmt))),
                        np.hstack((self.a.R.reshape(self.a.Rbins,1),profiles.T)),           
-                       header=''.join(('R[kpc], <sigma_W>[km/s] (',self.w,', ',label,') for [Fe/H] = [',
+                       header=''.join((r'R[kpc], <sigma_W>[km/s] (',self.w,', ',label,') for [Fe/H] = [',
                                str(round(mets[0],3)),',',str(round(mets[-1],3)),'] with step = ',
                                str(round(np.mean(np.diff(mets)),3)),' at |z| = [',
                                str(zlim[0]),',',str(zlim[1]),'] pc')))
         
         
     def mean_quantity_save(self,profiles,mode,R,zlim,quantity):
-        """
+        r"""
         Saves vertical profiles of some quantity calculated based on the stellar assemblies. 
         Output subfolder is ``a.T['pop']``. File name base is ``'Mean_'``. 
         
@@ -1396,9 +1396,9 @@ class TabSaver():
             if quantity=='age':
                 Q3 = '<age>[Gyr]'
             if quantity=='FeH':
-                Q3 = '<[Fe/H]>'
+                Q3 = r'<[Fe/H]>'
             if quantity=='sigw':
-                Q3 = '<sigma_W>[km/s]'
+                Q3 = r'<sigma_W>[km/s]'
         else:
             Q3 = '<' + quantity + '>[same units as in the stellar assemblies tables]'
         savepath = ''.join(('Mean_',quantity,'_R',str(R),'_z',
@@ -1421,7 +1421,7 @@ class TabSaver():
             
         
     def pops_in_volume_save(self,table,mode,R,mode_pop_name):
-        """
+        r"""
         Saves table(s) with number densities of stellar assemblies for some volume.
         Output subfolder is ``a.T['pop']``. File name base is ``'SSP_R'``. 
         
@@ -1489,7 +1489,7 @@ class TabSaver():
     
         
     def rz_map_save(self,profiles,mode):
-        """
+        r"""
         Saves R-z map of some **quantity**.  
         Output subfolder is ``a.T['maps']``. File name is ``'Rho'``, ``'N'``, ``'Sigma'``, 
         or ``'SigmaN'``, depending on *kwargs* of the class instance. 
@@ -1513,13 +1513,13 @@ class TabSaver():
         if 'dz' in self.kwargs:
             dz = str(self.kwargs['dz']/1e3) # in kpc
         savepath += dz
-        headname = ''.join((self.Q1,'/[',dz,' kpc x ',str(self.p.dR),' kpc] (',label,')'))
+        headname = ''.join((self.Q1,r'/[',dz,' kpc x ',str(self.p.dR),' kpc] (',label,')'))
         if 'ages' in self.kwargs:
             savepath += '_age' + str(self.kwargs['ages'])
             headname += ' for age = ' + str(self.kwargs['ages']) + ' Gyr'
         if 'mets' in self.kwargs:
             savepath += '_FeH' + str(self.kwargs['mets'])
-            headname += ' for [Fe/H] = ' + str(self.kwargs['mets'])
+            headname += r' for [Fe/H] = ' + str(self.kwargs['mets'])
         savepath += '_' + mode
         if 'mode_pop' in self.kwargs:
             savepath += '_' + self.kwargs['mode_pop']
@@ -1533,7 +1533,7 @@ class TabSaver():
                    
     
     def rz_map_quantity_save(self,profiles,mode,quantity):
-        """
+        r"""
         Saves R-z map of some **quantity**.  
         Output subfolder is ``a.T['maps']``. File name begins with **quantity**. 
         
@@ -1568,7 +1568,7 @@ class TabSaver():
         if quantity=='sigw':
             quantity = 'sigma_W'
             units='km/s'
-        headname = ''.join((quantity,'[',units,' / ',dz,' pc x ',str(self.p.dR),' kpc] (',label,')'))
+        headname = ''.join((quantity,'[',units,r' / ',dz,' pc x ',str(self.p.dR),' kpc] (',label,')'))
         if 'ages' in self.kwargs:
             savepath += '_age' + str(self.kwargs['ages'])
             headname += ' for age = ' + str(self.kwargs['ages']) + ' Gyr'
@@ -1588,7 +1588,7 @@ class TabSaver():
         
         
     def fw_save(self,profiles,mode,R,zlim):
-        """
+        r"""
         Saves W-velocity dostribution function. 
         Output subfolder is ``a.T['kinem']``. File name base is ``'f(|W|)'``. 
         
@@ -1648,7 +1648,7 @@ class TabSaver():
         if 'fig' in self.kwargs and self.kwargs['fig']==True:
             plt.savefig(os.path.join(self.a.T[''.join(('kin',self.dir2))],''.join((savepath,self.fmt2))))
         else:
-            headname = ''.join(('|W|[km/s], f(|W|)(',self.w,', ',label,'), R = ',
+            headname = ''.join((r'|W|[km/s], f(|W|)(',self.w,', ',label,'), R = ',
                                 str(R),' kpc, |z| =',str(zlim).replace(' ', ''),' pc'))
             if 'mode_pop' in self.kwargs:
                 label += ', ' + self.Pn[self.kwargs['mode_pop']] 
@@ -1659,7 +1659,7 @@ class TabSaver():
                
                     
     def hess_save(self,profiles,mode,mode_geom,bands,mag_range,mag_step):
-        """
+        r"""
         Hess diagram for the simple volumes. 
         Output subfolder is ``a.T['hess']``. File name base is ``'Hess_'``. 
         
@@ -1700,13 +1700,13 @@ class TabSaver():
             plt.savefig(os.path.join(self.a.T[''.join(('hess',self.dir2))],''.join((savepath,self.fmt2))))
         else:
             np.savetxt(os.path.join(self.a.T[''.join(('hess',self.dir))],''.join((savepath,self.fmt))),
-                   profiles.T,header=''.join(('N / [',str(mag_step[0]),' mag x ',str(mag_step[1]),
+                   profiles.T,header=''.join((r'N / [',str(mag_step[0]),' mag x ',str(mag_step[1]),
                                               ' mag] in (',bands[0],' - ',bands[1],', ', bands[2],
                                               ') for ',label)))                                             
                                    
                           
     def disk_brightness_save(self,profiles,mode,mode_geom,band):
-        """
+        r"""
         Saves surface brightness or colour profile of the MW if it is viewed 
         edge-on or face-on. Output subfolder is ``a.T['pop']``. File name base is ``'MagR_'``. 
         
@@ -1761,7 +1761,7 @@ class TabSaver():
                                        ' pc calculated with ',mode_iso,' isochrones')))                                                           
         
     def input_local_save(self,inp):
-        """
+        r"""
         Saves a set of the local model input data: SFR, mass loss function, and AMR 
         (for the thin and thick disk). 
         The output directory is ``a.T['inp']``, and file names are prescribed by :func:`jjmodel.iof.tab_sorter`. 
@@ -1775,34 +1775,34 @@ class TabSaver():
         p, a = self.p, self.a
         # SFR
         np.savetxt(tab_sorter('SFRd0',p,a.T),np.stack((a.t,inp['SFRd0']),axis=-1),
-                   header='t[Gyr], SFR_thin.d[Msun/pc^2/Gyr]')
+                   header=r't[Gyr], SFR_thin.d[Msun/pc^2/Gyr]')
         np.savetxt(tab_sorter('NSFRd0',p,a.T),np.stack((a.t,inp['NSFRd0']),axis=-1),
-                   header='t[Gyr], SFR_thin.d/<SFR_thin.d>')
+                   header=r't[Gyr], SFR_thin.d/<SFR_thin.d>')
         if p.pkey==1:
             np.savetxt(tab_sorter('Fp0',p,a.T),
                        np.hstack((a.t.reshape(a.jd,1),inp['Fp0'].T)),
-                       header='t[Gyr], SFR_thin.d peak(s) fraction')
+                       header=r't[Gyr], SFR_thin.d peak(s) fraction')
         np.savetxt(tab_sorter('SFRt0',p,a.T),np.stack((a.t[:a.jt],inp['SFRt0']),axis=-1),
-                   header='t[Gyr], SFR_thick.d[Msun/pc^2/Gyr]')
+                   header=r't[Gyr], SFR_thick.d[Msun/pc^2/Gyr]')
         np.savetxt(tab_sorter('NSFRt',p,a.T),np.stack((a.t[:a.jt],inp['NSFRt0']),axis=-1),
-                   header='t[Gyr], SFR_thick.d/<SFR_thick.d>')
+                   header=r't[Gyr], SFR_thick.d/<SFR_thick.d>')
         np.savetxt(tab_sorter('SFRtot0',p,a.T),np.stack((a.t,inp['SFRtot0']),axis=-1),
-                   header='t[Gyr], SFR_tot[Msun/pc^2/Gyr]')
+                   header=r't[Gyr], SFR_tot[Msun/pc^2/Gyr]')
         np.savetxt(tab_sorter('NSFRtot0',p,a.T),np.stack((a.t,inp['NSFRtot0']),axis=-1),
-                   header='t[Gyr], SFR_tot/<SFR_tot>')
+                   header=r't[Gyr], SFR_tot/<SFR_tot>')
         np.savetxt(tab_sorter('gd0',p,a.T),np.stack((a.t,inp['gd0']),axis=-1),
-                   header='t[Gyr], fraction_in_stars&remnants_thin.d') 
+                   header=r't[Gyr], fraction_in_stars&remnants_thin.d') 
         np.savetxt(tab_sorter('gt',p,a.T),np.stack((a.t[:a.jt],inp['gt']),axis=-1),
-                   header='t[Gyr], fraction_in_stars&remnants_thick.d')
+                   header=r't[Gyr], fraction_in_stars&remnants_thick.d')
         np.savetxt(tab_sorter('AMRd0',p,a.T),np.stack((a.t,inp['AMRd0']),axis=-1),
-                   header='t[Gyr], [Fe/H]_thin.d')
+                   header=r't[Gyr], [Fe/H]_thin.d')
         np.savetxt(tab_sorter('AMRt',p,a.T),np.stack((a.t[:a.jt],inp['AMRt'][:a.jt]),axis=-1),
-                   header='t[Gyr], [Fe/H]_thick.d')
+                   header=r't[Gyr], [Fe/H]_thick.d')
         print('\nInput data saved.')
         
              
     def output_local_save(self,out):
-        """
+        r"""
         Saves a set of the local model output data: AVR, scale heights for all model components, 
         vertical potential, force, and density profiles.  
         The output directory and file name for each quantity are prescribed by :func:`jjmodel.iof.tab_sorter` 
@@ -1822,17 +1822,17 @@ class TabSaver():
         
         # Kinematics
         np.savetxt(tab_sorter('AVR0',p,a.T),np.stack((a.t,out['avr']),axis=-1),
-                   header='t[Gyr], sigma_W[km/s]')
+                   header=r't[Gyr], sigma_W[km/s]')
         
         # Scale heights
         np.savetxt(tab_sorter('Heffd0',p,a.T),
                    np.stack(([p.Rsun],[out['heffd']]),axis=-1), 
-                   header='R[kpc], h_eff[pc]_thin.d')
+                   header=r'R[kpc], h_eff[pc]_thin.d')
         np.savetxt(tab_sorter('Hd0',p,a.T),np.stack((a.t,out['hd']),axis=-1),
-                   header='t[Gyr], h[pc]_thin.d')
+                   header=r't[Gyr], h[pc]_thin.d')
         if p.pkey==1:
             np.savetxt(tab_sorter('Hdp0',p,a.T),np.stack((out['sigp'],out['hdp']),axis=-1),
-                       header='sigma_W[km/s], h[pc]_thin.dp')
+                       header=r'sigma_W[km/s], h[pc]_thin.dp')
         np.savetxt(tab_sorter('Ht0',p,a.T),
                    np.stack(([p.Rsun],[out['ht']]),axis=-1),header='R[kpc], h[pc]_thick.d')
         np.savetxt(tab_sorter('Hsh0',p,a.T),np.stack(([p.Rsun],[out['hsh']]),axis=-1),
@@ -1844,13 +1844,13 @@ class TabSaver():
         np.savetxt(tab_sorter('Phi0',p,a.T),np.stack((a.z,out['phi']),axis=-1), header='z[pc], Phi[m^2/s^2]')
         np.savetxt(tab_sorter('Kz0',p,a.T),np.stack((a.z,out['Kzdtot'],out['Kzg1'],out['Kzg2'],
                                                      out['Kzt'],out['Kzdh'],out['Kzsh']),axis=-1),
-                   header='z[pc], Q_thin.d, Q_mol.g, Q_atom.gas, Q_thick.d, Q_DM, '+\
+                   header=r'z[pc], Q_thin.d, Q_mol.g, Q_atom.gas, Q_thick.d, Q_DM, '+\
                            'Q_st.halo with Q = Kz[km^2/s^2/kpc]')                             
         print('\nOutput data saved.')
         
         
     def output_extended_save(self,res):
-        """ 
+        r""" 
         Same as :meth:`jjmodel.iof.TabSaver.output_local`, but for the model extending over 
         some range of Galactocentric distances. 
         
@@ -1870,41 +1870,41 @@ class TabSaver():
             np.savetxt(tab_sorter('Kz',p,a.T,R=a.R[i]),
                        np.stack((a.z,res[i]['Kzdtot'],res[i]['Kzg1'],res[i]['Kzg2'],res[i]['Kzt'],                                                         
                                  res[i]['Kzdh'],res[i]['Kzsh']),axis=-1),
-                       header='z[pc], Q_thin.d, Q_mol.g, Q_atom.gas, Q_thick.d, '+\
+                       header=r'z[pc], Q_thin.d, Q_mol.g, Q_atom.gas, Q_thick.d, '+\
                                'Q_DM, Q_st.halo with Q = Kz[km^2/s^2/kpc]')    
             if p.pkey==1:
                 np.savetxt(tab_sorter('Hdp',p,a.T,R=a.R[i]),
                            np.stack((res[i]['sigp'],res[i]['hdp']),axis=-1),                                 
-                           header='sigma_W[km/s], h[pc]_thin.dp')
+                           header=r'sigma_W[km/s], h[pc]_thin.dp')
                                
         # Kinematics
         np.savetxt(tab_sorter('AVR',p,a.T),
                    np.hstack((a.t.reshape(a.jd,1),np.array([res[i]['avr'] for i in a.R_array]).T)), 
-                   header=''.join(('t[Gyr], sigma_W[km/s]_thin.d at R = [',str(p.Rmin),',',str(p.Rmax),
+                   header=''.join((r't[Gyr], sigma_W[km/s]_thin.d at R = [',str(p.Rmin),',',str(p.Rmax),
                                    '] kpc with step dR = ',str(p.dR),' kpc')))
         np.savetxt(tab_sorter('Sigt',p,a.T), 
                    np.stack((a.R,[res[i]['sigt'] for i in a.R_array]),axis=-1), 
-                   header='R[kpc], sigma_W[km/s]_thick.d')
+                   header=r'R[kpc], sigma_W[km/s]_thick.d')
         np.savetxt(tab_sorter('Sigg1',p,a.T), 
                    np.stack((a.R,[res[i]['sigg1'] for i in a.R_array]),axis=-1),
-                   header='R[kpc], sigma_W[km/s]_mol.gas')
+                   header=r'R[kpc], sigma_W[km/s]_mol.gas')
         np.savetxt(tab_sorter('Sigg2',p,a.T), 
                    np.stack((a.R,[res[i]['sigg2'] for i in a.R_array]),axis=-1), 
-                   header='R[kpc], sigma_W[km/s]_atom.gas')
+                   header=r'R[kpc], sigma_W[km/s]_atom.gas')
         np.savetxt(tab_sorter('Sige',p,a.T), 
                    np.stack((a.R,[res[i]['sige'] for i in a.R_array]),axis=-1), 
-                   header='R[kpc], sigma_e[km/s]')
+                   header=r'R[kpc], sigma_e[km/s]')
         
         # Scale heights
         np.savetxt(tab_sorter('Heffd',p,a.T),
                    np.stack((a.R,[res[i]['heffd'] for i in a.R_array]),axis=-1), 
-                   header='R[kpc], h_eff[pc]_thin.d')
+                   header=r'R[kpc], h_eff[pc]_thin.d')
         np.savetxt(tab_sorter('Hsh',p,a.T), 
                    np.stack((a.R,[res[i]['hsh'] for i in a.R_array]),axis=-1), 
-                   header='R[kpc], h[pc]_st.halo')
+                   header=r'R[kpc], h[pc]_st.halo')
         np.savetxt(tab_sorter('Hdh',p,a.T), 
                    np.stack((a.R,[res[i]['hdh'] for i in a.R_array]),axis=-1), 
-                   header='R[kpc], h[pc]_DM')
+                   header=r'R[kpc], h[pc]_DM')
         np.savetxt(tab_sorter('Hd',p,a.T),
                    np.hstack((a.t.reshape(a.jd,1),np.array([res[i]['hd'] for i in a.R_array]).T)), 
                    header=''.join(('t[Gyr], h[pc]_thin.d at R = ',str([p.Rmin,p.Rmax]),
@@ -1915,14 +1915,14 @@ class TabSaver():
         # Potential 
         np.savetxt(tab_sorter('Phi',p,a.T),np.hstack((a.z.reshape(a.n,1),
                    np.array([res[i]['phi'] for i in a.R_array]).T)), 
-                   header=''.join(('z[pc], Phi[m^2/s^2] at R = ',str([p.Rmin,p.Rmax]),
+                   header=''.join((r'z[pc], Phi[m^2/s^2] at R = ',str([p.Rmin,p.Rmax]),
                                    ' kpc with step dR = ',str(p.dR),' kpc')))
         
         print('\nOutput data saved.')
         
     
     def input_extended_save(self,inp):
-        """ 
+        r""" 
         Same as :meth:`jjmodel.iof.TabSaver.input_local`, but for the model extending over 
         some range of Galactocentric distances. 
         
@@ -1935,10 +1935,10 @@ class TabSaver():
         p, a = self.p, self.a
         # Input data
         np.savetxt(tab_sorter('SFRd',p,a.T),np.hstack((a.t.reshape(a.jd,1),inp['SFRd'].T)),
-                   header=''.join(('t[Gyr], SFR_thin.d[Msun/pc^2/Gyr] at R = ',
+                   header=''.join((r't[Gyr], SFR_thin.d[Msun/pc^2/Gyr] at R = ',
                                    str([p.Rmin,p.Rmax]),' kpc with step dR = ',str(p.dR),' kpc')))
         np.savetxt(tab_sorter('NSFRd',p,a.T), np.hstack((a.t.reshape(a.jd,1),inp['NSFRd'].T)),
-                   header=''.join(('t[Gyr], SFR_thin.d/<SFR_thin.d> at R = ',
+                   header=''.join((r't[Gyr], SFR_thin.d/<SFR_thin.d> at R = ',
                                    str([p.Rmin,p.Rmax]),' kpc with step dR = ',str(p.dR),' kpc')))
         if p.pkey==1:
             for i in range(a.Rbins):
@@ -1946,26 +1946,26 @@ class TabSaver():
                            np.hstack((a.t.reshape(a.jd,1),inp['Fp'][i].T)),
                            header='t[Gyr], SFR_thin.d peak(s) fraction')
         np.savetxt(tab_sorter('SFRt',p,a.T),np.hstack((a.t[:a.jt].reshape(a.jt,1),inp['SFRt'].T)),
-                   header=''.join(('t[Gyr], SFR_thick.d[Msun/pc^2/Gyr] at R = ',str([p.Rmin,p.Rmax]),
+                   header=''.join((r't[Gyr], SFR_thick.d[Msun/pc^2/Gyr] at R = ',str([p.Rmin,p.Rmax]),
                                    ' kpc with step dR = ',str(p.dR),' kpc')))
         np.savetxt(tab_sorter('SFRtot',p,a.T),np.hstack((a.t.reshape(a.jd,1),inp['SFRtot'].T)),
-                   header=''.join(('t[Gyr], SFR_tot[Msun/pc^2/Gyr] at R = ',str([p.Rmin,p.Rmax]),
+                   header=''.join((r't[Gyr], SFR_tot[Msun/pc^2/Gyr] at R = ',str([p.Rmin,p.Rmax]),
                                    ' kpc with step dR = ',str(p.dR),' kpc')))
         np.savetxt(tab_sorter('NSFRtot',p,a.T),np.hstack((a.t.reshape(a.jd,1),inp['NSFRtot'].T)),
-                   header=''.join(('t[Gyr], SFR_tot/<SFR_tot> at R = ',str([p.Rmin,p.Rmax]),
+                   header=''.join((r't[Gyr], SFR_tot/<SFR_tot> at R = ',str([p.Rmin,p.Rmax]),
                                    ' kpc with step dR = ',str(p.dR),' kpc')))
         np.savetxt(tab_sorter('AMRd',p,a.T),np.hstack((a.t.reshape(a.jd,1),inp['AMRd'].T)),
-                   header=''.join(('t[Gyr], [Fe/H]_thin.d at R = ',
+                   header=''.join((r't[Gyr], [Fe/H]_thin.d at R = ',
                                    str([p.Rmin,p.Rmax]),' kpc with step dR = ',str(p.dR),' kpc')))
         np.savetxt(tab_sorter('SR',p,a.T),np.hstack((a.R.reshape(a.Rbins,1),np.array(inp['SigmaR']).T)),                  
                    header='R[kpc], Q_thin.d, Q_mol.g, Q_atom.g, Q_thick.d, '+\
-                           'Q_DM, Q_st.halo with Q = Sigma[Msun/pc^2]')
+                           r'Q_DM, Q_st.halo with Q = Sigma[Msun/pc^2]')
         np.savetxt(tab_sorter('Hg1',p,a.T),np.stack((a.R,inp['hg1']),axis=-1),
                    header='R[kpc], h[pc]_mol.gas')
         np.savetxt(tab_sorter('Hg2',p,a.T),np.stack((a.R,inp['hg2']),axis=-1),
                    header='R[kpc], h[pc]_atom.gas')
         np.savetxt(tab_sorter('gd',p,a.T),np.hstack((a.t.reshape(a.jd,1),np.array(inp['gd']).T)),
-                   header='t[Gyr], fraction_in_stars&remnants_thin.d at R = '+str([p.Rmin,p.Rmax])
+                   header=r't[Gyr], fraction_in_stars&remnants_thin.d at R = '+str([p.Rmin,p.Rmax])
                            +' kpc with step dR = '+str(p.dR)+' kpc') 
         
         print('\nInput data saved.')

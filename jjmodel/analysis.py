@@ -36,7 +36,7 @@ class GetPopulations():
     """
     
     def __init__(self,mode_iso,R,p,a):
-        """
+        r"""
         Initialization of the class instance. 
         
         :param mode_iso: Defines which set of isochrones is used, can be ``'Padova'``, ``'MIST'``, or ``'BaSTI'``. 
@@ -69,7 +69,7 @@ class GetPopulations():
         
         
     def custom_population(self,mode_comp,column_list,range_list,**kwargs):
-        """
+        r"""
         Allows to select stellar population using custom cuts on the columns
         of the stellar assemblies table. 
         
@@ -119,7 +119,7 @@ class GetPopulations():
                                          
 
     def rc_simple(self,mode_comp,**kwargs):
-        """
+        r"""
         Selects Red Clump (RC) population using simple cuts on 
         *T_eff*, *logg* and *logL*: 4250 K  < *T_eff* < 5250 K && 
         *logg* < 2.75 && 1.65 < *logL* < 1.85. 
@@ -158,7 +158,7 @@ class GetPopulations():
     
         
     def rc_clean(self,mode_comp,**kwargs):
-        """
+        r"""
         Selects Red Clump (RC) population in the 3d parameter space *{logT,logg,[Fe/H]}*. 
         This is a cleaner RC selection than the one given by 
         :meth:`jjmodel.analysis.GetPopulations.rc_simple` method. 
@@ -320,21 +320,21 @@ class GetPopulations():
             ax.scatter([i[0] for i in rc_sample],
                        [i[1] for i in rc_sample],
                        [i[2] for i in rc_sample],s=0.5,c='r',
-                       label='$\mathrm{Selected \ RC \ sample}$')
+                       label=r'$\mathrm{Selected \ RC \ sample}$')
             ax.scatter([i[0] for i in rc_compl],
                        [i[1] for i in rc_compl],
                        [i[2] for i in rc_compl],s=0.5,c='gray',
-                       label='$\mathrm{Complementary \ sample}$')
+                       label=r'$\mathrm{Complementary \ sample}$')
             ax.set_xlim(0,1)
             ax.set_ylim(0,1)
             ax.set_zlim(0,1)
-            ax.set_xlabel('$\mathrm{logT}$',fontsize=12,labelpad=10)
-            ax.set_ylabel('$\mathrm{logg}$',fontsize=12,labelpad=10)
-            ax.set_zlabel('$\mathrm{[Fe/H]}$',fontsize=12,labelpad=10)
+            ax.set_xlabel(r'$\mathrm{logT}$',fontsize=12,labelpad=10)
+            ax.set_ylabel(r'$\mathrm{logg}$',fontsize=12,labelpad=10)
+            ax.set_zlabel(r'$\mathrm{[Fe/H]}$',fontsize=12,labelpad=10)
             lg = plt.legend(prop={'size':11},ncol=2,loc='upper center')
             for handle in lg.legendHandles:
                 handle.set_sizes([6.0])
-            ax.set_title(''.join(('$\mathrm{R = }$',str(self.R),'$\mathrm{\ kpc}$')),
+            ax.set_title(''.join((r'$\mathrm{R = }$',str(self.R),r'$\mathrm{\ kpc}$')),
                          fontsize=12,pad=30)
             figname = os.path.join(self.a.T['popplt'],
                                    ''.join(('Clean_RC_R',str(self.R),'_',mode_comp,'.png')))
@@ -354,7 +354,7 @@ class GetPopulations():
             
             
     def a_stars(self,mode_comp,**kwargs):
-        """
+        r"""
         Selects A-type stars using cuts on *T_eff*: 7500 K < *T_eff* < 10000 K.
         
         :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
@@ -385,7 +385,7 @@ class GetPopulations():
     
     
     def f_stars(self,mode_comp,**kwargs):
-        """
+        r"""
         Selects F-type stars using cuts on *T_eff*: 6000 K < *T_eff* < 7500 K.
         
         :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
@@ -416,7 +416,7 @@ class GetPopulations():
 
            
     def g_dwarfs(self,mode_comp,**kwargs):
-        """
+        r"""
         Selects G-dwarfs using cuts on *T_eff* and *logg*: 5200 K < *T_eff* < 6000 K && 4.3 < *logg* < 7.
          
         :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
@@ -449,7 +449,7 @@ class GetPopulations():
     
     
     def k_dwarfs(self,mode_comp,**kwargs):
-        """
+        r"""
         Selects K-dwarfs using cuts on *T_eff* and *logg*: 3700 K < *T_eff* < 5200 K && 4.3 < *logg* < 7. 
         
         :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
@@ -482,7 +482,7 @@ class GetPopulations():
     
     
     def m_dwarfs(self,mode_comp,**kwargs):
-        """
+        r"""
         Selects M-dwarfs using cuts on *T_eff* and *logg*: 2400 K < *T_eff* < 3700 K && 4 < *logg* < 7. 
         
         :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
@@ -514,7 +514,7 @@ class GetPopulations():
         return mdw     
     
     def _rr_lyrae_(self,mode_comp,**kwargs):
-        """
+        r"""
         Experimental method.
         Selects RR Lyrae stars. HB stars in the instability strip
         with pulsation period < 1 day (Marconi et al. 2015). 
@@ -572,7 +572,7 @@ class GetPopulations():
 
 
     def cepheids_type1(self,mode_comp,**kwargs):
-        """
+        r"""
         Selects classical Cepheids. HB stars in the instability strip (IS) with masses
         in the range 4-20 :math:`\mathrm{M}_\odot`. IS adopted from De Somma et al. (2020)a (mixing length parameter = 1.5,
         canonical mass-luminosity relation), periods calculated according to De Somma et al. (2020)b.
@@ -620,7 +620,7 @@ class GetPopulations():
     
     
     def white_dwarfs(self,mode_comp,**kwargs):
-        """
+        r"""
         Experimental method.
         Can be DA or DB white dwarfs or a mixture, depends on the setup in stellar_assemblies_r.
         Selects WDs. Uses the WD-MS cut from CNS5: 
@@ -1228,7 +1228,8 @@ def _rhomet_d_(R,mets,p,a,this_function,**kwargs):
         indr = int(_indr_(R,p,a) + 1)
         AMR = tab_reader(['AMRd'],p,a.T)[0][indr]
     indt = _ind_amr2t_(AMR,mets)
-    if indt!=[] and len(indt)>1:
+
+    if indt.size > 1: # indt!=[] and len(indt)>1:
         if R==p.Rsun:
             rho_zd = _rhoz_d_(p,a,R=R,**kwargs)
         else:
@@ -1383,7 +1384,7 @@ def _rhoz_ages_(rhoz_input,indt,this_function,a,**kwargs):
         for i in range(nage):
             if (indt[i+1]!=-999) and (indt[i]!=-999):
                 indt1, indt2 = np.sort([indt[i+1],indt[i]])
-                i1 = np.arange(indt1,indt2,dtype=np.int)
+                i1 = np.arange(indt1,indt2,dtype=int)
                 rho_z[i] = np.sum(rhoz_input.T[i1,:],axis=0)
     else:
         indt_good = np.where(indt!=-999)[0]
@@ -1402,7 +1403,7 @@ def _rhor_ages_(rhor_input,indt,this_function,a,**kwargs):
         for i in range(nage):
             if (indt[i+1]!=-999) and (indt[i]!=-999):
                 indt1, indt2 = np.sort([indt[i+1],indt[i]])
-                i1 = np.arange(indt1,indt2,dtype=np.int)
+                i1 = np.arange(indt1,indt2,dtype=int)
                 rho_r[i] = np.sum(rhor_input.T[i1,:],axis=0)
     else:
         indt_good = np.where(indt!=-999)[0]
@@ -1577,7 +1578,7 @@ def _fw_d_(R,zlim,wgrid,dw,p,a,**kwargs):
                     i1 = 0
                 if inddt[1]==-999:
                     i2 = int(a.jd - 1) 
-                kwargs_calc['indt'] = np.arange(i1,i2,dtype=np.int)
+                kwargs_calc['indt'] = np.arange(i1,i2,dtype=int)
     if p.pkey==1:
         if R==p.Rsun:
             sigp = p.sigp
@@ -1684,7 +1685,7 @@ def _indr_(R,p,a):
 # =============================================================================
 
 def rhoz_monoage(mode_comp,R,ages,p,a,**kwargs):
-    """
+    r"""
     Vertical profiles of the mono-age subpopulations calculated at a given Galactocentric distance.
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -1736,7 +1737,7 @@ def rhoz_monoage(mode_comp,R,ages,p,a,**kwargs):
     ages = inpcheck_age(ages,this_function)
     inpcheck_kwargs_compatibility(kwargs,this_function)
     
-    indt = np.array(np.subtract(tp,ages)//tr,dtype=np.int)
+    indt = np.array(np.subtract(tp,ages)//tr,dtype=int)
     
     if (mode_comp=='dt' or mode_comp=='tot') and ('tab' in kwargs):
         tabd = kwargs['tab'][0]
@@ -1822,7 +1823,7 @@ def rhoz_monoage(mode_comp,R,ages,p,a,**kwargs):
 
 
 def rhoz_monomet(mode_comp,R,mets,p,a,**kwargs):
-    """
+    r"""
     Vertical profiles of the mono-metallicity subpopulations calculated at a given Galactocentric distance.
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -1911,7 +1912,7 @@ def rhoz_monomet(mode_comp,R,mets,p,a,**kwargs):
 
 
 def agez(mode_comp,p,a,**kwargs):
-    """
+    r"""
     Age as a function of distance from the Galactic plane calculated at the different radii. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -2077,7 +2078,7 @@ def agez(mode_comp,p,a,**kwargs):
     
 
 def ager(mode_comp,zlim,p,a,**kwargs):
-    """
+    r"""
     Age as a function of Galactocentric distance. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -2178,7 +2179,7 @@ def ager(mode_comp,zlim,p,a,**kwargs):
 
 
 def metz(mode_comp,p,a,**kwargs):
-    """
+    r"""
     Metallicity as a function of distance from the Galactic plane. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -2356,7 +2357,7 @@ def metz(mode_comp,p,a,**kwargs):
     
                                                                      
 def metr(mode_comp,zlim,p,a,**kwargs):
-    """
+    r"""
     Metallicity as a function of Galactocentric distance. 
             
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -2468,7 +2469,7 @@ def metr(mode_comp,zlim,p,a,**kwargs):
                                                 
 
 def rhor(p,a,**kwargs):
-    """
+    r"""
     Radial density profiles of the Galactic components. 
     
     :param p: Set of model parameters from the parameter file. 
@@ -2514,7 +2515,7 @@ def rhor(p,a,**kwargs):
 
 
 def rhor_monoage(mode_comp,zlim,ages,p,a,**kwargs):
-    """
+    r"""
     Radial density profiles of the mono-age subpopulations. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -2577,7 +2578,7 @@ def rhor_monoage(mode_comp,zlim,ages,p,a,**kwargs):
     else:
         nage = len(ages)
                  
-    indt = np.array(np.subtract(tp,ages)//tr,dtype=np.int)
+    indt = np.array(np.subtract(tp,ages)//tr,dtype=int)
     rho_r = np.zeros((nage,a.Rbins))
     
     if (mode_comp=='dt' or mode_comp=='tot') and ('tab' in kwargs):
@@ -2640,7 +2641,7 @@ def rhor_monoage(mode_comp,zlim,ages,p,a,**kwargs):
 
 
 def rhor_monomet(mode_comp,zlim,mets,p,a,**kwargs):
-    """
+    r"""
     Radial density profiles of the mono-metallicity subpopulations. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -2733,7 +2734,7 @@ def rhor_monomet(mode_comp,zlim,mets,p,a,**kwargs):
 
 
 def agehist(mode_comp,zlim,p,a,**kwargs):
-    """
+    r"""
     Age distributions at the different Galactocentric distances. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -2904,7 +2905,7 @@ def agehist(mode_comp,zlim,p,a,**kwargs):
                                               
                                                                            
 def methist(mode_comp,zlim,p,a,**kwargs):
-    """
+    r"""
     Metallicity distributions at the different Galactocentric distances. 
 
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -3133,7 +3134,7 @@ def methist(mode_comp,zlim,p,a,**kwargs):
 
 
 def hr_monoage(mode_comp,ages,p,a,**kwargs):
-    """
+    r"""
     Scale heights of the mono-age subpopulations as a function of Galactocentric distance. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'dt'``, or ``'tot'`` 
@@ -3185,7 +3186,7 @@ def hr_monoage(mode_comp,ages,p,a,**kwargs):
     else:
         nage = len(ages)
         
-    indt = np.array(np.subtract(tp,ages)//tr,dtype=np.int)
+    indt = np.array(np.subtract(tp,ages)//tr,dtype=int)
     H = np.zeros((a.Rbins,nage))
         
     if mode_comp=='d':
@@ -3263,7 +3264,7 @@ def hr_monoage(mode_comp,ages,p,a,**kwargs):
 
 
 def hr_monomet(mode_comp,mets,p,a,**kwargs):
-    """
+    r"""
     Scale heights of the mono-metallicity subpopulations as a function of Galactocentric distance. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'dt'``, or ``'tot'`` 
@@ -3401,7 +3402,7 @@ def hr_monomet(mode_comp,mets,p,a,**kwargs):
 
 
 def sigwz(mode_comp,p,a,**kwargs):
-    """
+    r"""
     W-velocity dispersion as a function of distance from the Galactic plane. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'dt'``, or ``'tot'`` 
@@ -3554,7 +3555,7 @@ def sigwz(mode_comp,p,a,**kwargs):
 
 
 def sigwr(mode_comp,zlim,p,a,**kwargs):
-    """
+    r"""
     W-velocity dispersion as a function of Galactocentric distance. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'dt'``, or ``'tot'`` 
@@ -3659,7 +3660,7 @@ def sigwr(mode_comp,zlim,p,a,**kwargs):
                                                                                 
                                                 
 def sigwr_monoage(mode_comp,zlim,ages,p,a,**kwargs):
-    """
+    r"""
     W-velocity dispersion for the mono-age subpopulations as a function of Galactocentric 
     distance. 
     
@@ -3720,7 +3721,7 @@ def sigwr_monoage(mode_comp,zlim,ages,p,a,**kwargs):
         fpr0 = [1 - np.sum(subarray[1:],axis=0) for subarray in Fp]
         npeak = len(p.sigp)
     
-    indt = np.array(np.subtract(tp,ages)//tr,dtype=np.int)
+    indt = np.array(np.subtract(tp,ages)//tr,dtype=int)
     if inpcheck_iskwargtype(kwargs,'between',True,bool,this_function):
         nage = int(len(ages) - 1)
     else:
@@ -3748,7 +3749,7 @@ def sigwr_monoage(mode_comp,zlim,ages,p,a,**kwargs):
             del kwargs_calc2['between']
             sigw_rho, rho_sum = np.zeros((nage)), np.zeros((nage)) 
             for k in range(nage):
-                indt_list = np.arange(indt[k+1],indt[k],dtype=np.int)
+                indt_list = np.arange(indt[k+1],indt[k],dtype=int)
                 rho_rd = _rhoz_ages_(rhord,indt_list,this_function,a,**kwargs_calc2)
                 rho_rd = np.sum(rho_rd,axis=1)
                 if p.pkey==1:
@@ -3804,7 +3805,7 @@ def sigwr_monoage(mode_comp,zlim,ages,p,a,**kwargs):
             
 
 def sigwr_monomet(mode_comp,zlim,mets,p,a,**kwargs):
-    """
+    r"""
     W-velocity dispersion for the mono-metallicity subpoplations as a function 
     of Galactocentric distance.
     
@@ -3882,7 +3883,7 @@ def sigwr_monomet(mode_comp,zlim,mets,p,a,**kwargs):
         for k in range(nage):
             ind1, ind2 = np.sort([inddt[k+1],inddt[k]])
             if ind1!=-999 and ind2!=-999:
-                indt_list = np.arange(ind1,ind2,dtype=np.int)
+                indt_list = np.arange(ind1,ind2,dtype=int)
                 rho_rd = _rhoz_ages_(rhord,indt_list,this_function,a,**kwargs)
                 rho_rd = np.sum(rho_rd,axis=1)
                 if p.pkey==1:
@@ -3902,7 +3903,7 @@ def sigwr_monomet(mode_comp,zlim,mets,p,a,**kwargs):
             for k in range(nage):
                 ind1, ind2 = np.sort([indtt[k+1],indtt[k]])
                 if ind1!=-999 and ind2!=-999:
-                    indt_list = np.arange(ind1,ind2,dtype=np.int)
+                    indt_list = np.arange(ind1,ind2,dtype=int)
                     rho_rt = _rhoz_ages_(rhort,indt_list,this_function,a,**kwargs)
                     rho_rt = np.sum(rho_rt,axis=1)
                     sigw_rho[k] = sigw_rho[k] + np.sum(Sigt[1][i]*rho_rt)
@@ -3935,7 +3936,7 @@ def sigwr_monomet(mode_comp,zlim,mets,p,a,**kwargs):
 
 
 def mean_quantity(mode_comp,R,zlim,quantity,p,a,**kwargs):
-    """
+    r"""
     Calculates mean value of some quantity as a function of height z
     weighted by the spatial number densities of 'stellar assemblies'. 
     
@@ -4018,7 +4019,7 @@ def mean_quantity(mode_comp,R,zlim,quantity,p,a,**kwargs):
         if ('ages' in kwargs) or ('mets' in kwargs):
             ind_sub = np.where((tabd[column]>bins[0])&(tabd[column]<bins[1]))[0]
             tabd = tabd[ind_sub]
-        inddt = np.array(np.subtract(tp,tabd['age'])//tr,dtype=np.int)
+        inddt = np.array(np.subtract(tp,tabd['age'])//tr,dtype=int)
         disk_ages = tp - a.t
         
     if mode_comp=='t' or mode_comp=='dt' or mode_comp=='tot':
@@ -4101,7 +4102,7 @@ def mean_quantity(mode_comp,R,zlim,quantity,p,a,**kwargs):
 
 
 def pops_in_volume(mode_comp,R,volume,p,a,**kwargs):
-    """
+    r"""
     Calculates the number of stars in a volume.  
 
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -4236,7 +4237,7 @@ def pops_in_volume(mode_comp,R,volume,p,a,**kwargs):
             wsh = 0.5/Hsh[1][indr-1]*np.sum(np.exp(-Fi[indr][indz1:indz2]/KM**2/p.sigsh**2)*volume) 
     
     if mode_comp=='d' or mode_comp=='dt' or mode_comp=='tot':
-        indt_tab = np.array(np.subtract(tp,tabd['age'])//tr,dtype=np.int)
+        indt_tab = np.array(np.subtract(tp,tabd['age'])//tr,dtype=int)
         if p.pkey==1:
             sum_Nzd = np.add(tabd['N']*wd0[indt_tab],tabd['N']*wdp[indt_tab])
         else:
@@ -4278,7 +4279,7 @@ def pops_in_volume(mode_comp,R,volume,p,a,**kwargs):
 
 
 def disk_brightness(mode_comp,mode_geom,bands,p,a,**kwargs):
-    """
+    r"""
     MW as an external galaxy. Function calculates the surface brightness or colour profile of the MW if it is viewed 
     edge-on or face-on (individual model components and stellar populations can be selected). 
     
@@ -4461,7 +4462,7 @@ def disk_brightness(mode_comp,mode_geom,bands,p,a,**kwargs):
   
     
 def rz_map(mode_comp,p,a,**kwargs):
-    """
+    r"""
     Mass (or number) density map in R and z Galactic coordinates. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -4616,7 +4617,7 @@ def rz_map(mode_comp,p,a,**kwargs):
     
 
 def rz_map_quantity(mode_comp,quantity,p,a,**kwargs):
-    """
+    r"""
     Calculates mean value of some quantity in R and z Galactic coordinates. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -4694,7 +4695,7 @@ def rz_map_quantity(mode_comp,quantity,p,a,**kwargs):
 
  
 def fw_hist(mode_comp,R,zlim,p,a,**kwargs):
-    """
+    r"""
     W-velocity distribution function at a given Galactocentric distance. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -4759,7 +4760,7 @@ def fw_hist(mode_comp,R,zlim,p,a,**kwargs):
     if 'ages' in kwargs:
         i1 = (tp - kwargs['ages'][0])//tr
         i2 = (tp - kwargs['ages'][1])//tr
-        indt = np.arange(i2,i1,dtype=np.int)
+        indt = np.arange(i2,i1,dtype=int)
         kwargs['indt'] = indt
     
     if mode_comp=='d':
@@ -4802,7 +4803,7 @@ def fw_hist(mode_comp,R,zlim,p,a,**kwargs):
 
 
 def hess_simple(mode_comp,mode_geom,bands,mag_range,mag_step,p,a,**kwargs):
-    """
+    r"""
     Hess diagram for the simple volumes. 
     
     :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -4946,7 +4947,7 @@ def hess_simple(mode_comp,mode_geom,bands,mag_range,mag_step,p,a,**kwargs):
 
 
 def fi_iso(ah,p,a,**kwargs):
-    """
+    r"""
     Calculates the normalized vertical gravitational potential as 
     a function of Galactocentric distance.
     
@@ -5000,7 +5001,7 @@ def fi_iso(ah,p,a,**kwargs):
 
 
 def rot_curve(ah,p,a,**kwargs):
-    """
+    r"""
     Calculatess the circular velocity :math:`\\upsilon_\mathrm{c}` as a function of 
     Galactocentric distance.
     

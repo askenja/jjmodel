@@ -7,7 +7,7 @@ Routine to solve Poisson-Boltzmann eq.
 
 import os
 import numpy as np
-from scipy.integrate import cumtrapz
+from scipy.integrate import cumulative_trapezoid #cumtrapz
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt 
 from scipy.ndimage import zoom
@@ -19,7 +19,7 @@ from .tools import ConvertAxes
 
 
 def z_potential(x,a,b,c,d,e,f):
-    """
+    r"""
     6-order polynom to fit the vertical gravitational potential. 
     There is no free coefficient to ensure that :math:`\\phi = 0` in the Galactic plane. 
     
@@ -35,7 +35,7 @@ def z_potential(x,a,b,c,d,e,f):
 
 
 def vertical_force(a,fimax,Sigma,sigW,h):
-    """
+    r"""
     Calculates the vertical force produced by some Galactic component. 
     
     :param a: Collection of the fixed model parameters, useful quantities, and arrays.
@@ -75,7 +75,7 @@ def vertical_force(a,fimax,Sigma,sigW,h):
         Ar2 = (SIGMA_E/sigW)**2
         dz_offset = np.sqrt(SIGMA_E**2*fi1*KM**2*PC/(2*np.pi*G*np.sum(rho0)*M_SUN))/ZN
         integrator = lambda x: 1/np.sqrt(np.sum(Ar1*(1-np.exp(-Ar2*x))))
-        dzi = np.add(dz_offset,cumtrapz([integrator(k) for k in fieq1],fieq1))  
+        dzi = np.add(dz_offset,cumulative_trapezoid([integrator(k) for k in fieq1],fieq1))  
         
         # i-th component of the potential and the corresponding vertical force 
         dzeq1 = np.concatenate((a.dzeq,[a.ddz]),axis=0)
@@ -90,7 +90,7 @@ def vertical_force(a,fimax,Sigma,sigW,h):
 
 
 def _fimax_optimal_(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
-    """
+    r"""
     Estimates reasonable maximum value of the normalized potential,
     which is needed to optimize the computation time of the 
     Poisson-Boltzmann eq. solver. 
@@ -230,7 +230,7 @@ def _fimax_optimal_(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
             return 1/np.sqrt(denominator)
             
         fieq1 = np.concatenate(([fi1],fieq),axis=0)
-        dz = np.add(dz_offset,cumtrapz([integrator(k) for k in fieq1],fieq1))            
+        dz = np.add(dz_offset,cumulative_trapezoid([integrator(k) for k in fieq1],fieq1))            
         
         # We are interested in max(dz) = dz[-1].
         # The new value of fimax is be chosen according to relative difference 
@@ -251,7 +251,7 @@ def _fimax_optimal_(a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
 
 
 def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
-    """
+    r"""
     Solver of the Poisson-Boltzmann equation. 
     
     :param a: Collection of the fixed model parameters, useful quantities, and arrays.
@@ -455,22 +455,22 @@ def poisson_solver(a,fimax,dfi,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
             
         dz_offset = np.sqrt(SIGMA_E**2*fi1*KM**2*PC/(2*np.pi*G*rho0*M_SUN))/ZN
         fieq1 = np.concatenate(([fi1],fieq),axis=0)
-        dz = np.add(dz_offset,cumtrapz([integrator(k) for k in fieq1],fieq1))  
+        dz = np.add(dz_offset,cumulative_trapezoid([integrator(k) for k in fieq1],fieq1))  
         interpolation_tool = ConvertAxes()
         fi = interpolation_tool.interpolate(a.dzeq,dz,fieq)
         fie = fi*SIGMA_E**2
                 
         if 'plot' in kwargs:
             ax.plot(dz*ZN,fieq,marker='o',markersize=5,lw=2,
-                     label='$\mathrm{initial \ grid, \ d \phi=const, iter=}$'+str(count))
+                     label=r'$\mathrm{initial \ grid, \ d \phi=const, iter=}$'+str(count))
             if count==0:
                 ax.plot(a.z,fi,ls='--',c='k',lw=0.5,
-                         label='$\mathrm{secondary \ grid, \ d z=const}$')
+                         label=r'$\mathrm{secondary \ grid, \ d z=const}$')
             else:
                 ax.plot(a.z,fi,ls='--',c='k')
             ax.set_xlim(0,round(a.dzmax*ZN,0))
             ax.set_ylim(0,np.round(fimax,1))
-            ax.set_xlabel('$\mathrm{|z|, \ pc}$')
+            ax.set_xlabel(r'$\mathrm{|z|, \ pc}$')
             ax.set_ylabel(r'$\mathrm{\phi / \sigma^2}$')
             plt.legend(loc=2,ncol=2,prop={'size':8})  
             fig.savefig(plotname)

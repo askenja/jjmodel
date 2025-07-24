@@ -121,7 +121,7 @@ class Volume():
     
      
     def none(self):
-        """
+        r"""
         Useful when the volume does not need to be taken into account,
         but equation is kept general with the volume term. 
         In this case, the volume array can be simply filled with ones. 
@@ -133,7 +133,7 @@ class Volume():
     
     
     def zcut(self,v,zlim):
-        """
+        r"""
         Fills z-cells laying outside of the chosen range with zeros. 
         
         :param v: z-grid with volume of the cells. z-grid has length ``a.n`` 
@@ -153,7 +153,7 @@ class Volume():
     
         
     def local_sphere(self,r_min,r_max):
-        """
+        r"""
         Returns z-grid with volume of the cells for the local sphere  
         with an inner hole. For testing, do: 
             
@@ -207,7 +207,7 @@ class Volume():
     
     
     def local_cylinder(self,r_min,r_max,z_min,z_max):
-        """
+        r"""
         Returns z-grid with volume of the cells for the local cylinder  
         with an inner hole. For testing, do: 
             
@@ -267,7 +267,7 @@ class Volume():
         
     
     def rphiz_box(self,R_min,R_max,dphi,z_min,z_max):
-        """
+        r"""
         Returns volume z-grid for the 'box' in the Galactic cylindrical coordinates (R,:math:`\\phi`,z). 
         For testing, do: 
             

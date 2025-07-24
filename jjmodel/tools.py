@@ -17,7 +17,7 @@ from . import localpath
 
 
 def read_parameters(path_to_file):
-    """
+    r"""
     Reads parameters from text file(s).
     
     :param path_to_file: Relative path to the parameter file(s). Main parameter file must have name 
@@ -248,7 +248,7 @@ def resave_parameters(path_to_parameterfile,path_to_parameterfile_copy,p):
                         for i in range(len(parameters)):
                             if parameters[i] in pnames_local:
                                 ind_reduced.append(i)   
-                        ind_reduced = np.array(ind_reduced,dtype=np.int)
+                        ind_reduced = np.array(ind_reduced,dtype=int)
                         parameters = np.array(parameters)
                         f_out.write('#' + '\t'.join((parameters[ind_reduced])) + '\n')
                 else:
@@ -410,7 +410,7 @@ class ConvertAxes():
         
              
 def rebin_histogram(bin_edges,x_centers,counts):
-    """
+    r"""
     Uses existing histogram to create a new histogram for the 
     different set of x-bins, such that the overall counts are 
     conserved. 
@@ -456,7 +456,7 @@ def rebin_histogram(bin_edges,x_centers,counts):
 
 
 def _transition_2curves_(epsilon,x_break,x,y):
-    """
+    r"""
     This is a crazy routine of my own invention, that allows to 
     make a smooth `naturally looking` transition between two curves. 
     It could be a fragmet of cycloid or hyperbola, but according 
@@ -626,7 +626,7 @@ def gauss_weights(x,mean,sigma):
 
 
 def reduce_table(tab,a):
-    """
+    r"""
     Calculates the surface number density of the mono-age subpopulations, thus, 
     reduces the length of the 'stellar assemblies' table to the number of thin- or thick-disk, 
     or halo subpopulations. 
@@ -637,7 +637,7 @@ def reduce_table(tab,a):
     :type a: namedtuple
     
     :return: Table with two columns: ``'t'`` and ``'N'``, Galactic time (Gyr) 
-        and surface number densities (:math:`\mathrm{number \ pc^{-2}}`).
+        and surface number densities (:math:`\mathrm{number\pc^{-2}}`).
     :rtype: astropy Table 
     """
     
@@ -651,7 +651,7 @@ def reduce_table(tab,a):
     for i in range(a.jd):
         ind = np.where((time>=timebins[i]) & (time<timebins[i+1]))[0]
         c+=len(ind)
-        if ind!=[]:
+        if ind.size > 0:
             out['N'][i] = np.sum(np.array(tab['N'][ind]))
             out['Sigma'][i] = np.sum(np.array(tab['N'][ind]*tab['Mf'][ind]))
         

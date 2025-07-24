@@ -27,7 +27,7 @@ from . import localpath
 # =============================================================================
 
 def hgr(p,a):
-    """
+    r"""
     Scale heights of the atomic and molecular gas components as 
     functions of Galactocentric distance. Data are taken from Nakanishi and Sofue (2016). 
     
@@ -58,7 +58,7 @@ def hgr(p,a):
 
 
 def heffr(p,a,heffd0):
-    """
+    r"""
     Thin-disk half-thickness as a function of Galactocentric distance. 
 
     :param p: Set of model parameters from the parameter file. 
@@ -90,7 +90,7 @@ def heffr(p,a,heffd0):
 
 
 def log_surface_gravity(Mf,L,Teff):
-    """
+    r"""
     Function for calculation of surface gravity. 
     
     :param Mf: Stellar mass (present-day mass in isochrones), :math:`\mathrm{M}_\odot`.
@@ -143,7 +143,7 @@ class RadialPotential():
         
         
     def exp_disk(self,sigma0,Rd):
-        """
+        r"""
         Potential of a razor-thin exponential disk (via Bessel functions). 
         
         :param sigma0: Local surface density, :math:`\mathrm{M_\odot \ pc^{-2}}`.    
@@ -163,7 +163,7 @@ class RadialPotential():
     
     
     def pow_law(self,rho0,alpha):
-        """
+        r"""
         Potential of a MW component with a power-law radial density profile, 
         :math:`{\\rho}(R) \propto (R_\odot/R)^{\\alpha}`. 
         
@@ -182,7 +182,7 @@ class RadialPotential():
         
     
     def cored_iso_sphere(self,rho0,ah):
-        """
+        r"""
         Potential of a cored isothermal sphere. 
 
         :param rho0: Local mass density, :math:`\mathrm{M_\odot \ pc^{-3}}`. 
@@ -224,7 +224,7 @@ class RadialDensity():
         
         
     def rho_disk(self,rho0,Rd,**kwargs):
-        """
+        r"""
         Midplane mass density of an exponential disk.
     
         :param rho0: Local mass density, :math:`\mathrm{M_\odot \ pc^{-3}}`. 
@@ -246,7 +246,7 @@ class RadialDensity():
     
     
     def sigma_disk(self,sigma0,Rd,**kwargs):
-        """
+        r"""
         Surface density of an exponential disk.
     
         :param sigma0: Local surface density, :math:`\mathrm{M_\odot \ pc^{-2}}`. 
@@ -269,7 +269,7 @@ class RadialDensity():
         
     
     def rho_dm_halo(self,z,rho0,ah):
-        """
+        r"""
         3d mass density of an isothermal dark matter (DM) sphere.
     
         :param z: Height above the Galactic plane, kpc.
@@ -298,7 +298,7 @@ class RadialDensity():
     
     
     def sigma_dm_halo(self,zmax,sigma0,ah):
-        """
+        r"""
         Surface density of an isothermal dark matter (DM) sphere.
         
         :param zmax: Maximal height above the Galactic plane, kpc. Up to this height DM mass 
@@ -319,7 +319,7 @@ class RadialDensity():
 
     
     def rho_stellar_halo(self,z,rho0,a_sh):
-        """
+        r"""
         3d mass density of a spherical stellar halo.
         Flattening is ignored, profile is a power law, :math:`{\\rho}(R) \propto (R_\odot/R)^{-\\alpha}`. 
         
@@ -342,7 +342,7 @@ class RadialDensity():
     
     
     def sigma_stellar_halo(self,zmax,sigma0,a_sh):
-        """
+        r"""
         Surface density of a spherical stellar halo.
         Flattening is ignored, profile is a power law (see :meth:`jjmodel.RadialDensity.rho_stellar_halo`). 
         
@@ -393,7 +393,7 @@ class RotCurve():
         self.sigma_r = M_SUN/PC*1e3
         
     def vc_bulge(self,Mb):
-        """
+        r"""
         Rotation curve of a point-mass bulge. 
         
         :param Mb: Mass of the bulge, :math:`\mathrm{M_\odot}`. 
@@ -407,7 +407,7 @@ class RotCurve():
         return vc
 
     def vc_disk(self,sigma0,Rd,R0):
-        """
+        r"""
         Rotation curve of an infinitely thin exponential disk 
         (Eq. 2-169 in Binney and Tremaine).
         
@@ -430,7 +430,7 @@ class RotCurve():
         return vc
 
     def vc_halo_nfw(self,rho0,ah):
-        """
+        r"""
         Rotation curve of dark matter (DM) halo with NWF profile.
         
         :param rho0: Local DM mass density, :math:`\mathrm{M_\odot \ pc^{-3}}`. 
@@ -450,7 +450,7 @@ class RotCurve():
         return vc
 
     def vc_halo_cored_iso_sphere(self,rho0,ah):
-        """
+        r"""
         Rotation curve of dark matter (DM) halo, which is a cored isothermal sphere.
         
         :param rho0: Local DM mass density, :math:`\mathrm{M_\odot \ pc^{-3}}`. 
@@ -468,7 +468,7 @@ class RotCurve():
         return vc
     
     def _vc_halo_power_law_(self,rho0,alpha):
-        """
+        r"""
         Rotation velocity for stellar halo with a power-law profile.
         Not physical, gives too large enclosed halo mass. Must be 
         truncated at some R near GC, or core has to be added. 
@@ -487,7 +487,7 @@ class RotCurve():
             
     
     def vc_tot(self,vc_array):
-        """
+        r"""
         Total rotation curve as quadratic sum of all velocity components.         
         
         :param vc_array: :math:`{\\upsilon}_\mathrm{c}` components at distance(s) **R**. 
@@ -508,7 +508,7 @@ class RotCurve():
     
     
     def vc0(self,vc_tot):
-        """
+        r"""
         Calculates total circular velocity :math:`{\\upsilon}_\mathrm{c}` at the Solar radius, ``p.Rsun``.  
         
         :param vc_tot: Total circular velocity at the given Galactocentric distance(s) **R**. 
@@ -633,7 +633,7 @@ class AMR():
     
     
     def amrd_global_sj22(self,t,t01,t02,r1,r2,alpha_w,FeH_0,FeH_p):
-        """
+        r"""
         Thin-disk AMR from Sysoliatina and Just (2022), Eq. (22) and (23). 
         All parameters must correspond to the same Galactocentric distance (but not necessarily to 
         the Solar radius ``p.Rsun``). 
@@ -847,7 +847,7 @@ class AMR():
 
     
     def amrr(self,p,a):
-        """
+        r"""
         Thin-disk AMR across the disk. 
         If ``p.fehkey=0``, AMR is from Sysoliatina and Just (2021), and AMR parameters are assumed 
         to be linear functions of Galactocentric distance (old version of the AMR generalization). 
@@ -885,7 +885,7 @@ class AMR():
     
     
     def get_amr(self,fe_ax,nfe_cum,t_ax,nt_cum,a):
-        """
+        r"""
         Reconstructs AMR from a normalized cumulative metallicity distribution function (CMDF) 
         and a normalized cumulative age distribution function (CADF). The first can be taken from 
         some observational data, the latter is modeled. Both CMDF and CADF correspond to the same 
@@ -929,7 +929,7 @@ class AMR():
     
     
     def chemical_disks(self,tab,feh_br,alpha_br):
-        """
+        r"""
         Method used to separate two populations in :math:`\mathrm{[Fe/H]}\\text{-}\mathrm{[{\\alpha}/Fe]}` plane. 
         Shape of the separating border was chosed based on the APOGEE Red Clump data 
         (may be not optimal for other data samples). Equation defining the border 
@@ -974,7 +974,7 @@ class AMR():
     
     
     def chemical_disks_sj21(self,tab):
-        """
+        r"""
         Same as :meth:`jjmodel.funcs.AMR.chemical_disks`, but with the specified separating border 
         location (for the APOGEE RC DR14). Can be not optimal for other data samples 
         (also for other releases of the RC catalogue). 
@@ -992,7 +992,7 @@ class AMR():
     
     
     def chemical_disks_mg(self,tab):
-        """
+        r"""
         Same as :meth:`jjmodel.funcs.AMR.chemical_disks`, but for :math:`\mathrm{[Fe/H]}\\text{-}\mathrm{[Mg/Fe]}`
         plane. Separating border is adapted for the RAVE DR5, may be not optimal for other data samples. 
         
@@ -1019,7 +1019,7 @@ class AMR():
     
     
     def get_metcum(self,Rlim,zlim,tab,a,**kwargs):   
-        """
+        r"""
         Calculates normalized cumulative metallicity distribution function (CMDF) from the data. 
         
         :param Rlim: Range of Galactocentric distances, same units as for Galactocentric distance 
@@ -1073,7 +1073,7 @@ class AMR():
           
     
     def conv(self,x,k,b,sigma):
-        """
+        r"""
         Analytical convolution of the linear function :math:`(k*x + b)` with a Gaussian kernel. 
         See Eq.(20) in Sysoliatina and Just (2022). 
         
@@ -1100,7 +1100,7 @@ class AMR():
 
 
     def get_convolved(self,x,ycum,sigma,y_linpart):
-        """
+        r"""
         Convolution of the normalized cumulative metallicity distribution function (CMDF) 
         with a Gaussian kernel based on :meth:`jjmodel.funcs.AMR.conv`. 
         Only the upper part of CMDF (**ycum** > 0.5) is convolved. 
@@ -1143,7 +1143,7 @@ class AMR():
         
         
     def get_deconvolved(self,x,ycum,y_linpart):
-        """
+        r"""
         Reconstructs 'true' normalized cumulative metallicity distribution function (CMDF) 
         assuming that the observed CMDF is a convolution of the 'true' distribution with a Gaussian 
         kernel (e.g. related to observational errors). See Sysoliatina and Just (2021) and 
@@ -1207,7 +1207,7 @@ class AMR():
 
     
     def mass_loss_jj10_default(self):
-        """
+        r"""
         Thin-disk mass loss function calculated with the **Chempy** code consistent with the three-slope 
         broken power-law IMF from Rybizki and Just (2015) and AMR from Just and Jahreiss (2010). 
         This mass loss function is close to the one used in Just and Jahreiss (2010). 
@@ -1221,7 +1221,7 @@ class AMR():
 
 
     def mass_loss_sj21_default(self):
-        """
+        r"""
         Thin-disk mass loss function calculated with the **Chempy** code consistent with the four-slope 
         broken power-law IMF and AMR from Sysoliatina and Just (2021).
         
@@ -1237,7 +1237,7 @@ class AMR():
         
     
     def mass_loss(self,t,FeH):
-        """
+        r"""
         Mass loss for an arbitrary AMR (IMF 
         is a four-slope broken power law from Sysoliatina and Just 2021).         
         
@@ -1267,7 +1267,7 @@ class AMR():
         
     
     def z2fe(self,Z):
-        """
+        r"""
         Function to convert mass fraction of metals *Z* into abundance :math:`\mathrm{[Fe/H]}`. 
         Formulae are taken 
         from Choi et al. (2016). The approach adopts a primordial helium abundance *Yp* = 0.249
@@ -1296,7 +1296,7 @@ class AMR():
 
 
     def fe2z(self,FeH):
-        """
+        r"""
         Function to convert abundance :math:`\mathrm{[Fe/H]}` into mass fraction of metals *Z*. 
         Formulae are taken 
         from Choi et al. (2016). The approach adopts a primordial helium abundance *Yp* = 0.249
@@ -1325,13 +1325,13 @@ class AMR():
   
      
 class AVR():
-    """
+    r"""
     Collection of methods to work with the age-velocity dispersion relation (AVR). 
     Here velocity dispersion is :math:`\\sigma_\mathrm{W}`, the vertical component. 
     """
     
     def avr_jj10(self,t,tp,sigma_e,tau0,alpha):
-        """
+        r"""
         Thin-disk AVR in the Solar neighbourhood as defined in Just and Jahreiss (2010).
         
         :param t: Galactic time, Gyr. 
@@ -1356,7 +1356,7 @@ class AVR():
 
     
     def avr_jj10_default(self,t,**kwargs):
-        """
+        r"""
         Thin-disk AVR in the Solar neighbourhood as defined in Just and Jahreiss (2010) 
         calculated with the best parameters (model A).
     
@@ -1406,7 +1406,7 @@ class SFR():
         self.gt_sj21_default = np.loadtxt(os.path.join(localpath,'input','mass_loss','gt_sj21_default.txt')).T[1]
         
     def sfrd_jj10(self,t,t0,t1,sigma,**kwargs):
-        """
+        r"""
         Thin-disk SFR equation as defined in Just and Jahreiss (2010) (model A). 
         
         :param t: Galactic time, Gyr. 
@@ -1445,7 +1445,7 @@ class SFR():
 
 
     def sfrd_jj10_default(self,t):
-        """
+        r"""
         SFR equation from Just and Jahreiss (2010) (model A)  
         (:meth:`jjmodel.funcs.SFR.sfrd_jj10`) calculated with the best parameters.
         
@@ -1469,7 +1469,7 @@ class SFR():
         
 
     def sfrd_sj21(self,t,dzeta,eta,t1,t2,sigma,**kwargs):
-        """
+        r"""
         SFR of the thin disk as defined in Sysoliatina and Just (2021).
         
         :param t: Galactic time, Gyr. 
@@ -1515,7 +1515,7 @@ class SFR():
     
     
     def sfrd_sj21_mono_default(self,t):
-        """
+        r"""
         SFR of the thin disk, as defined in Sysoliatina and Just (2021) 
         (:meth:`jjmodel.funcs.SFR.sfrd_sj21`) calculated with 
         the best-fit parameters (model MCMC1).
@@ -1536,7 +1536,7 @@ class SFR():
 
 
     def sfrd_sj21_multipeak(self,tp,tr,t,dzeta,eta,t1,t2,sigma,sigmap,tpk,dtp,**kwargs):
-        """
+        r"""
         SFR of the thin disk as defined in Sysoliatina and Just (2021) with any number of extra Gaussian 
         peaks. Also, see Eqs. (7)-(10) in Sysoliatina and Just (2022). 
         
@@ -1580,9 +1580,9 @@ class SFR():
             g = self.gd_sj21_default
         
         try:
-            ind_peak = np.int(np.round(np.divide(tpk-t1,self.dt)))
+            ind_peak = int(np.round(np.divide(tpk-t1,self.dt)))
         except:
-            ind_peak = np.array(np.round(np.divide(tpk-t1,self.dt)),dtype=np.int)
+            ind_peak = np.array(np.round(np.divide(tpk-t1,self.dt)),dtype=int)
             
         if len(sigmap)==1:
             ind_peak = np.array([ind_peak])
@@ -1614,7 +1614,7 @@ class SFR():
     
     
     def sfrd_sj21_multipeak_default(self,t):   
-        """
+        r"""
         SFR of the thin disk as defined in Sysoliatina and Just (2021) with two extra Gaussian peaks 
         (see :meth:`jjmodel.funcs.SFR.sfrd_sj21_multipeak`). 
         Calculated with the best-fit parameters (model MCMC1). 
@@ -1638,7 +1638,7 @@ class SFR():
     
     
     def sfrt_sj21(self,t,gamma,beta,t1,t2,sigma,**kwargs):
-        """
+        r"""
         SFR of the thick disk as defined in Sysoliatina and Just (2021), Eq. (7)-(8). 
         
         :param t: Galactic time, Gyr. 
@@ -1678,7 +1678,7 @@ class SFR():
     
     
     def sfrt_sj21_default(self,t):
-        """
+        r"""
         Thick-disk SFR as defined in Sysoliatina and Just (2021) (:meth:`jjmodel.funcs.SFR.sfrt_sj21`)
         calculated with best parameters (model MCMC1). 
         
@@ -1697,7 +1697,7 @@ class SFR():
     
     
     def sfrr(self,p,a,gd,gd0,gt):
-        """
+        r"""
         Thin- and thick-disk SFR as functions of Galactocentric distance. 
         
         :param p: Set of model parameters from the parameter file. 
@@ -1782,7 +1782,7 @@ class IMF():
     """
     
     def __init__(self,mlow,mup):
-        """
+        r"""
         Class instance is initialized by two parameters. 
         
         :param mlow: Lower limit of the mass range, :math:`\mathrm{M_\odot}`. 
@@ -1886,7 +1886,7 @@ class IMF():
     
     
     def number_stars(self,mass1,mass2):
-        """
+        r"""
         Probability of a star to have mass in the given interval 
         according to chosen IMF (yes, the method name is misleading, sorry). 
         Should be called after the IMF definition (e.g., :meth:`jjmodel.func.IMF.BPL_4slopes`). 
@@ -1903,7 +1903,7 @@ class IMF():
     
 
     def BPL_4slopes(self,a0,a1,a2,a3,m1,m2,m3):
-        """
+        r"""
         A four-slope broken power-law (BPL) IMF.
         
         :param a0: First IMF slope. 
@@ -1951,7 +1951,7 @@ class IMF():
     
     
     def BPL_4slopes_rj15_default(self):
-        """
+        r"""
         A four-slope broken power-law (BPL) IMF from Rybizki and Just (2015) and Rybizki (2018) 
         (:meth:`jjmodel.funcs.IMF.BPL_4slopes`)
         calculated with the best parameters. 
@@ -1967,7 +1967,7 @@ class IMF():
 
 
     def BPL_4slopes_sj21_default(self):
-        """
+        r"""
         A four-slope broken power law (BPL) IMF from Sysoliatina and Just (2021) 
         (:meth:`jjmodel.funcs.IMF.BPL_4slopes`) 
         calculated with the best parameters (MCMC1 run). 
@@ -1983,7 +1983,7 @@ class IMF():
 
 
     def Chabrier03(self):
-        """
+        r"""
         A lognormal + power-law IMF from Chabrier (2003). 
         
         :return: Linear mass grid from **mlow** to **mup** (in :math:`\mathrm{M_\odot}`) and 
@@ -2002,7 +2002,7 @@ class IMF():
         m_lin = np.linspace(self.mlow,self.mup,int((self.mup-self.mlow)//self.mres+2))
         f = [self._chabrier03_call_(i,ka1,a1,m1) for i in m_lin]
         
-        u = f*self.m_lin
+        u = f*self.m_lin_ktg93_3slopes_call_
         u = np.divide(u,np.sum(u))
         self.Nmdm = np.divide(u,self.m_lin)
                
@@ -2010,12 +2010,12 @@ class IMF():
     
     
     def KTG93(self):
-        """
+        r"""
         A three-slope broken power law (BPL) IMF from Kroupa et al. (1993).
         
         :return: Linear mass grid from **mlow** to **mup** (in :math:`\mathrm{M_\odot}`) and 
                 probabilities corresponding to these mass intervals.
-        :rtype: 2d-array
+        :rtype: 2d-array_ktg93_3slopes_call_
         """  
             
         a1, a2, a3 = 1.3, 2.2, 2.7

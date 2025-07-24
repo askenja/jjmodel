@@ -17,7 +17,7 @@ from .constants import tr, SIGMA_E
 
 
 def rbin_builder(R,a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
-    """
+    r"""
     Predicts the vertical structure of the MW disk at a given Galactocentric distance.  
     
     :param R: Galactocentric distance, kpc. 
@@ -152,7 +152,7 @@ def rbin_builder(R,a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
                      )
     
     if 'log' in kwargs:
-        kwargs['log'].append('\n\nDensity in the Galactic plane [Msun/pc^3]:\n')
+        kwargs['log'].append(r'\n\nDensity in the Galactic plane [Msun/pc^3]:\n')
         kwargs['log'].append(''.join(('{:<11}'.format('Thin.d'),
                                       '{:<11}'.format('Thick.d'),
                                       '{:<11}'.format('Mol.gas'),
@@ -178,7 +178,7 @@ def rbin_builder(R,a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
 
 
 def local_run(p,a,inp,**kwargs):
-    """
+    r"""
     Builds the local JJ model based on the given parameters and input functions.
     Accepts optional parameters of :func:`jjmodel.mwdisk.rbin_builder`. 
     
@@ -207,7 +207,7 @@ def local_run(p,a,inp,**kwargs):
 
 
 def extended_run(inp,i,out_local,**kwargs):
-    """
+    r"""
     Calculates the JJ-model predictions at a given Galactocentric distance. 
     Accepts optional parameters of :func:`jjmodel.mwdisk.rbin_builder`. 
         
@@ -262,7 +262,7 @@ def _apply_args_and_kwargs_(fn, args, kwargs):
 
 
 def disk_builder(p,a,inp,**kwargs):
-    """
+    r"""
     Constructs the disk (vertical structure at some Galactocentric distance). 
     Can work in two modes (depending on the parameter ``p.run_mode``):
         

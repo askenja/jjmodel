@@ -47,29 +47,29 @@ class Plotting():
         self.labs = {'d':r'$\mathrm{Thin \ disk}$', 't':r'$\mathrm{Thick \ disk}$',
                      'g1':r'$\mathrm{Molecular \ gas}$', 'g2':r'$\mathrm{Atomic \ gas}$',
                      'dh':r'$\mathrm{DM \ halo}$', 'sh':r'$\mathrm{Stellar \ halo}$',
-                     'r0':'$\mathrm{R_\odot=}$' + str(self.p.Rsun) + '$\mathrm{\ kpc}$',
+                     'r0':r'$\mathrm{R_\odot=}$' + str(self.p.Rsun) + r'$\mathrm{\ kpc}$',
                      'dt':r'$\mathrm{Total \ disk}$', 'tot':r'$\mathrm{Total \ disk + halo}$',
                      'b':r'$\mathrm{Bulge}$'}
-        self.pops = {'rc':'$\mathrm{RC \ stars}$', 'rc+':'$\mathrm{RC+HGB \ stars}$',
-                     'a':'$\mathrm{A \ stars}$', 'f':'$\mathrm{F \ stars}$',
-                     'gdw':'$\mathrm{G \ dwarfs}$', 'kdw':'$\mathrm{K \ dwarfs}$',                     
-                     'mdw':'$\mathrm{M \ dwarfs}$','ceph':'$\mathrm{Cepheids \ Type \ I}$',
-                     'wd':'$\mathrm{White \ dwarfs}$'}
+        self.pops = {'rc':r'$\mathrm{RC \ stars}$', 'rc+':r'$\mathrm{RC+HGB \ stars}$',
+                     'a':r'$\mathrm{A \ stars}$', 'f':r'$\mathrm{F \ stars}$',
+                     'gdw':r'$\mathrm{G \ dwarfs}$', 'kdw':r'$\mathrm{K \ dwarfs}$',                     
+                     'mdw':r'$\mathrm{M \ dwarfs}$','ceph':r'$\mathrm{Cepheids \ Type \ I}$',
+                     'wd':r'$\mathrm{White \ dwarfs}$'}
         self.popcols = {'rc':'r', 'rc+':'tomato',
                         'a':'cyan', 'f':'steelblue',
                         'gdw':'orange', 'kdw':'magenta','ceph':'indigo','wd':'brown'                   
                         }
         self.cols = {'d':'dodgerblue','g1':'cyan','g2':'lawngreen','t':'orange',
                     'dh':'darkmagenta','sh':'r','dt':'violet','tot':'k','b':'y'}
-        self.axts = {'r':'$\mathrm{R, \ kpc}$', 't':'$\mathrm{t, \ Gyr}$',                          
+        self.axts = {'r':r'$\mathrm{R, \ kpc}$', 't':r'$\mathrm{t, \ Gyr}$',                          
                      'tau':r'$\mathrm{\tau, \ Gyr}$', 'num':r'$\mathrm{N, \ pc^{-2}}$',
                      'sigma':r'$\mathrm{\Sigma, \ M_\odot \ pc^{-2}}$',
-                     'z':'$\mathrm{|z|, \ pc}$', 'zkpc':'$\mathrm{|z|, \ kpc}$',
-                     'h':'$\mathrm{h, \ pc}$', 'nsfr':'$\mathrm{SFR/<SFR>}$',
+                     'z':r'$\mathrm{|z|, \ pc}$', 'zkpc':r'$\mathrm{|z|, \ kpc}$',
+                     'h':r'$\mathrm{h, \ pc}$', 'nsfr':r'$\mathrm{SFR/<SFR>}$',
                      'rho':r'$\mathrm{\rho, \ M_\odot \ pc^{-3}}$',
-                     'sigw':r'$\mathrm{\sigma_W, \ km \ s^{-1}}$', 'fe':'$\mathrm{[Fe/H]}$',
-                     'kz':'$\mathrm{K_{|z|}, \ km^2 \ s^{-2} \ kpc^{-1}}$',
-                     'n':'$\mathrm{N, \ pc^{-3}}$'}
+                     'sigw':r'$\mathrm{\sigma_W, \ km \ s^{-1}}$', 'fe':r'$\mathrm{[Fe/H]}$',
+                     'kz':r'$\mathrm{K_{|z|}, \ km^2 \ s^{-2} \ kpc^{-1}}$',
+                     'n':r'$\mathrm{N, \ pc^{-3}}$'}
         self.xt = {'ticks':np.arange(tp+1),
                    'labels':['0','','2','','4','','6','','8','','10','','12',''] }
         self.lw = {'main':2,'secondary':1}
@@ -80,26 +80,26 @@ class Plotting():
                           'dens':'magma','viridis':'viridis'}
         self.cbar_settings = {'FeH':[0.2,[-2.5,1],self.axts['fe']],
                               'sigw':[10,[0,100],self.axts['sigw']],
-                              'logg':[1,[-10,10],'$\mathrm{logg}$'],
-                              'logL':[1,[-10,10],'$\mathrm{logL}$'],
-                              'logT':[1,[0,5],'$\mathrm{logT}$'],
-                              'Mf':[1,[0,100],'$\mathrm{M_f, \ M_\odot}$'],
-                              'Mini':[1,[0,100],'$\mathrm{M_{ini}, \ M_\odot}$'],                   
-                              'U':[2,[-10,20],'$\mathrm{U, \ mag}$'],
-                              'B':[2,[-10,20],'$\mathrm{B, \ mag}$'],
-                              'V':[2,[-10,20],'$\mathrm{V, \ mag}$'],
-                              'R':[2,[-10,20],'$\mathrm{R, \ mag}$'],
-                              'I':[2,[-10,20],'$\mathrm{I, \ mag}$'],
-                              'K':[2,[-10,20],'$\mathrm{K, \ mag}$'],
-                              'H':[2,[-10,20],'$\mathrm{H, \ mag}$'],
-                              'J':[2,[-10,20],'$\mathrm{J, \ mag}$'],
-                              'G_DR2':[2,[-10,20],'$\mathrm{G\_DR2, \ mag}$'],
-                              'GBPbr_DR2':[2,[-10,20],'$\mathrm{GBPbr\_DR2, \ mag}$'],
-                              'GBPft_DR2':[2,[-10,20],'$\mathrm{GBPft\_DR2, \ mag}$'],
-                              'GRP_DR2':[2,[-10,20],'$\mathrm{GRP\_DR2, \ mag}$'],
-                              'G_EDR3':[2,[-10,20],'$\mathrm{G\_EDR3, \ mag}$'],
-                              'GBP_EDR3':[2,[-10,20],'$\mathrm{GBP\_EDR3, \ mag}$'],
-                              'GRP_EDR3':[2,[-10,20],'$\mathrm{GRP\_EDR3, \ mag}$']}                             
+                              'logg':[1,[-10,10],r'$\mathrm{logg}$'],
+                              'logL':[1,[-10,10],r'$\mathrm{logL}$'],
+                              'logT':[1,[0,5],r'$\mathrm{logT}$'],
+                              'Mf':[1,[0,100],r'$\mathrm{M_f, \ M_\odot}$'],
+                              'Mini':[1,[0,100],r'$\mathrm{M_{ini}, \ M_\odot}$'],                   
+                              'U':[2,[-10,20],r'$\mathrm{U, \ mag}$'],
+                              'B':[2,[-10,20],r'$\mathrm{B, \ mag}$'],
+                              'V':[2,[-10,20],r'$\mathrm{V, \ mag}$'],
+                              'R':[2,[-10,20],r'$\mathrm{R, \ mag}$'],
+                              'I':[2,[-10,20],r'$\mathrm{I, \ mag}$'],
+                              'K':[2,[-10,20],r'$\mathrm{K, \ mag}$'],
+                              'H':[2,[-10,20],r'$\mathrm{H, \ mag}$'],
+                              'J':[2,[-10,20],r'$\mathrm{J, \ mag}$'],
+                              'G_DR2':[2,[-10,20],r'$\mathrm{G\_DR2, \ mag}$'],
+                              'GBPbr_DR2':[2,[-10,20],r'$\mathrm{GBPbr\_DR2, \ mag}$'],
+                              'GBPft_DR2':[2,[-10,20],r'$\mathrm{GBPft\_DR2, \ mag}$'],
+                              'GRP_DR2':[2,[-10,20],r'$\mathrm{GRP\_DR2, \ mag}$'],
+                              'G_EDR3':[2,[-10,20],r'$\mathrm{G\_EDR3, \ mag}$'],
+                              'GBP_EDR3':[2,[-10,20],r'$\mathrm{GBP\_EDR3, \ mag}$'],
+                              'GRP_EDR3':[2,[-10,20],r'$\mathrm{GRP\_EDR3, \ mag}$']}                             
         label_size = 12
         mpl.rcParams['xtick.labelsize'] = label_size 
         mpl.rcParams['ytick.labelsize'] = label_size 
@@ -244,7 +244,7 @@ class Plotting():
     
     
     def rhor_plt(self,**kwargs):
-        """
+        r"""
         Radial density profiles of the Galactic components 
         (thin and thick disk, molecular and atomic gas, DM and stellar halo). 
         
@@ -304,7 +304,7 @@ class Plotting():
         
     
     def nsfr_plt(self,mode_comp,**kwargs):
-        """
+        r"""
         Normalized star formation rate (NSFR) as a function of Galactocentric distance. 
                 
         :param mode_comp: Galactic component. Can be ``'d'`` (thin disk), ``'t'`` (thick disk), or 
@@ -386,7 +386,7 @@ class Plotting():
     
 
     def nsfr_rsun_plt(self,mode_comp,**kwargs):
-        """
+        r"""
         Normalized star formation rate (NSFR) for the Solar neighbourhood, ``p.Rsun``.
         
         :param mode_comp: Galactic component. Can be ``'d'`` (thin disk), ``'t'`` (thick disk), or 
@@ -455,7 +455,7 @@ class Plotting():
 
     
     def amrr_plt(self,mode_comp,**kwargs):
-        """
+        r"""
         Age-metallicity relation (AMR) of the disk as a function of Galactocentric distance.
         
         :param mode_comp: Galactic component. Can be ``'d'`` (thin disk), ``'t'`` (thick disk), or 
@@ -541,7 +541,7 @@ class Plotting():
     
 
     def amr_rsun_plt(self,mode_comp,**kwargs):
-        """
+        r"""
         Age-metallicity relation (AMR) for the Solar neighbourhood, ``p.Rsun``.
         
         :param mode_comp: Galactic component. Can be ``'d'`` (thin disk), ``'t'`` (thick disk), or 
@@ -604,7 +604,7 @@ class Plotting():
 
 
     def gr_plt(self,mode_comp,**kwargs):
-        """
+        r"""
         Mass loss as a function of time and Galactocentric distance.
         
         :param mode_comp: Galactic component. Can be ``'d'`` (thin disk), ``'t'`` (thick disk), or 
@@ -643,7 +643,7 @@ class Plotting():
         ax.set_xticks(self.xt['ticks'])
         ax.set_xticklabels(self.xt['labels'])
         ax.set_xlabel(self.axts['t'],fontsize=self.fnt['main'],labelpad=15)
-        ax.set_ylabel('$\mathrm{Mass \ fraction \ in \ stars \ and \ remnants}$',
+        ax.set_ylabel(r'$\mathrm{Mass \ fraction \ in \ stars \ and \ remnants}$',
                       fontsize=self.fnt['main'],labelpad=15)
         axx = ax.twiny()
         axx.set_xticks(self.xt['ticks'])
@@ -688,7 +688,7 @@ class Plotting():
 
 
     def g_rsun_plt(self,mode_comp,**kwargs):
-        """
+        r"""
         Plots mass loss function for the Solar neighbourhood, ``p.Rsun``.
         
         :param mode_comp: Galactic component. Can be ``'d'`` (thin disk), ``'t'`` (thick disk), or 
@@ -717,7 +717,7 @@ class Plotting():
         ax.set_xticks(self.xt['ticks'])
         ax.set_xticklabels(self.xt['labels'])
         ax.set_xlabel(self.axts['t'],fontsize=self.fnt['main'],labelpad=15)
-        ax.set_ylabel('$\mathrm{Mass \ fraction \ in \ stars \ and \ remnants}$',
+        ax.set_ylabel(r'$\mathrm{Mass \ fraction \ in \ stars \ and \ remnants}$',
                       fontsize=self.fnt['main'],labelpad=15)
         axx = ax.twiny()
         axx.set_xticks(self.xt['ticks'])
@@ -745,7 +745,7 @@ class Plotting():
 
 
     def rhoz_plt(self,R,**kwargs):
-        """
+        r"""
         Vertical density profiles of the Galactic components (thin and thick disk, 
         molecular and atomic gas, DM and stellar halo) at some radius.
         
@@ -806,7 +806,7 @@ class Plotting():
                 ylabelname,legendloc = self.axts['rho'],1
         ax.set_ylabel(ylabelname,fontsize=self.fnt['main'],labelpad=15)
         ax.set_xlabel(self.axts['z'],fontsize=self.fnt['main'],labelpad=15)
-        ax.set_title('$\mathrm{R=}$'+str(float(R))+'$\mathrm{\ kpc}$',fontsize=self.fnt['main'],pad=15)
+        ax.set_title(r'$\mathrm{R=}$'+str(float(R))+r'$\mathrm{\ kpc}$',fontsize=self.fnt['main'],pad=15)
         ax.set_xlim(0,self.p.zmax)
         plt.legend(prop={'size':self.fnt['secondary']},loc=legendloc,ncol=2)
         f.subplots_adjust(left=0.14,top=0.86,bottom=0.15,right=0.86)
@@ -822,7 +822,7 @@ class Plotting():
     
  
     def rhoz_monoage_plt(self,mode_comp,R,ages,**kwargs):
-        """
+        r"""
         Vertical density profiles of the mono-age subpopulations
         (plotting for :func:`jjmodel.analysis.rhoz_monoage`).
         
@@ -898,10 +898,10 @@ class Plotting():
             if inpcheck_iskwargtype(kwargs,'number',True,bool,this_function):
                 ylabel = self.axts['n']
             if 'mode_pop' in kwargs:
-                ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+                ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
             if 'tab' in kwargs:
-                ln += '$\mathrm{\ (custom \ population)}$'
-        ln += '$\mathrm{\ at \ R=}$'+str(R)+'$\mathrm{\ kpc}$'
+                ln += r'$\mathrm{\ (custom \ population)}$'
+        ln += r'$\mathrm{\ at \ R=}$'+str(R)+r'$\mathrm{\ kpc}$'
         
         f, ax = plt.subplots(figsize=(9,7))
         ax.set_xlim((0,self.p.zmax))
@@ -938,7 +938,7 @@ class Plotting():
     
     
     def rhoz_monomet_plt(self,mode_comp,R,mets,**kwargs):
-        """
+        r"""
         Vertical density profiles of the mono-metallicity subpopulations
         (plotting for jjmodel.analysis.rhoz_monomet).
         
@@ -1000,10 +1000,10 @@ class Plotting():
             if inpcheck_iskwargtype(kwargs,'number',True,bool,this_function):
                 ylabel = self.axts['n']
             if 'mode_pop' in kwargs:
-                ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+                ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
             if 'tab' in kwargs:
-                ln += '$\mathrm{\ (custom \ population)}$'
-        ln += '$\mathrm{\ at \ R=}$'+str(R)+'$\mathrm{\ kpc}$'
+                ln += r'$\mathrm{\ (custom \ population)}$'
+        ln += r'$\mathrm{\ at \ R=}$'+str(R)+r'$\mathrm{\ kpc}$'
                                
         f, ax = plt.subplots(figsize=(9,7))
         ax.set_xlim((0,self.p.zmax))
@@ -1040,7 +1040,7 @@ class Plotting():
     
     
     def rz_map_plt(self,mode_comp,**kwargs):
-        """
+        r"""
         Density distribution in R and z Galactic coordinates. Can be matter or number density. 
         Plotting for :func:`jjmodel.analysis.rz_map`. 
         
@@ -1091,15 +1091,15 @@ class Plotting():
         colorbar = self._figcolorbar_('dens',10,**kwargs)
         
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
         if 'ages' in kwargs:
             ln += r'$\mathrm{\ of \ \tau=}$' + '${}$'.format(str(kwargs['ages'])) +\
                   r'$\mathrm{ \ Gyr}$'                          
         if 'mets' in kwargs:
-            ln += '$\mathrm{\ of \ [Fe/H]=[}$' + str(kwargs['mets'][0]) + ',' +\
-                  str(kwargs['mets'][1]) + '$\mathrm{]}$'
+            ln += r'$\mathrm{\ of \ [Fe/H]=[}$' + str(kwargs['mets'][0]) + ',' +\
+                  str(kwargs['mets'][1]) + r'$\mathrm{]}$'
         
         cbarlabel = r'$\mathrm{log_{10} \ \rho \ [M_\odot \ pc^{-3}]}$'
         if inpcheck_iskwargtype(kwargs,'number',True,bool,this_function):
@@ -1131,7 +1131,7 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         ax.set_xlabel(self.axts['r'],fontsize=self.fnt['main'],labelpad=10)
-        ax.set_ylabel('$\mathrm{|z|, \ kpc}$',fontsize=self.fnt['main'],labelpad=10)
+        ax.set_ylabel(r'$\mathrm{|z|, \ kpc}$',fontsize=self.fnt['main'],labelpad=10)
         ax.set_title(ln,fontsize=self.fnt['main'],pad=10)
         cbar = plt.colorbar(im,cax=cax,orientation='vertical')
         cbar.set_ticks(ycbar)
@@ -1148,7 +1148,7 @@ class Plotting():
         
     
     def rz_map_quantity_plt(self,mode_comp,quantity,**kwargs):
-        """
+        r"""
         Distribution of some quantity Q in Rz-plane. Q can be W-velocity dispersion or 
         stellar physical parameter from isochrones. Plotting for :func:`jjmodel.analysis.rz_map_quantity`. 
         
@@ -1199,15 +1199,15 @@ class Plotting():
         colorbar = self._figcolorbar_('dens',10,**kwargs)
         
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
         if 'ages' in kwargs:
             ln += r'$\mathrm{\ of \ \tau=}$' + '${}$'.format(str(kwargs['ages'])) +\
                   r'$\mathrm{ \ Gyr}$'                          
         if 'mets' in kwargs:
-            ln += '$\mathrm{\ of \ [Fe/H]=[}$' + str(kwargs['mets'][0]) + ',' +\
-                  str(kwargs['mets'][1]) + '$\mathrm{]}$'
+            ln += r'$\mathrm{\ of \ [Fe/H]=[}$' + str(kwargs['mets'][0]) + ',' +\
+                  str(kwargs['mets'][1]) + r'$\mathrm{]}$'
         
         kwargs_calc = reduce_kwargs(kwargs,['save','dz','mode_pop','tab','ages','mets','mode_iso'])
         rz_grid = rz_map_quantity(mode_comp,quantity,self.p,self.a,**kwargs_calc)
@@ -1255,7 +1255,7 @@ class Plotting():
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         ax.set_xlabel(self.axts['r'],fontsize=self.fnt['main'],labelpad=10)
-        ax.set_ylabel('$\mathrm{|z|, \ kpc}$',fontsize=self.fnt['main'],labelpad=10)
+        ax.set_ylabel(r'$\mathrm{|z|, \ kpc}$',fontsize=self.fnt['main'],labelpad=10)
         ax.set_title(ln,fontsize=self.fnt['main'],pad=10)
         cbar = plt.colorbar(im,cax=cax,orientation='vertical')
         cbar.set_ticks(ycbar)
@@ -1270,7 +1270,7 @@ class Plotting():
 
 
     def agez_plt(self,mode_comp,**kwargs):
-        """
+        r"""
         Mean age as a function of height z and Galactocentric distance R.
         Plotting for :func:`jjmodel.analysis.agez`. 
         
@@ -1316,9 +1316,9 @@ class Plotting():
         
         colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
         cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
                                        **kwargs,radius_applicable=True)
             
@@ -1342,10 +1342,10 @@ class Plotting():
         im = ax.add_collection(line_segments)
         if mode_comp=='dt' or mode_comp=='tot':
             agezt, agezt0 = agez('t',self.p,self.a)
-            ax.plot(self.a.z,agezt0,ls='--',color='orange',lw=2,label='$\mathrm{Thick \ disk}$')
+            ax.plot(self.a.z,agezt0,ls='--',color='orange',lw=2,label=r'$\mathrm{Thick \ disk}$')
         if mode_comp=='tot':
             agezsh, agezsh0 = agez('sh',self.p,self.a)
-            ax.plot(self.a.z,agezsh0,ls='--',color='magenta',lw=2,label='$\mathrm{Halo}$')
+            ax.plot(self.a.z,agezsh0,ls='--',color='magenta',lw=2,label=r'$\mathrm{Halo}$')
         ax.plot(self.a.z,agezr0,ls='--',color='k',lw=self.lw['secondary'],label=self.labs['r0'])
         plt.legend(loc=4,prop={'size':self.fnt['secondary']})
         pos = ax.get_position()
@@ -1365,7 +1365,7 @@ class Plotting():
     
 
     def agez_rsun_plt(self,mode_comp,**kwargs):
-        """
+        r"""
         Mean age as a function of height z for the Solar neighbourhood, ``p.Rsun``.
         Plotting for :func:`jjmodel.analysis.agez`. 
         
@@ -1404,9 +1404,9 @@ class Plotting():
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
             
         kwargs_calc = reduce_kwargs(kwargs,['save','tab','mode_pop','number','mode_iso'])
         
@@ -1462,7 +1462,7 @@ class Plotting():
 
 
     def ager_plt(self,mode_comp,zlim,**kwargs):
-        """
+        r"""
         Radial age profiles. Plotting for :func:`jjmodel.analysis.ager`. 
         
         :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -1509,9 +1509,9 @@ class Plotting():
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'        
+            ln += r'$\mathrm{\ (custom \ population)}$'        
         
         nz = int(len(zlim) - 1)
         colorbar = self._figcolorbar_('z',nz,**kwargs)
@@ -1544,10 +1544,10 @@ class Plotting():
         im = ax.add_collection(line_segments)
         if mode_comp=='dt' or mode_comp=='tot':
             agert = ager('t',[zlim[0],zlim[-1]],self.p,self.a)
-            ax.plot(self.a.R,agert,ls='--',color='orange',lw=2,label='$\mathrm{Thick \ disk}$')
+            ax.plot(self.a.R,agert,ls='--',color='orange',lw=2,label=r'$\mathrm{Thick \ disk}$')
         if mode_comp=='tot':
             agersh = ager('sh',[zlim[0],zlim[-1]],self.p,self.a)
-            ax.plot(self.a.R,agersh,ls='--',color='magenta',lw=2,label='$\mathrm{Halo}$')
+            ax.plot(self.a.R,agersh,ls='--',color='magenta',lw=2,label=r'$\mathrm{Halo}$')
         ax.plot([self.p.Rsun,self.p.Rsun],[ymin,ymax],ls='--',lw=self.lw['secondary'],
                      c='darkgrey',label=self.labs['r0'])
         plt.legend(prop={'size':self.fnt['secondary']},loc=3,ncol=1)
@@ -1568,7 +1568,7 @@ class Plotting():
 
 
     def metz_plt(self,mode_comp,**kwargs):
-        """ 
+        r""" 
         Mean metallicity as a function of height z and Galactocentric distance R.
         Plotting for :func:`jjmodel.analysis.metz`. 
         
@@ -1614,9 +1614,9 @@ class Plotting():
         
         colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
         cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
                                        **kwargs,radius_applicable=True)
                
@@ -1641,7 +1641,7 @@ class Plotting():
         im = ax.add_collection(line_segments)
         if mode_comp=='dt' or mode_comp=='tot':
             fehzt, fehzt0 = metz('t',self.p,self.a)
-            ax.plot(self.a.z,fehzt0,ls='--',color='orange',lw=2,label='$\mathrm{Thick \ disk}$')
+            ax.plot(self.a.z,fehzt0,ls='--',color='orange',lw=2,label=r'$\mathrm{Thick \ disk}$')
         ax.plot(self.a.z,fehzr0,ls='--',color='k',lw=self.lw['secondary'],label=self.labs['r0'])
         plt.legend(loc=1,prop={'size':self.fnt['secondary']})
         pos = ax.get_position()
@@ -1661,7 +1661,7 @@ class Plotting():
     
     
     def metz_rsun_plt(self,mode_comp,**kwargs):
-        """        
+        r"""        
         Mean metallicity as a function of height z for the Solar neighbourhood, p.Rsun.
         Plotting for jjmodel.analysis.metz. 
         
@@ -1701,9 +1701,9 @@ class Plotting():
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
                
         kwargs_calc = reduce_kwargs(kwargs,['save','tab','mode_pop','number','mode_iso'])
         if ('tab' in kwargs) and (mode_comp=='dt' or mode_comp=='tot'):
@@ -1761,7 +1761,7 @@ class Plotting():
 
     
     def metr_plt(self,mode_comp,zlim,**kwargs):
-        """        
+        r"""        
         Radial metallicity profiles. Plotting for :func:`jjmodel.analysis.metr`. 
         
         :param mode_comp: Galactic component. Can be ``'d'`` (thin disk), ``'dt'`` (thin + thick disk), 
@@ -1808,9 +1808,9 @@ class Plotting():
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
         cmin, cmax = zlim[0]/1e3, zlim[-1]/1e3
         if 'cbar_bins' in kwargs and kwargs['cbar_bins']==True:
             intervals = np.add(zlim/1e3,np.mean(np.diff(zlim))/2e3)[:-1]
@@ -1845,7 +1845,7 @@ class Plotting():
                              tab=kwargs['tab'][1])
             else:
                 fehrt = metr('t',[zlim[0],zlim[-1]],self.p,self.a,**kwargs_calc)
-            ax.plot(self.a.R,fehrt,ls='--',color='orange',lw=2,label='$\mathrm{Thick \ disk}$')
+            ax.plot(self.a.R,fehrt,ls='--',color='orange',lw=2,label=r'$\mathrm{Thick \ disk}$')
         ymin, ymax = self._dynamic_ylim_lin_(fehr,[-1.4,1],0.2)
         ax.set_ylim((ymin,ymax))      
         ax.plot([self.p.Rsun,self.p.Rsun],[ymin,ymax],ls='--',lw=self.lw['secondary'],
@@ -1868,7 +1868,7 @@ class Plotting():
 
   
     def rhor_monoage_plt(self,mode_comp,zlim,ages,**kwargs):
-        """
+        r"""
         Radial densiy profiles of the mono-age subpopulations. 
         Plotting for :func:`jjmodel.analysis.rhor_monoage`. 
         
@@ -1926,10 +1926,10 @@ class Plotting():
         zlim = inpcheck_height(zlim,self.p,this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
-        ln += '$\mathrm{\ at \ |z|=[}$' + str(zlim[0]/1e3) + ',' + str(zlim[1]/1e3) + '$\mathrm{] \ kpc}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
+        ln += r'$\mathrm{\ at \ |z|=[}$' + str(zlim[0]/1e3) + ',' + str(zlim[1]/1e3) + r'$\mathrm{] \ kpc}$'
         
         nage = len(ages)
         if inpcheck_iskwargtype(kwargs,'between',True,bool,this_function):
@@ -1956,10 +1956,10 @@ class Plotting():
             if inpcheck_iskwargtype(kwargs,'sigma',True,bool,this_function):
                 ylabel = self.axts['sigma']
                 if inpcheck_iskwargtype(kwargs,'number',True,bool,this_function):
-                    ylabel = '$\mathrm{N, \ pc^{-2}}$'                   
+                    ylabel = r'$\mathrm{N, \ pc^{-2}}$'                   
             else:
                 if inpcheck_iskwargtype(kwargs,'number',True,bool,this_function):
-                    ylabel = '$\mathrm{N, \ pc^{-3}}$'
+                    ylabel = r'$\mathrm{N, \ pc^{-3}}$'
        
         f, ax = plt.subplots(figsize=(9,7))
         ax.set_xlim((self.p.Rmin,self.p.Rmax))        
@@ -1999,7 +1999,7 @@ class Plotting():
 
 
     def rhor_monomet_plt(self,mode_comp,zlim,mets,**kwargs):
-        """
+        r"""
         Radial densiy profiles of the mono-metallicity subpopulations. 
         Plotting for :func:`jjmodel.analysis.rhor_monomet`. 
         
@@ -2052,10 +2052,10 @@ class Plotting():
         zlim = inpcheck_height(zlim,self.p,this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
-        ln += '$\mathrm{\ at \ |z|=[}$' + str(zlim[0]/1e3) + ',' + str(zlim[1]/1e3) + '$\mathrm{] \ kpc}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
+        ln += r'$\mathrm{\ at \ |z|=[}$' + str(zlim[0]/1e3) + ',' + str(zlim[1]/1e3) + r'$\mathrm{] \ kpc}$'
 
         nmet = len(mets) - 1     
         colorbar = self._figcolorbar_('feh',len(mets),**kwargs)
@@ -2076,10 +2076,10 @@ class Plotting():
             if inpcheck_iskwargtype(kwargs,'sigma',True,bool,this_function):
                 ylabel = self.axts['sigma']
                 if inpcheck_iskwargtype(kwargs,'number',True,bool,this_function):
-                    ylabel = '$\mathrm{N, \ pc^{-2}}$'                   
+                    ylabel = r'$\mathrm{N, \ pc^{-2}}$'                   
             else:
                 if inpcheck_iskwargtype(kwargs,'number',True,bool,this_function):
-                    ylabel = '$\mathrm{N, \ pc^{-3}}$'
+                    ylabel = r'$\mathrm{N, \ pc^{-3}}$'
         
         f, ax = plt.subplots(figsize=(9,7))
         ax.set_xlim((self.p.Rmin,self.p.Rmax))
@@ -2115,7 +2115,7 @@ class Plotting():
 
 
     def agehist_plt(self,mode_comp,zlim,**kwargs):
-        """
+        r"""
         Age distribution (normalized on area) as a function of height and Galactocentric distance. 
         Plotting for :func:`jjmodel.analysis.agehist`. 
         
@@ -2167,11 +2167,11 @@ class Plotting():
                                            'age distributions',this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
-        ln += '\n'+'$\mathrm{at \ |z|=[}$' + str(zlim[0]/1e3) +\
-              ',' + str(zlim[1]/1e3) + '$\mathrm{] \ kpc}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
+        ln += '\n'+r'$\mathrm{at \ |z|=[}$' + str(zlim[0]/1e3) +\
+              ',' + str(zlim[1]/1e3) + r'$\mathrm{] \ kpc}$'
 
         colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
         cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
@@ -2236,7 +2236,7 @@ class Plotting():
 
 
     def agehist_rsun_plt(self,mode_comp,zlim,**kwargs):
-        """
+        r"""
         Age distribution (normalized on area) as a function of height for the Solar neighbourhood, ``p.Rsun``.
         Plotting for :func:`jjmodel.analysis.agehist`. 
         
@@ -2288,11 +2288,11 @@ class Plotting():
                                            'age distributions',this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
-        ln += '\n'+'$\mathrm{at \ |z|=[}$' + str(zlim[0]/1e3) + ',' +\
-              str(zlim[-1]/1e3) + '$\mathrm{] \ kpc}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
+        ln += '\n'+r'$\mathrm{at \ |z|=[}$' + str(zlim[0]/1e3) + ',' +\
+              str(zlim[-1]/1e3) + r'$\mathrm{] \ kpc}$'
         
         if len(zlim)>2:
             nz = int(len(zlim) - 1)
@@ -2424,7 +2424,7 @@ class Plotting():
 
 
     def methist_plt(self,mode_comp,zlim,**kwargs):
-        """     
+        r"""     
         Metallicity distribution (normalized on area) as a function of height and Galactocentric distance. 
         Plotting for :func:`jjmodel.analysis.methist`. 
         
@@ -2480,10 +2480,10 @@ class Plotting():
         zlim = inpcheck_height(zlim,self.p,this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
-        ln += '$\mathrm{\ at \ |z|=[}$' + str(zlim[0]/1e3) + ',' + str(zlim[-1]/1e3) + '$\mathrm{] \ kpc}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
+        ln += r'$\mathrm{\ at \ |z|=[}$' + str(zlim[0]/1e3) + ',' + str(zlim[-1]/1e3) + r'$\mathrm{] \ kpc}$'
 
         colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
         cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
@@ -2543,7 +2543,7 @@ class Plotting():
 
 
     def methist_rsun_plt(self,mode_comp,zlim,**kwargs):
-        """
+        r"""
         Metallicity distribution (normalized on area) as a function of height 
         for the Solar neighbourhood, p. Rsun. Plotting for jjmodel.analysis.methist. 
         
@@ -2599,10 +2599,10 @@ class Plotting():
         zlim = inpcheck_height(zlim,self.p,this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
-        ln += '$\mathrm{\ at \ |z|=[}$' + str(zlim[0]/1e3) + ',' + str(zlim[-1]/1e3) + '$\mathrm{] \ kpc}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
+        ln += r'$\mathrm{\ at \ |z|=[}$' + str(zlim[0]/1e3) + ',' + str(zlim[-1]/1e3) + r'$\mathrm{] \ kpc}$'
 
         if len(zlim)>2:
             nz = int(len(zlim) - 1)
@@ -2730,7 +2730,7 @@ class Plotting():
 
 
     def h_plt(self,**kwargs):
-        """
+        r"""
         MW thin-disk's scale height as a function of time (and age).
         
         :param cbar: Optional. Matplotlib colomap name. 
@@ -2808,7 +2808,7 @@ class Plotting():
 
 
     def h_rsun_plt(self,**kwargs):
-        """
+        r"""
         MW thin-disk's scale height as a function of time (and age)
         for the Solar neighbourhood, at ``p.Rsun``.
         
@@ -2852,7 +2852,7 @@ class Plotting():
             for i in range(npeak):
                 if i==0:
                     ax.scatter(self.p.tpk[i],Hdp[i],c='k',marker='x',s=40,
-                               label='$\mathrm{Special \ subpopulations}$')
+                               label=r'$\mathrm{Special \ subpopulations}$')
                 else:
                     ax.scatter(self.p.tpk[i],Hdp[i],c='k',marker='x',s=40)                           
             ax.legend(loc=3,prop={'size':self.fnt['secondary']})
@@ -2868,7 +2868,7 @@ class Plotting():
 
 
     def hr_monoage_plt(self,mode_comp,ages,**kwargs):
-        """
+        r"""
         Scale heights of the disk's mono-age subpopulations as a function of Galactocentric distance.
         Plotting for :func:`jjmodel.analysis.hr_monoage`. 
         
@@ -2918,9 +2918,9 @@ class Plotting():
         ages = inpcheck_age(ages,this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
 
         colorbar = self._figcolorbar_('tau',self.a.Rbins,**kwargs)
         cmin, cmax = self._cbarminmax_(ages[0],ages[-1],np.mean(np.diff(ages)),
@@ -2957,13 +2957,13 @@ class Plotting():
         line_segments.set_array(intervals)
         im = ax.add_collection(line_segments)
         ax.plot(self.a.R,Heffd[1],ls='--',lw=self.lw['main'],c=self.cols['d'],
-                label='$\mathrm{Thin}$'+'-'+'$\mathrm{disk \ half}$'+'-'+'$\mathrm{thickness}$')
+                label=r'$\mathrm{Thin}$'+'-'+r'$\mathrm{disk \ half}$'+'-'+r'$\mathrm{thickness}$')
         if mode_comp=='dt' or mode_comp=='tot':
             ax.plot(self.a.R,Ht[1],lw=self.lw['main'],ls='--',
-                    c=self.cols['t'],label='$\mathrm{Thick}$'+'-'+'$\mathrm{disk \ scale \ height}$')
+                    c=self.cols['t'],label=r'$\mathrm{Thick}$'+'-'+r'$\mathrm{disk \ scale \ height}$')
         if mode_comp=='tot':
             ax.plot(self.a.R,Hsh[1],lw=self.lw['main'],ls='--',c=self.cols['sh'],
-                    label='$\mathrm{Halo \ scale \ height}$')
+                    label=r'$\mathrm{Halo \ scale \ height}$')
         f.subplots_adjust(left=0.14,top=0.86,bottom=0.15,right=0.86)
         ax.legend(loc=4,ncol=2,prop={'size':self.fnt['secondary']})
         pos = ax.get_position()
@@ -2986,7 +2986,7 @@ class Plotting():
     
     
     def hr_monomet_plt(self,mode_comp,mets,**kwargs):
-        """
+        r"""
         Scale heights of the disk's mono-metallicity sub-populations as a function of Galactocentric distance.
         Plotting for :func:`jjmodel.analysis.hr_monomet`. 
         
@@ -3032,9 +3032,9 @@ class Plotting():
                                            'mono-metallicity scale heights',this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
             
         colorbar = self._figcolorbar_('feh',self.a.Rbins,**kwargs)
         cmin, cmax = self._cbarminmax_(mets[0],mets[-1],np.mean(np.diff(mets)),**kwargs)
@@ -3069,13 +3069,13 @@ class Plotting():
         line_segments.set_array(intervals)
         im = ax.add_collection(line_segments)
         ax.plot(self.a.R,Heffd[1],ls='--',lw=self.lw['main'],c=self.cols['d'],
-                label='$\mathrm{Thin}$'+'-'+'$\mathrm{disk \ half}$'+'-'+'$\mathrm{thickness}$')
+                label=r'$\mathrm{Thin}$'+'-'+r'$\mathrm{disk \ half}$'+'-'+r'$\mathrm{thickness}$')
         if mode_comp=='dt' or mode_comp=='tot':
             ax.plot(self.a.R,Ht[1],lw=self.lw['main'],ls='--',
-                    c=self.cols['t'],label='$\mathrm{Thick}$'+'-'+'$\mathrm{disk \ scale \ height}$')
+                    c=self.cols['t'],label=r'$\mathrm{Thick}$'+'-'+r'$\mathrm{disk \ scale \ height}$')
         if mode_comp=='tot':
             ax.plot(self.a.R,Hsh[1],lw=self.lw['main'],ls='--',
-                    c=self.cols['sh'],label='$\mathrm{Halo \ scale \ height}$')
+                    c=self.cols['sh'],label=r'$\mathrm{Halo \ scale \ height}$')
         f.subplots_adjust(left=0.14,top=0.86,bottom=0.15,right=0.86)
         ax.legend(loc=3,ncol=2,prop={'size':self.fnt['secondary']})
         pos = ax.get_position()
@@ -3094,7 +3094,7 @@ class Plotting():
 
 
     def hr_gas_plt(self,**kwargs):
-        """
+        r"""
         Scale heights of molecular and atomic gas as functions of Galactocentric distance.
         
         :param save: Optional. If True, the figure will be saved. 
@@ -3122,9 +3122,9 @@ class Plotting():
         ax.set_xlabel(self.axts['r'],fontsize=self.fnt['main'])
         ax.set_ylabel(self.axts['h'],fontsize=self.fnt['main'])
         ax.errorbar(H2[0],H2[1]/2,yerr=H2[2]/2,ls='none',marker='o',markersize=5,
-                    color='b',label='$\mathrm{H_2 \ from \ Nakanishi \ and \ Sofue \ (2016)}$')
+                    color='b',label=r'$\mathrm{H_2 \ from \ Nakanishi \ and \ Sofue \ (2016)}$')
         ax.errorbar(HI[0],HI[1]/2,yerr=HI[2]/2,ls='none',marker='o',markersize=5,
-                    color='darkgreen',label='$\mathrm{HI \ from \ Nakanishi \ and \ Sofue \ (2016)}$')
+                    color='darkgreen',label=r'$\mathrm{HI \ from \ Nakanishi \ and \ Sofue \ (2016)}$')
         ax.plot(Hg1[0],Hg1[1],lw=self.lw['main'],color=self.cols['g1'],label=self.labs['g1'])
         ax.plot(Hg2[0],Hg2[1],lw=self.lw['main'],color=self.cols['g2'],label=self.labs['g2'])
         f.subplots_adjust(left=0.14,top=0.86,bottom=0.15,right=0.86)
@@ -3139,7 +3139,7 @@ class Plotting():
     
     
     def avr_plt(self,**kwargs):
-        """
+        r"""
         Plots age - W-velocity dispersion relation (AVR).
         
         :param cbar: Optional. Matplotlib colormap name. 
@@ -3215,7 +3215,7 @@ class Plotting():
 
 
     def avr_rsun_plt(self,**kwargs):
-        """
+        r"""
         Plots age - W-velocity dispersion relation (AVR) 
         for the Solar neighbourhood, at ``p.Rsun``.
         
@@ -3255,7 +3255,7 @@ class Plotting():
             for i in range(len(self.p.sigp)):
                 if i==0:
                     ax.scatter(self.p.tpk[i],self.p.sigp[i],c='k',marker='x',s=40,
-                               label='$\mathrm{Special \ subpopulations}$')
+                               label=r'$\mathrm{Special \ subpopulations}$')
                 else:
                     ax.scatter(self.p.tpk[i],self.p.sigp[i],c='k',marker='x',s=40)        
             ax.legend(loc=3,prop={'size':self.fnt['secondary']})
@@ -3271,7 +3271,7 @@ class Plotting():
 
     
     def sigwr_thick_plt(self,**kwargs):
-        """
+        r"""
         Thick-disk W-velocity dispersion as a function of Galactocentric distance.
         
         :param save: Optional. If True, the figure will be saved. 
@@ -3309,7 +3309,7 @@ class Plotting():
     
     
     def sigwz_plt(self,mode_comp,**kwargs):
-        """
+        r"""
         W-velocity dispersion as a function of height z and Galactocentric distance. 
         Plotting for :func:`jjmodel.analysis.sigwz`. 
         
@@ -3353,9 +3353,9 @@ class Plotting():
                                            'W-velocity dispersion',this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
         
         colorbar = self._figcolorbar_('r',self.a.Rbins,**kwargs)
         cmin, cmax = self._cbarminmax_(self.p.Rmin,self.p.Rmax,self.p.dR,
@@ -3398,7 +3398,7 @@ class Plotting():
 
 
     def sigwz_rsun_plt(self,mode_comp,**kwargs):
-        """
+        r"""
         W-velocity dispersion as a function of height z for the Solar neighbourhood, at ``p.Rsun``. 
         Plotting for :func:`jjmodel.analysis.sigwz`. 
         
@@ -3436,9 +3436,9 @@ class Plotting():
                                            'W-velocity dispersion',this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
         
         kwargs_calc = reduce_kwargs(kwargs,['save','mode_pop','tab','number','mode_iso'])
         sigwzr0 = sigwz(mode_comp,self.p,self.a,**kwargs_calc,R=self.p.Rsun)
@@ -3463,7 +3463,7 @@ class Plotting():
 
 
     def sigwr_plt(self,mode_comp,zlim,**kwargs):
-        """
+        r"""
         W-velocity dispersion as a function of Galactocentric distance.
         Plotting for :func:`jjmodel.analysis.sigwr`. 
         
@@ -3509,9 +3509,9 @@ class Plotting():
                                            'W-velocity dispersion',this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
             
         nz = len(zlim)                        
         kwargs_calc = reduce_kwargs(kwargs,['save','mode_pop','number','tab','mode_iso'])
@@ -3561,8 +3561,8 @@ class Plotting():
             cbar.set_ticks(intervals)
             cbar.set_label(self.axts['zkpc'],fontsize=self.fnt['main'])
         else: 
-            ax.set_title(ln+'$\mathrm{ \ at \ |z|=[}$'+str(round(zlim[0],0)/1e3)+','+\
-                         str(round(zlim[1],0)/1e3)+'$\mathrm{] \ kpc}$',fontsize=self.fnt['main'],pad=10)                                
+            ax.set_title(ln+r'$\mathrm{ \ at \ |z|=[}$'+str(round(zlim[0],0)/1e3)+','+\
+                         str(round(zlim[1],0)/1e3)+r'$\mathrm{] \ kpc}$',fontsize=self.fnt['main'],pad=10)                                
             ax.plot(self.a.R,sigw_r,lw=self.lw['main'],color=self.cols[mode_comp])  
         if mode_comp=='dt' or mode_comp=='tot':
             ax.plot(self.a.R,Sigt[1],ls='--',lw=self.lw['main'],c=self.cols['t'],label=self.labs['t'])
@@ -3582,7 +3582,7 @@ class Plotting():
     
 
     def sigwr_monoage_plt(self,mode_comp,zlim,ages,**kwargs):
-        """
+        r"""
         W-velocity dispersion of mono-age sub-populations as a function of Galactocentric distance.
         Plotting for :func:`jjmodel.analysis.sigwr_monoage`. 
         
@@ -3636,11 +3636,11 @@ class Plotting():
         zlim = inpcheck_height(zlim,self.p,this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
-        ln += '$\mathrm{ \ at \ |z|=[}$'+str(round(zlim[0],0)/1e3)+','+\
-                         str(round(zlim[1],0)/1e3)+'$\mathrm{] \ kpc}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
+        ln += r'$\mathrm{ \ at \ |z|=[}$'+str(round(zlim[0],0)/1e3)+','+\
+                         str(round(zlim[1],0)/1e3)+r'$\mathrm{] \ kpc}$'
         nage = len(ages)
         if inpcheck_iskwargtype(kwargs,'between',True,bool,this_function):
             nage = int(len(ages) - 1)
@@ -3712,7 +3712,7 @@ class Plotting():
 
 
     def sigwr_monomet_plt(self,mode_comp,zlim,mets,**kwargs):
-        """
+        r"""
         W-velocity dispersion of mono-metallicity subpopulations as a function of Galactocentric distance.
         Plotting for :func:`jjmodel.analysis.sigwr_monomet`. 
 
@@ -3762,11 +3762,11 @@ class Plotting():
         zlim = inpcheck_height(zlim,self.p,this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
-        ln += '$\mathrm{ \ at \ |z|=[}$'+str(round(zlim[0],0)/1e3)+','+\
-                         str(round(zlim[1],0)/1e3)+'$\mathrm{] \ kpc}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
+        ln += r'$\mathrm{ \ at \ |z|=[}$'+str(round(zlim[0],0)/1e3)+','+\
+                         str(round(zlim[1],0)/1e3)+r'$\mathrm{] \ kpc}$'
 
         nmet = int(len(mets)-1)
         colorbar = self._figcolorbar_('feh',len(mets),**kwargs)
@@ -3828,7 +3828,7 @@ class Plotting():
 
 
     def sigwr_gas_plt(self,**kwargs):
-        """
+        r"""
         W-velocity dispersion of the atomic and molecular gas as a function of Galactocentric distance.
         
         :param save: Optional. If True, the figure will be saved. 
@@ -3872,7 +3872,7 @@ class Plotting():
     
     
     def fi_plt(self,**kwargs):
-        """
+        r"""
         Vertical gravitational potential as a function of Galactocentric distance. 
         Potential is normalized to ``SIGMA_E^2``. 
 
@@ -3934,7 +3934,7 @@ class Plotting():
 
 
     def fi_rsun_plt(self,**kwargs):
-        """
+        r"""
         The normalized vertical gravitational potential  
         for the Solar neighbourhood, at ``p.Rsun``.
 
@@ -3974,7 +3974,7 @@ class Plotting():
 
 
     def fi_iso_plt(self,**kwargs):
-        """
+        r"""
         2d map (R-z plane) of the normalized gravitational potential with isolines. 
         
         :param save: Optional. If True, the figure will be saved. 
@@ -4003,7 +4003,7 @@ class Plotting():
         ax.contour(PHI,10,extent=[self.p.Rmin,self.p.Rmax,-self.p.zmax/1e3,self.p.zmax/1e3],
                   cmap='Reds_r',norm = mpl.colors.Normalize(vmin=phimin,vmax=phimax),linewidths=2)
         ax.set_xlabel(self.axts['r'],fontsize=self.fnt['main'],labelpad=15)
-        ax.set_ylabel('$\mathrm{z, \ kpc}$',fontsize=self.fnt['main'],labelpad=15)
+        ax.set_ylabel(r'$\mathrm{z, \ kpc}$',fontsize=self.fnt['main'],labelpad=15)
         ax.plot([self.p.Rmin,self.p.Rmax],[0,0],c='lightgrey',ls='--')
         f.subplots_adjust(left=0.11,bottom=0.15)
         
@@ -4017,7 +4017,7 @@ class Plotting():
 
 
     def kz_plt(self,R,**kwargs):
-        """
+        r"""
         Vertical gravitational force of the different model components calculated 
         for a fixed Galactocentric distance.
         
@@ -4048,7 +4048,7 @@ class Plotting():
                     lw=self.lw['main'],color=self.cols[self.name[i]])
         ax.set_xlabel(self.axts['z'],fontsize=self.fnt['main'],labelpad=15)
         ax.set_ylabel(self.axts['kz'],fontsize=self.fnt['main'],labelpad=15)
-        ax.set_title('$\mathrm{R=}$'+str(R)+'$\mathrm{\ kpc}$',fontsize=self.fnt['main'],pad=15)
+        ax.set_title(r'$\mathrm{R=}$'+str(R)+r'$\mathrm{\ kpc}$',fontsize=self.fnt['main'],pad=15)
         plt.legend(prop={'size':self.fnt['secondary']},loc=2,ncol=2)
         ax.set_xlim(0,self.p.zmax)
         ax.set_ylim(0,1.05*np.amax(Kz[1:]))
@@ -4063,7 +4063,7 @@ class Plotting():
 
     
     def rot_curve_plt(self,**kwargs):
-        """
+        r"""
         Rotation curve as follows from the assumed MW mass model.
         
         :param R: Optional. Galactocentric distance grid, kpc. 
@@ -4088,7 +4088,7 @@ class Plotting():
         components = ['b','d','t','g1','g2','dh']
         
         f, ax = plt.subplots(figsize=(10,7))
-        ax.plot(rc['r'],rc['tot'],c='k',lw=self.lw['main'],label='$\mathrm{Total}$')
+        ax.plot(rc['r'],rc['tot'],c='k',lw=self.lw['main'],label=r'$\mathrm{Total}$')
         for i in range(len(components)):
             k = components[i]
             ax.plot(rc['r'],rc[k],c=self.cols[k],label=self.labs[k],lw=self.lw['main'])
@@ -4097,7 +4097,7 @@ class Plotting():
         ax.set_xlim(0,rc['r'][-1])
         ax.set_ylim(0,350)
         ax.set_xlabel(self.axts['r'],fontsize=self.fnt['main'],labelpad=15)
-        ax.set_ylabel('$\mathrm{V_c,\ km \ s^{-1}}$',fontsize=self.fnt['main'],labelpad=15)
+        ax.set_ylabel(r'$\mathrm{V_c,\ km \ s^{-1}}$',fontsize=self.fnt['main'],labelpad=15)
         plt.legend(loc=1,ncol=3)          
 
         format_ = self._figformat_(**kwargs)
@@ -4109,7 +4109,7 @@ class Plotting():
 
 
     def fw_hist_plt(self,mode_comp,R,zlim,**kwargs):
-        """
+        r"""
         W-velocity distribution function. Plotting for :func:`jjmodel.analysis.fw_hist`. 
         
         :param mode_comp: Galactic component. Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -4181,12 +4181,12 @@ class Plotting():
             wmax = kwargs['wmax']           
         
         if 'mode_pop' in kwargs_calc and type(kwargs_calc['mode_pop'])!=list:
-            ln += '$\mathrm{ \ (}$' + self.pops[kwargs_calc['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{ \ (}$' + self.pops[kwargs_calc['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs_calc:
-            ln += '$\mathrm{ \ (custom \ population)}$'
+            ln += r'$\mathrm{ \ (custom \ population)}$'
         if 'ages' in kwargs_calc and len(kwargs_calc['ages'])==2:
             ln += r'$\mathrm{\ of \ \tau = [}$'+str(kwargs_calc['ages'][0]) + ',' +\
-                    str(kwargs_calc['ages'][1]) + '$\mathrm{] \ Gyr}$'
+                    str(kwargs_calc['ages'][1]) + r'$\mathrm{] \ Gyr}$'
         if 'mets' in kwargs_calc and len(kwargs_calc['mets'])==2:
             ln += r'$\mathrm{\ of \ [Fe/H] = [}$' + str(kwargs_calc['mets'][0]) + ',' +\
                 str(kwargs_calc['mets'][1]) + r'$\mathrm{]}$'
@@ -4196,17 +4196,17 @@ class Plotting():
             print(this_function + ": Unnecessary input. Keywords 'cbar' and 'cbar_bins' "+\
                   "don't work with this combination of parameters.")
         if type(R)!=list:
-            ln += r'$\mathrm{\ at \ R = }$'+str(R) + '$\mathrm{\ kpc}$'
+            ln += r'$\mathrm{\ at \ R = }$'+str(R) + r'$\mathrm{\ kpc}$'
             if len(zlim)==2:
-                ln += r'$\mathrm{\ and \ |z| = [}$'+str(zlim[0]/1e3)+','+str(zlim[1]/1e3)+'$\mathrm{]\ kpc}$' 
+                ln += r'$\mathrm{\ and \ |z| = [}$'+str(zlim[0]/1e3)+','+str(zlim[1]/1e3)+r'$\mathrm{]\ kpc}$' 
         else:
             if len(zlim)==2:
-                ln += r'$\mathrm{\ at \ |z| = [}$'+str(zlim[0]/1e3)+','+str(zlim[1]/1e3)+'$\mathrm{]\ kpc}$' 
+                ln += r'$\mathrm{\ at \ |z| = [}$'+str(zlim[0]/1e3)+','+str(zlim[1]/1e3)+r'$\mathrm{]\ kpc}$' 
         
         f, ax = plt.subplots(figsize=(9,7))
         ax.set_xlim(0,wmax)
-        ax.set_xlabel('$\mathrm{|W|, \ km \ s^{-1}}$',fontsize=self.fnt['main'],labelpad=15)
-        ax.set_ylabel('$\mathrm{f(|W|)}$',fontsize=self.fnt['main'],labelpad=15)
+        ax.set_xlabel(r'$\mathrm{|W|, \ km \ s^{-1}}$',fontsize=self.fnt['main'],labelpad=15)
+        ax.set_ylabel(r'$\mathrm{f(|W|)}$',fontsize=self.fnt['main'],labelpad=15)
         ax.set_title(ln,fontsize=self.fnt['secondary'],pad=15)        
             
         if ('mode_pop' in kwargs_calc and type(kwargs_calc['mode_pop'])==list):
@@ -4364,7 +4364,7 @@ class Plotting():
     
     
     def disk_brightness_plt(self,mode_comp,mode_geom,bands,**kwargs):
-        """
+        r"""
         Surface brightness or colour profile of the MW viewed edge-on or face-on. 
         Plotting for :func:`jjmodel.analysis.disk_brightness`. 
     
@@ -4410,19 +4410,19 @@ class Plotting():
                                            'disk brightness/colour profile',this_function)
         inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if mode_geom=='face-on':
-            ln += '$\mathrm{\ face-on}$'
+            ln += r'$\mathrm{\ face-on}$'
         else:
-            ln += '$\mathrm{\ edge-on}$'
+            ln += r'$\mathrm{\ edge-on}$'
         if 'mode_pop' in kwargs:
-            ln += '$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + '$\mathrm{)}$'
+            ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
-            ln += '$\mathrm{\ (custom \ population)}$'
+            ln += r'$\mathrm{\ (custom \ population)}$'
         if mode_geom=='edge-on':
             zlim = [0,self.p.zmax]
             if 'zlim' in kwargs:
                 zlim = kwargs['zlim']
-            ln += '$\mathrm{ \ for \ |z|=[}$'+str(round(zlim[0],0)/1e3)+','+\
-                             str(round(zlim[1],0)/1e3)+'$\mathrm{] \ kpc}$'
+            ln += r'$\mathrm{ \ for \ |z|=[}$'+str(round(zlim[0],0)/1e3)+','+\
+                             str(round(zlim[1],0)/1e3)+r'$\mathrm{] \ kpc}$'
                          
         kwargs_calc = reduce_kwargs(kwargs,['save','zlim','mode_iso'])                
         profile = disk_brightness(mode_comp,mode_geom,bands,self.p,self.a,**kwargs_calc)
@@ -4433,15 +4433,15 @@ class Plotting():
         if type(bands)==str:
             bands_string = bands.split('_')
             if len(bands_string)==2:
-                bands_string = bands_string[0]+'\_'+bands_string[1]
-            ax.set_ylabel('$\mathrm{\mu_{'+bands_string+'}, \ mag \ arcsec^{-2}}$',
+                bands_string = bands_string[0] + r'\_' + bands_string[1]
+            ax.set_ylabel(r'$\mathrm{\mu_{' + bands_string + r'}, \ mag \ arcsec^{-2}}$',
                           fontsize=self.fnt['main'],labelpad=15)
         else:
             bands_string1 = bands[0].split('_')
             bands_string2 = bands[1].split('_')
-            bands_string1 = bands_string1[0]+'\_'+bands_string1[1]
-            bands_string2 = bands_string2[0]+'\_'+bands_string2[1]
-            ax.set_ylabel('$\mathrm{'+bands_string1+'-'+bands_string2+'}$',
+            bands_string1 = bands_string1[0] + r'\_' + bands_string1[1]
+            bands_string2 = bands_string2[0] + r'\_' + bands_string2[1]
+            ax.set_ylabel(r'$\mathrm{'+bands_string1 + '-' + bands_string2 + '}$',
                           fontsize=self.fnt['main'],labelpad=15)
         #plt.legend(prop={'size':self.fnt['secondary']},loc=2,ncol=2)
         ax.set_xlim(self.p.Rmin,self.p.Rmax)
@@ -4467,7 +4467,7 @@ class Plotting():
     
     
     def hess_simple_plt(self,mode_comp,mode_geom,bands,mag_range,mag_step,**kwargs):
-        """
+        r"""
         Hess diagram for the simple volumes. PLotting for :func:`jjmodel.analysis.hess_simple`. 
         
         :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
@@ -4545,20 +4545,21 @@ class Plotting():
             bsplit = ''
             for k in range(len(split)):
                 if k!=0:
-                    bsplit += '\_' + split[k]
+                    bsplit += r'\_' + split[k]
                 else:
                     bsplit += split[k]
             b.append(bsplit)
         
-        ax.set_xlabel('$\mathrm{'+b[1]+'-'+b[2]+'}$',fontsize=self.fnt['main'])
-        ax.set_ylabel('$\mathrm{'+b[0]+'}$',fontsize=self.fnt['main'])
-        ax.text(0.2,0.05,'$\mathrm{N='+str(Ntot)+'}$',fontsize=self.fnt['secondary'],transform=ax.transAxes)
+        ax.set_xlabel(r'$\mathrm{'+b[1]+'-'+b[2]+'}$',fontsize=self.fnt['main'])
+        ax.set_ylabel(r'$\mathrm{'+b[0]+'}$',fontsize=self.fnt['main'])
+        ax.text(0.2,0.05,r'$\mathrm{N='+str(Ntot)+'}$',fontsize=self.fnt['secondary'],transform=ax.transAxes)
         f.subplots_adjust(bottom=0.18,left=0.08,right=0.94,top=0.93)
         pos = ax.get_position()
         cax = f.add_axes([pos.x0+pos.width+0.02,pos.y0,0.025,pos.height])
         cbar = f.colorbar(im,cax=cax,orientation='vertical')
-        cbar.set_label(r'$\mathrm{log_{10} \ N \ ['+str(mag_step[0])+
-                       r'\times'+str(mag_step[1])+'] \ mag^{-2}}$',fontsize=self.fnt['main'],labelpad=10)
+        cbar.set_label(r'$\mathrm{log_{10} \ N \ [' + str(mag_step[0]) +
+                       r'\times' + str(mag_step[1]) + r'] \ mag^{-2}}$',
+                       fontsize=self.fnt['main'],labelpad=10)
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
             format_ = self._figformat_(**kwargs)
@@ -4576,7 +4577,7 @@ class PlotBlocks():
     """
     
     def __init__(self,p,a,inp):
-        """
+        r"""
         Class is initialized with tuples p and a and dictionary ``inp``. 
         
         :param p: Set of model parameters from the parameter file. 
@@ -4596,7 +4597,7 @@ class PlotBlocks():
         
         
     def model_input(self,**kwgs):
-        """
+        r"""
         Plots and saves all model input: radial density profiles 
         of the Galactic components, SFR, mass loss, gas scale heights. 
         
@@ -4630,7 +4631,7 @@ class PlotBlocks():
 
         
     def densities(self,zlim,ages,mets,**kwgs):
-        """
+        r"""
         Plots and saves predicted vertical and radial profiles  
         of the Galactic components and of the disk's mono-age and mono-metallicity subpopulations. 
         
@@ -4680,7 +4681,7 @@ class PlotBlocks():
         
         
     def ages(self,zlim_set,age_sm,**kwgs):
-        """
+        r"""
         Plots and saves disk's age distributions at different heights and Galactocentric distances. 
         
         :param zlim_set: Edges of z-bins where the quantity will be calculated. 
@@ -4726,7 +4727,7 @@ class PlotBlocks():
             
             
     def metallicities(self,zlim_set,met_sm,**kwgs):
-        """
+        r"""
         Plots and saves disk's age distributions at different heights and Galactocentric distances. 
         
         :param zlim_set: Edges of z-bins where the quantity will be calculated. 
@@ -4771,7 +4772,7 @@ class PlotBlocks():
             
             
     def heights(self,ages,mets,**kwgs):
-        """
+        r"""
         Plots and saves disk's scale heights as a function of age and Galactocentric distance. 
         
         :type ages: array-like
@@ -4803,7 +4804,7 @@ class PlotBlocks():
         
         
     def kinematics(self,zlim_set,ages,mets,**kwgs):
-        """
+        r"""
         Plots and saves disk's kinematic functions: AVR, W-velocity 
         dispersion of the thick disk and gas at different Galactocentric distances. 
         
@@ -4853,7 +4854,7 @@ class PlotBlocks():
             
             
     def potential(self,**kwgs):
-        """
+        r"""
         Plots and saves vertical grvitational potential and gravitational force. 
         
         :param print_time: Optional. If True, calculation time is printed. 
@@ -4884,7 +4885,7 @@ class PlotBlocks():
             
             
     def rz_maps(self,dz,**kwgs):
-        """
+        r"""
         Plots and saves density/age/[Fe/H]/sigw maps in Rz plane. 
         
         :param dz: Optional. Vertical resolution, pc. 
@@ -4908,7 +4909,7 @@ class PlotBlocks():
                         
             
     def populations(self,zlim,ages,mets,age_sm,met_sm,rmax,**kwgs):
-        """
+        r"""
         Plots and saves radial density profiles, age, metallicity , and f(W) distributions, 
         Hess diagrams and Rz-maps for the different populations. 
     
@@ -5006,7 +5007,7 @@ class PlotBlocks():
         
         
     def basic_output(self,zlim_set,ages,mets,age_sm,met_sm,rmax,**kwargs):
-        """
+        r"""
         Plots and saves all figures (basic output of the model). 
         
         :param zlim_set: Edges of z-bins where the quantities will be calculated. 
