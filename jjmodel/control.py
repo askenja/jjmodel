@@ -13,7 +13,7 @@ from .funcs import AVR, RadialDensity
 
 
 def inpcheck_mode(n_options,mode,quantity,funcname,**kwargs):
-    """
+    r"""
     Checks input of the functions defined below. 
     
     Parameters
@@ -41,44 +41,44 @@ def inpcheck_mode(n_options,mode,quantity,funcname,**kwargs):
         DESCRIPTION.
     """
     
-    ln = '$\mathrm{Thin \ disk}$'
+    ln = r'$\mathrm{Thin \ disk}$'
     if mode!='d':
         if n_options==3:
             if mode=='t':
-                ln = '$\mathrm{Thick \ disk}$'
+                ln = r'$\mathrm{Thick \ disk}$'
             else:
                 if mode!='dt':
                     mode='dt'
-                    print(''.join(('\n',funcname,': Parameter `mode` can equal `d` (thin disk), ',
+                    print(''.join(('\n',funcname,r': Parameter `mode` can equal `d` (thin disk), ',
                                    '`t` (thick disk) or `dt` (total disk), check your input! ',
                                     'Falling back to the default and plotting total disk ',
                                     quantity,'.'))
                           )
                 if 'merged' in kwargs and kwargs['merged']==False:
-                    ln = '$\mathrm{Thin + thick \ disk}$'  
+                    ln = r'$\mathrm{Thin + thick \ disk}$'  
                 else:
-                    ln = '$\mathrm{Total \ disk}$'   
+                    ln = r'$\mathrm{Total \ disk}$'   
         else:
             if n_options!=2:
-                print(''.join(('\n',inpcheck_mode.__name__,': Parameter `n_options` must be 2 ',
+                print(''.join(('\n',inpcheck_mode.__name__,r': Parameter `n_options` must be 2 ',
                       '(plots for thin disk or total disk) or 3 (thin, thick or total disk), ',
                       'check your intput!, Text on the plot may be incorrect.'))
                       )
-            ln = '$\mathrm{Total \ disk}$'
+            ln = r'$\mathrm{Total \ disk}$'
             if mode!='dt':
-                print(''.join(('\n',funcname,': Parameter `mode` can equal `d` (thin disk) ',
-                               'or `dt` (total disk), check your input! Got ',str(mode),' instead. ',
-                               'Falling back to the default and plotting total disk ',
+                print(''.join(('\n',funcname,r': Parameter `mode` can equal `d` (thin disk) ',
+                               r'or `dt` (total disk), check your input! Got ',str(mode),' instead. ',
+                               r'Falling back to the default and plotting total disk ',
                                quantity,'.'))
                      )
                 mode='dt'
                 if 'merged' in kwargs and kwargs['merged']==False:
-                    ln = '$\mathrm{Thin + thick \ disk}$'  
+                    ln = r'$\mathrm{Thin + thick \ disk}$'  
     return (ln, mode)
 
 
 def inpcheck_mode_comp(mode,mode_allowed,quantity,funcname,**kwargs):
-    """
+    r"""
     
     Parameters
     ----------
@@ -106,21 +106,21 @@ def inpcheck_mode_comp(mode,mode_allowed,quantity,funcname,**kwargs):
     mode_allowed_allowed = ['d','t','dt','sh','tot']
     mode_names={'d':'thin disk','t':'thick disk','sh':'stellar halo',
                 'dt':'thin + thick disk','tot':'total'}
-    mode_labels = {'d':'$\mathrm{Thin \ disk}$',
-                   't':'$\mathrm{Thick \ disk}$',
-                   'sh':'$\mathrm{Stellar \ halo}$',
-                   'dt':['$\mathrm{Thin + thick \ disk}$','$\mathrm{Total \ disk}$'],
-                   'tot':'$\mathrm{Total \ disk + halo}$'}
+    mode_labels = {'d':r'$\mathrm{Thin \ disk}$',
+                   't':r'$\mathrm{Thick \ disk}$',
+                   'sh':r'$\mathrm{Stellar \ halo}$',
+                   'dt':[r'$\mathrm{Thin + thick \ disk}$',r'$\mathrm{Total \ disk}$'],
+                   'tot':r'$\mathrm{Total \ disk + halo}$'}
     test = True
     for i in range(len(mode_allowed)):
         if mode_allowed[i] not in mode_allowed_allowed:
             test=False
     if test==False:
         print("".join(("\n",this_function," in ",funcname, 
-                       ": Parameter 'mode_allowed' can only include 'd'(thin disk), ",
-                       "'t'(thick disk), 'sh'(stellar halo), 'dt'(thin+thick disk), ",
-                       "or 'tot'(total), check your input! ",
-                       "Falling back to the default mode_allowed=['d','t','dt','sh','tot'] for ",
+                       r": Parameter 'mode_allowed' can only include 'd'(thin disk), ",
+                       r"'t'(thick disk), 'sh'(stellar halo), 'dt'(thin+thick disk), ",
+                       r"or 'tot'(total), check your input! ",
+                       r"Falling back to the default mode_allowed=['d','t','dt','sh','tot'] for ",
                         quantity,'.')))    
     
     if mode not in mode_allowed:
@@ -147,14 +147,14 @@ def inpcheck_radius(R,p,funcname):
     try:
         r_interval = [(i>=p.Rmin)&(i<=p.Rmax) for i in R]
         if (False in r_interval):
-            print(''.join(('\n',funcname,': You use distances that are outside ',
+            print(''.join(('\n',funcname,r': You use distances that are outside ',
                            'of the modelled interval [p.Rmin,p.Rmax], check your input! ',
                            'Too large or too short R are removed from the array.')))
             good = np.where(r_interval==True)[0]
             R = R[good]
     except:
         if R<p.Rmin or R>p.Rmax:
-            print(''.join(('\n',funcname,': You use distance that is outside ',
+            print(''.join(('\n',funcname,r': You use distance that is outside ',
                            'of the modelled interval [p.Rmin,p.Rmax], check your input! ',
                            'Falling back to the closest R available in the model.')))
             if R<p.Rmin:
@@ -169,9 +169,9 @@ def inpcheck_age(age,funcname):
     try:
         age_interval = [(i>=0)&(i<=tp) for i in age]
         if (False in age_interval):
-            print(''.join(('\n',funcname,': You use ages that are outside ',
-                           'of the modelled interval [0,tp], check your input! ',
-                           'Too old or too young(negative?!) ages are removed from the array.')))
+            print(''.join(('\n',funcname,r': You use ages that are outside ',
+                           r'of the modelled interval [0,tp], check your input! ',
+                           r'Too old or too young(negative?!) ages are removed from the array.')))
             good = np.where(np.array(age_interval)==True)[0]
             age = age[good]
     except:
@@ -237,8 +237,8 @@ def inpcheck_height(z,p,funcname):
 def inpcheck_mode_disk(mode,funcname):
     
     if mode!='face-on' and mode!='edge-on':
-        print(''.join(('\n',funcname,': Parameter `mode` must be `face-on` or `edge-on`, ',
-                       'check your input! Falling back to the default `face-on` option.')))
+        print(''.join(('\n',funcname,r': Parameter `mode` must be `face-on` or `edge-on`, ',
+                       r'check your input! Falling back to the default `face-on` option.')))
         mode = 'face-on'
         
     return mode
@@ -875,22 +875,22 @@ def inpcheck_parameters(p):
             
     if p.sige < 22 or p.sige > 31:
         errs += "-> Got unexpected value for the AVR parameter 'sige'. "+\
-                "Expected value is 26 ± 5 km/s.\n"
+                r"Expected value is 26 ± 5 km/s.\n"
         n_errors += 1 
             
     if p.sigt < 35 or p.sigt > 55:
         errs += "-> Got unexpected value for the thick-disk velocity dispersion 'sigt'. "+\
-                "Expected value is in the range ~35-55 km/s.\n"
+                r"Expected value is in the range ~35-55 km/s.\n"
         n_errors += 1 
             
     if p.sigdh < 100 or p.sigdh > 200:
         errs += "-> Got unexpected value for the DM velocity dispersion 'sigdh'. "+\
-                "Expected value is in the range ~100-200 km/s.\n"
+                r"Expected value is in the range ~100-200 km/s.\n"
         n_errors += 1 
             
     if p.sigsh < 70 or p.sigsh > 130:
         errs += "-> Got unexpected value for the halo velocity dispersion 'sigsh'. "+\
-                "Expected value is in the range ~70-130 km/s.\n"
+                r"Expected value is in the range ~70-130 km/s.\n"
         n_errors += 1 
     
     # Local density normalizations 
@@ -898,32 +898,32 @@ def inpcheck_parameters(p):
     
     if p.sigmad < 15 or p.sigmad > 45:
         errs += "-> Got unexpected value for the thin-disk surface density at Rsun 'sigmad'. "+\
-                "Expected value ~15-45 Msun/pc^2.\n"
+                r"Expected value ~15-45 Msun/pc^2.\n"
         n_errors += 1 
         
     if p.sigmat < 1 or p.sigmat > 15:
         errs += "-> Got unexpected value for the thick-disk surface density at Rsun 'sigmat'. "+\
-                "Expected value ~1-15 Msun/pc^2.\n"
+                r"Expected value ~1-15 Msun/pc^2.\n"
         n_errors += 1 
     
     if p.sigmag1 < 1 or p.sigmag1 > 15:
         errs += "-> Got unexpected value for the molecular gas surface density at Rsun 'sigmag1'. "+\
-                "Expected value ~1-15 Msun/pc^2.\n"
+                r"Expected value ~1-15 Msun/pc^2.\n"
         n_errors += 1 
             
     if p.sigmag2 < 1 or p.sigmag2 > 30:
         errs += "-> Got unexpected value for the atomic gas surface density at Rsun 'sigmag2'. "+\
-                "Expected value ~1-30 Msun/pc^2.\n"
+                r"Expected value ~1-30 Msun/pc^2.\n"
         n_errors += 1 
             
     if p.sigmadh < 1 or p.sigmadh > 100:
         errs += "-> Got unexpected value for the DM surface density at Rsun 'sigmadh'. "+\
-                "Expected value ~1-100 Msun/pc^2.\n"
+                r"Expected value ~1-100 Msun/pc^2.\n"
         n_errors += 1 
             
     if p.sigmash < 0.001 or p.sigmash > 5:
         errs += "-> Got unexpected value for the halo surface density at Rsun 'sigmash'. "+\
-                "Expected value ~0.001-5 Msun/pc^2.\n"
+                r"Expected value ~0.001-5 Msun/pc^2.\n"
         n_errors += 1 
     
     # Technical staff
@@ -969,7 +969,7 @@ class CheckIsoInput():
     """
     
     def check_mode_isochrone(self,mode,funcname):
-        """
+        r"""
         Checks whether parameter `mode` is correct, when type of 
         isochrone set is chosen.
         
@@ -988,7 +988,7 @@ class CheckIsoInput():
             
                     
     def check_mode_component(self,mode,funcname):
-        """
+        r"""
         Checks whether parameter `mode` is correct, when type of 
         the Galactic component is chosen.
         
@@ -1003,12 +1003,12 @@ class CheckIsoInput():
         """  
         
         if mode!='t' and mode!='d' and mode!='sh':
-            print(''.join(('\n',funcname,': Parameter `mode`',
-            ' must be `d`(thin disk) or `t`(thick disk), or `sh`(stellar halo), check your input!')))
+            print(''.join(('\n',funcname,r': Parameter `mode`',
+            r' must be `d`(thin disk) or `t`(thick disk), or `sh`(stellar halo), check your input!')))
                     
                 
     def check_photometric_system(self,mode,photometric_system,funcname,**kwargs):
-        """
+        r"""
         Checks whether parameter `photometric_system` is correct.
         
         Parameters
