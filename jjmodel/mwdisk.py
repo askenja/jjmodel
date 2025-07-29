@@ -146,10 +146,11 @@ def rbin_builder(R,a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
     out['Kzsh'] = vertical_force(a,fimax,Sigma[3],sigW[4],S['hsh'])
                
     t_exit = timer.stop(t_start)
-    sys.stdout.write(''.join(('\n','{:<8}'.format(''),
-                                   '{:<14}'.format('Process %s' %(R)),
-                                   '{:<14}'.format(''.join((': exit, time: ', t_exit)))))
-                     )
+    if 'status_progress' in kwargs and kwargs['status_progress']==True: 
+        sys.stdout.write(''.join(('\n','{:<8}'.format(''),
+                                    '{:<14}'.format('Process %s' %(R)),
+                                    '{:<14}'.format(''.join((': exit, time: ', t_exit)))))
+                        )
     
     if 'log' in kwargs:
         kwargs['log'].append(r'\n\nDensity in the Galactic plane [Msun/pc^3]:\n')

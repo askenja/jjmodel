@@ -1781,7 +1781,7 @@ class IMF():
     Class for defining the initial mass function (IMF).
     """
     
-    def __init__(self,mlow,mup):
+    def __init__(self,mlow,mup,mres=0.005):
         r"""
         Class instance is initialized by two parameters. 
         
@@ -1791,7 +1791,7 @@ class IMF():
         :type mup: scalar 
         """
         self.mlow, self.mup = mlow, mup
-        self.mres = 0.005               # Msun
+        self.mres = mres               # Msun
         self.m_lin = np.linspace(self.mlow,self.mup,int((self.mup-self.mlow)//self.mres+2))
 
     

@@ -17,7 +17,7 @@
 # Run settings
 # ===================================================================================================
 run_mode	0			0 = only locally at Rsun, 1 = range of distances 
-out_dir		'tutorial1'		Name of the output directory 
+out_dir		'wd_test'		Name of the output directory 
 out_mode	1			Saving mode: 1 = overwrite existing files, 0 = clean first
 nprocess	4			Number of CPU cores to be used
 
@@ -32,8 +32,8 @@ zsun		20	pc		Solar height above the Galactic plane
 # ===================================================================================================
 # Rz-grid and radial profiles
 # ===================================================================================================
-zmax		2000	pc		Max height z 
-dz		2	pc		Vertical resolution 
+zmax		100	pc		Max height z 
+dz		1	pc		Vertical resolution 
 
 
 # ===================================================================================================
