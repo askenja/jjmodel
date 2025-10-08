@@ -22,7 +22,7 @@ class ColumnsIso():
     Collection of methods to work with the columns of Padova, MIST, and BaSTI isochrones.
     """
     
-    def column_namespace(self,mode,photometric_system):
+    def column_namespace(self,mode,photometric_system,wd=False):
         r"""
         Names of the useful isochrone columns to be extracted from 
         the stellar library (or calculated from them).
@@ -50,6 +50,9 @@ class ColumnsIso():
         photometric_system = ch.check_photometric_system(mode,photometric_system,this_function)
  
         basic_columns = ['Mini','Mf','logL','logT','logg']
+        if wd:
+            basic_columns.append('age_WD')
+
         if mode!='BaSTI':
             basic_columns += ['phase']
         photo_columns = {'GaiaDR2_MAW':['G_DR2','GBPbr_DR2','GBPft_DR2','GRP_DR2'],
@@ -86,21 +89,43 @@ class ColumnsIso():
         """  
 
         # After my pre-processing (only potentially useful columns left)
+        '''
+        # old metallicity grd
         namespace_padova = {'Mini':0,'Mf':1,'logL':2,'logT':3,'logg':4,
                             'U':6,'B':7,'V':8,'R':9,'I':10,'J':11,'H':12,'K':13,
                             'G_DR2':14,'GBPbr_DR2':15,'GBPft_DR2':16,'GRP_DR2':17,
                             'G_EDR3':18,'GBP_EDR3':19,'GRP_EDR3':20,'phase':5
                             }
+        '''
+        # updated grid
+        namespace_padova = {'Mini':0,'Mf':1,'logL':2,'logT':3,'logg':4,
+                            'phase':5,'G_EDR3':6,'GBP_EDR3':7,'GRP_EDR3':8
+                            }
+        '''
+        # old metallicity grd
         namespace_mist = {'Mini':0,'Mf':1,'logT':2,'logg':3,'logL':4,
                           'U':5,'B':6,'V':7,'R':8,'I':9,'J':10,'H':11,'K':12,
                           'G_DR2':13,'GBPbr_DR2':14,'GBPft_DR2':15,'GRP_DR2':16,
                           'G_EDR3':17,'GBP_EDR3':18,'GRP_EDR3':19, 'phase':20
                           }
+        '''
+        namespace_mist = {'Mini':0,'Mf':1,'logT':3,'logg':4,'logL':2,
+                          'G_EDR3':7,'GBP_EDR3':8,'GRP_EDR3':9, 'phase':6
+                          }
         if 'wd' in kwargs and kwargs['wd']==True:
+            '''
+            # old grid
             namespace_basti = {'Mini':0,'Mf':1,'logL':3,'logT':2,'logg':4,
                                'U':5,'B':6,'V':7,'R':8,'I':9,'J':10,'H':11,'K':12,
-                               'G_EDR3':13,'GBP_EDR3':14,'GRP_EDR3':15
+                               'G_EDR3':13,'GBP_EDR3':14,'GRP_EDR3':15,
+                               'age_WD':16
                                }
+            '''
+            # new grid
+            namespace_basti = {'Mini':0,'Mf':1,'logL':2,'logT':3,'logg':4,
+                               'age_WD':5,'G_EDR3':6,'GBP_EDR3':7,'GRP_EDR3':8
+                               }
+            
         else:
             namespace_basti = {'Mini':0,'Mf':1,'logL':2,'logT':3,'logg':4,
                                'G_EDR3':5,'GBP_EDR3':6,'GRP_EDR3':7
@@ -141,9 +166,12 @@ class ColumnsIso():
         :rtype: dict
         """ 
         
+        if len(columns) != len(indices):
+            raise ValueError('Length of column and index lists must be the same!')
+
         iso = {}
-        for i in range(len(indices)):
-            iso[columns[i]] = isochrone[indices[i]]
+        for col,idx in zip(columns,indices):
+            iso[col] = isochrone[idx]
                         
         return iso
     
@@ -211,7 +239,7 @@ class ColumnsIso():
         m_centers = np.zeros((lenm+1))
         m_centers[0], m_centers[-1] = iso_masses[0], iso_masses[-1]
         m_centers[1:-1] = [np.mean([iso_masses[i],iso_masses[i+1]]) for i in np.arange(lenm-1)]
-    
+
         num_dens = np.array([imf(m_centers[k],m_centers[k+1])*mass for k in np.arange(lenm)])
         
         return num_dens
@@ -259,24 +287,29 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
     met_available_table = np.loadtxt(os.path.join(localpath,'input','isochrones',
                                                       'Metallicity_grid.txt')).T
     cols = ColumnsIso()
-    all_columns = cols.column_namespace(mode,photometric_system)
     
     if 'wd' not in kwargs or ('wd' in kwargs and kwargs['wd']=='ms+wd'):
+
+        all_columns_ms = cols.column_namespace(mode,photometric_system)
+
         if mode=='BaSTI':
             folder_name = os.path.join('MS+','gaiaedr3')
         else:
             folder_name = 'multiband'
-            
-        grid_mask = np.loadtxt(os.path.join(localpath,'input','isochrones',mode,folder_name,
-                                            ''.join(('grid_mask_',mode,'.txt')))).T
-        grid_mask = np.array(grid_mask,dtype=bool)
+        
+        
+        #grid_mask = np.loadtxt(os.path.join(localpath,'input','isochrones',mode,folder_name,
+        #                                    ''.join(('grid_mask_',mode,'.txt')))).T
+        #grid_mask = np.array(grid_mask,dtype=bool)
+        
         # File grid_mask is a boolean mask indicating what isochrone ages are available 
         # for a given metallicity. In fact, only needed with BaSTI isochrones, as for 
         # Padova and MIST all ages in the range of 0-13 Gyr are available for the adopted 
         # metallicity grid. 
         
-        met_available = met_available_table[1][grid_mask[0]]
-        
+        #met_available = met_available_table[1][grid_mask[0]]
+        met_available = met_available_table[1]
+
         # Main isochrone
         # -----------------------------------------------------------
         age_available = np.arange(0.05,13.05,0.05)
@@ -289,7 +322,9 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
         index_best_met2 = np.where(met_available_table[1]==met_available[index_best_met])[0][0]
         
         # Get available ages for the adopted metallicity
-        age4met_available = age_available[grid_mask[:,index_best_met2]]
+        #age4met_available = age_available[grid_mask[:,index_best_met2]]
+        age4met_available = age_available
+
         # Find closest available age to the modelled one 
         index_best_age = np.where(np.abs(np.subtract(age4met_available,age))==\
                                   np.amin(np.abs(np.subtract(age4met_available,age))))[0][0]                                                         
@@ -300,8 +335,8 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
     
         isochrone = np.genfromtxt(name).T
         
-        indices = cols.column_positions(mode,all_columns)
-        iso = cols.read_columns(mode,isochrone,all_columns,indices)
+        indices = cols.column_positions(mode,all_columns_ms)
+        iso = cols.read_columns(mode,isochrone,all_columns_ms,indices)
         
         #iso = cols.sort_mass_column(iso) # not needed any more, new isochrone grid has sorted mass column 
         iso['N'] = cols.apply_IMF(imf,iso['Mini'],mass)
@@ -309,24 +344,31 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
         if mode=='BaSTI':
             iso['phase'] = np.repeat(1,len(iso['N'])) #MS to AGB are 1
 
+        if 'wd' in kwargs and kwargs['wd']=='ms+wd':
+            iso['age_WD'] = [np.nan for _ in np.arange(len(iso['Mini']))]
+
     
     if 'wd' in kwargs and (kwargs['wd']=='ms+wd' or kwargs['wd']=='wd'):
-                
+
+        all_columns_wd = cols.column_namespace(mode,photometric_system,wd=True)
+
         index_best_met = np.where(np.abs(np.subtract(met_available_table[1],met))==\
                                   np.amin(np.abs(np.subtract(met_available_table[1],met))))[0][0]
         
         # DA white-dwarf isochrone
         # -----------------------------------------------------------
-        age_available_dawd = np.hstack((0.080,np.arange(0.100,2.700+0.050,0.050), 
-                                        np.arange(2.900,12.700,0.050)))
+        age_available_dawd = np.arange(0.05,13.05,0.05)
+        #age_available_dawd = np.hstack((0.080,np.arange(0.100,2.700+0.050,0.050), 
+        #                                np.arange(2.900,12.700,0.050)))
 
         index_best_age_dawd = np.where(np.abs(np.subtract(age_available_dawd,age))==\
                                   np.amin(np.abs(np.subtract(age_available_dawd,age))))[0][0] 
         
         # DB white-dwarf isochrone
         # -----------------------------------------------------------
-        age_available_dbwd = age_available_dawd[:111] # only for age < 5.7 Gyr
-                
+        #age_available_dbwd = age_available_dawd[:111] # only for age < 5.7 Gyr
+        age_available_dbwd = np.arange(0.05,13.05,0.05)
+        
         index_best_age_dbwd = np.where(np.abs(np.subtract(age_available_dbwd,age))==\
                                   np.amin(np.abs(np.subtract(age_available_dbwd,age))))[0][0] 
 
@@ -355,12 +397,13 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
         isochrone_dbwd = np.genfromtxt(name_dbwd).T
         
         if mode!='BaSTI':
-            all_columns.remove('phase')
-            
+            all_columns_wd.remove('phase')
+
         #for DAWD
-        indices_wd = cols.column_positions('BaSTI',all_columns,wd=True)
+        indices_wd = cols.column_positions('BaSTI',all_columns_wd,wd=True)
         
-        iso_dawd = cols.read_columns('BaSTI',isochrone_dawd,all_columns,indices_wd)
+        iso_dawd = cols.read_columns('BaSTI',isochrone_dawd,all_columns_wd,indices_wd)
+        
         iso_dawd = cols.sort_mass_column(iso_dawd)
         iso_dawd['N'] = cols.apply_IMF(imf,iso_dawd['Mini'],mass)*0.8
         #iso_dawd['N'] = iso_dawd['N']*(1 - fdb_parabola(10**iso_dawd['logT']/10**3))*0.8 
@@ -368,22 +411,24 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
         iso_dawd['phase'] = np.repeat(10,len(iso_dawd['N'])) # DA WDs are 10 
         
         #for DB WD
-        iso_dbwd = cols.read_columns('BaSTI',isochrone_dbwd,all_columns,indices_wd)
+        iso_dbwd = cols.read_columns('BaSTI',isochrone_dbwd,all_columns_wd,indices_wd)
         iso_dbwd = cols.sort_mass_column(iso_dbwd)
         iso_dbwd['N'] = cols.apply_IMF(imf,iso_dbwd['Mini'],mass)*0.2
         #iso_dbwd['N'] = iso_dbwd['N'] * (fdb_parabola(10**iso_dbwd['logT']/10**3))*0.2
         iso_dbwd['age'], iso_dbwd['FeH'] = [age for i in iso_dbwd['logT']],[met for i in iso_dbwd['logT']]
         iso_dbwd['phase'] = np.repeat(11,len(iso_dbwd['N'])) # DB WDs are 11
         
-        iso_wd = cols.append_iso(iso_dawd, iso_dbwd)
-        
+        iso_wd = cols.append_iso(iso_dawd,iso_dbwd)
+
     if 'wd' in kwargs:
         if kwargs['wd']=='ms+wd':
-            iso = cols.append_iso(iso,iso_wd)
+            iso_tot = cols.append_iso(iso,iso_wd)
         if kwargs['wd']=='wd':
-            iso = iso_wd
+            iso_tot = iso_wd
+    else:
+        iso_tot = iso 
         
-    return iso
+    return iso_tot
     
   
 def fdb_parabola(Teff):
@@ -572,24 +617,24 @@ def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_
         jm = len(age)
         argument_list = [(mode,photometric_system,met[k],age[k],mass[k],imf) for k in np.arange(jm)]
         kwargs_list = repeat(kwargs)            
-        
-        # Create output lists
-        cols = ColumnsIso()
-        columns = cols.column_namespace(mode,photometric_system)
-        all_columns = ['N','age','FeH'] + columns
-        if mode == 'BaSTI':
-            all_columns += ['phase']     
-        all_columns += ['disk_label']
-        
-        ncols = len(all_columns)
-        output = [[] for i in range(ncols)]
-                
+                  
         pool = Pool(processes=p.nprocess)
         #result = pool.starmap(stellar_assemblies_iso,stellar_assemblies_iso)
         result = _starmap_with_kwargs_(pool,stellar_assemblies_iso,argument_list,kwargs_list)
         pool.close()
         pool.join()
         
+        # Create output lists
+        iso_columns = list(result[0].keys())
+
+        all_columns = ['N','age','FeH'] + iso_columns
+        if mode == 'BaSTI':
+            all_columns += ['phase']     
+        all_columns += ['disk_label']
+
+        ncols = len(all_columns)
+        output = [[] for i in range(ncols)]
+
         for k in range(len(result)):
             for m in range(ncols-1):
                 output[m].extend(result[k][all_columns[m]])

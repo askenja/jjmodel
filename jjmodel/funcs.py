@@ -119,6 +119,39 @@ def log_surface_gravity(Mf,L,Teff):
         
     logg = np.log10(g_sgs)
     return logg
+
+
+def log_luminosity(Mf,logg,Teff):
+    r"""
+    Function for calculation of luminosity. 
+    
+    :param Mf: Stellar mass (present-day mass in isochrones), :math:`\mathrm{M}_\odot`.
+    :type Mf: scalar or array-like
+    :param logg: Surface gravity in :math:`\mathrm{log(cm \ s^{-2})}`
+    :type logg: scalar or array-like
+    :param Teff: Effective temperature, K.
+    :type Teff: scalar or array-like
+    
+    :return: Log luminosity, :math:`\mathrm{\log{L}}_\odot`
+    :rtype: scalar or array-like
+    """
+    
+    G = 6.67*10**(-11)      # Gravitational constant, m3*kg-1*s-2
+    sigma = 5.67*10**(-8)   # Stefan-Boltzmann constant, W*m−2*K−4
+    L_sun = 3.828*10**26    # Solar luminosity, W
+    M_sun = 1.988*10**30    # Solar mass, kg
+    #Teff_sun = 5778         # Solar temperature, K
+
+    g = 10**logg
+    g_si = g*1e-2 # in SI, m*s-2
+    M_kg = np.multiply(Mf,M_sun)
+
+    L_W = 4*np.pi*sigma*Teff**4*G*M_kg/g_si
+    
+    L_Lsun = L_W/L_sun
+    logL = np.log10(L_Lsun)
+
+    return logL
     
 
 # =============================================================================
