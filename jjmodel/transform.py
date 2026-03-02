@@ -335,7 +335,7 @@ class XVTrans():
             - (``'erg'``, ``'ephi'``): Errors of Galactocentric cylindrical coordinates 
             - (``'eU'``, ``'eV'``, ``'eW'``): Errors of the 3d Cartesian velocity components
             - (``'eUc'``, ``'eVc'``, ``'eWc'``): Random errors of the 3d Cartesian velocity components (calculated only when covarience matrix is given to check the impact of correlations). 
-            - (``'eVr'``, ``'eVphi'``): Errors of Galactocentric velocities in cylindrical coordinates
+            - (``'eVr'``, ``'eVphi'``): Errors of Galself.lon)actocentric velocities in cylindrical coordinates
               
         """
         print('Calculation of the Galactic coordinate and velocity errors:')

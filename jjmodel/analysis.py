@@ -1665,9 +1665,8 @@ def _extend_mag_(mag,tab,bands):
     """
     Concatenates photometric lists.
     """
-    mag[0].extend(tab[bands[0]])
-    mag[1].extend(tab[bands[1]])
-    mag[2].extend(tab[bands[2]])
+    for i in range(len(mag)):
+        mag[i].extend(tab[bands[i]])
     return mag
 
 

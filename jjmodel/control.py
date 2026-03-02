@@ -346,7 +346,7 @@ def inpcheck_parameters(p):
         errs += "Parameter 'Rsun' must be positive.\n"
         n_errors += 1 
     
-    if p.Rsun <= 8.117 or p.Rsun >= 8.239:
+    if p.Rsun <= 8.0 or p.Rsun >= 8.3:
         wrns += "-> Got unexpected value for the Solar radius 'Rsun'. "+\
                 "Check units (must be kpc). According to Gravity Collaboration et al. (2019), "+\
                 "Rsun = 8.178 ± 0.013 (stat) ± 0.022 (sys) kpc.\n"
@@ -852,9 +852,9 @@ def inpcheck_parameters(p):
         n_errors += 1 
     
     if p.zmax < 1500:
-        errs += "-> We do not recommend to use 'zmax' smaller than 1.5 kpc as otherwise vertical "+\
-                "structure of the disk can be not properly reconstructed.\n"
-        n_errors += 1 
+        wrns += "-> We do not recommend to use 'zmax' smaller than 1.5 kpc as otherwise vertical "+\
+                "structure of the disk cannot be properly reconstructed.\n"
+        n_warnings += 1 
             
     if p.zmax > 2000:
         errs += "-> The maximum height 'zmax' cannot be very large. It is not recommended to use the model "+\
