@@ -15,6 +15,151 @@ from .constants import tp, tr
 from .control import CheckIsoInput
 from .tools import gauss_weights
 from . import localpath
+from functools import lru_cache
+
+# Helper functions to speed up the code for WDs
+
+ISOCHRONE_ROOT = os.path.join(localpath, 'input', 'isochrones')
+WD_ISOCHRONE_ROOT = os.path.join(ISOCHRONE_ROOT, 'WD_isochrones')
+METALLICITY_GRID = np.loadtxt(os.path.join(ISOCHRONE_ROOT, 'Metallicity_grid.txt')).T
+AGE_AVAILABLE = np.arange(0.05, 13.05, 0.05)
+
+@lru_cache(maxsize=32)
+def _load_isochrone_table(path):
+    """
+    Reads one numeric isochrone table from disk.
+
+    The isochrone files contain a commented header followed by numeric columns.
+    ``np.loadtxt`` is used instead of ``np.genfromtxt`` because the format is simple
+    and ``loadtxt`` is faster. The transposed output matches the old code layout.
+    """
+    return np.loadtxt(path).T
+
+WD_GRID_ROOTS = {
+    'basti': 'multiband_basti',
+    'lpcode': 'multiband_lpcode',
+    'montreal': 'multiband_montreal',
+}
+
+WD_GRID_ALIASES = {
+    'basti': 'basti',
+    'lpcode': 'lpcode',
+    'montreal': 'montreal',
+}
+
+
+def _normalize_wd_mode(mode_wd):
+    """
+    Normalizes the requested white-dwarf isochrone grid name.
+
+    Accepted values are ``'BaSTI'``, ``'LPCODE'``, and ``'Montreal'``.
+    The comparison is case-insensitive.
+    """
+    mode_key = str(mode_wd).strip().lower()
+    if mode_key not in WD_GRID_ALIASES:
+        raise ValueError(
+            "mode_wd must be one of: 'BaSTI', 'LPCODE', or 'Montreal'. "
+            f"Got {mode_wd!r}."
+        )
+    return WD_GRID_ALIASES[mode_key]
+
+
+def _wd_grid_root(mode_wd):
+    """
+    Returns the root directory of the selected white-dwarf isochrone grid.
+
+    The WD grids are stored under ``input/isochrones/WD_isochrones``.
+    Expected folder names are ``multiband_basti``, ``multiband_lpcode``,
+    and ``multiband_montreal``.
+    """
+    mode_key = _normalize_wd_mode(mode_wd)
+    root = os.path.join(WD_ISOCHRONE_ROOT, WD_GRID_ROOTS[mode_key])
+
+    if not os.path.isdir(root):
+        raise FileNotFoundError(
+            f"WD isochrone grid not found: {root}. "
+            f"Extract or rename the {mode_key} WD grid to "
+            f"{WD_GRID_ROOTS[mode_key]} under {WD_ISOCHRONE_ROOT}."
+        )
+
+    return root
+
+
+
+@lru_cache(maxsize=16)
+def _metallicity_folders(root):
+    """
+    Lists available metallicity folders for one WD atmosphere grid.
+
+    The expected folder names are like ``iso_fe-0.2`` or ``iso_fe0.0``.
+    The returned tuple contains ``(metallicity, folder_path)`` pairs.
+    """
+    folders = []
+
+    for name in os.listdir(root):
+        if not name.startswith('iso_fe'):
+            continue
+        try:
+            metallicity = float(name.replace('iso_fe', ''))
+        except ValueError:
+            continue
+        folders.append((metallicity, os.path.join(root, name)))
+
+    if not folders:
+        raise FileNotFoundError(f"No metallicity folders found in: {root}")
+
+    return tuple(sorted(folders))
+
+
+def _nearest_metallicity_folder(root, met):
+    """
+    Finds the closest available WD metallicity folder to the requested metallicity.
+    """
+    folders = _metallicity_folders(root)
+    metallicities = np.array([item[0] for item in folders])
+    index_best_met = np.argmin(np.abs(metallicities - met))
+    return folders[index_best_met]
+
+def _fast_imf_weights(imf, mass_edges):
+    """
+    Calculates IMF bin weights using the precomputed IMF arrays.
+
+    This is a faster replacement for repeatedly calling ``imf(m1, m2)`` in a
+    Python loop. If the input IMF does not expose the expected internal arrays,
+    the function returns ``None`` and the caller should fall back to the old method.
+    """
+    imf_obj = getattr(imf, "__self__", None)
+
+    required = ("mlow", "mup", "mres", "m_lin", "Nmdm")
+    if imf_obj is None or not all(hasattr(imf_obj, attr) for attr in required):
+        return None
+
+    mass1 = np.asarray(mass_edges[:-1], dtype=float)
+    mass2 = np.asarray(mass_edges[1:], dtype=float)
+
+    mass1 = np.maximum(mass1, imf_obj.mlow)
+    mass2 = np.minimum(mass2, imf_obj.mup)
+
+    m1_ind = ((mass1 - imf_obj.mlow) // imf_obj.mres).astype(int)
+    m2_ind = ((mass2 - imf_obj.mlow) // imf_obj.mres).astype(int)
+
+    close = (m1_ind == m2_ind) | ((m2_ind - m1_ind) == 1)
+    m2_eff = m2_ind.copy()
+    m2_eff[close] = m1_ind[close] + 2
+
+    m1_ind = np.clip(m1_ind, 0, len(imf_obj.Nmdm) - 1)
+    m2_eff = np.clip(m2_eff, 0, len(imf_obj.Nmdm))
+
+    csum = np.concatenate(([0.0], np.cumsum(imf_obj.Nmdm)))
+    weights = csum[m2_eff] - csum[m1_ind]
+
+    interval_weight = np.ones_like(weights)
+    interval_weight[close] = (
+        (mass2[close] - mass1[close]) /
+        (imf_obj.m_lin[m2_eff[close]] - imf_obj.m_lin[m1_ind[close]])
+    )
+
+    return weights * interval_weight
 
 
 class ColumnsIso():
@@ -217,32 +362,44 @@ class ColumnsIso():
         return new
 
 
-    def apply_IMF(self,imf,iso_masses,mass):   
+    def apply_IMF(self, imf, iso_masses, mass):
         r"""
-        Applies IMF to the isochrone mass column.
-        
-        :param imf: IMF PDF function returning the probability to form a 
-            star with a mass between *mass1* and *mass2*. 
-        :type imf: *function(mass1,mass2)* 
-        :param iso_masses: Mass column from the isochrone table. 
-        :type iso_masses: array-like
-        :param mass: Total mass that was converted into stars of the chosen 
-            metallicity and age (this isochrone), :math:`\mathrm{M}_\odot`.
-        :type mass: scalar  
-        
-        :return: New column with the present-day surface number densities of the semi-(metallicity-age-mass)
-             'stellar assemblies',  :math:`\mathrm{number \ pc}^{-2}`. 
-        :rtype: 1d-array            
-        """ 
-        
-        lenm = len(iso_masses)
-        m_centers = np.zeros((lenm+1))
-        m_centers[0], m_centers[-1] = iso_masses[0], iso_masses[-1]
-        m_centers[1:-1] = [np.mean([iso_masses[i],iso_masses[i+1]]) for i in np.arange(lenm-1)]
+        Applies the IMF to the isochrone mass grid.
 
-        num_dens = np.array([imf(m_centers[k],m_centers[k+1])*mass for k in np.arange(lenm)])
-        
-        return num_dens
+        The isochrone mass column is converted into mass-bin edges by placing
+        bin boundaries halfway between neighboring initial masses. The returned
+        array gives the expected number surface density in each mass bin,
+        normalized by the total stellar mass formed in this age-metallicity bin.
+
+        A vectorized fast path is used when ``imf`` is a bound ``IMF.number_stars``
+        method with precomputed ``m_lin`` and ``Nmdm`` arrays. Otherwise the code
+        falls back to calling ``imf(m1, m2)`` for every mass bin.
+
+        :param imf: IMF function returning the fraction of stars in a mass interval.
+        :type imf: callable
+        :param iso_masses: Initial stellar masses from the isochrone table.
+        :type iso_masses: array-like
+        :param mass: Total stellar mass formed in this age-metallicity bin.
+        :type mass: scalar
+
+        :return: Number surface density for each isochrone mass bin.
+        :rtype: 1d-array
+        """
+        lenm = len(iso_masses)
+
+        m_centers = np.zeros((lenm + 1))
+        m_centers[0], m_centers[-1] = iso_masses[0], iso_masses[-1]
+        m_centers[1:-1] = (np.asarray(iso_masses[:-1]) + np.asarray(iso_masses[1:])) / 2
+
+        fast_weights = _fast_imf_weights(imf, m_centers)
+        if fast_weights is not None:
+            return fast_weights * mass
+
+        return np.array([
+            imf(m_centers[k], m_centers[k + 1]) * mass
+            for k in np.arange(lenm)
+        ])
+
     
     
 
@@ -284,8 +441,7 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
     :rtype: dict            
     """ 
     
-    met_available_table = np.loadtxt(os.path.join(localpath,'input','isochrones',
-                                                      'Metallicity_grid.txt')).T
+    met_available_table = METALLICITY_GRID
     cols = ColumnsIso()
     
     if 'wd' not in kwargs or ('wd' in kwargs and kwargs['wd']=='ms+wd'):
@@ -312,28 +468,30 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
 
         # Main isochrone
         # -----------------------------------------------------------
-        age_available = np.arange(0.05,13.05,0.05)
+        age_available = AGE_AVAILABLE
         # Find closest metallicity in the grid of available metallicities
         # for this isochrone grid (e.g. Fe/H values of +0.46 and +0.47 dex  
         # from our standard metallicity grid are not available for BaSTI)
-        index_best_met = np.where(np.abs(np.subtract(met_available,met))==\
-                                  np.amin(np.abs(np.subtract(met_available,met))))[0][0]
+        index_best_met = np.argmin(np.abs(met_available - met))
+
             
-        index_best_met2 = np.where(met_available_table[1]==met_available[index_best_met])[0][0]
+        index_best_met2 = np.argmin(
+            np.abs(met_available_table[1] - met_available[index_best_met])
+        )
         
         # Get available ages for the adopted metallicity
         #age4met_available = age_available[grid_mask[:,index_best_met2]]
         age4met_available = age_available
 
         # Find closest available age to the modelled one 
-        index_best_age = np.where(np.abs(np.subtract(age4met_available,age))==\
-                                  np.amin(np.abs(np.subtract(age4met_available,age))))[0][0]                                                         
+        index_best_age = np.argmin(np.abs(age4met_available - age))
+                                                      
         
         name = os.path.join(localpath,'input','isochrones',mode,folder_name,
                             ''.join(('iso_fe',str(round(met_available[index_best_met],2)))),
                             ''.join(('iso_age',str(round(age4met_available[index_best_age],2)),'.txt'))) 
     
-        isochrone = np.genfromtxt(name).T
+        isochrone = _load_isochrone_table(name).copy()
         
         indices = cols.column_positions(mode,all_columns_ms)
         iso = cols.read_columns(mode,isochrone,all_columns_ms,indices)
@@ -352,25 +510,34 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
 
         all_columns_wd = cols.column_namespace(mode,photometric_system,wd=True)
 
-        index_best_met = np.where(np.abs(np.subtract(met_available_table[1],met))==\
-                                  np.amin(np.abs(np.subtract(met_available_table[1],met))))[0][0]
+        mode_wd = _normalize_wd_mode(kwargs.get('mode_wd', 'BaSTI'))
+        wd_root = _wd_grid_root(mode_wd)
+
+        dawd_met, dawd_folder = _nearest_metallicity_folder(
+            os.path.join(wd_root, 'H'), met
+        )
+        dbwd_met, dbwd_folder = _nearest_metallicity_folder(
+            os.path.join(wd_root, 'He'), met
+        )
+
+
         
         # DA white-dwarf isochrone
         # -----------------------------------------------------------
-        age_available_dawd = np.arange(0.05,13.05,0.05)
+        age_available_dawd = AGE_AVAILABLE
         #age_available_dawd = np.hstack((0.080,np.arange(0.100,2.700+0.050,0.050), 
         #                                np.arange(2.900,12.700,0.050)))
 
-        index_best_age_dawd = np.where(np.abs(np.subtract(age_available_dawd,age))==\
-                                  np.amin(np.abs(np.subtract(age_available_dawd,age))))[0][0] 
+        index_best_age_dawd = np.argmin(np.abs(age_available_dawd - age))
+
         
         # DB white-dwarf isochrone
         # -----------------------------------------------------------
         #age_available_dbwd = age_available_dawd[:111] # only for age < 5.7 Gyr
-        age_available_dbwd = np.arange(0.05,13.05,0.05)
+        age_available_dbwd = AGE_AVAILABLE
         
-        index_best_age_dbwd = np.where(np.abs(np.subtract(age_available_dbwd,age))==\
-                                  np.amin(np.abs(np.subtract(age_available_dbwd,age))))[0][0] 
+        index_best_age_dbwd = np.argmin(np.abs(age_available_dbwd - age))
+
 
         # Check for metallicities and ages
         '''
@@ -383,18 +550,20 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
               ' chosen age:', round(age_available_dbwd[index_best_age_dbwd],2))
         '''
     
-        name_dawd = os.path.join(localpath,'input','isochrones','BaSTI','WD','multiband','H',
-                            ''.join(('iso_fe',str(round(met_available_table[1][index_best_met],2)))),
-                            ''.join(('iso_age',str(round(age_available_dawd[index_best_age_dawd],2)),
-                                     '.txt')))
+        name_dawd = os.path.join(
+            dawd_folder,
+            ''.join(('iso_age', str(round(age_available_dawd[index_best_age_dawd], 2)), '.txt'))
+        )
+
         
-        name_dbwd = os.path.join(localpath,'input','isochrones','BaSTI','WD','multiband','He',
-                            ''.join(('iso_fe',str(round(met_available_table[1][index_best_met],2)))),
-                            ''.join(('iso_age',str(round(age_available_dbwd[index_best_age_dbwd],2)),
-                                     '.txt')))
+        name_dbwd = os.path.join(
+            dbwd_folder,
+            ''.join(('iso_age', str(round(age_available_dbwd[index_best_age_dbwd], 2)), '.txt'))
+        )
+
     
-        isochrone_dawd = np.genfromtxt(name_dawd).T
-        isochrone_dbwd = np.genfromtxt(name_dbwd).T
+        isochrone_dawd = _load_isochrone_table(name_dawd).copy()
+        isochrone_dbwd = _load_isochrone_table(name_dbwd).copy()
         
         if mode!='BaSTI':
             all_columns_wd.remove('phase')
@@ -507,6 +676,7 @@ def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_
     if 'wd' in kwargs and kwargs['wd']=='wd' and mode!='BaSTI':
         print('Warning. Note that currently the only WD isochrone set is BaSTI, \
               and you chose mode =',mode,'. Changed mode to BaSTI.')
+        mode = 'BaSTI'
         
     amrsh_spread = np.linspace(p.FeHsh-3*p.dFeHsh,p.FeHsh+3*p.dFeHsh,p.n_FeHsh)
     wsh = gauss_weights(amrsh_spread,p.FeHsh,p.dFeHsh)
@@ -627,10 +797,11 @@ def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_
         # Create output lists
         iso_columns = list(result[0].keys())
 
-        all_columns = ['N','age','FeH'] + iso_columns
-        if mode == 'BaSTI':
-            all_columns += ['phase']     
-        all_columns += ['disk_label']
+        all_columns = list(dict.fromkeys(['N', 'age', 'FeH'] + iso_columns))
+        if mode == 'BaSTI' and 'phase' not in all_columns:
+            all_columns.append('phase')
+        all_columns.append('disk_label')
+
 
         ncols = len(all_columns)
         output = [[] for i in range(ncols)]
