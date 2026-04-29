@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Feb 20 18:17:18 2017
+Modified on Wed Apr 29 12:33:15 2026
 
-@author: Skevja
+@author: Skevja and a-vani
 """
 import os 
 import inspect
@@ -10,7 +11,7 @@ import numpy as np
 from itertools import repeat
 from multiprocessing import Pool
 from astropy.table import Table
-from .funcs import AMR, log_surface_gravity
+from .funcs import AMR, log_surface_gravity, IMF
 from .constants import tp, tr
 from .control import CheckIsoInput
 from .tools import gauss_weights
@@ -23,6 +24,8 @@ ISOCHRONE_ROOT = os.path.join(localpath, 'input', 'isochrones')
 WD_ISOCHRONE_ROOT = os.path.join(ISOCHRONE_ROOT, 'WD_isochrones')
 METALLICITY_GRID = np.loadtxt(os.path.join(ISOCHRONE_ROOT, 'Metallicity_grid.txt')).T
 AGE_AVAILABLE = np.arange(0.05, 13.05, 0.05)
+MS_LIFETIME_FILE = os.path.join(ISOCHRONE_ROOT, 'MS_lifetimes', 'tau_ms_met.txt')
+
 
 @lru_cache(maxsize=32)
 def _load_isochrone_table(path):
@@ -160,6 +163,81 @@ def _fast_imf_weights(imf, mass_edges):
     )
 
     return weights * interval_weight
+
+@lru_cache(maxsize=1)
+def _load_ms_lifetime_params():
+    """
+    Load metallicity-dependent MS lifetime fit parameters.
+
+    The file columns are:
+        FeH, M_br1, b, alpha1, alpha2
+
+    The fit returns log10(tau_MS/Gyr) as a piecewise-linear function of
+    log10(Mini/Msun).
+    """
+    feh_grid = []
+    params = []
+
+    with open(MS_LIFETIME_FILE, 'r') as f:
+        for line in f:
+            line = line.strip()
+
+            if line == '' or line.startswith('#'):
+                continue
+
+            values = line.split()
+            feh_grid.append(float(values[0]))
+
+            par = [float(value) for value in values[1:]]
+
+            # Break mass is stored in Msun, but the fit uses log10(Mini).
+            par[0] = np.log10(par[0])
+
+            params.append(tuple(par))
+
+    return np.asarray(feh_grid), tuple(params)
+
+
+def _piecewise_linear_ms_lifetime(log_mini, log_mbr1, b, alpha1, alpha2):
+    """
+    Evaluate the two-slope MS lifetime fit.
+
+    Returns log10(tau_MS/Gyr).
+    """
+    return np.where(
+        log_mini < log_mbr1,
+        alpha1 * log_mini + b,
+        alpha2 * (log_mini - log_mbr1) + b + alpha1 * log_mbr1
+    )
+
+
+def _ms_lifetime_from_table(mini, feh):
+    """
+    Return MS lifetime in Gyr for initial mass Mini and metallicity FeH.
+    """
+    feh_grid, params = _load_ms_lifetime_params()
+
+    index_feh = np.argmin(np.abs(feh_grid - feh))
+    log_mbr1, b, alpha1, alpha2 = params[index_feh]
+
+    mini = np.asarray(mini, dtype=float)
+
+    tau_ms = np.full_like(mini, np.nan, dtype=float)
+    valid = np.isfinite(mini) & (mini > 0)
+
+    log_mini = np.log10(mini[valid])
+
+    log_tau_ms = _piecewise_linear_ms_lifetime(
+        log_mini,
+        log_mbr1,
+        b,
+        alpha1,
+        alpha2
+    )
+
+    tau_ms[valid] = 10**log_tau_ms
+
+    return tau_ms
 
 
 class ColumnsIso():
@@ -508,9 +586,26 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
     
     if 'wd' in kwargs and (kwargs['wd']=='ms+wd' or kwargs['wd']=='wd'):
 
+        f_da = float(kwargs['f_da'])
+        f_da_mode = int(kwargs['f_da_mode']) #currently in testing
+        wd_cooling_delay = float(kwargs['wd_cooling_delay'])
+        ifmr_mode = str(kwargs['ifmr_mode']).lower()
+
+
+        if f_da < 0 or f_da > 1:
+            raise ValueError(f"f_da must be between 0 and 1. Got f_da={f_da}.")
+
+        if f_da_mode != 0:
+            raise NotImplementedError(
+                "Only f_da_mode = 0 is currently implemented "
+                "(constant DA fraction)."
+            )
+
+
+
         all_columns_wd = cols.column_namespace(mode,photometric_system,wd=True)
 
-        mode_wd = _normalize_wd_mode(kwargs.get('mode_wd', 'BaSTI'))
+        mode_wd = _normalize_wd_mode(kwargs.get('mode_wd'))
         wd_root = _wd_grid_root(mode_wd)
 
         dawd_met, dawd_folder = _nearest_metallicity_folder(
@@ -525,15 +620,12 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
         # DA white-dwarf isochrone
         # -----------------------------------------------------------
         age_available_dawd = AGE_AVAILABLE
-        #age_available_dawd = np.hstack((0.080,np.arange(0.100,2.700+0.050,0.050), 
-        #                                np.arange(2.900,12.700,0.050)))
 
         index_best_age_dawd = np.argmin(np.abs(age_available_dawd - age))
 
         
         # DB white-dwarf isochrone
         # -----------------------------------------------------------
-        #age_available_dbwd = age_available_dawd[:111] # only for age < 5.7 Gyr
         age_available_dbwd = AGE_AVAILABLE
         
         index_best_age_dbwd = np.argmin(np.abs(age_available_dbwd - age))
@@ -565,29 +657,57 @@ def stellar_assemblies_iso(mode,photometric_system,met,age,mass,imf,**kwargs):
         isochrone_dawd = _load_isochrone_table(name_dawd).copy()
         isochrone_dbwd = _load_isochrone_table(name_dbwd).copy()
         
-        if mode!='BaSTI':
-            all_columns_wd.remove('phase')
+        # if mode!='BaSTI':
+        #     all_columns_wd.remove('phase')
 
         #for DAWD
-        indices_wd = cols.column_positions('BaSTI',all_columns_wd,wd=True)
-        
-        iso_dawd = cols.read_columns('BaSTI',isochrone_dawd,all_columns_wd,indices_wd)
-        
+        indices_wd = cols.column_positions('BaSTI', all_columns_wd, wd=True)
+
+        # DA WD
+        iso_dawd = cols.read_columns('BaSTI', isochrone_dawd, all_columns_wd, indices_wd)
         iso_dawd = cols.sort_mass_column(iso_dawd)
-        iso_dawd['N'] = cols.apply_IMF(imf,iso_dawd['Mini'],mass)*0.8
-        #iso_dawd['N'] = iso_dawd['N']*(1 - fdb_parabola(10**iso_dawd['logT']/10**3))*0.8 
-        iso_dawd['age'], iso_dawd['FeH'] = [age for i in iso_dawd['logT']],[met for i in iso_dawd['logT']]
-        iso_dawd['phase'] = np.repeat(10,len(iso_dawd['N'])) # DA WDs are 10 
-        
-        #for DB WD
-        iso_dbwd = cols.read_columns('BaSTI',isochrone_dbwd,all_columns_wd,indices_wd)
+        iso_dawd['age'], iso_dawd['FeH'] = (
+            [age for i in iso_dawd['logT']],
+            [met for i in iso_dawd['logT']]
+        )
+        iso_dawd['phase'] = np.repeat(10, len(iso_dawd['Mini']))
+
+        iso_dawd, ifmr_valid_dawd = _apply_ifmr_to_wd_iso(iso_dawd, met, kwargs)
+        iso_dawd, ifmr_valid_dawd = _sort_iso_and_mask_by_mini(iso_dawd, ifmr_valid_dawd)
+
+        if wd_cooling_delay != 0:
+            iso_dawd['age'] = (
+                np.asarray(iso_dawd['age'], dtype=float) +
+                wd_cooling_delay * np.asarray(iso_dawd['age_WD'], dtype=float)
+            )
+
+        iso_dawd['N'] = cols.apply_IMF(imf, iso_dawd['Mini'], mass) * f_da
+        iso_dawd['N'][~ifmr_valid_dawd] = 0
+
+        # DB WD
+        iso_dbwd = cols.read_columns('BaSTI', isochrone_dbwd, all_columns_wd, indices_wd)
         iso_dbwd = cols.sort_mass_column(iso_dbwd)
-        iso_dbwd['N'] = cols.apply_IMF(imf,iso_dbwd['Mini'],mass)*0.2
-        #iso_dbwd['N'] = iso_dbwd['N'] * (fdb_parabola(10**iso_dbwd['logT']/10**3))*0.2
-        iso_dbwd['age'], iso_dbwd['FeH'] = [age for i in iso_dbwd['logT']],[met for i in iso_dbwd['logT']]
-        iso_dbwd['phase'] = np.repeat(11,len(iso_dbwd['N'])) # DB WDs are 11
+        iso_dbwd['age'], iso_dbwd['FeH'] = (
+            [age for i in iso_dbwd['logT']],
+            [met for i in iso_dbwd['logT']]
+        )
+        iso_dbwd['phase'] = np.repeat(11, len(iso_dbwd['Mini']))
+
+        iso_dbwd, ifmr_valid_dbwd = _apply_ifmr_to_wd_iso(iso_dbwd, met, kwargs)
+        iso_dbwd, ifmr_valid_dbwd = _sort_iso_and_mask_by_mini(iso_dbwd, ifmr_valid_dbwd)
+
+        if wd_cooling_delay != 0:
+            iso_dbwd['age'] = (
+                np.asarray(iso_dbwd['age'], dtype=float) +
+                wd_cooling_delay * np.asarray(iso_dbwd['age_WD'], dtype=float)
+            )
+
+        iso_dbwd['N'] = cols.apply_IMF(imf, iso_dbwd['Mini'], mass) * (1 - f_da)
+        iso_dbwd['N'][~ifmr_valid_dbwd] = 0
+
         
         iso_wd = cols.append_iso(iso_dawd,iso_dbwd)
+
 
     if 'wd' in kwargs:
         if kwargs['wd']=='ms+wd':
@@ -606,6 +726,246 @@ def fdb_parabola(Teff):
     def parabola(x, a, b, c): #function to fit
         return a*x**2 + b*x + c
     return parabola(np.array(Teff), *[1.40000000e-04, -1.15983436e-02,  3.11929944e-01]) #returns fraction of He dom atm, so for Da it will be 1-this frac
+
+def _read_wd_parameters_from_p(p):
+    """
+    Read WD-related parameters from the parameter file.
+
+    IFMR modes:
+        Cummings18   : fixed fiducial Cummings+18 IFMR
+        Cunningham23 : fixed fiducial Cunningham+23 IFMR
+        custom       : read IFMR slopes/breaks/intercept from parameter file
+        none         : use original WD isochrone Mini
+    """
+    required = [
+        'f_da',
+        'f_da_mode',
+        'wd_cooling_delay',
+        'ifmr_mode',
+    ]
+
+    missing = [name for name in required if not hasattr(p, name)]
+    if missing:
+        raise AttributeError(
+            "WDs were requested, but these parameters are missing "
+            f"from the parameter file: {missing}"
+        )
+
+    wd_params = {
+        'f_da': float(p.f_da),
+        'f_da_mode': int(p.f_da_mode),
+        'wd_cooling_delay': float(p.wd_cooling_delay),
+        'ifmr_mode': str(p.ifmr_mode).strip().lower(),
+    }
+
+    ifmr_mode = wd_params['ifmr_mode']
+
+    if ifmr_mode not in ('isochrone', 'cummings18', 'cunningham23', 'custom'):
+        raise ValueError(
+            "ifmr_mode must be one of 'isochrone', 'Cummings18', "
+            f"'Cunningham23', or 'custom'. Got {p.ifmr_mode!r}."
+        )
+
+    if ifmr_mode == 'custom':
+        required_ifmr = [
+            'ifmr_alpha1',
+            'ifmr_alpha2',
+            'ifmr_alpha3',
+            'ifmr_mbr1',
+            'ifmr_mbr2',
+            'ifmr_b1',
+        ]
+
+        missing = [name for name in required_ifmr if not hasattr(p, name)]
+        if missing:
+            raise AttributeError(
+                "ifmr_mode='custom' requires these parameters: "
+                f"{missing}"
+            )
+
+        wd_params.update({
+            'ifmr_alpha1': float(p.ifmr_alpha1),
+            'ifmr_alpha2': float(p.ifmr_alpha2),
+            'ifmr_alpha3': float(p.ifmr_alpha3),
+            'ifmr_mbr1': float(p.ifmr_mbr1),
+            'ifmr_mbr2': float(p.ifmr_mbr2),
+            'ifmr_b1': float(p.ifmr_b1),
+        })
+
+    return wd_params
+
+
+def _ifmr_segments_from_kwargs(kwargs):
+    """
+    Build IFMR segments.
+
+    Each segment is ``(Mini_min, Mini_max, alpha, beta)`` for:
+        Mf = alpha * Mini + beta
+    """
+    ifmr_mode = str(kwargs['ifmr_mode']).strip().lower()
+
+    if ifmr_mode in ( 'isochrone'):
+        return None
+
+    if ifmr_mode == 'cummings18':
+        return [
+            (0.87, 2.80, 0.0873, 0.476),
+            (2.80, 3.65, 0.1810, 0.210),
+            (3.65, 8.20, 0.0835, 0.565),
+        ]
+
+    if ifmr_mode == 'cunningham23':
+        return [
+            (1.00, 2.50, 0.086, 0.469),
+            (2.50, 3.40, 0.100, 0.43214),
+            (3.40, 5.03, 0.060, 0.570),
+            (5.03, 7.60, 0.170, 0.0144),
+        ]
+
+    if ifmr_mode != 'custom':
+        raise ValueError(f"Unknown ifmr_mode={ifmr_mode!r}.")
+
+    alpha1 = float(kwargs['ifmr_alpha1'])
+    alpha2 = float(kwargs['ifmr_alpha2'])
+    alpha3 = float(kwargs['ifmr_alpha3'])
+
+    mbr1 = float(kwargs['ifmr_mbr1'])
+    mbr2 = float(kwargs['ifmr_mbr2'])
+
+    beta1 = float(kwargs['ifmr_b1'])
+
+    if not (0.87 < mbr1 < mbr2 < 8.20):
+        raise ValueError(
+            "Custom IFMR break masses must satisfy "
+            "0.87 < ifmr_mbr1 < ifmr_mbr2 < 8.20."
+        )
+
+    beta2 = beta1 - mbr1 * (alpha2 - alpha1)
+    beta3 = beta1 - mbr1 * (alpha2 - alpha1) - mbr2 * (alpha3 - alpha2)
+
+    return [
+        (0.87, mbr1, alpha1, beta1),
+        (mbr1, mbr2, alpha2, beta2),
+        (mbr2, 8.20, alpha3, beta3),
+    ]
+
+
+def _ifmr_inverse(mf, kwargs):
+    """
+    Applies the inverse IFMR: WD final mass Mf -> progenitor Mini.
+    """
+    segments = _ifmr_segments_from_kwargs(kwargs)
+    mf = np.asarray(mf, dtype=float)
+
+    if segments is None:
+        return None
+
+    mini = np.full_like(mf, np.nan, dtype=float)
+
+    for mini_low, mini_high, alpha, beta in segments:
+        mf_low = alpha * mini_low + beta
+        mf_high = alpha * mini_high + beta
+        mf_min = min(mf_low, mf_high)
+        mf_max = max(mf_low, mf_high)
+
+        ind = np.where((mf >= mf_min) & (mf <= mf_max))[0]
+        mini[ind] = (mf[ind] - beta) / alpha
+
+    mini[(mini < 0.08) | (mini > 100)] = np.nan
+
+    return mini
+
+
+def _apply_ifmr_to_wd_iso(iso_wd, met, kwargs):
+    """
+    Applies IFMR effects to a WD isochrone.
+
+    The WD grid supplies Mf, age_WD, and photometry. The selected IFMR changes
+    Mini. Then the MS lifetime is computed from the metallicity-dependent
+    MS lifetime table:
+
+        age_new = tau_MS(Mini_new, FeH) + age_WD
+    """
+    mini_new = _ifmr_inverse(iso_wd['Mf'], kwargs)
+
+    if mini_new is None:
+        return iso_wd, np.ones(len(iso_wd['Mini']), dtype=bool)
+
+    mini_ref = np.asarray(iso_wd['Mini'], dtype=float)
+    age_wd = np.asarray(iso_wd['age_WD'], dtype=float)
+
+    tau_ms_new = _ms_lifetime_from_table(mini_new, met)
+    age_new = tau_ms_new + age_wd
+
+    valid_new = (
+        np.isfinite(mini_new) &
+        np.isfinite(age_new) &
+        (age_new >= 0) &
+        (age_new <= tp)
+    )
+
+    iso_wd['Mini'] = np.where(valid_new, mini_new, mini_ref)
+    iso_wd['age'] = np.where(valid_new, age_new, iso_wd['age'])
+
+    return iso_wd, valid_new
+
+
+def _sort_iso_and_mask_by_mini(iso, mask):
+    """
+    Sorts an isochrone dictionary by Mini and applies the same order to a mask.
+    """
+    index_sorted = np.argsort(np.asarray(iso['Mini'], dtype=float))
+
+    for key in list(iso.keys()):
+        iso[key] = np.asarray(iso[key])[index_sorted]
+
+    return iso, np.asarray(mask)[index_sorted]
+
+
+def _apply_wd_cooling_delay_sfr_weight(iso, sfr, old_indt):
+    """
+    Reweights delayed WDs to the SFR bin corresponding to their shifted total age.
+
+    The WD cooling delay is applied in stellar_assemblies_iso() by changing
+    the WD total age column. This function then corrects the number density:
+    N_new = N_old * SFR(t_new) / SFR(t_old).
+
+    This is only used for thin/thick disk WDs. The stellar halo has no time
+    resolved SFR in this model.
+    """
+    if 'phase' not in iso:
+        return iso
+
+    phase = np.asarray(iso['phase'])
+    ind_wd = np.where((phase == 10) | (phase == 11))[0]
+
+    if len(ind_wd) == 0:
+        return iso
+
+    iso['N'] = np.asarray(iso['N'], dtype=float)
+    iso['age'] = np.asarray(iso['age'], dtype=float)
+
+    new_time = tp - iso['age'][ind_wd]
+    new_indt = np.asarray(new_time // tr, dtype=int)
+
+    valid = (
+        np.isfinite(new_time) &
+        (new_time >= 0) &
+        (new_indt >= 0) &
+        (new_indt < len(sfr))
+    )
+
+    old_sfr = sfr[old_indt]
+    if old_sfr <= 0:
+        iso['N'][ind_wd] = 0
+        return iso
+
+    weights = np.zeros(len(ind_wd))
+    weights[valid] = sfr[new_indt[valid]] / old_sfr
+
+    iso['N'][ind_wd] *= weights
+
+    return iso
 
 
 def _starmap_with_kwargs_(pool, fn, args_iter, kwargs_iter):
@@ -668,15 +1028,21 @@ def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_
     this_function = inspect.stack()[0][3]
     ch = CheckIsoInput()
     ch.check_mode_isochrone(mode,this_function)
-    
+
+    kwargs = dict(kwargs)
+
+    if kwargs.get('wd') in ('wd', 'ms+wd'):
+        kwargs.update(_read_wd_parameters_from_p(p))
+
     print(''.join(('\nStellar population synthesis for R = ', str(R),' kpc:')))
     # By default, the halo metalicity distribution is a Gaussian 
     # with mean at -1.5 and std=0.4 (An, Beers+2013). 
     
-    if 'wd' in kwargs and kwargs['wd']=='wd' and mode!='BaSTI':
-        print('Warning. Note that currently the only WD isochrone set is BaSTI, \
-              and you chose mode =',mode,'. Changed mode to BaSTI.')
-        mode = 'BaSTI'
+    if 'wd' in kwargs and kwargs['wd'] == 'wd':
+        mode_wd = _normalize_wd_mode(kwargs.get('mode_wd'))
+        print(f"\tWD-only run using {mode_wd} WD isochrones")
+        _wd_grid_root(mode_wd)
+
         
     amrsh_spread = np.linspace(p.FeHsh-3*p.dFeHsh,p.FeHsh+3*p.dFeHsh,p.n_FeHsh)
     wsh = gauss_weights(amrsh_spread,p.FeHsh,p.dFeHsh)
@@ -794,6 +1160,26 @@ def stellar_assemblies_r(R,p,a,amrd,amrt,sfrd,sfrt,sigmash,imf,mode,photometric_
         pool.close()
         pool.join()
         
+        # If WD cooling is delayed, the WD total age was shifted in
+        # stellar_assemblies_iso(). Reweight disk WDs to the SFR bin
+        # corresponding to the shifted age.
+        if (
+            kwargs.get('wd_cooling_delay', 0.0) != 0 or
+            str(kwargs.get('ifmr_mode', 'isochrone')).strip().lower()
+            not in ('isochrone', 'none')
+        ):
+            if i == 0:
+                for k in range(len(result)):
+                    result[k] = _apply_wd_cooling_delay_sfr_weight(
+                        result[k], sfrd, indt[k]
+                    )
+            if i == 1:
+                for k in range(len(result)):
+                    result[k] = _apply_wd_cooling_delay_sfr_weight(
+                        result[k], sfrt, indt[k]
+                    )
+        
+
         # Create output lists
         iso_columns = list(result[0].keys())
 

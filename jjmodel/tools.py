@@ -193,8 +193,13 @@ def resave_parameters(path_to_parameterfile,path_to_parameterfile_copy,p):
     pnames_local = ['run_mode','out_dir','out_mode','nprocess','Rsun','zsun','Vsun','zmax','dz',
                     'sigmad','sigmat','sigmag1','sigmag2','sigmadh','sigmash',
                     'td1','td2','dzeta','eta','pkey','tt1','tt2','gamma','beta',
+                    'imfkey','a0','a1','a2','a3','m0','m1','m2',
                     'FeHd0','FeHdp','rd','q','dFeHdt','n_FeHdt','FeHt0','FeHtp','rt','t0',
-                    'FeHsh','dFeHsh','n_FeHsh','alpha','sige','sigt','sigdh','sigsh']                    
+                    'FeHsh','dFeHsh','n_FeHsh','alpha','sige','sigt','sigdh','sigsh',
+                    'f_da','f_da_mode','wd_cooling_delay',
+                    'ifmr_mode','ifmr_alpha1','ifmr_alpha2','ifmr_alpha3',
+                    'ifmr_mbr1','ifmr_mbr2','ifmr_b1']
+                   
     if p.pkey==1:
         pnames_local.extend(['sigmap','taup','dtaup','sigp'])
     if p.pkey==2:

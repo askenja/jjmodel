@@ -648,7 +648,7 @@ class GetPopulations():
             #tabname = tab_sorter('mdwtab',self.p,self.a.T,R=self.R,mode=mode_comp,mode_pop='mdw')
             #mdw.write(tabname,overwrite=True)
             ts = TabSaver(self.p,self.a,**kwargs)
-            ts.poptab_save(wd,mode_comp,self.mode_iso,self.R,'wd')
+            ts.poptab_save(wd,mode_comp,self.mode_iso,self.R,'wd', mode_wd=kwargs.get('mode_wd'))
             if len(wd['logT'])==0:
                 print('\t','{:<3}'.format(mode_comp),': White dwarf sample is empty.')
 

@@ -1,0 +1,22 @@
+Galactocentric distance = 8.2 kpc
+
+ --- fimax optimization ---
+fimax   len(fi) 
+8       32      
+7.81    32      
+7.7     31      
+
+heffd, hefft = thin- and thick-disk half-thickness                              
+hg1, hg2 = molecular and atomic gas scale height                              
+hdh, hsh = DM and stellar halo scale heights                              
+units = [pc]
+
+heffd   hefft   hg1     hg2     hdh     hsh     
+368.5   1075.9  42.4    178.3   1847.8  1720.0  26.0    
+390.6   1106.9  62.9    212.1   1855.7  1733.9  26.0    
+395.7   1114.9  66.0    217.8   1857.7  1737.4  26.0    
+396.9   1117.3  66.0    218.2   1858.3  1738.4  26.0    
+397.3   1118.1  65.7    217.9   1858.5  1738.8  26.0    \n\nDensity in the Galactic plane [Msun/pc^3]:\nThin.d     Thick.d    Mol.gas    At.gas     DM.halo    St.halo    Total      
+0.0369     0.0022     0.0153     0.0253     0.014      0.00014    0.094      
+
+Time: 0h 0m 0.34s

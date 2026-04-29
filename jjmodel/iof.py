@@ -260,18 +260,21 @@ def tab_reader(names,p,T,**kwargs):
             tabname = Pn[names]
             
         # Default isochrone set is Padova
-        if 'mode_iso' not in kwargs:
-            mode_iso = 'Padova'
-        else:
-            mode_iso = kwargs['mode_iso']
-            
-        # If we read WD, isochrones are always BaSTI
-        if names == 'wd':
-            mode_iso = 'BaSTI'
-            
-        readpath = os.path.join(T[savedir],''.join((tabname,'_R',str(kwargs['R']),'_',kwargs['mode'],
-                                                    '_',mode_iso,'.csv'))) 
+        mode_iso = kwargs.get('mode_iso', 'Padova')
+
+        # Selected WD tables can optionally be labelled by WD grid.
+        # If mode_wd is not given, keep the MS isochrone label for backward compatibility.
+        mode_label = mode_iso
+        if names == 'wd' and kwargs.get('mode_wd') is not None:
+            mode_label = kwargs['mode_wd']
+
+        readpath = os.path.join(
+            T[savedir],
+            ''.join((tabname, '_R', str(kwargs['R']), '_', kwargs['mode'],
+                    '_', mode_label, '.csv'))
+        )
         tables = Table.read(readpath)
+
     else:
         tables = [np.loadtxt(tab_sorter(i,p,T,**kwargs)).T for i in names]
     return tables
@@ -520,7 +523,7 @@ class TabSaver():
                                         r'Q_at.g, Q_DM, Q_st.halo with Q = Vc[km/s]')  
 
             
-    def poptab_save(self,table,mode,mode_iso,R,mode_pop_name):
+    def poptab_save(self,table,mode,mode_iso,R,mode_pop_name, mode_wd=None):
         r"""
         Saves stellar assembly table to the subfolder ``a.T['poptab']`` . 
         
@@ -541,7 +544,9 @@ class TabSaver():
         :param mode_pop_name: Short name of the population (see :func:`jjmodel.iof.tab_reader`) 
             or any custom name for the table. 
         :type mode_pop_name: str 
-                
+        :param mode_wd: Name of the WD isochrones, if applicable. 
+        :type mode_wd: str 
+
         :return: None. 
         """  
         
@@ -553,11 +558,12 @@ class TabSaver():
             tabname = mode_pop_name
         
         # Overwrite mode_iso in case of WDs 
-        if (mode_pop_name == 'wd') and (mode_iso != 'BaSTI'):
-            mode_iso = 'BaSTI'
+        iso_label = mode_iso
+        if mode_pop_name == 'wd' and mode_wd is not None:
+            iso_label = mode_wd
         
         savepath = os.path.join(self.a.T[savedir],''.join((tabname,'_R',str(R),'_',mode,
-                                                           '_',mode_iso,'.csv')))                                                    
+                                                           '_',iso_label,'.csv')))                                                    
         table.write(savepath,overwrite=True)
                                            
     
