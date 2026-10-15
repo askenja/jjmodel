@@ -153,7 +153,7 @@ def rbin_builder(R,a,SFRd,SFRt,gd,gt,Sigma,sigW,hg,**kwargs):
                         )
     
     if 'log' in kwargs:
-        kwargs['log'].append(r'\n\nDensity in the Galactic plane [Msun/pc^3]:\n')
+        kwargs['log'].append('\n\nDensity in the Galactic plane [Msun/pc^3]:\n')
         kwargs['log'].append(''.join(('{:<11}'.format('Thin.d'),
                                       '{:<11}'.format('Thick.d'),
                                       '{:<11}'.format('Mol.gas'),

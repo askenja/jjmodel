@@ -1814,7 +1814,7 @@ class IMF():
     Class for defining the initial mass function (IMF).
     """
     
-    def __init__(self,mlow,mup,mres=0.005):
+    def __init__(self,mlow=0.08,mup=100,mres=0.005):
         r"""
         Class instance is initialized by two parameters. 
         
@@ -2035,7 +2035,7 @@ class IMF():
         m_lin = np.linspace(self.mlow,self.mup,int((self.mup-self.mlow)//self.mres+2))
         f = [self._chabrier03_call_(i,ka1,a1,m1) for i in m_lin]
         
-        u = f*self.m_lin_ktg93_3slopes_call_
+        u = f*self.m_lin
         u = np.divide(u,np.sum(u))
         self.Nmdm = np.divide(u,self.m_lin)
                

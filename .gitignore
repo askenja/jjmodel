@@ -153,10 +153,18 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-# isocrhones 
-/jjmodel/input/isochrones/BaSTI
-/jjmodel/input/isochrones/MIST
-/jjmodel/input/isochrones/Padova
+# isochrones 
+/jjmodel/input/isochrones/old
+/jjmodel/input/isochrones/main
+/jjmodel/input/isochrones/wd
+/jjmodel/input/isochrones/Metallicity_grid_old.txt
+
 /jjmodel/tutorials/tutorial1/output
+/jjmodel/tutorials/tutorial2/output
+/jjmodel/tutorials/tutorial3/output
+/jjmodel/tutorials/tutorial4/output
+/jjmodel/tutorials/tutorial5/output
+
+
 
 # End of https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks

@@ -262,15 +262,13 @@ def tab_reader(names,p,T,**kwargs):
         # Default isochrone set is Padova
         if 'mode_iso' not in kwargs:
             mode_iso = 'Padova'
+            mode_label = mode_iso
         else:
             mode_iso = kwargs['mode_iso']
-            
-        # If we read WD, isochrones are always BaSTI
-        if names == 'wd':
-            mode_iso = 'BaSTI'
+            mode_label = '-'.join(mode_iso.values())
             
         readpath = os.path.join(T[savedir],''.join((tabname,'_R',str(kwargs['R']),'_',kwargs['mode'],
-                                                    '_',mode_iso,'.csv'))) 
+                                                    '_',mode_label,'.csv'))) 
         tables = Table.read(readpath)
     else:
         tables = [np.loadtxt(tab_sorter(i,p,T,**kwargs)).T for i in names]
@@ -551,13 +549,10 @@ class TabSaver():
         except: 
             savedir = 'poptab'
             tabname = mode_pop_name
-        
-        # Overwrite mode_iso in case of WDs 
-        if (mode_pop_name == 'wd') and (mode_iso != 'BaSTI'):
-            mode_iso = 'BaSTI'
-        
+
+        mode_label = '-'.join(mode_iso.values())
         savepath = os.path.join(self.a.T[savedir],''.join((tabname,'_R',str(R),'_',mode,
-                                                           '_',mode_iso,'.csv')))                                                    
+                                                           '_',mode_label,'.csv')))                                                    
         table.write(savepath,overwrite=True)
                                            
     
@@ -1444,8 +1439,10 @@ class TabSaver():
         """
         
         mode_iso = 'Padova'
+        mode_label = mode_iso
         if 'mode_iso' in self.kwargs:
             mode_iso = self.kwargs['mode_iso']
+            mode_label = '-'.join(mode_iso.values())
         savepath = ''.join(('SSP_R',str(R)))
         if 'vln' in self.kwargs:
             savepath += '_' + self.kwargs['vln'] 
@@ -1463,7 +1460,7 @@ class TabSaver():
                 savepath += '_' + self.kwargs['mode_pop']
             if 'tab' in self.kwargs:
                 savepath += '_tab' 
-            savepath = os.path.join(self.a.T[savedir],''.join((savepath,'_',mode_iso,'.csv'))) 
+            savepath = os.path.join(self.a.T[savedir],''.join((savepath,'_',mode_label,'.csv'))) 
             table.write(savepath,overwrite=True)
         else:
             savepath_d = savepath + '_d'
@@ -1474,8 +1471,8 @@ class TabSaver():
             if 'tab' in self.kwargs:
                 savepath_d += '_tab' 
                 savepath_t += '_tab' 
-            savepath_d = os.path.join(self.a.T[savedir],''.join((savepath_d,'_',mode_iso,'.csv'))) 
-            savepath_t = os.path.join(self.a.T[savedir],''.join((savepath_t,'_',mode_iso,'.csv'))) 
+            savepath_d = os.path.join(self.a.T[savedir],''.join((savepath_d,'_',mode_label,'.csv'))) 
+            savepath_t = os.path.join(self.a.T[savedir],''.join((savepath_t,'_',mode_label,'.csv'))) 
             table[0].write(savepath_d,overwrite=True)
             table[1].write(savepath_t,overwrite=True)
             if mode=='tot':
@@ -1484,7 +1481,7 @@ class TabSaver():
                     savepath_sh += '_' + self.kwargs['mode_pop']
                 if 'tab' in self.kwargs:
                     savepath_sh += '_tab' 
-                savepath_sh = os.path.join(self.a.T[savedir],''.join((savepath_sh,'_',mode_iso,'.csv'))) 
+                savepath_sh = os.path.join(self.a.T[savedir],''.join((savepath_sh,'_',mode_label,'.csv'))) 
                 table[2].write(savepath_sh,overwrite=True)
     
         
@@ -1728,8 +1725,10 @@ class TabSaver():
         """
         
         mode_iso = 'Padova'
+        mode_label = mode_iso
         if 'mode_iso' in self.kwargs:
             mode_iso = self.kwargs['mode_iso']
+            mode_label = '-'.join(mode_iso.values())
         zlim = [0,self.p.zmax]     
         label = self.lb[mode]
         if type(band)!=str:
@@ -1739,12 +1738,12 @@ class TabSaver():
             bands = band
             quantity = ''.join(('mu_',bands,'[mag/arcsec^2]'))
         if mode_geom=='face-on':
-            savepath = ''.join(('MagR_',mode_geom,'_',bands,'_',mode_iso,'_',mode))                             
+            savepath = ''.join(('MagR_',mode_geom,'_',bands,'_',mode_label,'_',mode))                             
         else:
             if 'zlim' in self.kwargs:
                 zlim = self.kwargs['zlim']
             savepath = ''.join(('MagR_',mode_geom,'_z[',str(zlim[0]/1e3),
-                             ',',str(zlim[1]/1e3),']_',bands,'_',mode_iso,'_',mode))                                 
+                             ',',str(zlim[1]/1e3),']_',bands,'_',mode_label,'_',mode))                                 
         if 'mode_pop' in self.kwargs:
             savepath += '_' + self.kwargs['mode_pop']
             label += ', ' + self.Pn[self.kwargs['mode_pop']] 
@@ -1758,7 +1757,7 @@ class TabSaver():
                        np.stack((self.a.R,profiles),axis=0), 
                        header=''.join(('R[kpc], ',quantity,' ',label,' ',mode_geom,' at z = ',
                                        str(zlim).replace(' ', ''),
-                                       ' pc calculated with ',mode_iso,' isochrones')))                                                           
+                                       ' pc calculated with ',mode_label,' isochrones')))                                                           
         
     def input_local_save(self,inp):
         r"""

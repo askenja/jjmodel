@@ -1,76 +1,63 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Mon Jan  3 20:54:52 2022
 
 @author: skevja
 """
 import os 
+import gdown
 import shutil
-import urllib
-import requests
-from .__init__ import localpath
-from .tools import Timer
+from . import localpath
 
 
-
-def isochrone_loader(download_mode,**kwargs):
+def isochrone_loader(iso_type,model):
     """
     Automatically downloads isochrone grids adapted for the JJ model. 
     
-    :param download_mode: Can be 'Padova', 'MIST', or 'BaSTI'. 
+    :param iso_type: Can be 'main' or 'wd'. 
     :type download_mode: str 
-    :param photometry: Optional, photometry of the chosen isochrone library. 
-    Currently, the only option for Padova and MIST is 'multiband' and 
-        for BaSTI - 'gaiaedr3'. More photometric systems will be added in the future. 
-        If this parameter is not specified, all available photometric sets for the chosen 
-        stellar evolution library will be loaded. 
-    :type photometry: str or list[str]
+    :param model: Can be 'Padova', 'MIST', or 'BaSTI' for 'main' and 
+        'LPCODE', 'Montreal', or 'BaSTI' for 'wd'. 
+    :type model: str 
     
     :return: None. 
     """
-    
-    main_link = 'https://heidata.uni-heidelberg.de/api/access/datafile/'+\
-                ':persistentId?persistentId=doi:10.11588/data/ZCXHOE/'
-    
-    iso_folder_ids = {'Padova':{'multiband':'7XCJQP'},
-                      'MIST':{'multiband':'3T8WV4'},
-                      'BaSTI':{'gaiaedr3':'RIGNVU'}
-                     }
-   
-    if ('photometry' in kwargs):
-        download_photometry = [kwargs['photometry']]
-    else:
-        download_photometry = list(iso_folder_ids[download_mode].keys())
-                
-         
-    print('Loading isochrones: ',download_mode,'...')
-    
-    clock = Timer()
-    t1 = clock.start()
-    
+
+    links = {
+        'main':{
+            'Padova':'https://drive.google.com/file/d/1mH2mKAdhQBI5JrgsGVko2G7iH5bZUk-I/view?usp=sharing',
+            'MIST':'https://drive.google.com/file/d/1Pv5OgAf92eOmqYiK0ONprRfKTUSh3_2I/view?usp=sharing',
+            'BaSTI':'https://drive.google.com/file/d/1mnuQrFb1TrYnxGIFl7zj8O_0e4V7H7jv/view?usp=sharing'
+            },
+        'wd':{
+            'LPCODE':'https://drive.google.com/file/d/13rjsl00muTcpex9NENfJuQi-KJDF-mME/view?usp=sharing',
+            'Montreal':'https://drive.google.com/file/d/1PzIWb6FT66-Xd95irmpF4ojwZ-TKSqNK/view?usp=sharing',
+            'BaSTI':'https://drive.google.com/file/d/1lKywK0O3SN_jNttShiC0lD5F4kPmTo5L/view?usp=sharing'
+            }
+        }
+
+    download_link = links[iso_type][model]
+
     iso_folder = os.path.join(localpath,'input','isochrones')
     if not os.path.isdir(iso_folder):
         os.mkdir(iso_folder)
+
+    destination_base = os.path.join(localpath,'input','isochrones',iso_type)
+    destination_folder = os.path.join(destination_base,model)
+    os.makedirs(destination_folder,exist_ok=True)
+                            
+    zip_file = ''.join((destination_folder,'.zip'))
+
+    gdown.download(
+        url=download_link,
+        output=zip_file,
+        quiet=False,
+        resume=True,
+    )
     
-    for k in range(len(download_photometry)):
-        
-        print('\tphotometry: ',download_photometry[k])
-        
-        destination_folder = os.path.join(localpath,'input','isochrones',download_mode)
-                                
-        zip_file = ''.join((destination_folder,'.zip'))
-        
-        urllib.request.urlretrieve(main_link+iso_folder_ids[download_mode][download_photometry[k]],zip_file)
-        print('\tdata downloaded, please wait...')
-        
-        shutil.unpack_archive(zip_file,destination_folder)
-        print('\tarchive unpacked')
-        
-        os.remove(zip_file)
-        print('\tzip file removed\n')
-        
-        print(clock.stop(t1))
-        t1 = clock.start()
-
-
+    print('Unpacking archive... ',end='')
+    
+    shutil.unpack_archive(zip_file,destination_base)
+    print('ok')
+    
+    os.remove(zip_file)
+    print('Done')

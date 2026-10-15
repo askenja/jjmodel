@@ -97,9 +97,9 @@ class Plotting():
                               'GBPbr_DR2':[2,[-10,20],r'$\mathrm{GBPbr\_DR2, \ mag}$'],
                               'GBPft_DR2':[2,[-10,20],r'$\mathrm{GBPft\_DR2, \ mag}$'],
                               'GRP_DR2':[2,[-10,20],r'$\mathrm{GRP\_DR2, \ mag}$'],
-                              'G_EDR3':[2,[-10,20],r'$\mathrm{G\_EDR3, \ mag}$'],
-                              'GBP_EDR3':[2,[-10,20],r'$\mathrm{GBP\_EDR3, \ mag}$'],
-                              'GRP_EDR3':[2,[-10,20],r'$\mathrm{GRP\_EDR3, \ mag}$']}                             
+                              'G_Gaia_DR3':[2,[-10,20],r'$\mathrm{G\_DR3, \ mag}$'],
+                              'G_BP_Gaia_DR3':[2,[-10,20],r'$\mathrm{GBP\_DR3, \ mag}$'],
+                              'G_RP_Gaia_DR3':[2,[-10,20],r'$\mathrm{GRP\_DR3, \ mag}$']}                             
         label_size = 12
         mpl.rcParams['xtick.labelsize'] = label_size 
         mpl.rcParams['ytick.labelsize'] = label_size 
@@ -182,8 +182,8 @@ class Plotting():
                         ar_maxs_clean.append(ar_maxs[i])
             minmin = np.amin(ar_mins_clean)
             maxmax = np.amax(ar_maxs_clean)
-            ymin = 10**np.int(np.log10(minmin)//1)
-            ymax = 10**np.int(np.log10(maxmax)//1 + 1)
+            ymin = 10**int(np.log10(minmin)//1)
+            ymax = 10**int(np.log10(maxmax)//1 + 1)
             if ymin < ymind: 
                 ymin = ymind
         except: 
@@ -1236,7 +1236,7 @@ class Plotting():
                 dy = (np.nanmax(rz_grid) - np.nanmin(rz_grid))/4
                 interval_decimal_points = 2 
             ycmin, ycmax = self._dynamic_ylim_1d_lin_(rz_grid,self.cbar_settings[quantity][1],dy)
-            ybins = np.arange(ycmin,ycmax+dy,dy,dtype=np.float)   
+            ybins = np.arange(ycmin,ycmax+dy,dy,dtype=float)   
             ybins = [round(i,interval_decimal_points+3) for i in ybins]
             test = True
             for k in range(len(ybins)):
@@ -1918,13 +1918,13 @@ class Plotting():
         """
         
         this_function = inspect.stack()[0][3]
-        inpcheck_kwargs(kwargs,['save','save_format','close','cbar','mode_pop',
-                                'cbar_bins','sigma','between','number','tab','mode_iso'],this_function)
+        #inpcheck_kwargs(kwargs,['save','save_format','close','cbar','mode_pop',
+        #                        'cbar_bins','sigma','between','number','tab','mode_iso'],this_function)
         ln, mode_comp = inpcheck_mode_comp(mode_comp,['d','t','sh','dt','tot'],
                                            'radial mono-age profiles',this_function)
         ages = inpcheck_age(ages,this_function)
         zlim = inpcheck_height(zlim,self.p,this_function)
-        inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
+        #inpcheck_kwargs_compatibility(kwargs,this_function,plt_only=True)
         if 'mode_pop' in kwargs:
             ln += r'$\mathrm{\ (}$' + self.pops[kwargs['mode_pop']] + r'$\mathrm{)}$'
         if 'tab' in kwargs:
@@ -1947,6 +1947,7 @@ class Plotting():
             intervals = np.array(ages)
                                        
         kwargs_calc = reduce_kwargs(kwargs,['save','sigma','between','tab','mode_pop','number','mode_iso'])
+        #kwargs_calc = kwargs
         rhor = rhor_monoage(mode_comp,zlim,ages,self.p,self.a,**kwargs_calc)
         
         ylabel = self.axts['rho']
@@ -4576,7 +4577,7 @@ class PlotBlocks():
     Class to plot and save many figures automatically. 
     """
     
-    def __init__(self,p,a,inp):
+    def __init__(self,p,a,inp,**kwargs):
         r"""
         Class is initialized with tuples p and a and dictionary ``inp``. 
         
@@ -4592,7 +4593,9 @@ class PlotBlocks():
         self.modes_full = ['d','t','sh','dt','tot']
         self.modes_disk = ['d','t','dt']
         self.modes_dtot = ['d','dt','tot']
-        self.kwargs = {'close':True,'save':True}
+        self.kwargs = kwargs
+        self.kwargs['close'] = True
+        self.kwargs['save'] = True
         self.pops = ['a','f','rc','gdw','kdw','wd']
         
         
@@ -4651,7 +4654,7 @@ class PlotBlocks():
         if not inpcheck_iskwargtype(kwgs,'print_time',False,bool,this_function):
             timer = Timer()
             t_start = timer.start()
-        
+
         # In any case
         self.P.rhoz_plt(self.p.Rsun,**self.kwargs)    
         self.P.rhoz_plt(self.p.Rsun,normalized=True,**self.kwargs)
@@ -4990,14 +4993,14 @@ class PlotBlocks():
         self.P.fw_hist_plt(modes_disk,self.p.Rsun,zlim,mode_pop=self.pops,number=True,**self.kwargs)
         
         # Hess diagrams
-        self.P.hess_simple_plt(modes_disk,'local_sphere',['G_EDR3','G_EDR3','GRP_EDR3'],
+        self.P.hess_simple_plt(modes_disk,'local_sphere',['G_Gaia_DR3','G_Gaia_DR3','G_RP_Gaia_DR3'],
                                [[-0.25,1.5],[-5,15]],[0.005,0.1],smooth=[0.05,0.3],r_minmax=[0,rmax],
                                **self.kwargs)
-        self.P.hess_simple_plt(modes_disk,'local_cylinder',['G_EDR3','G_EDR3','GRP_EDR3'],
+        self.P.hess_simple_plt(modes_disk,'local_cylinder',['G_Gaia_DR3','G_Gaia_DR3','G_RP_Gaia_DR3'],
                                [[-0.25,1.5],[-5,15]],[0.005,0.1],smooth=[0.05,0.3],r_minmax=[0,rmax],
                                zlim=zlim,**self.kwargs)
         if self.p.run_mode!=0:
-            self.P.hess_simple_plt(modes_disk,'rphiz_box',['G_EDR3','G_EDR3','GRP_EDR3'],
+            self.P.hess_simple_plt(modes_disk,'rphiz_box',['G_Gaia_DR3','G_Gaia_DR3','G_RP_Gaia_DR3'],
                                    [[-0.25,1.5],[-5,15]],[0.005,0.1],smooth=[0.05,0.3],
                                    R_minmax=[self.p.Rsun-self.p.dR/2,self.p.Rsun+self.p.dR/2],
                                    zlim=zlim,dphi=360,**self.kwargs)

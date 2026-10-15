@@ -25,7 +25,7 @@ nprocess	4			Number of CPU cores to be used
 # ===================================================================================================
 # Solar coordinates and velocity
 # ===================================================================================================
-Rsun		8.17	kpc		Solar Galactocentric distance 
+Rsun		8.275	kpc		Solar Galactocentric distance 
 zsun		20	pc		Solar height above the Galactic plane 
 Vsun		12.5	km s-1		V-component of the Solar peculiar velocity
 
@@ -37,7 +37,7 @@ Rmin		4	kpc		Min Galactocentric distance
 Rmax		14	kpc		Max Galactocentric distance 
 dR		1	kpc		Radial resolution
 zmax		2000	pc		Max height z 
-dz		2	pc		Vertical resolution 
+dz		5	pc		Vertical resolution 
 
 Rd		2.5	kpc		Thin-disk radial scale length
 Rt		2.0	kpc		Thick-disk radial scale length
@@ -54,7 +54,7 @@ Mb		0.8e10	Msun		Mass of the bulge
 # ===================================================================================================
 # Local normalizations (surface densities)   
 # ===================================================================================================
-sigmad		29.3	Msun pc-2	Thin-disk 
+sigmad		31.2	Msun pc-2	Thin-disk 
 sigmat		4.9	Msun pc-2	Thick-disk 
 sigmag1		1.7	Msun pc-2	Molecular gas 
 sigmag2		10.9	Msun pc-2	Atomic gas 
@@ -69,8 +69,8 @@ sigmash		0.47	Msun pc-2	Stellar halo
 # ---------------------------------------------------------------------------------------------------
 td1 		0 	Gyr		Start time of SF
 td2		7.8	Gyr		Parameter controlling SFR shape and peak position
-dzeta		0.83	dim		Same as td2 
-eta		5.6	dim		Same as td2
+dzeta		0.58	dim		Same as td2 
+eta		5.02	dim		Same as td2
 pkey		1			0 = default SFR, 1 = SFR + peaks with special kinematics, 
 #					2 = SFR + peaks (fill sfrd_peaks_parameters)
 k_td2		1.5	dim		Power indices that define radial change of td2 
@@ -89,12 +89,12 @@ beta		3.5	Gyr-1		Same as gamma
 # IMF
 # ===================================================================================================
 imfkey		0			0=4BPL, 1=custom
-a0		1.31	dim		IMF slope for mass < m1
-a1		1.5	dim		IMF slope for m1 <= mass < m2
-a2		2.88	dim		IMF slope for m2 <= mass < m3 
+a0		1.04	dim		IMF slope for mass < m1
+a1		1.61	dim		IMF slope for m1 <= mass < m2
+a2		2.94	dim		IMF slope for m2 <= mass < m3 
 a3		2.28	dim		IMF slope for mass >= m3 
-m0		0.49	Msun		Break point between the slopes a0 and a1
-m1		1.43	Msun		Break point between the slopes a1 and a2
+m0		0.5	Msun		Break point between the slopes a0 and a1
+m1		1.5	Msun		Break point between the slopes a1 and a2
 m2		6.0	Msun		Break point between the slopes a2 and a3
 
 

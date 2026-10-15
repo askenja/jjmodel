@@ -50,21 +50,22 @@ class GetPopulations():
         """
         
         this_function = inspect.stack()[0][3]
-        ch = CheckIsoInput()
-        ch.check_mode_isochrone(mode_iso,this_function)
+        #ch = CheckIsoInput()
+        #ch.check_mode_isochrone(mode_iso,this_function)
         self.p, self.a = p, a
         self.mode_iso = mode_iso
+        self.mode_label = '-'.join(self.mode_iso.values())
         if R!=p.Rsun:
             self.R = inpcheck_radius(R,self.p,this_function)
         else:
             self.R = R
         
         tab_d = Table.read(os.path.join(a.T['poptab'],
-                                        ''.join(('SSP_R',str(self.R),'_d_',mode_iso,'.csv'))))
+                                        ''.join(('SSP_R',str(self.R),'_d_',self.mode_label,'.csv'))))
         tab_t = Table.read(os.path.join(a.T['poptab'],
-                                        ''.join(('SSP_R',str(self.R),'_t_',mode_iso,'.csv'))))
+                                        ''.join(('SSP_R',str(self.R),'_t_',self.mode_label,'.csv'))))
         tab_sh = Table.read(os.path.join(a.T['poptab'],
-                                         ''.join(('SSP_R',str(self.R),'_sh_',mode_iso,'.csv'))))
+                                         ''.join(('SSP_R',str(self.R),'_sh_',self.mode_label,'.csv'))))
         self.tables = {'d':tab_d,'t':tab_t,'sh':tab_sh}
         
         
@@ -183,6 +184,13 @@ class GetPopulations():
         inpcheck_kwargs_compatibility(kwargs,this_function)
                     
         rc0 = self.rc_simple(mode_comp)
+
+        if len(rc0['logT']) == 0:
+            ts = TabSaver(self.p,self.a,**kwargs)
+            ts.poptab_save(rc0,mode_comp,self.mode_iso,self.R,'rc')
+            print('\t','{:<3}'.format(mode_comp),': RC sample is empty.')
+            return rc0
+
         axis0 = [0,0,1]
         if mode_comp=='d':
             theta0 = np.radians(25)
@@ -371,7 +379,9 @@ class GetPopulations():
         inpcheck_kwargs_compatibility(kwargs,this_function)
         
         tab = self.tables[mode_comp]
-        ast = tab[np.logical_and.reduce([tab['logT'] > np.log10(7500),tab['logT'] < np.log10(10000)])]
+        ast = tab[np.logical_and.reduce([tab['logT'] > np.log10(7500),
+                                         tab['logT'] < np.log10(10000),
+                                         tab['logg'] < 7])]
         
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):          
             #tabname = tab_sorter('atab',self.p,self.a.T,R=self.R,mode=mode_comp,mode_pop='a') 
@@ -402,7 +412,10 @@ class GetPopulations():
         inpcheck_kwargs_compatibility(kwargs,this_function)
         
         tab = self.tables[mode_comp]
-        fst = tab[np.logical_and.reduce([tab['logT'] > np.log10(6300),tab['logT'] < np.log10(7500)])]
+        fst = tab[np.logical_and.reduce(
+            [tab['logT'] > np.log10(6300),
+             tab['logT'] < np.log10(7500),
+             tab['logg'] < 7])] # not to mix with WD!
                                          
         if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):  
             #tabname = tab_sorter('ftab',self.p,self.a.T,R=self.R,mode=mode_comp,mode_pop='f') 
@@ -1229,7 +1242,7 @@ def _rhomet_d_(R,mets,p,a,this_function,**kwargs):
         AMR = tab_reader(['AMRd'],p,a.T)[0][indr]
     indt = _ind_amr2t_(AMR,mets)
 
-    if indt.size > 1: # indt!=[] and len(indt)>1:
+    if indt.size > 1:
         if R==p.Rsun:
             rho_zd = _rhoz_d_(p,a,R=R,**kwargs)
         else:
@@ -1251,7 +1264,8 @@ def _rhomet_t_(R,mets,p,a,this_function,**kwargs):
     nage = len(mets)
     AMR = tab_reader(['AMRt'],p,a.T)[0][1]
     indt = _ind_amr2t_(AMR,mets)
-    if indt!=[] and len(indt)>1:
+   
+    if len(indt) > 1:
         if R==p.Rsun:
             rho_zt = _rhoz_t_(p,a,R=R,**kwargs)
         else:
@@ -1305,7 +1319,7 @@ def _rhometz_d_(zlim,mets,p,a,this_function,**kwargs):
         
     for i in range(a.Rbins):
         indt = _ind_amr2t_(AMR[i+1],mets)
-        if indt!=[] and len(indt)>1:
+        if len(indt) > 1:
             if inpcheck_iskwargtype(kwargs,'local',False,bool,inspect.stack()[0][3]):
                 if tables:
                     rho_zd = _rhoz_d_(p,a,R=a.R[i],zlim=zlim,**kwargs,tab=tabs[i])[0]
@@ -1336,7 +1350,7 @@ def _rhometz_t_(zlim,mets,p,a,this_function,**kwargs):
         del kwargs['tab']
         tables = True
         
-    if indt!=[] and len(indt)>1:
+    if len(indt) > 1:
         for i in range(a.Rbins):
             if inpcheck_iskwargtype(kwargs,'local',False,bool,inspect.stack()[0][3]):
                 if tables:
@@ -2564,13 +2578,13 @@ def rhor_monoage(mode_comp,zlim,ages,p,a,**kwargs):
     """
     
     this_function = inspect.stack()[0][3]
-    inpcheck_kwargs(kwargs,['save','sigma','between','tab','mode_pop',
-                            'number','mode_iso','indz'],this_function)
+    #inpcheck_kwargs(kwargs,['save','sigma','between','tab','mode_pop',
+    #                        'number','mode_iso','indz'],this_function)
     ln, mode_comp = inpcheck_mode_comp(mode_comp,['d','t','sh','dt','tot'],
                                        'radial mono-age profiles',this_function)
     ages = inpcheck_age(ages,this_function)
     zlim = inpcheck_height(zlim,p,this_function)
-    inpcheck_kwargs_compatibility(kwargs,this_function)
+    #inpcheck_kwargs_compatibility(kwargs,this_function)
     
     if inpcheck_iskwargtype(kwargs,'between',True,bool,this_function):
         nage = int(len(ages) - 1)
@@ -4236,7 +4250,14 @@ def pops_in_volume(mode_comp,R,volume,p,a,**kwargs):
             wsh = 0.5/Hsh[1][indr-1]*np.sum(np.exp(-Fi[indr][indz1:indz2]/KM**2/p.sigsh**2)*volume) 
     
     if mode_comp=='d' or mode_comp=='dt' or mode_comp=='tot':
-        indt_tab = np.array(np.subtract(tp,tabd['age'])//tr,dtype=int)
+        #indt_tab = np.array(np.subtract(tp,tabd['age'])//tr,dtype=int)
+
+        indt = np.subtract(tp, tabd['age']) // tr
+        good = np.isfinite(indt)
+
+        indt_tab = indt[good].astype(int)
+        tabd = tabd[good]
+
         if p.pkey==1:
             sum_Nzd = np.add(tabd['N']*wd0[indt_tab],tabd['N']*wdp[indt_tab])
         else:
@@ -4857,16 +4878,20 @@ def hess_simple(mode_comp,mode_geom,bands,mag_range,mag_step,p,a,**kwargs):
     if 'zlim' in kwargs:
         zlim = kwargs['zlim']
     mode_iso = 'Padova'
+    mode_label = mode_iso
     if 'mode_iso' in kwargs:
         mode_iso = kwargs['mode_iso']
-    
+        mode_label = '-'.join(mode_iso.values())
+
     V = Volume(p,a)
     if mode_geom=='local_sphere':
         if p.run_mode==0:
             volume, vln = V.local_sphere(kwargs['r_minmax'][0],kwargs['r_minmax'][1])
+            #print(np.sum(volume))
         else:
             volume, indrs, vln = V.local_sphere(kwargs['r_minmax'][0],kwargs['r_minmax'][1])
-            
+            #print(np.sum(np.sum(volume)))
+
     if mode_geom=='local_cylinder':
         if p.run_mode==0:
             volume, vln = V.local_cylinder(kwargs['r_minmax'][0],kwargs['r_minmax'][1],
@@ -4879,25 +4904,27 @@ def hess_simple(mode_comp,mode_geom,bands,mag_range,mag_step,p,a,**kwargs):
                                     zlim[0],zlim[1])
     
     if p.run_mode==0:
+        
         if mode_comp=='d' or mode_comp=='dt' or mode_comp=='tot':
             tabd = Table.read(os.path.join(a.T['poptab'],
-                              ''.join(('SSP_R',str(p.Rsun),'_d_',mode_iso,'.csv'))))
+                              ''.join(('SSP_R',str(p.Rsun),'_d_',mode_label,'.csv'))))
         if mode_comp=='t' or mode_comp=='dt' or mode_comp=='tot':
             tabt = Table.read(os.path.join(a.T['poptab'],
-                             ''.join(('SSP_R',str(p.Rsun),'_t_',mode_iso,'.csv'))))
+                             ''.join(('SSP_R',str(p.Rsun),'_t_',mode_label,'.csv'))))
         if mode_comp=='sh' or mode_comp=='tot':
             tabsh = Table.read(os.path.join(a.T['poptab'],
-                              ''.join(('SSP_R',str(p.Rsun),'_sh_',mode_iso,'.csv'))))
+                              ''.join(('SSP_R',str(p.Rsun),'_sh_',mode_label,'.csv'))))
     else:
+        print(f'Volume spanning though these R-bins:{a.R[indrs]}')
         if mode_comp=='d' or mode_comp=='dt' or mode_comp=='tot':
             tabd = [Table.read(os.path.join(a.T['poptab'],
-                      ''.join(('SSP_R',str(i),'_d_',mode_iso,'.csv')))) for i in a.R[indrs]]
+                      ''.join(('SSP_R',str(i),'_d_',mode_label,'.csv')))) for i in a.R[indrs]]
         if mode_comp=='t' or mode_comp=='dt' or mode_comp=='tot':
             tabt = [Table.read(os.path.join(a.T['poptab'],
-                      ''.join(('SSP_R',str(i),'_t_',mode_iso,'.csv')))) for i in a.R[indrs]]
+                      ''.join(('SSP_R',str(i),'_t_',mode_label,'.csv')))) for i in a.R[indrs]]
         if mode_comp=='sh' or mode_comp=='tot':
             tabsh = [Table.read(os.path.join(a.T['poptab'],
-                      ''.join(('SSP_R',str(i),'_sh_',mode_iso,'.csv'))))  for i in a.R[indrs]]        
+                      ''.join(('SSP_R',str(i),'_sh_',mode_label,'.csv'))))  for i in a.R[indrs]]        
 
     sum_Nz, mag = [], [[], [], []]
     kwargs_calc = reduce_kwargs(kwargs,['mode_pop','mode_iso'])
