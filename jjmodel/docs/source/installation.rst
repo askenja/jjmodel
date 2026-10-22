@@ -21,14 +21,14 @@ To install a specific version (see releases on github), use the corresponding ta
 
 Note that **jjmodel** requires python 3.8 or higher. Also, it depends on the following packages: 
 
-- `Astropy (v>=4.2) <http://www.astropy.org/>`_
+- `astropy (v>=4.2) <http://www.astropy.org/>`_
 - `fast_histogram (v>=0.9) <https://github.com/astrofrog/fast-histogram>`_
 - gdown (v=6.4.2)
 - healpy
 - `matplotlib (v>=3.2.1) <http://matplotlib.sourceforge.net/>`_
-- `Numpy (v>=1.18.1) <https://numpy.org/>`_
-- Pandas
-- `SciPy (v>=1.5.0) <http://www.scipy.org/>`_
+- `numpy (v>=1.18.1) <https://numpy.org/>`_
+- pandas
+- `scipy (v>=1.5.0) <http://www.scipy.org/>`_
 
 All of these packages will be automatically installed during the **jjmodel** installation process. 
 

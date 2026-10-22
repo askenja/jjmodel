@@ -20,11 +20,17 @@ To install the **jjmodel** code as *anaconda* package, do in terminal:
 To install a specific version (see releases on github), use the corresponding tag instead of *main*, e.g. *v.1.0.1*. 
 
 Note that **jjmodel** requires python 3.8 or higher. Also, it depends on the following packages: 
-`Numpy (v>=1.18.1) <https://numpy.org/>`_, `SciPy (v>=1.5.0) <http://www.scipy.org/>`_, 
-`Astropy (v>=4.2) <http://www.astropy.org/>`_, `matplotlib (v>=3.2.1) <http://matplotlib.sourceforge.net/>`_,
-gdown (v=6.4.2), and `fast_histogram (v>=0.9) <https://github.com/astrofrog/fast-histogram>`_. Also, consider installing 
-`healpy (v>=1.15.0) <https://healpy.readthedocs.io/en/latest/>`_ which is good for plotting sky maps 
-(used in one of the tutorials). All of these packages are pip-installable.
+
+- `astropy (v>=4.2) <http://www.astropy.org/>`_
+- `fast_histogram (v>=0.9) <https://github.com/astrofrog/fast-histogram>`_
+- gdown (v=6.4.2)
+- healpy
+- `matplotlib (v>=3.2.1) <http://matplotlib.sourceforge.net/>`_
+- `numpy (v>=1.18.1) <https://numpy.org/>`_
+- pandas
+- `scipy (v>=1.5.0) <http://www.scipy.org/>`_
+
+All of these packages will be automatically installed during the **jjmodel** installation process. 
 
 
 Installation without admin rights
