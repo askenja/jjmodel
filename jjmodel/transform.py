@@ -34,8 +34,8 @@ class XVTrans():
             - ``'eRsun'``: Uncertainty of the Solar radius, kpc
             - ``'eZsun'``: Uncertainty of the Solar distance from the Galactic plane, pc
             - ``'eUsun'``, ``'eVsun'``, ``'eWsun'``: Uncertainties of the Solar peculiar velocity components, :math:`\mathrm{km \ s^{-1}}`
-            - ``'pm_sgrA'``: Sgr A* proper motion, :math:`\mathrm{mas \ yr^{-1}}`
-            - ``'epm_sgrA'``: Uncertainty of Sgr A* proper motion, :math:`\mathrm{mas \ yr^{-1}}`.
+            - ``'pm_sgrA'``: Sgr A* proper motion, r':math:`\mathrm{mas \ yr^{-1}}`'
+            - ``'epm_sgrA'``: Uncertainty of Sgr A* proper motion, r':math:`\mathrm{mas \ yr^{-1}}`'.
               
         :type gframe: dict 
 
@@ -161,9 +161,9 @@ class XVTrans():
             - ``'dec'``: declination, deg
             - ``'dpc'`` or ``'dkpc'``: heliocentric distance, pc or kpc 
             - ``'parallax'``: parallax, can be given instead of the distance column, mas
-            - ``'pmra'``: proper motion in right ascention, :math:`\mathrm{mas \ yr^{-1}}`
-            - ``'pmdec'``: proper motion in right declination, :math:`\mathrm{mas \ yr^{-1}}`
-            - ``'vr'``: radial velocity, :math:`\mathrm{km \ s^{-1}}`. 
+            - ``'pmra'``: proper motion in right ascention, r':math:`\mathrm{mas \ yr^{-1}}`'
+            - ``'pmdec'``: proper motion in right declination, r':math:`\mathrm{mas \ yr^{-1}}`'
+            - ``'vr'``: radial velocity, r':math:`\mathrm{km \ s^{-1}}`'. 
             
         :type names: dict
         
@@ -303,16 +303,16 @@ class XVTrans():
             - ``'dec'``: declination, deg
             - ``'dpc'`` or ``'dkpc'``: heliocentric distance, pc or kpc 
             - ``'parallax'``: parallax, can be given instead of the distance column, mas
-            - ``'pmra'``: proper motion in right ascention, :math:`\mathrm{mas \ yr^{-1}}`
-            - ``'pmdec'``: proper motion in right declination, :math:`\mathrm{mas \ yr^{-1}}`
-            - ``'vr'``: radial velocity, :math:`\mathrm{km \ s^{-1}}`
+            - ``'pmra'``: proper motion in right ascention, r':math:`\mathrm{mas \ yr^{-1}}`'
+            - ``'pmdec'``: proper motion in right declination, r':math:`\mathrm{mas \ yr^{-1}}`'
+            - ``'vr'``: radial velocity, r':math:`\mathrm{km \ s^{-1}}`'
             - ``'era'``: error in right ascention, deg 
             - ``'edec'``: error in declination, deg
             - ``'edpc'`` or ``'edkpc'``: error in heliocentric distance, pc or kpc 
             - ``'eparallax'``: parallax error, can be given instead of the distance error column, mas
-            - ``'epmra'``: error in proper motion in right ascention, :math:`\mathrm{mas \ yr^{-1}}`
-            - ``'epmdec'``: error in proper motion in right declination, :math:`\mathrm{mas \ yr^{-1}}`
-            - ``'evr'``: error in radial velocity, :math:`\mathrm{km \ s^{-1}}`.
+            - ``'epmra'``: error in proper motion in right ascention, r':math:`\mathrm{mas \ yr^{-1}}`'
+            - ``'epmdec'``: error in proper motion in right declination, r':math:`\mathrm{mas \ yr^{-1}}`'
+            - ``'evr'``: error in radial velocity, r':math:`\mathrm{km \ s^{-1}}`'.
             
         :type names: dict
         

@@ -16,12 +16,13 @@ To install the **jjmodel** code as *anaconda* package, do in terminal:
 .. code-block:: bash
 
    $ pip install git+https://github.com/askenja/jjmodel.git@main
+   
+To install a specific version (see releases on github), use the corresponding tag instead of *main*, e.g. *v.1.0.1*. 
 
-Note that **jjmodel** requires python 3.8. Also, it depends on the following packages: 
-`Numpy (v1.18.1) <https://numpy.org/>`_, `SciPy (v1.5.0) <http://www.scipy.org/>`_, 
-`Astropy (v4.2) <http://www.astropy.org/>`_, `matplotlib (v3.2.1) <http://matplotlib.sourceforge.net/>`_, 
-and `fast_histogram (v0.9) <https://github.com/astrofrog/fast-histogram>`_. Also, consider installing 
-`healpy (v1.15.0) <https://healpy.readthedocs.io/en/latest/>`_ which is good for plotting sky maps 
+Note that **jjmodel** requires python 3.8 of higher. Also, it depends on the following packages: 
+`Numpy (v>=1.18.1) <https://numpy.org/>`_, `SciPy (v>=1.5.0) <http://www.scipy.org/>`_, 
+`Astropy (v>=4.2) <http://www.astropy.org/>`_, `matplotlib (v>=3.2.1) <http://matplotlib.sourceforge.net/>`_, and `fast_histogram (v>=0.9) <https://github.com/astrofrog/fast-histogram>`_. Also, consider installing 
+`healpy (v>=1.15.0) <https://healpy.readthedocs.io/en/latest/>`_ which is good for plotting sky maps 
 (used in one of the tutorials). All of these packages are pip-installable.
 
 
@@ -48,11 +49,18 @@ Getting isochrones
 -------------------------
 
 In order to work with mock stellar populations, the **jjmodel** code needs an isochrone grid. 
-We provide three alternative isochrone packages compatible with the JJ model: 
 
+We provide the following isochrone packages compatible with the JJ model. 
+
+I. Stellar volution up to TP-AGB phase:
 - `PARSEC (Padova) <http://stev.oapd.inaf.it/cgi-bin/cmd>`_
 - `MIST <https://waps.cfa.harvard.edu/MIST/interp_isos.html>`_
 - `BaSTI <http://basti-iac.oa-abruzzo.inaf.it/isocs.html>`_
+
+II. WD isochrones (generated with initial-final mass relation from Cummings et al. 2018): 
+- `LPCODE <https://evolgroup.fcaglp.unlp.edu.ar/modelos.html>`_
+- `BaSTI <http://basti-iac.oa-abruzzo.inaf.it/wdmodels.html>`_
+- `Montréal <http://www.astro.umontreal.ca/~bergeron/CoolingModels>`_
 
 After you have installed **jjmodel** to your *anaconda*, you can automatically download any 
 of the provided isochrone sets (or all of them). Run the following code in a python script or jupyther notebook: 
@@ -62,16 +70,14 @@ of the provided isochrone sets (or all of them). Run the following code in a pyt
    import jjmodel as jjm
    from jjmodel.iso_loader import isochrone_loader 
    
-   isochrone_loader('Padova')
-   isochrone_loader('MIST')
-   isochrone_loader('BaSTI')
+   isochrone_loader(iso_type='main',model='Padova') # or 'MIST', 'BaSTI'
+   isochrone_loader(iso_type='wd',model='LPCODE') # or 'BaSTI', 'Montreal'
    
 This will save and unpack all three isochrone grids to your local **jjmodel** folder, e.g. 
-``/home/user/anaconda2/envs/py3/lib/python3.8/site-packages/jjmodel/input/isochrones`` 
+``/home/user/anaconda2/envs/py3/lib/python_version/site-packages/jjmodel/input/isochrones`` 
 (you can use command ``jjm.__file__`` to see the path to the **jjmodel** code on your computer). 
 
-Note that you may need quite a lot of space for the isochrones (1.7 Gb for Padova, 12.2 Gb for MIST, 
-and 5.7 Gb for BaSTI), and download can take a while. 
+Note that some isochonre grids are heavy (5-8 Gb), so you need to have enough space. Also, downloading process can take a while. 
 
 After you have downloaded isochrones, the installation is complete, and you can start using the model 
 (e.g. see :doc:`tutorials`). 

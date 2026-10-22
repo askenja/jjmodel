@@ -8,13 +8,9 @@
 Stellar populations 
 ======================================
 
-.. autoclass:: jjmodel.populations.ColumnsIso
+.. autoclass:: jjmodel.populations.StellarAssemblies
    :members: 
  
-.. autofunction:: jjmodel.populations.stellar_assemblies_iso
-   
-.. autofunction:: jjmodel.populations.stellar_assemblies_r
-   
 .. autoclass:: jjmodel.analysis.GetPopulations
    :members: 
 

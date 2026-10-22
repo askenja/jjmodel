@@ -7,7 +7,10 @@
 Acknowledgements
 ****************
 
-If you use the **jjmodel** code in your work, please cite our paper describing the latest version of the JJ model - `Sysoliatina and Just (2022) in prep (link will be added soon). 
+If you use the **jjmodel** code in your work, please cite our paper describing the generalised version of the JJ model - `Sysoliatina and Just (2022), Towards a fully consistent Milky Way disk model. V. The disk model for 4-14 kpc <https://ui.adsabs.harvard.edu/abs/2022A%26A...666A.130S/abstract>`. 
+
+If you use the JJ model to simulate white dwarf population, please cite our latest work `Sysoliatina and Vani (in prep), The full Gaia colour--magnitude diagram with white dwarfs reveals a declining Milky Way star formation history` (link will be added soon).
+
 
 Optionally, cite some of our other papers:
 
@@ -21,11 +24,17 @@ Optionally, cite some of our other papers:
 
 - `Sysoliatina and Just (2021), Towards a fully consistent Milky Way disk model -- IV. The impact of Gaia DR2 and APOGEE <https://ui.adsabs.harvard.edu/abs/2021arXiv210209311S/abstract>`_
 
-If you used **jjmodel** facilities for the stellar population synthesis with isochrones, we also kindly ask you to cite papers of the corresponding research groups:
+If you used **jjmodel** facilities for the stellar population synthesis with isochrones, we also kindly ask you to cite papers of the corresponding research groups.
 
+Isochrones for evolutionary stages up to TP-AGB:
 1. PARSEC (Padova): `Bressan et al. (2012) <https://ui.adsabs.harvard.edu/abs/2012MNRAS.427..127B/abstract>`_, optionally `Marigo et al. (2013) <https://ui.adsabs.harvard.edu/abs/2013MNRAS.434..488M/abstract>`_, `Marigo et al. (2017) <https://ui.adsabs.harvard.edu/abs/2017ApJ...835...77M/abstract>`_.
 2. MIST: `Dotter (2016) <https://ui.adsabs.harvard.edu/abs/2016ApJS..222....8D/abstract>`_ and `Choi et al. (2016) <https://ui.adsabs.harvard.edu/abs/2016ApJ...823..102C/abstract>`_, optionally some of `Paxton et al. (2011) <https://ui.adsabs.harvard.edu/abs/2011ApJS..192....3P/abstract>`_, `Paxton et al. (2013) <https://ui.adsabs.harvard.edu/abs/2013ApJS..208....4P/abstract>`_, `Paxton et al. (2015) <https://ui.adsabs.harvard.edu/abs/2015ApJS..220...15P/abstract>`_, `Paxton et al. (2018) <https://ui.adsabs.harvard.edu/abs/2018ApJS..234...34P/abstract>`_. 
 3. BaSTI: `Hidalgo et al. (2018) <https://ui.adsabs.harvard.edu/abs/2018ApJ...856..125H/abstract>`_. 
+
+WD isochrones: 
+1. LPCODE: `Althaus et al. (2010) <https://ui.adsabs.harvard.edu/abs/2010A%26ARv..18..471A/abstract>`_, `Camisassa et al. (2019) <https://ui.adsabs.harvard.edu/abs/2019A%26A...625A..87C/abstract>`_, `Camisassa et al. (2021) <https://ui.adsabs.harvard.edu/abs/2021A%26A...649L...7C/abstract>`_.
+2. BaSTI: `Salaris et al. (2010) <https://ui.adsabs.harvard.edu/abs/2010ApJ...716.1241S/abstract>`_, `Salaris et al. (2022) <https://ui.adsabs.harvard.edu/abs/2022MNRAS.509.5197S/abstract>`_. 
+3. Montréal: `Bédard et al. (2020) <https://ui.adsabs.harvard.edu/abs/2020ApJ...901...93B/abstract>`_.
 
 If you use our separately published isochrone sets not in the framework of the JJ model, please refer to them as following: 
 

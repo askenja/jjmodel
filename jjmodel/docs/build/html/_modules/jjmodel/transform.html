@@ -1,25 +1,24 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>jjmodel.transform &#8212; jjmodel 0.1 documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -38,21 +37,25 @@
 
 <span class="sd">@author: skevja</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
-<span class="kn">import</span> <span class="nn">astropy.coordinates</span> <span class="k">as</span> <span class="nn">coord</span>
-<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy.units</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">u</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy.coordinates</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">coord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
 
 
-<div class="viewcode-block" id="XVTrans"><a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans">[docs]</a><span class="k">class</span> <span class="nc">XVTrans</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="XVTrans">
+<a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">XVTrans</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for coordinate transformation and calculation of Galactocentric distances and velocities </span>
 <span class="sd">    from astrometric parameters and radial velocities. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-<div class="viewcode-block" id="XVTrans.__init__"><a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filename</span><span class="p">,</span><span class="n">fileformat</span><span class="p">,</span><span class="n">gframe</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="XVTrans.__init__">
+<a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filename</span><span class="p">,</span><span class="n">fileformat</span><span class="p">,</span><span class="n">gframe</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialization of the class instance is performed with reading the data table </span>
 <span class="sd">        and specifying parameters of the Galactic coordinate system. </span>
 <span class="sd">        </span>
@@ -68,8 +71,8 @@
 <span class="sd">            - ``&#39;eRsun&#39;``: Uncertainty of the Solar radius, kpc</span>
 <span class="sd">            - ``&#39;eZsun&#39;``: Uncertainty of the Solar distance from the Galactic plane, pc</span>
 <span class="sd">            - ``&#39;eUsun&#39;``, ``&#39;eVsun&#39;``, ``&#39;eWsun&#39;``: Uncertainties of the Solar peculiar velocity components, :math:`\mathrm{km \ s^{-1}}`</span>
-<span class="sd">            - ``&#39;pm_sgrA&#39;``: Sgr A* proper motion, :math:`\mathrm{mas \ yr^{-1}}`</span>
-<span class="sd">            - ``&#39;epm_sgrA&#39;``: Uncertainty of Sgr A* proper motion, :math:`\mathrm{mas \ yr^{-1}}`.</span>
+<span class="sd">            - ``&#39;pm_sgrA&#39;``: Sgr A* proper motion, r&#39;:math:`\mathrm{mas \ yr^{-1}}`&#39;</span>
+<span class="sd">            - ``&#39;epm_sgrA&#39;``: Uncertainty of Sgr A* proper motion, r&#39;:math:`\mathrm{mas \ yr^{-1}}`&#39;.</span>
 <span class="sd">              </span>
 <span class="sd">        :type gframe: dict </span>
 
@@ -117,8 +120,11 @@
         <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="XVTrans.calc_3d_gal"><a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans.calc_3d_gal">[docs]</a>    <span class="k">def</span> <span class="nf">calc_3d_gal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">names</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="XVTrans.calc_3d_gal">
+<a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans.calc_3d_gal">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calc_3d_gal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">names</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates Galactic coordinates (Cartesian and cylindrical). </span>
 <span class="sd">        If parallax column is used, distances are calculated as 1/parallax. </span>
 <span class="sd">        </span>
@@ -183,9 +189,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">Rsun</span><span class="o">*</span><span class="mi">1000</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Z</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;rg&#39;</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;phi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Phi</span><span class="p">)</span></div>
 
+
     
-<div class="viewcode-block" id="XVTrans.calc_6d_gal"><a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans.calc_6d_gal">[docs]</a>    <span class="k">def</span> <span class="nf">calc_6d_gal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">names</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="XVTrans.calc_6d_gal">
+<a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans.calc_6d_gal">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calc_6d_gal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">names</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates Galactic coordinates (Cartesian and cylindrical). </span>
 <span class="sd">        If parallax column is used, distances are calculated as 1/parallax. </span>
 <span class="sd">        </span>
@@ -195,9 +204,9 @@
 <span class="sd">            - ``&#39;dec&#39;``: declination, deg</span>
 <span class="sd">            - ``&#39;dpc&#39;`` or ``&#39;dkpc&#39;``: heliocentric distance, pc or kpc </span>
 <span class="sd">            - ``&#39;parallax&#39;``: parallax, can be given instead of the distance column, mas</span>
-<span class="sd">            - ``&#39;pmra&#39;``: proper motion in right ascention, :math:`\mathrm{mas \ yr^{-1}}`</span>
-<span class="sd">            - ``&#39;pmdec&#39;``: proper motion in right declination, :math:`\mathrm{mas \ yr^{-1}}`</span>
-<span class="sd">            - ``&#39;vr&#39;``: radial velocity, :math:`\mathrm{km \ s^{-1}}`. </span>
+<span class="sd">            - ``&#39;pmra&#39;``: proper motion in right ascention, r&#39;:math:`\mathrm{mas \ yr^{-1}}`&#39;</span>
+<span class="sd">            - ``&#39;pmdec&#39;``: proper motion in right declination, r&#39;:math:`\mathrm{mas \ yr^{-1}}`&#39;</span>
+<span class="sd">            - ``&#39;vr&#39;``: radial velocity, r&#39;:math:`\mathrm{km \ s^{-1}}`&#39;. </span>
 <span class="sd">            </span>
 <span class="sd">        :type names: dict</span>
 <span class="sd">        </span>
@@ -267,8 +276,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;Vr&#39;</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;Vphi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Vr</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Vphi</span></div>
 
 
-<div class="viewcode-block" id="XVTrans.calc_3d_err"><a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans.calc_3d_err">[docs]</a>    <span class="k">def</span> <span class="nf">calc_3d_err</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">names</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="XVTrans.calc_3d_err">
+<a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans.calc_3d_err">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calc_3d_err</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">names</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculation of the coordinate errors. </span>
 <span class="sd">        Should be called only after :meth:`jjmodel.transform.XVTrans.calc_3d_gal` or </span>
 <span class="sd">        :meth:`jjmodel.transform.XVTrans.calc_6d_gal`.</span>
@@ -303,7 +315,7 @@
             <span class="k">if</span> <span class="s1">&#39;edkpc&#39;</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">edist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">names</span><span class="p">[</span><span class="s1">&#39;edkpc&#39;</span><span class="p">]]</span><span class="o">*</span><span class="mi">1000</span>
             <span class="k">if</span> <span class="s1">&#39;eparallax&#39;</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">edist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="o">-</span><span class="mi">1000</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">names</span><span class="p">[</span><span class="s1">&#39;parallax&#39;</span><span class="p">]])</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">names</span><span class="p">[</span><span class="s1">&#39;eparallax&#39;</span><span class="p">]]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edist</span> <span class="o">=</span> <span class="mi">1000</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">names</span><span class="p">[</span><span class="s1">&#39;parallax&#39;</span><span class="p">]]</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">names</span><span class="p">[</span><span class="s1">&#39;eparallax&#39;</span><span class="p">]]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error: give errors of helio_distance[pc or kpc] or parallax[mas]!&#39;</span><span class="p">)</span>
                     
@@ -325,9 +337,12 @@
         <span class="k">if</span> <span class="s1">&#39;eparallax&#39;</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span> 
             <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;ed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edist</span></div>
 
+
        
-<div class="viewcode-block" id="XVTrans.calc_6d_err"><a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans.calc_6d_err">[docs]</a>    <span class="k">def</span> <span class="nf">calc_6d_err</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">names</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="XVTrans.calc_6d_err">
+<a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans.calc_6d_err">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calc_6d_err</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">names</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculation of the coordinate and velocity errors. </span>
 <span class="sd">        Should be called only after calc_6d_gal.</span>
 <span class="sd">        </span>
@@ -337,16 +352,16 @@
 <span class="sd">            - ``&#39;dec&#39;``: declination, deg</span>
 <span class="sd">            - ``&#39;dpc&#39;`` or ``&#39;dkpc&#39;``: heliocentric distance, pc or kpc </span>
 <span class="sd">            - ``&#39;parallax&#39;``: parallax, can be given instead of the distance column, mas</span>
-<span class="sd">            - ``&#39;pmra&#39;``: proper motion in right ascention, :math:`\mathrm{mas \ yr^{-1}}`</span>
-<span class="sd">            - ``&#39;pmdec&#39;``: proper motion in right declination, :math:`\mathrm{mas \ yr^{-1}}`</span>
-<span class="sd">            - ``&#39;vr&#39;``: radial velocity, :math:`\mathrm{km \ s^{-1}}`</span>
+<span class="sd">            - ``&#39;pmra&#39;``: proper motion in right ascention, r&#39;:math:`\mathrm{mas \ yr^{-1}}`&#39;</span>
+<span class="sd">            - ``&#39;pmdec&#39;``: proper motion in right declination, r&#39;:math:`\mathrm{mas \ yr^{-1}}`&#39;</span>
+<span class="sd">            - ``&#39;vr&#39;``: radial velocity, r&#39;:math:`\mathrm{km \ s^{-1}}`&#39;</span>
 <span class="sd">            - ``&#39;era&#39;``: error in right ascention, deg </span>
 <span class="sd">            - ``&#39;edec&#39;``: error in declination, deg</span>
 <span class="sd">            - ``&#39;edpc&#39;`` or ``&#39;edkpc&#39;``: error in heliocentric distance, pc or kpc </span>
 <span class="sd">            - ``&#39;eparallax&#39;``: parallax error, can be given instead of the distance error column, mas</span>
-<span class="sd">            - ``&#39;epmra&#39;``: error in proper motion in right ascention, :math:`\mathrm{mas \ yr^{-1}}`</span>
-<span class="sd">            - ``&#39;epmdec&#39;``: error in proper motion in right declination, :math:`\mathrm{mas \ yr^{-1}}`</span>
-<span class="sd">            - ``&#39;evr&#39;``: error in radial velocity, :math:`\mathrm{km \ s^{-1}}`.</span>
+<span class="sd">            - ``&#39;epmra&#39;``: error in proper motion in right ascention, r&#39;:math:`\mathrm{mas \ yr^{-1}}`&#39;</span>
+<span class="sd">            - ``&#39;epmdec&#39;``: error in proper motion in right declination, r&#39;:math:`\mathrm{mas \ yr^{-1}}`&#39;</span>
+<span class="sd">            - ``&#39;evr&#39;``: error in radial velocity, r&#39;:math:`\mathrm{km \ s^{-1}}`&#39;.</span>
 <span class="sd">            </span>
 <span class="sd">        :type names: dict</span>
 <span class="sd">        </span>
@@ -369,7 +384,7 @@
 <span class="sd">            - (``&#39;erg&#39;``, ``&#39;ephi&#39;``): Errors of Galactocentric cylindrical coordinates </span>
 <span class="sd">            - (``&#39;eU&#39;``, ``&#39;eV&#39;``, ``&#39;eW&#39;``): Errors of the 3d Cartesian velocity components</span>
 <span class="sd">            - (``&#39;eUc&#39;``, ``&#39;eVc&#39;``, ``&#39;eWc&#39;``): Random errors of the 3d Cartesian velocity components (calculated only when covarience matrix is given to check the impact of correlations). </span>
-<span class="sd">            - (``&#39;eVr&#39;``, ``&#39;eVphi&#39;``): Errors of Galactocentric velocities in cylindrical coordinates</span>
+<span class="sd">            - (``&#39;eVr&#39;``, ``&#39;eVphi&#39;``): Errors of Galself.lon)actocentric velocities in cylindrical coordinates</span>
 <span class="sd">              </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculation of the Galactic coordinate and velocity errors:&#39;</span><span class="p">)</span>
@@ -415,7 +430,7 @@
         <span class="n">da_ddec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ra</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dec</span><span class="p">)</span><span class="o">-</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ra</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dec</span><span class="p">)</span><span class="o">+</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">dec</span><span class="p">))</span>
         <span class="n">dc_ddec</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ra</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">dec</span><span class="p">)</span><span class="o">-</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ra</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">dec</span><span class="p">)</span><span class="o">-</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dec</span><span class="p">))</span>
                     
-        <span class="k">def</span> <span class="nf">sigma_uvw_norm</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">sigma_uvw_norm</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
             <span class="c1"># Velocity error (random component)</span>
             
             <span class="n">s01</span> <span class="o">=</span> <span class="p">(</span><span class="n">da_dra</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">names</span><span class="p">[</span><span class="s1">&#39;vr&#39;</span><span class="p">]]</span><span class="o">+</span><span class="n">db_dra</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">*</span><span class="n">k</span><span class="o">*</span><span class="n">pmra</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="o">+</span><span class="n">dc_dra</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">*</span><span class="n">k</span><span class="o">*</span><span class="n">pmdec</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">)</span><span class="o">*</span><span class="n">era</span>
@@ -440,7 +455,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">done.&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span> 
             <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;cov_matrix&#39;</span><span class="p">]</span>
-            <span class="k">def</span> <span class="nf">sigma_uvw_cov</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">sigma_uvw_cov</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
                 <span class="c1"># Velocity error (component from correlations)</span>
                 
                 <span class="n">t1</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">cov_matrix</span><span class="p">[</span><span class="s1">&#39;c12&#39;</span><span class="p">]]</span><span class="o">*</span><span class="n">era</span><span class="o">*</span><span class="n">edec</span><span class="o">*</span>\
@@ -527,10 +542,13 @@
         
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;erg&#39;</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;ephi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eR</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ePhi</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;eVr&#39;</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;eVphi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eVr</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">eVphi</span></div>
+
         
 
-<div class="viewcode-block" id="XVTrans.save_result"><a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans.save_result">[docs]</a>    <span class="k">def</span> <span class="nf">save_result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="XVTrans.save_result">
+<a class="viewcode-back" href="../../trans.html#jjmodel.transform.XVTrans.save_result">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the data table with the new columns. </span>
 <span class="sd">        Save directory is constructed as ``filename+&#39;_trans.&#39;+fileformat``. </span>
 <span class="sd">        </span>
@@ -538,7 +556,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing output...&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;_trans.&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">fileformat</span><span class="p">)),</span><span class="nb">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fileformat</span><span class="p">,</span><span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span> </div></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span> </div>
+</div>
+
 
 
 </pre></div>
@@ -547,7 +567,7 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../../index.html">jjmodel</a></h1>
 
@@ -558,7 +578,16 @@
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Getting started</a></li>
@@ -584,16 +613,6 @@
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
 
 
 
@@ -607,11 +626,11 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2022, Sysoliatina.
+      &#169;2022, Sysoliatina.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.2.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
     </div>
 

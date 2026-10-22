@@ -9,11 +9,13 @@ Authors and contact
 
 **Code developer:** Dr. Kseniia Sysoliatina (1)
 
-**Collaborators:** Appl. Prof. Dr. Andreas Just (1) 
+**Collaborators:** PhD. candidate Akash Vani (2), Appl. Prof. Dr. Andreas Just (3) 
 
 **Affiliations:**
 
-(1) Astrojnomisches Rechen-Institut (ARI), Mönchhofstr. 12-14, 69120 Heidelberg, Germany
+(1) Leibniz-Institut für Astrophysik Potsdam (AIP), An der Sternwarte 16, 14482 Potsdam, Germany
+(2) Max-Planck Institut für Astrophysik, Karl-Schwarzschild-Str. 1, 85741 Garching bei München, Germany
+(3) Astronomisches Rechen-Institut (ARI), Mönchhofstr. 12-14, 69120 Heidelberg, Germany
 
-If you have any questions or need help with the code, please contact us via Sysoliatina@uni-heidelberg.de. 
+If you have any questions or need help with the code, please contact us via k.sysoliatina@gmail.com.  
 

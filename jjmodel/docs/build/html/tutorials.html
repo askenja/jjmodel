@@ -1,18 +1,17 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>Getting started &#8212; jjmodel 0.1 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=2709fde1"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Physical functions (input)" href="funcs.html" />
@@ -20,8 +19,9 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -33,36 +33,35 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="getting-started">
-<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="parameter-files">
-<h2>Parameter files<a class="headerlink" href="#parameter-files" title="Permalink to this headline">¶</a></h2>
+  <section id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
+<section id="parameter-files">
+<h2>Parameter files<a class="headerlink" href="#parameter-files" title="Link to this heading">¶</a></h2>
 <p>First of all, you need to create and fill parameter file(s) whose content will define properties of your
-model realization. You can understand parameter files' structure by looking at them in tutorials (see below).
-Also, you can use our <a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/docs/mydoc">manual</a> which includes description of all JJ-model parameters. It is also stored in your local <code class="docutils literal notranslate"><span class="pre">jjmodel/docs/mydoc</span></code> folder in <em>anaconda</em>
-(to find your <code class="docutils literal notranslate"><span class="pre">jjmodel</span></code> folder,
-execute <code class="docutils literal notranslate"><span class="pre">print(jjmodel.__file__)</span></code> in your python compiler).</p>
-</div>
-<div class="section" id="tutorials">
-<h2>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h2>
+model realisation. You can understand parameter files' structure by looking at them in tutorials (see below).
+Also, you can use our <a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/docs/mydoc">manual</a> which includes description of all JJ-model parameters. It is also stored in your local <code class="docutils literal notranslate"><span class="pre">jjmodel/docs/mydoc</span></code> folder in <em>anaconda</em> (to find your <code class="docutils literal notranslate"><span class="pre">jjmodel</span></code> folder, execute <code class="docutils literal notranslate"><span class="pre">print(jjmodel.__file__)</span></code> in your python compiler).</p>
+</section>
+<section id="tutorials">
+<h2>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading">¶</a></h2>
 <p>The code <strong>jjmodel</strong> includes several tutorials which should help user to familiarize himself with the code
 syntax. After the installation, jupyter notebooks can be found in the folder <code class="docutils literal notranslate"><span class="pre">jjmodel/tutorials</span></code>.
 Tutorials can be also viewed on github.</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/tutorials/tutorial1">Tutorial 1</a> . An example of basic usage of the code, modeling of the Solar neighborhood.</p></li>
+<li><p><a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/tutorials/tutorial1">Tutorial 1</a> . An example of basic usage of the code, modeling of the Solar neighbourhood.</p></li>
 <li><p><a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/tutorials/tutorial2">Tutorial 2</a>. Radially extended JJ model (general case of Tutorial 1).</p></li>
-<li><p><a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/tutorials/tutorial3">Tutorial 3</a>. More detailed modeling of the Solar neighborhood: stars in the local volume (sphere), selection of the data-motivated sample (cut on absolute or aparent magnitudes).</p></li>
-<li><p><a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/tutorials/tutorial4">Tutorial 4</a>. Advanced level. Modeling of the Red Clump sample across the disk and reconstruction of the age-metallicity relation based on the APOGEE data (analysis presented in Sysoliatina and Just 2022, in prep).</p></li>
+<li><p><a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/tutorials/tutorial3">Tutorial 3</a>. More detailed modeling of the Solar neighbourhood: stars in the local volume (sphere), selection of the data-motivated sample (cut on absolute or aparent magnitudes).</p></li>
+<li><p><a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/tutorials/tutorial4">Tutorial 4</a>. Advanced level. Modeling of the Red Clump sample across the disk and reconstruction of the age-metallicity relation based on the APOGEE data (analysis presented in Sysoliatina and Just 2022). Note that this tutorial has been developed for the earlier version of the code and may be not runnable after year 2026. The rest of tutorials are compatible with the latest code version.</p></li>
+<li><p><a class="reference external" href="https://github.com/askenja/jjmodel/tree/main/jjmodel/tutorials/tutorial5">Tutorial 5</a>. Advanced level. Prediction of the colour-magnitude diagram including white dwarfs and a custom initial-final mass relation (analysis presented in Sysoliatina and Vani in prep.).</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">jjmodel</a></h1>
 
@@ -73,7 +72,16 @@ Tutorials can be also viewed on github.</p>
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a><ul>
@@ -103,16 +111,6 @@ Tutorials can be also viewed on github.</p>
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
 
 
 
@@ -126,11 +124,11 @@ Tutorials can be also viewed on github.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2022, Sysoliatina.
+      &#169;2022, Sysoliatina.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.2.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/tutorials.rst.txt"
