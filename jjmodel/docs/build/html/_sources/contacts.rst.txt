@@ -9,7 +9,7 @@ Authors and contact
 
 **Code developer:** Dr. Kseniia Sysoliatina (1)
 
-**Collaborators:** PhD. candidate Akash Vani (2), Appl. Prof. Dr. Andreas Just (3) 
+**Collaborators:** PhD candidate Akash Vani (2), Appl. Prof. Dr. Andreas Just (3) 
 
 **Affiliations:**
 

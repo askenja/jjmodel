@@ -4,6 +4,7 @@ gdown
 matplotlib
 numpy
 scipy
+pandas
 readthedocs-sphinx-search
 sphinx
 sphinx-rtd-theme

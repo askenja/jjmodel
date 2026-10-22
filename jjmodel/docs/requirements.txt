@@ -53,6 +53,7 @@ numpy==2.5.4
     #   contourpy
     #   fast-histogram
     #   matplotlib
+    #   pandas
     #   pyerfa
     #   scipy
 packaging==26.3
@@ -60,6 +61,8 @@ packaging==26.3
     #   astropy
     #   matplotlib
     #   sphinx
+pandas==3.1.0
+    # via -r requirements.in
 pillow==13.0.0
     # via matplotlib
 pyerfa==2.0.1.5
@@ -71,7 +74,9 @@ pyparsing==3.3.3
 pysocks==1.7.1
     # via requests
 python-dateutil==3.0.0
-    # via matplotlib
+    # via
+    #   matplotlib
+    #   pandas
 pyyaml==6.0.3
     # via astropy
 readthedocs-sphinx-search==0.3.2

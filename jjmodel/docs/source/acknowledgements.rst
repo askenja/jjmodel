@@ -9,7 +9,7 @@ Acknowledgements
 
 If you use the **jjmodel** code in your work, please cite our paper describing the generalised version of the JJ model - `Sysoliatina and Just (2022), Towards a fully consistent Milky Way disk model. V. The disk model for 4-14 kpc <https://ui.adsabs.harvard.edu/abs/2022A%26A...666A.130S/abstract>`_. 
 
-If you use the JJ model to simulate white dwarf population, please cite our latest work `Sysoliatina and Vani (in prep), The full Gaia colour--magnitude diagram with white dwarfs reveals a declining Milky Way star formation history`_ (link will be added soon).
+If you use the JJ model to simulate white dwarf population, please cite our latest work `Sysoliatina and Vani (in prep), The full Gaia colour--magnitude diagram with white dwarfs reveals a declining Milky Way star formation history` (link will be added soon).
 
 
 Optionally, cite some of our other papers:
