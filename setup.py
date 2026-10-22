@@ -44,17 +44,6 @@ setup(name = "jjmodel",
       packages = find_packages(),
       package_dir = {'jjmodel' : 'jjmodel'},
       package_data = {'jjmodel' : supplementary_data},
-      python_requires=">=3.8",
-      install_requires=[
-        "astropy",
-        "fast-histogram",
-        "gdown",
-        "healpy",
-        "numpy",
-        "scipy",
-        "matplotlib",
-        "pandas"
-    ],
       classifiers=[
           'Development Status :: 3 - Alpha',
           'Intended Audience :: Science/Research',
