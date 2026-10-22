@@ -5,4 +5,4 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "jjmodel"
 authors = [{name = "Kseniia Sysoliatina", email = "k.sysoliatina@gmail.com"}]
-dynamic = ["version", "description"]
+dynamic = ["version", "description", "dependencies"]
