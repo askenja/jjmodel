@@ -19,7 +19,7 @@ To install the **jjmodel** code as *anaconda* package, do in terminal:
    
 To install a specific version (see releases on github), use the corresponding tag instead of *main*, e.g. *v.1.0.1*. 
 
-Note that **jjmodel** requires python 3.8 of higher. Also, it depends on the following packages: 
+Note that **jjmodel** requires python 3.8 or higher. Also, it depends on the following packages: 
 `Numpy (v>=1.18.1) <https://numpy.org/>`_, `SciPy (v>=1.5.0) <http://www.scipy.org/>`_, 
 `Astropy (v>=4.2) <http://www.astropy.org/>`_, `matplotlib (v>=3.2.1) <http://matplotlib.sourceforge.net/>`_, and `fast_histogram (v>=0.9) <https://github.com/astrofrog/fast-histogram>`_. Also, consider installing 
 `healpy (v>=1.15.0) <https://healpy.readthedocs.io/en/latest/>`_ which is good for plotting sky maps 
@@ -53,11 +53,13 @@ In order to work with mock stellar populations, the **jjmodel** code needs an is
 We provide the following isochrone packages compatible with the JJ model. 
 
 I. Stellar volution up to TP-AGB phase:
+
 - `PARSEC (Padova) <http://stev.oapd.inaf.it/cgi-bin/cmd>`_
 - `MIST <https://waps.cfa.harvard.edu/MIST/interp_isos.html>`_
 - `BaSTI <http://basti-iac.oa-abruzzo.inaf.it/isocs.html>`_
 
 II. WD isochrones (generated with initial-final mass relation from Cummings et al. 2018): 
+
 - `LPCODE <https://evolgroup.fcaglp.unlp.edu.ar/modelos.html>`_
 - `BaSTI <http://basti-iac.oa-abruzzo.inaf.it/wdmodels.html>`_
 - `Montréal <http://www.astro.umontreal.ca/~bergeron/CoolingModels>`_

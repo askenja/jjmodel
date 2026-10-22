@@ -7,10 +7,7 @@ Welcome to jjmodel's documentation!
 *************************************
 
 **jjmodel** (Just-Jahreiß model) is a Python package for a semi-analytic model of the Milky Way (MW) disk. 
-The latest version is designed 
-for modeling Galactocentric distances from approximately 4 kpc to 14 kpc and heights up to about 2 kpc. 
-This code is complemented by three alternative sets of isochrones (PARSEC, MIST, and BaSTI), 
-such that users can synthesize stellar populations and select observable samples on the colour-magnitude diagram.
+It is designed for modeling Galactocentric distances from approximately 4 kpc to 14 kpc and heights up to about 2 kpc. This code is complemented by several alternative sets of isochrones, such that users can synthesise stellar populations and select observable samples on the colour-magnitude diagram.
 
 Check out :doc:`installation` for instructions on how to install the package. Also read section :doc:`acknowledgements` for the list of publications and the way of acknowledging this code. 
 
