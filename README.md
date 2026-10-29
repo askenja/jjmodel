@@ -8,18 +8,18 @@ The generalised JJ model is described in [Sysoliatina & Just (2022)](https://ui.
 ## CALOMERA: Stellar population synthesis including white dwarfs
 
 <p align="center">
-  <img src="jjmodel/docs/images/CalomeraLogo.png" alt="CALOMERA logo" width="300">
+  <img src="jjmodel/docs/images/CalomeraLogo.png" alt="CALOMERA logo" width="400">
 </p>
 
-**CALOMERA** (*Chemo-dynAmicaL mOdel for Milky way Evolution and stellaR populAtion synthesis*) is the updated stellar population synthesis framework built on the JJ model, extending it to include white dwarfs (WDs) in a self-consistent description of the Galactic stellar population. Named after the fast-moving tiger beetle genus *Calomera*, it reflects the framework's emphasis on computational speed and efficiency.
+**CALOMERA** (*Chemo-dynAmicaL mOdel for Milky way Evolution and stellaR populAtion synthesis*) is an extended stellar population synthesis framework built on the JJ model, designed to provide a self-consistent synthesis of the full *Gaia* colour–magnitude diagram, including main-sequence stars, evolved stars, white dwarfs (WDs), and brown dwarfs (BDs). Named after the fast-moving tiger beetle genus *Calomera*, it reflects the framework's emphasis on computational speed and efficiency.
 
-CALOMERA combines the JJ model's semi-analytic chemo-dynamical description of the Galactic disk with modern WD cooling sequences, metallicity-dependent progenitor lifetimes, and synthetic photometry. Its calibration jointly constrains the initial mass function, Galactic star formation history, WD initial–final mass relation using a *Gaia* DR3 sample of nearly 8 million stars within 1 kpc, including approximately 110,000 WDs.
+CALOMERA combines the JJ model's semi-analytic chemo-dynamical description of the Galactic disk with modern WD models, metallicity-dependent progenitor lifetimes, BD models, and synthetic photometry. Its calibration jointly constrains the initial mass function, Galactic star formation history, and WD initial–final mass relation using a *Gaia* DR3 sample of nearly 8 million stars within 1 kpc, including approximately 110,000 WDs.
 
-The calibrated model reproduces star counts across colour–magnitude diagram regions to within 3% and the total number count to within 0.5%. It also enables predictions of Galactic WD distributions and luminosity functions, with an extension to the substellar regime using ATMO models to study L, T, and Y dwarfs.
+The calibrated model reproduces star counts across different regions of the *Gaia* CMD to within 3% and the total star count to within 0.5%. Beyond reproducing the full CMD, CALOMERA enables predictions of Galactic WD distributions and luminosity functions. Its BD population synthesis component further extends the framework into the substellar regime, incorporating ATMO models to predict the populations of L, T, and Y dwarfs.
 
-CALOMERA is the WD-inclusive stellar population synthesis version of the JJ model; the underlying JJ model remains unchanged.
+CALOMERA extends the population synthesis capabilities of the JJ model without modifying its underlying chemo-dynamical formulation, providing a unified framework for modelling the Galactic stellar and substellar populations.
 
-The new framework is presented in Sysoliatina & Vani, *The full Gaia colour–magnitude diagram with white dwarfs reveals a declining Milky Way star formation history* (in prep).
+The framework is presented in Sysoliatina & Vani, *The full Gaia colour–magnitude diagram with white dwarfs reveals a declining Milky Way star formation history* (in preparation).
 
 ## Documentation
 
