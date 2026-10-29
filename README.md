@@ -5,10 +5,10 @@ A semi-analytic Just-Jahreiß (JJ) model of the Milky Way disk. The model has be
 
 The generalised JJ model is described in [Sysoliatina & Just (2022)](https://ui.adsabs.harvard.edu/abs/2022A%26A...666A.130S/abstract).
 
-## CALOMERA: Stellar population synthesis including white dwarfs
+## CALOMERA: Stellar population synthesis including white dwarfs and brown dwarfs
 
 <p align="center">
-  <img src="jjmodel/docs/images/CalomeraLogo.png" alt="CALOMERA logo" width="400">
+  <img src="jjmodel/docs/images/CalomeraLogo.png" alt="CALOMERA logo" width="500">
 </p>
 
 **CALOMERA** (*Chemo-dynAmicaL mOdel for Milky way Evolution and stellaR populAtion synthesis*) is an extended stellar population synthesis framework built on the JJ model, designed to provide a self-consistent synthesis of the full *Gaia* colour–magnitude diagram, including main-sequence stars, evolved stars, white dwarfs (WDs), and brown dwarfs (BDs). Named after the fast-moving tiger beetle genus *Calomera*, it reflects the framework's emphasis on computational speed and efficiency.
