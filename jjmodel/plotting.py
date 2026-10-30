@@ -1155,8 +1155,8 @@ class Plotting():
         :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
             (thin disk, thick disk, halo, thin+thick disk, or total).
         :type mode_comp: str
-        :param quantity: :param quantity: Name of the column in a stellar assemblies table to which 
-            the function has to be applied; for velocity dispersion use ``'sigw'``. 
+        :param quantity: Name of the column in a stellar assemblies table to which
+            the function has to be applied; for velocity dispersion use ``'sigw'``.
         :type quantity: str
         :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
             (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
@@ -1665,8 +1665,8 @@ class Plotting():
         Mean metallicity as a function of height z for the Solar neighbourhood, p.Rsun.
         Plotting for jjmodel.analysis.metz. 
         
-        :param mode_comp:Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'`` 
-            (thin disk, thick disk, halo, thin+thick disk, or total). 
+        :param mode_comp: Galactic component, can be ``'d'``, ``'t'``, ``'sh'``, ``'dt'``, or ``'tot'``
+            (thin disk, thick disk, halo, thin+thick disk, or total).
         :type mode_comp: str
         :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one 
             (``'a'``, ``'f'``, ``'ceph'``, ``'rc'``, ``'rc+'``, ``'gdw'``, ``'kdw'``, ``'mdw'``) or custom 
