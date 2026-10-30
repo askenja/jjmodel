@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="./">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Output analysis &#8212; jjmodel 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
-    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=2709fde1"></script>
-    <script src="_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <title>Output analysis &#8212; jjmodel 2.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Plotting tools" href="plotting.html" />
@@ -20,9 +22,8 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-
   
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -35,12 +36,12 @@
           <div class="body" role="main">
             
   <section id="output-analysis">
-<h1>Output analysis<a class="headerlink" href="#output-analysis" title="Link to this heading">¶</a></h1>
+<h1>Output analysis<a class="headerlink" href="#output-analysis" title="Permalink to this heading">¶</a></h1>
 <section id="density-profiles">
-<h2>Density profiles<a class="headerlink" href="#density-profiles" title="Link to this heading">¶</a></h2>
+<h2>Density profiles<a class="headerlink" href="#density-profiles" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.rhor">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rhor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rhor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rhor" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rhor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rhor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rhor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Radial density profiles of the Galactic components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -67,7 +68,7 @@ otherwise the midplane mass density in <span class="math notranslate nohighlight
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.rhor_monoage">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rhor_monoage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rhor_monoage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rhor_monoage" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rhor_monoage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rhor_monoage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rhor_monoage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Radial density profiles of the mono-age subpopulations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -114,7 +115,7 @@ Array shape is <code class="docutils literal notranslate"><span class="pre">(len
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.rhor_monomet">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rhor_monomet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rhor_monomet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rhor_monomet" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rhor_monomet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rhor_monomet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rhor_monomet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Radial density profiles of the mono-metallicity subpopulations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -157,7 +158,7 @@ as a function of Galactocentric distance and age. Array shape is <code class="do
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.rhoz_monoage">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rhoz_monoage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rhoz_monoage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rhoz_monoage" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rhoz_monoage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rhoz_monoage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rhoz_monoage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Vertical profiles of the mono-age subpopulations calculated at a given Galactocentric distance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -199,7 +200,7 @@ Use together with the model vertical grid <code class="docutils literal notransl
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.rhoz_monomet">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rhoz_monomet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rhoz_monomet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rhoz_monomet" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rhoz_monomet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rhoz_monomet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rhoz_monomet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Vertical profiles of the mono-metallicity subpopulations calculated at a given Galactocentric distance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -238,10 +239,10 @@ Each profile corresponds to the model vertical grid <code class="docutils litera
 
 </section>
 <section id="ages-and-metallicities">
-<h2>Ages and metallicities<a class="headerlink" href="#ages-and-metallicities" title="Link to this heading">¶</a></h2>
+<h2>Ages and metallicities<a class="headerlink" href="#ages-and-metallicities" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.agez">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">agez</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#agez"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.agez" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">agez</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#agez"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.agez" title="Permalink to this definition">¶</a></dt>
 <dd><p>Age as a function of distance from the Galactic plane calculated at the different radii.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -285,7 +286,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.ager">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">ager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#ager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.ager" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">ager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#ager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.ager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Age as a function of Galactocentric distance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -321,7 +322,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.metz">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">metz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#metz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.metz" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">metz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#metz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.metz" title="Permalink to this definition">¶</a></dt>
 <dd><p>Metallicity as a function of distance from the Galactic plane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -365,7 +366,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.metr">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">metr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#metr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.metr" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">metr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#metr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.metr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Metallicity as a function of Galactocentric distance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -401,7 +402,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.agehist">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">agehist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#agehist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.agehist" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">agehist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#agehist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.agehist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Age distributions at the different Galactocentric distances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -445,7 +446,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.methist">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">methist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#methist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.methist" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">methist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#methist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.methist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Metallicity distributions at the different Galactocentric distances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -491,10 +492,10 @@ If not specified, Padova is the default isochrone set.</p></li>
 
 </section>
 <section id="scale-heights">
-<h2>Scale heights<a class="headerlink" href="#scale-heights" title="Link to this heading">¶</a></h2>
+<h2>Scale heights<a class="headerlink" href="#scale-heights" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.hr_monoage">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">hr_monoage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#hr_monoage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.hr_monoage" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">hr_monoage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#hr_monoage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.hr_monoage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale heights of the mono-age subpopulations as a function of Galactocentric distance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -534,7 +535,7 @@ or <code class="docutils literal notranslate"><span class="pre">(a.Rbins,len(age
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.hr_monomet">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">hr_monomet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#hr_monomet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.hr_monomet" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">hr_monomet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#hr_monomet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.hr_monomet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale heights of the mono-metallicity subpopulations as a function of Galactocentric distance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -570,10 +571,10 @@ If not specified, Padova is the default isochrone set.</p></li>
 
 </section>
 <section id="kinematics">
-<h2>Kinematics<a class="headerlink" href="#kinematics" title="Link to this heading">¶</a></h2>
+<h2>Kinematics<a class="headerlink" href="#kinematics" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.sigwz">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">sigwz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#sigwz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.sigwz" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">sigwz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#sigwz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.sigwz" title="Permalink to this definition">¶</a></dt>
 <dd><p>W-velocity dispersion as a function of distance from the Galactic plane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -620,7 +621,7 @@ W-velocity dispersion profile.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.sigwr">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">sigwr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#sigwr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.sigwr" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">sigwr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#sigwr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.sigwr" title="Permalink to this definition">¶</a></dt>
 <dd><p>W-velocity dispersion as a function of Galactocentric distance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -656,7 +657,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.sigwr_monoage">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">sigwr_monoage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#sigwr_monoage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.sigwr_monoage" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">sigwr_monoage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#sigwr_monoage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.sigwr_monoage" title="Permalink to this definition">¶</a></dt>
 <dd><p>W-velocity dispersion for the mono-age subpopulations as a function of Galactocentric 
 distance.</p>
 <dl class="field-list simple">
@@ -698,7 +699,7 @@ Array shape is <code class="docutils literal notranslate"><span class="pre">(a.R
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.sigwr_monomet">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">sigwr_monomet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#sigwr_monomet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.sigwr_monomet" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">sigwr_monomet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#sigwr_monomet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.sigwr_monomet" title="Permalink to this definition">¶</a></dt>
 <dd><p>W-velocity dispersion for the mono-metallicity subpoplations as a function 
 of Galactocentric distance.</p>
 <dl class="field-list simple">
@@ -737,7 +738,7 @@ Array shape is <code class="docutils literal notranslate"><span class="pre">(a.R
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.fw_hist">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">fw_hist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#fw_hist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.fw_hist" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">fw_hist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#fw_hist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.fw_hist" title="Permalink to this definition">¶</a></dt>
 <dd><p>W-velocity distribution function at a given Galactocentric distance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -778,7 +779,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.rot_curve">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rot_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ah</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rot_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rot_curve" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rot_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ah</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rot_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rot_curve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculatess the circular velocity <span class="math notranslate nohighlight">\(\\upsilon_\mathrm{c}\)</span> as a function of 
 Galactocentric distance.</p>
 <dl class="field-list simple">
@@ -804,10 +805,10 @@ to the output directory. The output path and table name are predcribed by
 
 </section>
 <section id="d-maps-and-hess-diagrams">
-<h2>2D maps and Hess diagrams<a class="headerlink" href="#d-maps-and-hess-diagrams" title="Link to this heading">¶</a></h2>
+<h2>2D maps and Hess diagrams<a class="headerlink" href="#d-maps-and-hess-diagrams" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.rz_map">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rz_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rz_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rz_map" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rz_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rz_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rz_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mass (or number) density map in R and z Galactic coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -845,7 +846,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.rz_map_quantity">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rz_map_quantity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rz_map_quantity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rz_map_quantity" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">rz_map_quantity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#rz_map_quantity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.rz_map_quantity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates mean value of some quantity in R and z Galactic coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -883,7 +884,7 @@ If not specified, Padova is the default isochrone set.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.hess_simple">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">hess_simple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mag_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mag_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#hess_simple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.hess_simple" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">hess_simple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mag_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mag_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#hess_simple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.hess_simple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hess diagram for the simple volumes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -925,10 +926,10 @@ or minimal and maximal radius of the cylindrical shell if <strong>mode_geom</str
 
 </section>
 <section id="other">
-<h2>Other<a class="headerlink" href="#other" title="Link to this heading">¶</a></h2>
+<h2>Other<a class="headerlink" href="#other" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.fi_iso">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">fi_iso</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ah</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#fi_iso"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.fi_iso" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">fi_iso</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ah</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#fi_iso"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.fi_iso" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the normalized vertical gravitational potential as 
 a function of Galactocentric distance.</p>
 <dl class="field-list simple">
@@ -953,7 +954,7 @@ to the output directory. The output path and table name are predcribed by
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.mean_quantity">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">mean_quantity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#mean_quantity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.mean_quantity" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">mean_quantity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#mean_quantity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.mean_quantity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates mean value of some quantity as a function of height z
 weighted by the spatial number densities of 'stellar assemblies'.</p>
 <dl class="field-list simple">
@@ -994,7 +995,7 @@ horizontal slice <strong>zlim</strong>. Array of length <code class="docutils li
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.pops_in_volume">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">pops_in_volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#pops_in_volume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.pops_in_volume" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">pops_in_volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#pops_in_volume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.pops_in_volume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the number of stars in a volume.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1040,7 +1041,7 @@ and <strong>volume</strong> (what are volumes of z-slices - allows to model diff
 
 <dl class="py function">
 <dt class="sig sig-object py" id="jjmodel.analysis.disk_brightness">
-<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">disk_brightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#disk_brightness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.disk_brightness" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">jjmodel.analysis.</span></span><span class="sig-name descname"><span class="pre">disk_brightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jjmodel/analysis.html#disk_brightness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jjmodel.analysis.disk_brightness" title="Permalink to this definition">¶</a></dt>
 <dd><p>MW as an external galaxy. Function calculates the surface brightness or colour profile of the MW if it is viewed 
 edge-on or face-on (individual model components and stellar populations can be selected).</p>
 <dl class="field-list simple">
@@ -1087,7 +1088,7 @@ profile (mag). Use together with <code class="docutils literal notranslate"><spa
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">jjmodel</a></h1>
 
@@ -1098,16 +1099,7 @@ profile (mag). Use together with <code class="docutils literal notranslate"><spa
 
 
 
-
-<search id="searchbox" style="display: none" role="search">
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Getting started</a></li>
@@ -1141,6 +1133,16 @@ profile (mag). Use together with <code class="docutils literal notranslate"><spa
   </ul></li>
 </ul>
 </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -1154,11 +1156,11 @@ profile (mag). Use together with <code class="docutils literal notranslate"><spa
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2022, Sysoliatina.
+      &copy;2022, Sysoliatina.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.2.0</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/analysis.rst.txt"
