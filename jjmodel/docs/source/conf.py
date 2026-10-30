@@ -24,10 +24,10 @@ project = u'jjmodel'
 copyright = u'2022, Sysoliatina'
 author = u'Sysoliatina'
 
-# The short X.Y version
-version = u''
-# The full version, including alpha/beta/rc tags
-release = u'0.1'
+from jjmodel.version import __version__
+
+version = __version__
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
