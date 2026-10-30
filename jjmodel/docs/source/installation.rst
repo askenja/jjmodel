@@ -63,12 +63,12 @@ I. Stellar volution up to TP-AGB phase:
 
 - `PARSEC (Padova) <http://stev.oapd.inaf.it/cgi-bin/cmd>`_
 - `MIST <https://waps.cfa.harvard.edu/MIST/interp_isos.html>`_
-- `BaSTI <http://basti-iac.oa-abruzzo.inaf.it/isocs.html>`_
+- `BaSTI <http://basti-iac.oa-abruzzo.inaf.it/isocs.html>`__
 
 II. WD isochrones (generated with initial-final mass relation from Cummings et al. 2018): 
 
 - `LPCODE <https://evolgroup.fcaglp.unlp.edu.ar/modelos.html>`_
-- `BaSTI <http://basti-iac.oa-abruzzo.inaf.it/wdmodels.html>`_
+- `BaSTI <http://basti-iac.oa-abruzzo.inaf.it/wdmodels.html>`__
 - `Montréal <http://www.astro.umontreal.ca/~bergeron/CoolingModels>`_
 
 After you have installed **jjmodel** to your *anaconda*, you can automatically download any 
