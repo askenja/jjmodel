@@ -2048,7 +2048,7 @@ class IMF():
         
         :return: Linear mass grid from **mlow** to **mup** (in :math:`\mathrm{M_\odot}`) and 
                 probabilities corresponding to these mass intervals.
-        :rtype: 2d-array_ktg93_3slopes_call_
+        :rtype: tuple[numpy.ndarray, numpy.ndarray]
         """  
             
         a1, a2, a3 = 1.3, 2.2, 2.7

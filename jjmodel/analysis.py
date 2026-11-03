@@ -1538,7 +1538,8 @@ def _fw_hist_t_(N_t,sig_t,wgrid,dw,p,a,**kwargs):
         N_t = N_t[kwargs['indt']]
     
     for i in range(len(wgrid)):
-        fw_hist[i] = np.sum(N_t*(erf((i+dw/2)/sq2/sig_t)-erf((i-dw/2)/sq2/sig_t)))
+        wi = wgrid[i]
+        fw_hist[i] = np.sum(N_t * (erf((wi + dw/2)/sq2/sig_t) - erf((wi - dw/2)/sq2/sig_t)))
     return fw_hist
              
     
@@ -1553,7 +1554,8 @@ def _fw_hist_sh_(N_sh,wgrid,dw,p,a,**kwargs):
         N_sh = N_sh[kwargs['indt']]
         
     for i in range(len(wgrid)):
-        fw_hist[i] = np.sum(N_sh*(erf((i+dw/2)/sq2/p.sigsh)-erf((i-dw/2)/sq2/p.sigsh))) 
+        wi = wgrid[i]
+        fw_hist[i] = np.sum(N_sh * (erf((wi + dw/2)/sq2/p.sigsh) - erf((wi - dw/2)/sq2/p.sigsh)))
     return fw_hist
            
 
@@ -1790,7 +1792,7 @@ def rhoz_monoage(mode_comp,R,ages,p,a,**kwargs):
             if 'tab' in kwargs:
                 del kwargs['tab']
                 rho_zd = _rhoz_d_(p,a,R=R,local=False,**kwargs,tab=tabd)[0]
-                rho_zt = _rhoz_t_(p,a,R=R,local=False,**kwargs,tab=tabd)[0]
+                rho_zt = _rhoz_t_(p,a,R=R,local=False,**kwargs,tab=tabt)[0]
             else:
                 rho_zd = _rhoz_d_(p,a,R=R,local=False,**kwargs)[0]
                 rho_zt = _rhoz_t_(p,a,R=R,local=False,**kwargs)[0]
@@ -1899,7 +1901,7 @@ def rhoz_monomet(mode_comp,R,mets,p,a,**kwargs):
         if 'tab' in kwargs:
             del kwargs['tab']
             rho_zd = _rhomet_d_(R,mets,p,a,this_function,**kwargs,local=False,tab=tabd)
-            rho_zt = _rhomet_t_(R,mets,p,a,this_function,**kwargs,local=False,tabd=tabt)
+            rho_zt = _rhomet_t_(R,mets,p,a,this_function,**kwargs,local=False,tab=tabt)
         else:
             rho_zd = _rhomet_d_(R,mets,p,a,this_function,**kwargs,local=False)
             rho_zt = _rhomet_t_(R,mets,p,a,this_function,**kwargs,local=False)

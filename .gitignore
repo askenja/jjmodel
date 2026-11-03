@@ -165,6 +165,6 @@ cython_debug/
 /jjmodel/tutorials/tutorial4/output
 /jjmodel/tutorials/tutorial5/output
 
-
-
+#av
+/jjmodel/jjmodel/tutorials/test.py
 # End of https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks

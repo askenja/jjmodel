@@ -32,7 +32,7 @@ inpcheck_parameters(p)
 # dzeq is a normalized z-grid with equal step in linear space. 
 # -------------------------------------------------------------------------------------------------
 
-jd, jt = int(tp/tr), int(p.tt2/tr) 
+jd, jt = int(round(tp/tr)), int(np.floor(p.tt2/tr + 1e-10)) 
 jd_array, jt_array = np.arange(jd), np.arange(jt) 
 t = np.arange(tr/2,tp+tr/2,tr)
 tau = np.subtract(tp,t)

@@ -1,24 +1,25 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>jjmodel.plotting &#8212; jjmodel 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
-    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
-    <script src="../../_static/documentation_options.js?v=2709fde1"></script>
-    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <title>jjmodel.plotting &#8212; jjmodel 2.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
-
   
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -58,17 +59,13 @@
 
 
 
-<div class="viewcode-block" id="Plotting">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Plotting</span><span class="p">():</span>
+<div class="viewcode-block" id="Plotting"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Plotting</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for plotting. </span>
 <span class="sd">    All methods of this class return figure and axes (f, ax).        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-<div class="viewcode-block" id="Plotting.__init__">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">inp</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.__init__"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">inp</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Class instance is initialized by three basic parameters. </span>
 <span class="sd">        </span>
 <span class="sd">        :param p: Set of model parameters from the parameter file. </span>
@@ -140,7 +137,6 @@
         <span class="n">label_size</span> <span class="o">=</span> <span class="mi">12</span>
         <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;xtick.labelsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label_size</span> 
         <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;ytick.labelsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label_size</span> </div>
-
     
     
     <span class="k">def</span><span class="w"> </span><span class="nf">_figclose_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -281,9 +277,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="p">)</span>
     
     
-<div class="viewcode-block" id="Plotting.rhor_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rhor_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rhor_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.rhor_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rhor_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rhor_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Radial density profiles of the Galactic components </span>
 <span class="sd">        (thin and thick disk, molecular and atomic gas, DM and stellar halo). </span>
@@ -341,12 +335,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
-
         
     
-<div class="viewcode-block" id="Plotting.nsfr_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.nsfr_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">nsfr_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.nsfr_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.nsfr_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">nsfr_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Normalized star formation rate (NSFR) as a function of Galactocentric distance. </span>
 <span class="sd">                </span>
@@ -426,12 +417,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>        </div>
-
     
 
-<div class="viewcode-block" id="Plotting.nsfr_rsun_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.nsfr_rsun_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">nsfr_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.nsfr_rsun_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.nsfr_rsun_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">nsfr_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Normalized star formation rate (NSFR) for the Solar neighbourhood, ``p.Rsun``.</span>
 <span class="sd">        </span>
@@ -499,11 +487,8 @@
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>        </div>
 
-
     
-<div class="viewcode-block" id="Plotting.amrr_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.amrr_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">amrr_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.amrr_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.amrr_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">amrr_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Age-metallicity relation (AMR) of the disk as a function of Galactocentric distance.</span>
 <span class="sd">        </span>
@@ -587,12 +572,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>     </div>
-
     
 
-<div class="viewcode-block" id="Plotting.amr_rsun_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.amr_rsun_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">amr_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.amr_rsun_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.amr_rsun_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">amr_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Age-metallicity relation (AMR) for the Solar neighbourhood, ``p.Rsun``.</span>
 <span class="sd">        </span>
@@ -655,10 +637,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>     </div>
 
 
-
-<div class="viewcode-block" id="Plotting.gr_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.gr_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">gr_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.gr_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.gr_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">gr_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Mass loss as a function of time and Galactocentric distance.</span>
 <span class="sd">        </span>
@@ -742,10 +721,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>         </div>
 
 
-
-<div class="viewcode-block" id="Plotting.g_rsun_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.g_rsun_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">g_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.g_rsun_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.g_rsun_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">g_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots mass loss function for the Solar neighbourhood, ``p.Rsun``.</span>
 <span class="sd">        </span>
@@ -802,10 +778,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>         </div>
 
 
-
-<div class="viewcode-block" id="Plotting.rhoz_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rhoz_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rhoz_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.rhoz_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rhoz_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rhoz_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Vertical density profiles of the Galactic components (thin and thick disk, </span>
 <span class="sd">        molecular and atomic gas, DM and stellar halo) at some radius.</span>
@@ -880,12 +853,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
-
     
  
-<div class="viewcode-block" id="Plotting.rhoz_monoage_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rhoz_monoage_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rhoz_monoage_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.rhoz_monoage_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rhoz_monoage_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rhoz_monoage_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Vertical density profiles of the mono-age subpopulations</span>
 <span class="sd">        (plotting for :func:`jjmodel.analysis.rhoz_monoage`).</span>
@@ -999,12 +969,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
-
     
     
-<div class="viewcode-block" id="Plotting.rhoz_monomet_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rhoz_monomet_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rhoz_monomet_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.rhoz_monomet_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rhoz_monomet_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rhoz_monomet_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Vertical density profiles of the mono-metallicity subpopulations</span>
 <span class="sd">        (plotting for jjmodel.analysis.rhoz_monomet).</span>
@@ -1104,12 +1071,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
-
     
     
-<div class="viewcode-block" id="Plotting.rz_map_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rz_map_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rz_map_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.rz_map_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rz_map_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rz_map_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Density distribution in R and z Galactic coordinates. Can be matter or number density. </span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.rz_map`. </span>
@@ -1215,12 +1179,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
-
         
     
-<div class="viewcode-block" id="Plotting.rz_map_quantity_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rz_map_quantity_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rz_map_quantity_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">quantity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.rz_map_quantity_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rz_map_quantity_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rz_map_quantity_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">quantity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Distribution of some quantity Q in Rz-plane. Q can be W-velocity dispersion or </span>
 <span class="sd">        stellar physical parameter from isochrones. Plotting for :func:`jjmodel.analysis.rz_map_quantity`. </span>
@@ -1228,8 +1189,8 @@
 <span class="sd">        :param mode_comp: Galactic component, can be ``&#39;d&#39;``, ``&#39;t&#39;``, ``&#39;sh&#39;``, ``&#39;dt&#39;``, or ``&#39;tot&#39;`` </span>
 <span class="sd">            (thin disk, thick disk, halo, thin+thick disk, or total).</span>
 <span class="sd">        :type mode_comp: str</span>
-<span class="sd">        :param quantity: :param quantity: Name of the column in a stellar assemblies table to which </span>
-<span class="sd">            the function has to be applied; for velocity dispersion use ``&#39;sigw&#39;``. </span>
+<span class="sd">        :param quantity: Name of the column in a stellar assemblies table to which</span>
+<span class="sd">            the function has to be applied; for velocity dispersion use ``&#39;sigw&#39;``.</span>
 <span class="sd">        :type quantity: str</span>
 <span class="sd">        :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">            (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -1342,10 +1303,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="Plotting.agez_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.agez_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">agez_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.agez_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.agez_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">agez_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Mean age as a function of height z and Galactocentric distance R.</span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.agez`. </span>
@@ -1438,12 +1396,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
-
     
 
-<div class="viewcode-block" id="Plotting.agez_rsun_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.agez_rsun_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">agez_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.agez_rsun_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.agez_rsun_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">agez_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Mean age as a function of height z for the Solar neighbourhood, ``p.Rsun``.</span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.agez`. </span>
@@ -1540,10 +1495,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
 
 
-
-<div class="viewcode-block" id="Plotting.ager_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.ager_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">ager_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.ager_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.ager_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">ager_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Radial age profiles. Plotting for :func:`jjmodel.analysis.ager`. </span>
 <span class="sd">        </span>
@@ -1649,10 +1601,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
 
 
-
-<div class="viewcode-block" id="Plotting.metz_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.metz_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">metz_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.metz_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.metz_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">metz_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">        Mean metallicity as a function of height z and Galactocentric distance R.</span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.metz`. </span>
@@ -1743,18 +1692,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
-
     
     
-<div class="viewcode-block" id="Plotting.metz_rsun_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.metz_rsun_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">metz_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.metz_rsun_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.metz_rsun_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">metz_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;        </span>
 <span class="sd">        Mean metallicity as a function of height z for the Solar neighbourhood, p.Rsun.</span>
 <span class="sd">        Plotting for jjmodel.analysis.metz. </span>
 <span class="sd">        </span>
-<span class="sd">        :param mode_comp:Galactic component, can be ``&#39;d&#39;``, ``&#39;t&#39;``, ``&#39;sh&#39;``, ``&#39;dt&#39;``, or ``&#39;tot&#39;`` </span>
-<span class="sd">            (thin disk, thick disk, halo, thin+thick disk, or total). </span>
+<span class="sd">        :param mode_comp: Galactic component, can be ``&#39;d&#39;``, ``&#39;t&#39;``, ``&#39;sh&#39;``, ``&#39;dt&#39;``, or ``&#39;tot&#39;``</span>
+<span class="sd">            (thin disk, thick disk, halo, thin+thick disk, or total).</span>
 <span class="sd">        :type mode_comp: str</span>
 <span class="sd">        :param mode_pop: Optional. Name of stellar population. Can be a pre-defined one </span>
 <span class="sd">            (``&#39;a&#39;``, ``&#39;f&#39;``, ``&#39;ceph&#39;``, ``&#39;rc&#39;``, ``&#39;rc+&#39;``, ``&#39;gdw&#39;``, ``&#39;kdw&#39;``, ``&#39;mdw&#39;``) or custom </span>
@@ -1847,11 +1793,8 @@
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
 
-
     
-<div class="viewcode-block" id="Plotting.metr_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.metr_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">metr_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.metr_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.metr_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">metr_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;        </span>
 <span class="sd">        Radial metallicity profiles. Plotting for :func:`jjmodel.analysis.metr`. </span>
 <span class="sd">        </span>
@@ -1957,11 +1900,8 @@
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
 
-
   
-<div class="viewcode-block" id="Plotting.rhor_monoage_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rhor_monoage_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rhor_monoage_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.rhor_monoage_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rhor_monoage_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rhor_monoage_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Radial densiy profiles of the mono-age subpopulations. </span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.rhor_monoage`. </span>
@@ -2093,10 +2033,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
 
 
-
-<div class="viewcode-block" id="Plotting.rhor_monomet_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rhor_monomet_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rhor_monomet_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.rhor_monomet_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rhor_monomet_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rhor_monomet_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Radial densiy profiles of the mono-metallicity subpopulations. </span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.rhor_monomet`. </span>
@@ -2212,10 +2149,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
 
 
-
-<div class="viewcode-block" id="Plotting.agehist_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.agehist_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">agehist_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.agehist_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.agehist_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">agehist_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Age distribution (normalized on area) as a function of height and Galactocentric distance. </span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.agehist`. </span>
@@ -2336,10 +2270,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="Plotting.agehist_rsun_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.agehist_rsun_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">agehist_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.agehist_rsun_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.agehist_rsun_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">agehist_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Age distribution (normalized on area) as a function of height for the Solar neighbourhood, ``p.Rsun``.</span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.agehist`. </span>
@@ -2527,10 +2458,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="Plotting.methist_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.methist_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">methist_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.methist_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.methist_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">methist_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;     </span>
 <span class="sd">        Metallicity distribution (normalized on area) as a function of height and Galactocentric distance. </span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.methist`. </span>
@@ -2649,10 +2577,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="Plotting.methist_rsun_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.methist_rsun_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">methist_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.methist_rsun_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.methist_rsun_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">methist_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Metallicity distribution (normalized on area) as a function of height </span>
 <span class="sd">        for the Solar neighbourhood, p. Rsun. Plotting for jjmodel.analysis.methist. </span>
@@ -2839,10 +2764,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="Plotting.h_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.h_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">h_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.h_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.h_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">h_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        MW thin-disk&#39;s scale height as a function of time (and age).</span>
 <span class="sd">        </span>
@@ -2920,10 +2842,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>         </div>
 
 
-
-<div class="viewcode-block" id="Plotting.h_rsun_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.h_rsun_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">h_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.h_rsun_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.h_rsun_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">h_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        MW thin-disk&#39;s scale height as a function of time (and age)</span>
 <span class="sd">        for the Solar neighbourhood, at ``p.Rsun``.</span>
@@ -2983,10 +2902,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>         </div>
 
 
-
-<div class="viewcode-block" id="Plotting.hr_monoage_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.hr_monoage_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">hr_monoage_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.hr_monoage_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.hr_monoage_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">hr_monoage_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Scale heights of the disk&#39;s mono-age subpopulations as a function of Galactocentric distance.</span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.hr_monoage`. </span>
@@ -3102,12 +3018,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
-
     
     
-<div class="viewcode-block" id="Plotting.hr_monomet_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.hr_monomet_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">hr_monomet_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.hr_monomet_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.hr_monomet_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">hr_monomet_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Scale heights of the disk&#39;s mono-metallicity sub-populations as a function of Galactocentric distance.</span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.hr_monomet`. </span>
@@ -3215,10 +3128,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
 
 
-
-<div class="viewcode-block" id="Plotting.hr_gas_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.hr_gas_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">hr_gas_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.hr_gas_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.hr_gas_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">hr_gas_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Scale heights of molecular and atomic gas as functions of Galactocentric distance.</span>
 <span class="sd">        </span>
@@ -3261,12 +3171,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> 
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
-
     
     
-<div class="viewcode-block" id="Plotting.avr_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.avr_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">avr_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.avr_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.avr_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">avr_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots age - W-velocity dispersion relation (AVR).</span>
 <span class="sd">        </span>
@@ -3342,10 +3249,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>         </div>
 
 
-
-<div class="viewcode-block" id="Plotting.avr_rsun_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.avr_rsun_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">avr_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.avr_rsun_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.avr_rsun_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">avr_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots age - W-velocity dispersion relation (AVR) </span>
 <span class="sd">        for the Solar neighbourhood, at ``p.Rsun``.</span>
@@ -3400,11 +3304,8 @@
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>         </div>
 
-
     
-<div class="viewcode-block" id="Plotting.sigwr_thick_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwr_thick_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sigwr_thick_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.sigwr_thick_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwr_thick_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sigwr_thick_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Thick-disk W-velocity dispersion as a function of Galactocentric distance.</span>
 <span class="sd">        </span>
@@ -3440,12 +3341,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> 
 
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
-
     
     
-<div class="viewcode-block" id="Plotting.sigwz_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwz_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sigwz_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.sigwz_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwz_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sigwz_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        W-velocity dispersion as a function of height z and Galactocentric distance. </span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.sigwz`. </span>
@@ -3534,10 +3432,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
 
 
-
-<div class="viewcode-block" id="Plotting.sigwz_rsun_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwz_rsun_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sigwz_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.sigwz_rsun_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwz_rsun_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sigwz_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        W-velocity dispersion as a function of height z for the Solar neighbourhood, at ``p.Rsun``. </span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.sigwz`. </span>
@@ -3602,10 +3497,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
 
 
-
-<div class="viewcode-block" id="Plotting.sigwr_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwr_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sigwr_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.sigwr_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwr_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sigwr_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        W-velocity dispersion as a function of Galactocentric distance.</span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.sigwr`. </span>
@@ -3722,12 +3614,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> 
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
-
     
 
-<div class="viewcode-block" id="Plotting.sigwr_monoage_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwr_monoage_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sigwr_monoage_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.sigwr_monoage_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwr_monoage_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sigwr_monoage_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        W-velocity dispersion of mono-age sub-populations as a function of Galactocentric distance.</span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.sigwr_monoage`. </span>
@@ -3857,10 +3746,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>    </div>
 
 
-
-<div class="viewcode-block" id="Plotting.sigwr_monomet_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwr_monomet_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sigwr_monomet_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.sigwr_monomet_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwr_monomet_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sigwr_monomet_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        W-velocity dispersion of mono-metallicity subpopulations as a function of Galactocentric distance.</span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.sigwr_monomet`. </span>
@@ -3976,10 +3862,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>  </div>
 
 
-
-<div class="viewcode-block" id="Plotting.sigwr_gas_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwr_gas_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sigwr_gas_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.sigwr_gas_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.sigwr_gas_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sigwr_gas_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        W-velocity dispersion of the atomic and molecular gas as a function of Galactocentric distance.</span>
 <span class="sd">        </span>
@@ -4021,12 +3904,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> 
 
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
-
     
     
-<div class="viewcode-block" id="Plotting.fi_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.fi_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">fi_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.fi_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.fi_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">fi_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Vertical gravitational potential as a function of Galactocentric distance. </span>
 <span class="sd">        Potential is normalized to ``SIGMA_E^2``. </span>
@@ -4088,10 +3968,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>     </div>
 
 
-
-<div class="viewcode-block" id="Plotting.fi_rsun_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.fi_rsun_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">fi_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.fi_rsun_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.fi_rsun_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">fi_rsun_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The normalized vertical gravitational potential  </span>
 <span class="sd">        for the Solar neighbourhood, at ``p.Rsun``.</span>
@@ -4131,10 +4008,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>     </div>
 
 
-
-<div class="viewcode-block" id="Plotting.fi_iso_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.fi_iso_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">fi_iso_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.fi_iso_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.fi_iso_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">fi_iso_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        2d map (R-z plane) of the normalized gravitational potential with isolines. </span>
 <span class="sd">        </span>
@@ -4177,10 +4051,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>     </div>
 
 
-
-<div class="viewcode-block" id="Plotting.kz_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.kz_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">kz_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.kz_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.kz_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">kz_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Vertical gravitational force of the different model components calculated </span>
 <span class="sd">        for a fixed Galactocentric distance.</span>
@@ -4225,11 +4096,8 @@
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>     </div>
 
-
     
-<div class="viewcode-block" id="Plotting.rot_curve_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rot_curve_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rot_curve_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.rot_curve_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.rot_curve_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rot_curve_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rotation curve as follows from the assumed MW mass model.</span>
 <span class="sd">        </span>
@@ -4275,10 +4143,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> </div>
 
 
-
-<div class="viewcode-block" id="Plotting.fw_hist_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.fw_hist_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">fw_hist_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.fw_hist_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.fw_hist_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">fw_hist_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        W-velocity distribution function. Plotting for :func:`jjmodel.analysis.fw_hist`. </span>
 <span class="sd">        </span>
@@ -4531,12 +4396,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>     </div>
-
     
     
-<div class="viewcode-block" id="Plotting.disk_brightness_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.disk_brightness_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">disk_brightness_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">mode_geom</span><span class="p">,</span><span class="n">bands</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.disk_brightness_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.disk_brightness_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">disk_brightness_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">mode_geom</span><span class="p">,</span><span class="n">bands</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Surface brightness or colour profile of the MW viewed edge-on or face-on. </span>
 <span class="sd">        Plotting for :func:`jjmodel.analysis.disk_brightness`. </span>
@@ -4637,12 +4499,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>     </div>
-
     
     
-<div class="viewcode-block" id="Plotting.hess_simple_plt">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.hess_simple_plt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">hess_simple_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">mode_geom</span><span class="p">,</span><span class="n">bands</span><span class="p">,</span><span class="n">mag_range</span><span class="p">,</span><span class="n">mag_step</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Plotting.hess_simple_plt"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.Plotting.hess_simple_plt">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">hess_simple_plt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">mode_geom</span><span class="p">,</span><span class="n">bands</span><span class="p">,</span><span class="n">mag_range</span><span class="p">,</span><span class="n">mag_step</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Hess diagram for the simple volumes. PLotting for :func:`jjmodel.analysis.hess_simple`. </span>
 <span class="sd">        </span>
@@ -4743,22 +4602,16 @@
             <span class="n">ts</span><span class="o">.</span><span class="n">hess_save</span><span class="p">(</span><span class="n">hess</span><span class="p">,</span><span class="n">mode_comp</span><span class="p">,</span><span class="n">mode_geom</span><span class="p">,</span><span class="n">bands</span><span class="p">,</span><span class="n">mag_range</span><span class="p">,</span><span class="n">mag_step</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_figclose_</span><span class="p">(</span><span class="n">this_function</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
-        <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>     </div>
-</div>
-
+        <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>     </div></div>
         
             
 
-<div class="viewcode-block" id="PlotBlocks">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PlotBlocks</span><span class="p">():</span>
+<div class="viewcode-block" id="PlotBlocks"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">PlotBlocks</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to plot and save many figures automatically. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-<div class="viewcode-block" id="PlotBlocks.__init__">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotBlocks.__init__"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Class is initialized with tuples p and a and dictionary ``inp``. </span>
 <span class="sd">        </span>
@@ -4778,12 +4631,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;close&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;save&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pops</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;f&#39;</span><span class="p">,</span><span class="s1">&#39;rc&#39;</span><span class="p">,</span><span class="s1">&#39;gdw&#39;</span><span class="p">,</span><span class="s1">&#39;kdw&#39;</span><span class="p">,</span><span class="s1">&#39;wd&#39;</span><span class="p">]</span></div>
-
         
         
-<div class="viewcode-block" id="PlotBlocks.model_input">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.model_input">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">model_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotBlocks.model_input"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.model_input">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">model_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots and saves all model input: radial density profiles </span>
 <span class="sd">        of the Galactic components, SFR, mass loss, gas scale heights. </span>
@@ -4816,11 +4666,8 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">inpcheck_iskwargtype</span><span class="p">(</span><span class="n">kwgs</span><span class="p">,</span><span class="s1">&#39;print_time&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">this_function</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">PlotBlocks.model_input : &#39;</span><span class="p">,</span><span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">t_start</span><span class="p">))</span></div>
 
-
         
-<div class="viewcode-block" id="PlotBlocks.densities">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.densities">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">densities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotBlocks.densities"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.densities">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">densities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots and saves predicted vertical and radial profiles  </span>
 <span class="sd">        of the Galactic components and of the disk&#39;s mono-age and mono-metallicity subpopulations. </span>
@@ -4868,12 +4715,9 @@
         
         <span class="k">if</span> <span class="ow">not</span> <span class="n">inpcheck_iskwargtype</span><span class="p">(</span><span class="n">kwgs</span><span class="p">,</span><span class="s1">&#39;print_time&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">this_function</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">PlotBlocks.densities : &#39;</span><span class="p">,</span><span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">t_start</span><span class="p">))</span></div>
-
         
         
-<div class="viewcode-block" id="PlotBlocks.ages">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.ages">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">ages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zlim_set</span><span class="p">,</span><span class="n">age_sm</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotBlocks.ages"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.ages">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">ages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zlim_set</span><span class="p">,</span><span class="n">age_sm</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots and saves disk&#39;s age distributions at different heights and Galactocentric distances. </span>
 <span class="sd">        </span>
@@ -4917,12 +4761,9 @@
         
         <span class="k">if</span> <span class="ow">not</span> <span class="n">inpcheck_iskwargtype</span><span class="p">(</span><span class="n">kwgs</span><span class="p">,</span><span class="s1">&#39;print_time&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">this_function</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">PlotBlocks.ages : &#39;</span><span class="p">,</span><span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">t_start</span><span class="p">))</span></div>
-
             
             
-<div class="viewcode-block" id="PlotBlocks.metallicities">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.metallicities">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">metallicities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zlim_set</span><span class="p">,</span><span class="n">met_sm</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotBlocks.metallicities"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.metallicities">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">metallicities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zlim_set</span><span class="p">,</span><span class="n">met_sm</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots and saves disk&#39;s age distributions at different heights and Galactocentric distances. </span>
 <span class="sd">        </span>
@@ -4965,12 +4806,9 @@
         
         <span class="k">if</span> <span class="ow">not</span> <span class="n">inpcheck_iskwargtype</span><span class="p">(</span><span class="n">kwgs</span><span class="p">,</span><span class="s1">&#39;print_time&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">this_function</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">PlotBlocks.metallicities : &#39;</span><span class="p">,</span><span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">t_start</span><span class="p">))</span></div>
-
             
             
-<div class="viewcode-block" id="PlotBlocks.heights">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.heights">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">heights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotBlocks.heights"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.heights">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">heights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots and saves disk&#39;s scale heights as a function of age and Galactocentric distance. </span>
 <span class="sd">        </span>
@@ -5000,12 +4838,9 @@
     
         <span class="k">if</span> <span class="ow">not</span> <span class="n">inpcheck_iskwargtype</span><span class="p">(</span><span class="n">kwgs</span><span class="p">,</span><span class="s1">&#39;print_time&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">this_function</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">PlotBlocks.heights : &#39;</span><span class="p">,</span><span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">t_start</span><span class="p">))</span></div>
-
         
         
-<div class="viewcode-block" id="PlotBlocks.kinematics">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.kinematics">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">kinematics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zlim_set</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotBlocks.kinematics"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.kinematics">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">kinematics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zlim_set</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots and saves disk&#39;s kinematic functions: AVR, W-velocity </span>
 <span class="sd">        dispersion of the thick disk and gas at different Galactocentric distances. </span>
@@ -5053,12 +4888,9 @@
                 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">inpcheck_iskwargtype</span><span class="p">(</span><span class="n">kwgs</span><span class="p">,</span><span class="s1">&#39;print_time&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">this_function</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">PlotBlocks.kinematics : &#39;</span><span class="p">,</span><span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">t_start</span><span class="p">))</span> </div>
-
             
             
-<div class="viewcode-block" id="PlotBlocks.potential">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.potential">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotBlocks.potential"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.potential">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots and saves vertical grvitational potential and gravitational force. </span>
 <span class="sd">        </span>
@@ -5087,12 +4919,9 @@
         
         <span class="k">if</span> <span class="ow">not</span> <span class="n">inpcheck_iskwargtype</span><span class="p">(</span><span class="n">kwgs</span><span class="p">,</span><span class="s1">&#39;print_time&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">this_function</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">PlotBlocks.potential : &#39;</span><span class="p">,</span><span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">t_start</span><span class="p">))</span></div>
-
             
             
-<div class="viewcode-block" id="PlotBlocks.rz_maps">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.rz_maps">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rz_maps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dz</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotBlocks.rz_maps"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.rz_maps">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rz_maps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dz</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots and saves density/age/[Fe/H]/sigw maps in Rz plane. </span>
 <span class="sd">        </span>
@@ -5114,12 +4943,9 @@
             
         <span class="k">if</span> <span class="ow">not</span> <span class="n">inpcheck_iskwargtype</span><span class="p">(</span><span class="n">kwgs</span><span class="p">,</span><span class="s1">&#39;print_time&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">this_function</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">PlotBlocks.rz_maps : &#39;</span><span class="p">,</span><span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">t_start</span><span class="p">))</span></div>
-
                         
             
-<div class="viewcode-block" id="PlotBlocks.populations">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.populations">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">populations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="n">age_sm</span><span class="p">,</span><span class="n">met_sm</span><span class="p">,</span><span class="n">rmax</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotBlocks.populations"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.populations">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">populations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zlim</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="n">age_sm</span><span class="p">,</span><span class="n">met_sm</span><span class="p">,</span><span class="n">rmax</span><span class="p">,</span><span class="o">**</span><span class="n">kwgs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots and saves radial density profiles, age, metallicity , and f(W) distributions, </span>
 <span class="sd">        Hess diagrams and Rz-maps for the different populations. </span>
@@ -5215,12 +5041,9 @@
         
         <span class="k">if</span> <span class="ow">not</span> <span class="n">inpcheck_iskwargtype</span><span class="p">(</span><span class="n">kwgs</span><span class="p">,</span><span class="s1">&#39;print_time&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">this_function</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">PlotBlocks.pops : &#39;</span><span class="p">,</span><span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">t_start</span><span class="p">))</span></div>
-
         
         
-<div class="viewcode-block" id="PlotBlocks.basic_output">
-<a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.basic_output">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">basic_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zlim_set</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="n">age_sm</span><span class="p">,</span><span class="n">met_sm</span><span class="p">,</span><span class="n">rmax</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="PlotBlocks.basic_output"><a class="viewcode-back" href="../../plotting.html#jjmodel.plotting.PlotBlocks.basic_output">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">basic_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zlim_set</span><span class="p">,</span><span class="n">ages</span><span class="p">,</span><span class="n">mets</span><span class="p">,</span><span class="n">age_sm</span><span class="p">,</span><span class="n">met_sm</span><span class="p">,</span><span class="n">rmax</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots and saves all figures (basic output of the model). </span>
 <span class="sd">        </span>
@@ -5278,9 +5101,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">rz_maps</span><span class="p">(</span><span class="n">dz</span><span class="p">,</span><span class="n">print_time</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>            
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">ok&#39;</span><span class="p">)</span>
         
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">PlotBlocks.basic_output: &#39;</span><span class="p">,</span><span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">t_start</span><span class="p">))</span></div>
-</div>
-
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">PlotBlocks.basic_output: &#39;</span><span class="p">,</span><span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">t_start</span><span class="p">))</span></div></div>
 
 
 </pre></div>
@@ -5289,7 +5110,7 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../../index.html">jjmodel</a></h1>
 
@@ -5300,16 +5121,7 @@
 
 
 
-
-<search id="searchbox" style="display: none" role="search">
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Getting started</a></li>
@@ -5335,6 +5147,16 @@
   </ul></li>
 </ul>
 </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -5348,11 +5170,11 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2022, Sysoliatina.
+      &copy;2022, Sysoliatina.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.2.0</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

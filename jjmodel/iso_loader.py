@@ -48,10 +48,10 @@ def isochrone_loader(iso_type,model):
     zip_file = ''.join((destination_folder,'.zip'))
 
     gdown.download(
-        url=download_link,
+            id=download_link.split("/d/")[1].split("/")[0],
         output=zip_file,
         quiet=False,
-        resume=True,
+        resume=False,
     )
     
     print('Unpacking archive... ',end='')

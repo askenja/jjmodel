@@ -1400,22 +1400,27 @@ class IFMRHandler():
                 self.segments_cummings[calibration][0]['b'] = kwargs[par]
 
         # Update Mini ranges in case if Mf breakpoints were modified 
-        for _, seg in enumerate(self.segments_cummings[calibration]):
-            vals, _, _ = self.cummings(seg['range'],calibration=calibration)
-            val_lower, val_upper = vals
-            seg['range_r'] = np.round([float(val_lower),float(val_upper)],2)
+        segments = self.segments_cummings[calibration]
+        a1, a2, a3 = [seg['a'] for seg in segments]
+        b1 = segments[0]['b']
+        m1 = segments[0]['range'][1]
+        m2 = segments[1]['range'][1]
 
-        # Ensure continuity by updating offsets
-        b1 = self.segments_cummings[calibration][0]['b']
-        a1 = self.segments_cummings[calibration][0]['a']
-        a2 = self.segments_cummings[calibration][1]['a']
-        a3 = self.segments_cummings[calibration][2]['a']
-        m_br1 = self.segments_cummings[calibration][0]['range'][1]
-        m_br2 = self.segments_cummings[calibration][1]['range'][1]
+        # First make all three segments continuous.
+        segments[1]['b'] = b1 + (a1 - a2) * m1
+        segments[2]['b'] = segments[1]['b'] + (a2 - a3) * m2
 
-        self.segments_cummings[calibration][1]['b'] = float(np.round(b1 - m_br1*(a2 - a1),3))
-        self.segments_cummings[calibration][2]['b'] = float(np.round(b1 - m_br1*(a2 - a1) - m_br2*(a3 - a2),3))
+        # Then derive shared inverse boundaries from the final coefficients.
+        # Do not round these boundaries.
+        final_edges = np.array([
+            a1 * segments[0]['range'][0] + b1,
+            a1 * m1 + b1,
+            a2 * m2 + segments[1]['b'],
+            a3 * segments[2]['range'][1] + segments[2]['b'],
+        ], dtype=float)
 
+        for i, seg in enumerate(segments):
+            seg['range_r'] = final_edges[i:i + 2].copy()
 
     def _segmented_forward_(self, segment, Mini):
         r"""
@@ -1916,16 +1921,28 @@ class PopHandler:
             Initial mass indices corresponding to the provided mass grid. 
             Structure: {'d':ind_d,'t':ind_t,'sh':ind_sh}. 
         """
+        def nearest(grid, values):
+            grid = np.asarray(grid)
+            values = np.asarray(values)
+
+            right = np.searchsorted(grid, values)
+            right = np.clip(right, 0, len(grid) - 1)
+            left = np.maximum(right - 1, 0)
+
+            use_left = (np.abs(values - grid[left]) <= np.abs(values - grid[right]))
+
+            indices = np.where(use_left, left, right)
+            return np.where(np.isfinite(values), indices, 0)
+
         indt = {}
         indm = {}
 
-        indt['d'] = np.array([np.argmin(np.abs(time - self.a.t)) for time in np.subtract(tp,pop_tabs['d']['age'])])
-        indm['d'] = np.array([np.argmin(np.abs(mass - mass_binsc)) for mass in pop_tabs['d']['Mini']])
+        for label, grid in [('d', self.a.t), ('t', self.a.t[:self.a.jt])]:
+            times = tp - np.asarray(pop_tabs[label]['age'])
+            indt[label] = nearest(grid, times)
 
-        indt['t'] = np.array([np.argmin(np.abs(time - self.a.t[:self.a.jt])) for time in np.subtract(tp,pop_tabs['t']['age'])])
-        indm['t'] = np.array([np.argmin(np.abs(mass - mass_binsc)) for mass in pop_tabs['t']['Mini']])
-
-        indm['sh'] = np.array([np.argmin(np.abs(mass - mass_binsc)) for mass in pop_tabs['sh']['Mini']])
+        for label in ['d', 't', 'sh']:
+            indm[label] = nearest(mass_binsc, pop_tabs[label]['Mini'])
 
         return indt, indm
 
@@ -2503,10 +2520,15 @@ class PopHandler:
                 age_tot_wd = age_tot_ref_arr.copy()
 
             # -------- dcool: apply part of the cooling delay correction ----------
+
             if 'dcool' in opt_classes and label != 'sh':
                 alpha_cool = opt_params['dcool']['alpha_cool']
-                # New total WD ages
+
                 age_tot_wd = age_tot_wd + alpha_cool * age_wd_ref_arr
+
+                pop_tabs[label]['age'][all_wd_idx] = age_tot_wd
+
+                pop_tabs[label]['t_cool'][all_wd_idx] = ((1 + alpha_cool) * age_wd_ref_arr)
 
             # -------- IFMR and dcool (remaining part) correction ----------
             if (('ifmr' in opt_classes) or ('dcool' in opt_classes)) and (label != 'sh'):
@@ -2522,7 +2544,10 @@ class PopHandler:
                 # Then compute new time index array and clip to a valid range
                 #t_wd = 13.0 - age_tot_wd
                 #indt_new = np.array([np.argmin(np.abs(time - self.a.t)) for time in t_wd]) # Do not use this line! +4s to iteration runtime!
-                indt_new = np.searchsorted(time_grid, 13.0 - age_tot_wd)
+                boundaries = (self.a.t[:-1] + self.a.t[1:]) / 2
+
+                indt_new = np.searchsorted(boundaries, tp - age_tot_wd)
+
                 indt_new = np.clip(indt_new, 0, max_time_idx[label])
                 # update indt in place
                 indt[label][all_wd_idx] = indt_new
@@ -2564,8 +2589,12 @@ class PopHandler:
                 teff_factor_da, teff_factor_db = 1, 1
 
                 if f_da_teff:
-                    teff_factor_db = fdb_parabola(10**(pop_tabs[label]['logT'] - 3))
-                    teff_factor_da = (1 - teff_factor_db)
+                    teff_factor_db = fdb_parabola(
+                        10**(pop_tabs[label]['logT'][ind_db] - 3)
+                    )
+                    teff_factor_da = 1 - fdb_parabola(
+                        10**(pop_tabs[label]['logT'][ind_da] - 3)
+                    )
                 
                 # Update WD number densities with the new DA/DB fractions
                 pop_tabs[label]['N'][ind_da] *= da_weight*teff_factor_da
@@ -2719,10 +2748,13 @@ class MSAgeHandler():
             Main-sequence lifetime, Gyr. 
         """
         # Check that metallicity is specified
-        if not feh and not self.feh and not self.feh_idx:
-            raise ValueError('Parameter feh (metallicity [Fe/H]) must be given!')
-        elif feh:
+        if feh is not None:
             self.set_feh(feh)
+
+        if self.feh_idx is None:
+            raise ValueError(
+                'Parameter feh (metallicity [Fe/H]) must be given!'
+            )
 
         # Choose the interpolator corresponding to this metallicity 
         # and type of the function according to the data in the parameter file
