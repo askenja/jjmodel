@@ -1400,22 +1400,27 @@ class IFMRHandler():
                 self.segments_cummings[calibration][0]['b'] = kwargs[par]
 
         # Update Mini ranges in case if Mf breakpoints were modified 
-        # Calculate inverse ranges from the updated relation.
-        for seg in self.segments_cummings[calibration]:
-            values, _, _ = self.cummings(seg['range'], calibration=calibration)
-            seg['range_r'] = np.round(np.asarray(values, dtype=float), 2)
+        segments = self.segments_cummings[calibration]
+        a1, a2, a3 = [seg['a'] for seg in segments]
+        b1 = segments[0]['b']
+        m1 = segments[0]['range'][1]
+        m2 = segments[1]['range'][1]
 
-        # Ensure continuity by updating offsets
-        b1 = self.segments_cummings[calibration][0]['b']
-        a1 = self.segments_cummings[calibration][0]['a']
-        a2 = self.segments_cummings[calibration][1]['a']
-        a3 = self.segments_cummings[calibration][2]['a']
-        m_br1 = self.segments_cummings[calibration][0]['range'][1]
-        m_br2 = self.segments_cummings[calibration][1]['range'][1]
+        # First make all three segments continuous.
+        segments[1]['b'] = b1 + (a1 - a2) * m1
+        segments[2]['b'] = segments[1]['b'] + (a2 - a3) * m2
 
-        self.segments_cummings[calibration][1]['b'] = float(np.round(b1 - m_br1*(a2 - a1),3))
-        self.segments_cummings[calibration][2]['b'] = float(np.round(b1 - m_br1*(a2 - a1) - m_br2*(a3 - a2),3))
+        # Then derive shared inverse boundaries from the final coefficients.
+        # Do not round these boundaries.
+        final_edges = np.array([
+            a1 * segments[0]['range'][0] + b1,
+            a1 * m1 + b1,
+            a2 * m2 + segments[1]['b'],
+            a3 * segments[2]['range'][1] + segments[2]['b'],
+        ], dtype=float)
 
+        for i, seg in enumerate(segments):
+            seg['range_r'] = final_edges[i:i + 2].copy()
 
     def _segmented_forward_(self, segment, Mini):
         r"""
