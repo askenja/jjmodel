@@ -29,7 +29,7 @@ def isochrone_loader(iso_type,model):
             'BaSTI':'https://drive.google.com/file/d/1mnuQrFb1TrYnxGIFl7zj8O_0e4V7H7jv/view?usp=sharing'
             },
         'wd':{
-            'LPCODE':'https://drive.google.com/file/d/13rjsl00muTcpex9NENfJuQi-KJDF-mME/view?usp=sharing',
+            'LPCODE':'https://drive.google.com/file/d/1Zm2iVmKWQlb3jz3hkXggrBQTOp-tkE5p/view?usp=sharing',
             'Montreal':'https://drive.google.com/file/d/1PzIWb6FT66-Xd95irmpF4ojwZ-TKSqNK/view?usp=sharing',
             'BaSTI':'https://drive.google.com/file/d/1lKywK0O3SN_jNttShiC0lD5F4kPmTo5L/view?usp=sharing'
             }
@@ -48,7 +48,7 @@ def isochrone_loader(iso_type,model):
     zip_file = ''.join((destination_folder,'.zip'))
 
     gdown.download(
-            id=download_link.split("/d/")[1].split("/")[0],
+        id=download_link.split("/d/")[1].split("/")[0],
         output=zip_file,
         quiet=False,
         resume=False,

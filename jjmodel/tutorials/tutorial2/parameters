@@ -18,7 +18,7 @@
 # ===================================================================================================
 run_mode	1			0 = only locally at Rsun, 1 = range of distances 
 out_dir		'tutorial2'		Name of the output directory 
-out_mode	1			Saving mode: 1 = overwrite existing files, 0 = clean first
+out_mode	0			Saving mode: 1 = overwrite existing files, 0 = clean first
 nprocess	4			Number of CPU cores to be used
 
 
@@ -27,15 +27,15 @@ nprocess	4			Number of CPU cores to be used
 # ===================================================================================================
 Rsun		8.275	kpc		Solar Galactocentric distance 
 zsun		20	pc		Solar height above the Galactic plane 
-Vsun		12.5	km s-1		V-component of the Solar peculiar velocity
+Vsun		12.5	km s-1  	V-component of the Solar peculiar velocity
 
 
 # ===================================================================================================
 # Rz-grid and radial profiles
 # ===================================================================================================
-Rmin		4	kpc		Min Galactocentric distance 
-Rmax		14	kpc		Max Galactocentric distance 
-dR		1	kpc		Radial resolution
+Rmin		6.5	kpc		Min Galactocentric distance 
+Rmax		9.5	kpc		Max Galactocentric distance 
+dR		0.5	kpc		Radial resolution
 zmax		2000	pc		Max height z 
 dz		5	pc		Vertical resolution 
 
@@ -56,8 +56,8 @@ Mb		0.8e10	Msun		Mass of the bulge
 # ===================================================================================================
 sigmad		31.2	Msun pc-2	Thin-disk 
 sigmat		4.9	Msun pc-2	Thick-disk 
-sigmag1		1.7	Msun pc-2	Molecular gas 
-sigmag2		10.9	Msun pc-2	Atomic gas 
+sigmag1		2.0	Msun pc-2	Molecular gas 
+sigmag2		11.0	Msun pc-2	Atomic gas 
 sigmadh		51.9	Msun pc-2	DM halo 
 sigmash		0.47	Msun pc-2	Stellar halo 
 
@@ -81,8 +81,8 @@ k_eta		-0.1	dim		Same as k_td2 but for eta
 # ---------------------------------------------------------------------------------------------------
 tt1		0.1	Gyr		Defines SFR at t = 0 Gyr 
 tt2		4	Gyr		Time when thick-disk SF stops
-gamma		2	dim		Parameter controlling SFR shape
-beta		3.5	Gyr-1		Same as gamma
+gamma	    	2	dim		Parameter controlling SFR shape
+beta	    	3.5	Gyr-1		Same as gamma
 
 
 # ===================================================================================================
@@ -103,8 +103,8 @@ m2		6.0	Msun		Break point between the slopes a2 and a3
 # ===================================================================================================
 # Thin disk
 # ---------------------------------------------------------------------------------------------------
-dFeHdt		0	dex		Dispersion of the disk MAPs MD (thin and thick)
-n_FeHdt		1			Number of subpopulations used to sample the disk MAPs' MD. 
+dFeHdt		0.07	    dex		Dispersion of the disk MAPs MD (thin and thick)
+n_FeHdt		7			Number of subpopulations used to sample the disk MAPs' MD. 
 
 fehkey		1			0=SJ21 (based on Gaia locally), 
 # 					1=SJ22 (based on APOGEE at 4-14 kpc), 2=SJ22 with default parameters
@@ -149,22 +149,22 @@ b3_t02		9.96 	Gyr		R > Rbr3
 # ---------------------------------------------------------------------------------------------------
 FeHt0		-0.94	dex		Initial thick-disk metallicity
 FeHtp		0.04	dex		Present-day thick-disk metallicity 
-rt		0.77	dim		Parameter controlling AMR shape
-t0		0.97	Gyr		Same as rt
+rt		    0.77	dim		Parameter controlling AMR shape
+t0		    0.97	Gyr		Same as rt
 
 # Stellar halo
 # ---------------------------------------------------------------------------------------------------
 FeHsh		-1.5	dex		Mean metallicity of the halo MD
-dFeHsh		0.4	dex		Dispersion of the halo MD
-n_FeHsh		7			Number of subpopulations used to sample halo MD 
+dFeHsh		0.4	    dex		Dispersion of the halo MD
+n_FeHsh		7			    Number of subpopulations used to sample halo MD 
 
 
 # ===================================================================================================
 # Vertical kinematics (W-velocity dispersion)
 # ===================================================================================================
-alpha		0.409	dim		Thin-disk AVR power index at Rsun 
-sige		25.1	km s-1 		AVR scaling parameter at Rsun
-sigt		43.3 	km s-1		Thick-disk velocity dispersion at Rsun 
-sigdh		140	km s-1		DM halo velosity dispersion
-sigsh		100	km s-1		Stellar halo velocity dispersion
+alpha		0.375	dim		    Thin-disk AVR power index at Rsun 
+sige		26.0	km s-1 		AVR scaling parameter at Rsun
+sigt		43.5 	km s-1		Thick-disk velocity dispersion at Rsun 
+sigdh		140	    km s-1		DM halo velosity dispersion
+sigsh		100	    km s-1		Stellar halo velocity dispersion
 

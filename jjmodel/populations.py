@@ -7,6 +7,7 @@ import os
 import h5py
 import glob
 import numpy as np 
+from functools import partial
 from itertools import repeat
 from multiprocessing import Pool
 from astropy.table import Table
@@ -45,7 +46,7 @@ def spread_metallicity(times, metallicities, n_spread, sigma):
         met_spread.extend(met_grid)
         weights_spread.extend(weights)
 
-    return [t_spread, met_spread, weights_spread] 
+    return [np.array(t_spread), np.array(met_spread), np.array(weights_spread)] 
 
 
 def mass_per_population(p,pop,t,sigma,weights):
@@ -205,8 +206,8 @@ class StellarAssemblies:
         # 2. Calculate the mass reservoir of each subpopulation
         # ---------------------------------------------------------------
 
-        md = mass_per_population(self.p,'d',self.a.t,sfrd,popd[2])
-        mt = mass_per_population(self.p,'t',self.a.t[:self.a.jt],sfrt[:self.a.jt],popt[2])
+        md = mass_per_population(self.p,'d',popd[0],sfrd,popd[2])
+        mt = mass_per_population(self.p,'t',popt[0],sfrt[:self.a.jt],popt[2])
         msh = mass_per_population(self.p,'sh',popsh[0],sigmash,popsh[2])
 
         # Combine the populations.
@@ -266,10 +267,16 @@ class StellarAssemblies:
                 )
                 for k in np.arange(len(ind_feh_unique))
                 ]
+            
+            if 'f_da' in kwargs:
+                func = partial(_imf_to_feh_age_pop_, f_da=kwargs['f_da'])
+            else:
+                func = _imf_to_feh_age_pop_
+                
             pool = Pool(processes=self.p.nprocess)
             result = _starmap_with_kwargs_(
                 pool,
-                _imf_to_feh_age_pop_,
+                func,
                 argument_list,
                 kwargs_list
                 )

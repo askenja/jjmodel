@@ -38,14 +38,19 @@ t = np.arange(tr/2,tp+tr/2,tr)
 tau = np.subtract(tp,t)
 
 if p.run_mode!=0:
-    Rbins = int((p.Rmax-p.Rmin)/p.dR+1) 
+    Rbins = int(np.ceil((p.Rmax - p.Rmin) / p.dR) + 1)
+    #Rbins = int(round((p.Rmax-p.Rmin)/p.dR,2) + 1)
     R_array = np.arange(Rbins)
     lenstr1 = len(str(p.Rmin).split(".")[1])
     lenstr2 = len(str(p.Rmax).split(".")[1])
     lenstr3 = len(str(p.dR).split(".")[1])
     lenstr = np.amax([lenstr1,lenstr2,lenstr3])
-    R = np.round(np.arange(p.Rmin,p.Rmax+p.dR,p.dR),lenstr)
+    #R = np.round(np.arange(p.Rmin,p.Rmax+p.dR,p.dR),lenstr)
+    R = p.Rmin + np.arange(Rbins) * p.dR
+    R = np.round(R,lenstr)
     R_edges = np.concatenate((R-p.dR/2,[R[-1]+p.dR/2]))
+
+
 
 dzmax = p.zmax/ZN 
 ddz = p.dz/ZN 

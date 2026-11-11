@@ -39,7 +39,7 @@ dz		2	pc		Vertical resolution
 # ===================================================================================================
 # Local normalizations (surface densities)   
 # ===================================================================================================
-sigmad		29.3	Msun pc-2	Thin-disk 
+sigmad		31.2	Msun pc-2	Thin-disk 
 sigmat		4.9	Msun pc-2	Thick-disk 
 sigmag1		2.0	Msun pc-2	Molecular gas 
 sigmag2		11.0	Msun pc-2	Atomic gas 
@@ -54,8 +54,8 @@ sigmash		0.47	Msun pc-2	Stellar halo
 # ---------------------------------------------------------------------------------------------------
 td1 		0 	Gyr		Start time of SF, don't change
 td2		7.8	Gyr		Parameter controlling SFR shape and peak position
-dzeta		0.8	dim		Same as td2 
-eta		5.6	dim		Same as td2
+dzeta		0.58	dim		Same as td2 
+eta		5.02	dim		Same as td2
 pkey		1			0 = default SFR, 1 = SFR + peaks with special kinematics, 
 #					2 = SFR + peaks (fill sfrd_peaks_parameters)
 
@@ -75,8 +75,8 @@ a0		1.31	dim		IMF slope for mass < m1
 a1		1.5	dim		IMF slope for m1 <= mass < m2
 a2		2.88	dim		IMF slope for m2 <= mass < m3 
 a3		2.28	dim		IMF slope for mass >= m3 
-m0		0.49	Msun		Break point between the slopes a0 and a1
-m1		1.43	Msun		Break point between the slopes a1 and a2
+m0		0.5	    Msun		Break point between the slopes a0 and a1
+m1		1.5	    Msun		Break point between the slopes a1 and a2
 m2		6.0	Msun		Break point between the slopes a2 and a3
 
 

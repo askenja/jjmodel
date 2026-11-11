@@ -730,7 +730,7 @@ def inpcheck_parameters(p):
             errs += "-> Parameter 'dR' must be positive and its maximum allowed value is (Rmax - Rmin) kpc.\n"                         
             n_errors += 1 
             
-        if (p.Rmax - p.Rmin)/p.dR - int((p.Rmax - p.Rmin)/p.dR) != 0: 
+        if round((p.Rmax - p.Rmin)/p.dR,2) - int(round((p.Rmax - p.Rmin)/p.dR,2)) != 0: 
             errs += "-> Parameter 'dR' is not consistent with the chosen range of Galactocentric"+\
                     "distances ['Rmin', 'Rmax']. An interval (Rmax - Rmin) must contain an int number of bins 'dR'.\n"                         
             n_errors += 1 
