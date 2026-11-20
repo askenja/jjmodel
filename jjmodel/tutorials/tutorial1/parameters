@@ -71,9 +71,9 @@ beta		3.5	Gyr-1		Same as gamma
 # IMF
 # ===================================================================================================
 imfkey		0			0=4BPL, 1=custom
-a0		1.31	dim		IMF slope for mass < m1
-a1		1.5	dim		IMF slope for m1 <= mass < m2
-a2		2.88	dim		IMF slope for m2 <= mass < m3 
+a0		1.04	dim		IMF slope for mass < m1
+a1		1.61	dim		IMF slope for m1 <= mass < m2
+a2		2.94	dim		IMF slope for m2 <= mass < m3 
 a3		2.28	dim		IMF slope for mass >= m3 
 m0		0.5	    Msun		Break point between the slopes a0 and a1
 m1		1.5	    Msun		Break point between the slopes a1 and a2

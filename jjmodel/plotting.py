@@ -54,10 +54,12 @@ class Plotting():
                      'a':r'$\mathrm{A \ stars}$', 'f':r'$\mathrm{F \ stars}$',
                      'gdw':r'$\mathrm{G \ dwarfs}$', 'kdw':r'$\mathrm{K \ dwarfs}$',                     
                      'mdw':r'$\mathrm{M \ dwarfs}$','ceph':r'$\mathrm{Cepheids \ Type \ I}$',
-                     'wd':r'$\mathrm{White \ dwarfs}$'}
+                     'wd':r'$\mathrm{White \ dwarfs}$','ldw':r'$\mathrm{L \ dwarfs}$',
+                     'tdw':r'$\mathrm{T \ dwarfs}$','ydw':r'$\mathrm{Y \ dwarfs}$'}
         self.popcols = {'rc':'r', 'rc+':'tomato',
                         'a':'cyan', 'f':'steelblue',
-                        'gdw':'orange', 'kdw':'magenta','ceph':'indigo','wd':'brown'                   
+                        'gdw':'orange', 'kdw':'magenta','ceph':'indigo','wd':'brown',
+                        'ldw':'maroon','tdw':'purple','ydw':'navy'                  
                         }
         self.cols = {'d':'dodgerblue','g1':'cyan','g2':'lawngreen','t':'orange',
                     'dh':'darkmagenta','sh':'r','dt':'violet','tot':'k','b':'y'}

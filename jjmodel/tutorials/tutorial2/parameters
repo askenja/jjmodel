@@ -33,9 +33,9 @@ Vsun		12.5	km s-1  	V-component of the Solar peculiar velocity
 # ===================================================================================================
 # Rz-grid and radial profiles
 # ===================================================================================================
-Rmin		6.5	kpc		Min Galactocentric distance 
-Rmax		9.5	kpc		Max Galactocentric distance 
-dR		0.5	kpc		Radial resolution
+Rmin		4.0	kpc		Min Galactocentric distance 
+Rmax		14.0	kpc		Max Galactocentric distance 
+dR		1	kpc		Radial resolution
 zmax		2000	pc		Max height z 
 dz		5	pc		Vertical resolution 
 

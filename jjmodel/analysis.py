@@ -525,6 +525,109 @@ class GetPopulations():
                 print('\t','{:<3}'.format(mode_comp),': M-dwarf sample is empty.')
                 
         return mdw     
+
+
+    def l_dwarfs(self,mode_comp,**kwargs):
+        r"""
+        Selects L-dwarfs using cuts on *T_eff* and *logg*: 1000 K < *T_eff* < 2400 K && 4 < *logg* < 7. 
+        
+        :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
+        :type mode_comp: str 
+        :param save: Optional. If True, the output table is saved (to the output subdirectory ``pop/tab``).
+        :type save: boolean
+        
+        :return: Table of the stellar assemblies which belong to the L-dwarf population.
+        :rtype: astropy table
+        """
+        
+        this_function = inspect.stack()[0][3]
+        ln, mode_comp = inpcheck_mode_comp(mode_comp,['d','t','sh'],'L dwarfs',this_function)
+        inpcheck_kwargs_compatibility(kwargs,this_function)
+        
+        tab = self.tables[mode_comp]
+        ldw = tab[np.logical_and.reduce([tab['logT'] > np.log10(1000),
+                                         tab['logT'] < np.log10(2400),
+                                         #tab['logg'] < 7,tab['logg'] > 4.0
+                                         ]
+                                         )]
+        
+        if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
+            #tabname = tab_sorter('mdwtab',self.p,self.a.T,R=self.R,mode=mode_comp,mode_pop='mdw') 
+            #mdw.write(tabname,overwrite=True)
+            ts = TabSaver(self.p,self.a,**kwargs)
+            ts.poptab_save(ldw,mode_comp,self.mode_iso,self.R,'ldw')
+            if len(ldw['logT'])==0:
+                print('\t','{:<3}'.format(mode_comp),': L-dwarf sample is empty.')
+                
+        return ldw 
+
+    def y_dwarfs(self,mode_comp,**kwargs):
+        r"""
+        Selects Y-dwarfs using cuts on *T_eff* and *logg*: 250 K < *T_eff* < 500 K && 4 < *logg* < 7. 
+        
+        :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
+        :type mode_comp: str 
+        :param save: Optional. If True, the output table is saved (to the output subdirectory ``pop/tab``).
+        :type save: boolean
+        
+        :return: Table of the stellar assemblies which belong to the Y-dwarf population.
+        :rtype: astropy table
+        """
+        
+        this_function = inspect.stack()[0][3]
+        ln, mode_comp = inpcheck_mode_comp(mode_comp,['d','t','sh'],'Y dwarfs',this_function)
+        inpcheck_kwargs_compatibility(kwargs,this_function)
+        
+        tab = self.tables[mode_comp]
+        ydw = tab[np.logical_and.reduce([tab['logT'] > np.log10(250),
+                                         tab['logT'] < np.log10(500),
+                                         #tab['logg'] < 7,tab['logg'] > 4.0
+                                         ]
+                                         )]
+        
+        if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
+            #tabname = tab_sorter('mdwtab',self.p,self.a.T,R=self.R,mode=mode_comp,mode_pop='mdw') 
+            #mdw.write(tabname,overwrite=True)
+            ts = TabSaver(self.p,self.a,**kwargs)
+            ts.poptab_save(ydw,mode_comp,self.mode_iso,self.R,'ydw')
+            if len(ydw['logT'])==0:
+                print('\t','{:<3}'.format(mode_comp),': Y-dwarf sample is empty.')
+                
+        return ydw 
+
+    def t_dwarfs(self,mode_comp,**kwargs):
+        r"""
+        Selects T-dwarfs using cuts on *T_eff* and *logg*: 500 K < *T_eff* < 1000 K && 4 < *logg* < 7. 
+        
+        :param mode_comp: Model component: ``'d'``, ``'t'``, or ``'sh'`` (thin disk, thick disk, or halo).
+        :type mode_comp: str 
+        :param save: Optional. If True, the output table is saved (to the output subdirectory ``pop/tab``).
+        :type save: boolean
+        
+        :return: Table of the stellar assemblies which belong to the T-dwarf population.
+        :rtype: astropy table
+        """
+        
+        this_function = inspect.stack()[0][3]
+        ln, mode_comp = inpcheck_mode_comp(mode_comp,['d','t','sh'],'T dwarfs',this_function)
+        inpcheck_kwargs_compatibility(kwargs,this_function)
+        
+        tab = self.tables[mode_comp]
+        tdw = tab[np.logical_and.reduce([tab['logT'] > np.log10(500),
+                                         tab['logT'] < np.log10(1000),
+                                         #tab['logg'] < 7,tab['logg'] > 4.0
+                                         ]
+                                         )]
+        
+        if inpcheck_iskwargtype(kwargs,'save',True,bool,this_function):
+            #tabname = tab_sorter('mdwtab',self.p,self.a.T,R=self.R,mode=mode_comp,mode_pop='mdw') 
+            #mdw.write(tabname,overwrite=True)
+            ts = TabSaver(self.p,self.a,**kwargs)
+            ts.poptab_save(tdw,mode_comp,self.mode_iso,self.R,'tdw')
+            if len(tdw['logT'])==0:
+                print('\t','{:<3}'.format(mode_comp),': T-dwarf sample is empty.')
+                
+        return tdw 
     
     def _rr_lyrae_(self,mode_comp,**kwargs):
         r"""
@@ -4171,7 +4274,7 @@ def pops_in_volume(mode_comp,R,volume,p,a,**kwargs):
                                        'stellar assemblies number density',this_function)
     if R!=p.Rsun:
         R = inpcheck_radius(R,p,this_function)  
-    inpcheck_kwargs_compatibility(kwargs,this_function)
+    #inpcheck_kwargs_compatibility(kwargs,this_function)
     
     popname = 'ssp'
     if 'tab' in kwargs:
@@ -4908,19 +5011,34 @@ def hess_simple(mode_comp,mode_geom,bands,mag_range,mag_step,p,a,**kwargs):
     if p.run_mode==0:
         
         if mode_comp=='d' or mode_comp=='dt' or mode_comp=='tot':
-            tabd = Table.read(os.path.join(a.T['poptab'],
-                              ''.join(('SSP_R',str(p.Rsun),'_d_',mode_label,'.csv'))))
+            if 'mode_pop' not in kwargs:
+                tabd = tab_reader('ssp',p,a.T,mode='d',tab=True,R=p.Rsun,mode_iso=mode_iso)
+            else:
+                tabd = tab_reader(kwargs['mode_pop'],p,a.T,mode='d',tab=True,R=p.Rsun,mode_iso=mode_iso)
+                #tabd = np.vstack(tabd)
+            #tabd = Table.read(os.path.join(a.T['poptab'],
+            #                  ''.join(('SSP_R',str(p.Rsun),'_d_',mode_label,'.csv'))))
         if mode_comp=='t' or mode_comp=='dt' or mode_comp=='tot':
-            tabt = Table.read(os.path.join(a.T['poptab'],
-                             ''.join(('SSP_R',str(p.Rsun),'_t_',mode_label,'.csv'))))
+            if 'mode_pop' not in kwargs:
+                tabt = tab_reader('ssp',p,a.T,mode='t',tab=True,R=p.Rsun,mode_iso=mode_iso)
+            else:
+                tabt = tab_reader(kwargs['mode_pop'],p,a.T,mode='t',tab=True,R=p.Rsun,mode_iso=mode_iso)
+                #tabt = np.vstack(tabt)
+            #tabt = Table.read(os.path.join(a.T['poptab'],
+            #                 ''.join(('SSP_R',str(p.Rsun),'_t_',mode_label,'.csv'))))
         if mode_comp=='sh' or mode_comp=='tot':
-            tabsh = Table.read(os.path.join(a.T['poptab'],
-                              ''.join(('SSP_R',str(p.Rsun),'_sh_',mode_label,'.csv'))))
+            if 'mode_pop' not in kwargs:
+                tabsh = tab_reader('ssp',p,a.T,mode='sh',tab=True,R=p.Rsun,mode_iso=mode_iso)
+            else:
+                tabsh = tab_reader(kwargs['mode_pop'],p,a.T,mode='sh',tab=True,R=p.Rsun,mode_iso=mode_iso)
+                #tabsh = np.vstack(tabsh)
+            #tabsh = Table.read(os.path.join(a.T['poptab'],
+            #                  ''.join(('SSP_R',str(p.Rsun),'_sh_',mode_label,'.csv'))))
     else:
         print(f'Volume spanning though these R-bins:{a.R[indrs]}')
         if mode_comp=='d' or mode_comp=='dt' or mode_comp=='tot':
             tabd = [Table.read(os.path.join(a.T['poptab'],
-                      ''.join(('SSP_R',str(i),'_d_',mode_label,'.csv')))) for i in a.R[indrs]]
+                   ''.join(('SSP_R',str(i),'_d_',mode_label,'.csv')))) for i in a.R[indrs]]
         if mode_comp=='t' or mode_comp=='dt' or mode_comp=='tot':
             tabt = [Table.read(os.path.join(a.T['poptab'],
                       ''.join(('SSP_R',str(i),'_t_',mode_label,'.csv')))) for i in a.R[indrs]]
@@ -4929,7 +5047,7 @@ def hess_simple(mode_comp,mode_geom,bands,mag_range,mag_step,p,a,**kwargs):
                       ''.join(('SSP_R',str(i),'_sh_',mode_label,'.csv'))))  for i in a.R[indrs]]        
 
     sum_Nz, mag = [], [[], [], []]
-    kwargs_calc = reduce_kwargs(kwargs,['mode_pop','mode_iso'])
+    kwargs_calc = reduce_kwargs(kwargs,['mode_iso','mode_pop'])
     
     if p.run_mode==0:
         if mode_comp=='d' or mode_comp=='dt' or mode_comp=='tot':

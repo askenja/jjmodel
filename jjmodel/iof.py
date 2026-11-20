@@ -66,6 +66,9 @@ def dir_tree(p,**kwargs):
     T['popgdwtab'] = os.path.join(T['poptab'],'gdw')
     T['popkdwtab'] = os.path.join(T['poptab'],'kdw')
     T['popwdtab'] = os.path.join(T['poptab'],'wd')
+    T['popldwtab'] = os.path.join(T['poptab'],'ldw')
+    T['poptdwtab'] = os.path.join(T['poptab'],'tdw')
+    T['popydwtab'] = os.path.join(T['poptab'],'ydw')
     
     dirs_level1, dirs_level2, dirs_level3 = [], [], [] 
     keys_list = list(T.keys())
@@ -248,9 +251,11 @@ def tab_reader(names,p,T,**kwargs):
     """
     if ('tab' in kwargs) and (kwargs['tab']==True):
         Pn = {'a':'A','f':'F','rc':'RC','rc+':'RC+',
-                   'gdw':'Gdw','kdw':'Kdw','rrl':'RRL','ceph':'Ceph','wd':'WD'}
+                   'gdw':'Gdw','kdw':'Kdw','rrl':'RRL','ceph':'Ceph','wd':'WD',
+                   'ldw':'Ldw','tdw':'Tdw','ydw':'Ydw'}
         pn = {'a':'a','f':'f','rc':'rc','rc+':'rc',
-              'gdw':'gdw','kdw':'kdw','rrl':'rrl','ceph':'ceph','wd':'wd'}
+              'gdw':'gdw','kdw':'kdw','rrl':'rrl','ceph':'ceph','wd':'wd',
+              'ldw':'ldw','tdw':'tdw','ydw':'ydw'}
         
         if names=='ssp':
             savedir = 'poptab'
@@ -425,9 +430,11 @@ class TabSaver():
         self.lb = {'d':'thin disk','t':'thick disk','sh':'stellar halo',
                    'dt':'total disk','tot':'total disk + halo'}
         self.pn = {'a':'a','f':'f','rc':'rc','rc+':'rc','rc_compl':'rc',
-                   'gdw':'gdw','kdw':'kdw','rrl':'rrl','ceph':'ceph','wd':'wd'}
+                   'gdw':'gdw','kdw':'kdw','rrl':'rrl','ceph':'ceph','wd':'wd',
+                   'ldw':'ldw','tdw':'tdw','ydw':'ydw'}
         self.Pn = {'a':'A','f':'F','rc':'RC','rc+':'RC+','rc_compl':'RC_compl',
-                   'gdw':'Gdw','kdw':'Kdw','rrl':'RRL','ceph':'Ceph','wd':'WD'}
+                   'gdw':'Gdw','kdw':'Kdw','rrl':'RRL','ceph':'Ceph','wd':'WD',
+                   'ldw':'Ldw','tdw':'Tdw','ydw':'Ydw'}
         
         self.dir, self.fmt = 'tab', '.txt'
         if 'fig' in self.kwargs and self.kwargs['fig']==True:

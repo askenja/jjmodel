@@ -67,6 +67,48 @@ def mass_per_population(p,pop,t,sigma,weights):
     return mass
 
 
+def _fast_imf_weights(imf, mass_edges):
+    """
+    Calculates IMF bin weights using the precomputed IMF arrays.
+
+    This is a faster replacement for repeatedly calling ``imf(m1, m2)`` in a
+    Python loop. If the input IMF does not expose the expected internal arrays,
+    the function returns ``None`` and the caller should fall back to the old method.
+    """
+    imf_obj = getattr(imf, "__self__", None)
+
+    required = ("mlow", "mup", "mres", "m_lin", "Nmdm")
+    if imf_obj is None or not all(hasattr(imf_obj, attr) for attr in required):
+        return None
+
+    mass1 = np.asarray(mass_edges[:-1], dtype=float)
+    mass2 = np.asarray(mass_edges[1:], dtype=float)
+
+    mass1 = np.maximum(mass1, imf_obj.mlow)
+    mass2 = np.minimum(mass2, imf_obj.mup)
+
+    m1_ind = ((mass1 - imf_obj.mlow) // imf_obj.mres).astype(int)
+    m2_ind = ((mass2 - imf_obj.mlow) // imf_obj.mres).astype(int)
+
+    close = (m1_ind == m2_ind) | ((m2_ind - m1_ind) == 1)
+    m2_eff = m2_ind.copy()
+    m2_eff[close] = m1_ind[close] + 2
+
+    m1_ind = np.clip(m1_ind, 0, len(imf_obj.Nmdm) - 1)
+    m2_eff = np.clip(m2_eff, 0, len(imf_obj.Nmdm))
+
+    csum = np.concatenate(([0.0], np.cumsum(imf_obj.Nmdm)))
+    weights = csum[m2_eff] - csum[m1_ind]
+
+    interval_weight = np.ones_like(weights)
+    interval_weight[close] = (
+        (mass2[close] - mass1[close]) /
+        (imf_obj.m_lin[m2_eff[close]] - imf_obj.m_lin[m1_ind[close]])
+    )
+
+    return weights * interval_weight
+
+
 def apply_IMF(imf,iso_masses,mass):   
     r"""
     Applies IMF to the isochrone mass column.
@@ -89,10 +131,15 @@ def apply_IMF(imf,iso_masses,mass):
     m_centers = np.zeros((lenm+1))
     m_centers[0], m_centers[-1] = iso_masses[0], iso_masses[-1]
     m_centers[1:-1] = [np.mean([iso_masses[i],iso_masses[i+1]]) for i in np.arange(lenm-1)]
-
-    num_dens = np.array([imf(m_centers[k],m_centers[k+1])*mass for k in np.arange(lenm)])
     
-    return num_dens
+    fast_weights = _fast_imf_weights(imf, m_centers)
+    if fast_weights is not None:
+        return fast_weights * mass
+    
+    return np.array([
+        imf(m_centers[k], m_centers[k + 1]) * mass
+        for k in np.arange(lenm)
+    ])
 
 
 def _imf_to_feh_age_pop_(
@@ -123,7 +170,9 @@ def _imf_to_feh_age_pop_(
             # Read the requested columns from this age group
             if mode_key == 'main':
 
-                iso_age = StellarAssemblies.read_hdf5_isochrone(f1, age_best, phot,**kwargs)
+                age_name = f'age_{age_best:.2f}'
+
+                iso_age = StellarAssemblies.read_hdf5_isochrone(f1, age_name, phot,**kwargs)
                     
                 # Add number density column (apply IMF)
                 iso_age['N'] = apply_IMF(imf,iso_age['Mini'],mass)
@@ -138,10 +187,11 @@ def _imf_to_feh_age_pop_(
 
             elif mode_key == 'wd':
 
+                age_name = f'age_{age_best:.2f}'
                 iso_age_da = StellarAssemblies.read_hdf5_isochrone(
-                                    f1, age_best, phot,wd_atmo='DA',**kwargs)
+                                    f1, age_name, phot, model='DA',**kwargs)
                 iso_age_db = StellarAssemblies.read_hdf5_isochrone(
-                                    f1, age_best, phot,wd_atmo='DB',**kwargs)
+                                    f1, age_name, phot,model='DB',**kwargs)
 
                 # Add number density column (apply IMF)
                 iso_age_da['N'] = apply_IMF(imf,iso_age_da['Mini'],mass*f_da)
@@ -153,6 +203,23 @@ def _imf_to_feh_age_pop_(
 
                 iso_age = {key: np.concatenate((iso_age_da[key], iso_age_db[key])) 
                            for key in iso_age_da}
+
+            elif mode_key == 'bd':
+
+                age_name = f'age_{age_best:.3f}'
+
+                bd_model = mode[mode_key].split('ATMO_')[-1]
+
+                iso_age = StellarAssemblies.read_hdf5_isochrone(f1, age_name, phot, model=bd_model, **kwargs)
+                                    
+                # Add number density column (apply IMF)
+                iso_age['N'] = apply_IMF(imf,iso_age['Mini'],mass)
+
+                n_pops = len(iso_age['Mini'])
+
+                # Add phase
+                iso_age['phase'] = np.full(len(iso_age['N']),20)
+
                                         
             # Add age and FeH columns
             n_pops = len(iso_age['Mini'])
@@ -180,37 +247,145 @@ class StellarAssemblies:
         self.mode = mode
         self.phot = photometric_system
 
+    @staticmethod
+    def get_available_ages(h5):
+        """Return the ages available in one metallicity file."""
+        return np.array(sorted(
+            float(name.removeprefix('age_'))
+            for name in h5.keys()
+            if name.startswith('age_')
+        ))
 
+    @staticmethod
+    def read_hdf5_isochrone(h5,age_name,photometric_system,model=None,**kwargs):
+        """
+        Read the requested physical columns from one age group.
+
+        Assumes each age group contains an 'Astro' dataset and one or
+        more photometric datasets, each with a 'columns' attribute.
+        """
+
+        if model:
+            category = h5[model]
+            group = category[age_name]
+        else:
+            group = h5[age_name]
+
+        # Public photometric-system names -> HDF5 dataset names.
+        category_map = {
+            'GaiaDR3': 'GDR3',
+            'UBVRIplus': 'UBVRIJHK',
+            'MKO_WISE_IRAC': 'MKO_WISE_IRAC',
+            'NIRCAM': 'NIRCAM_modA'
+            # update when necessary
+        }
+
+        systems = photometric_system.split('+')
+        datasets = ['Astro'] + [category_map[system] for system in systems]
+
+        available_columns = {}
+
+        for dataset_name in datasets:
+            dataset = group[dataset_name]
+            values = np.asarray(dataset)
+            names = dataset.attrs['columns']
+
+            # HDF5 string attributes may be stored as bytes.
+            names = [
+                name.decode() if isinstance(name, bytes) else str(name)
+                for name in names
+            ]
+
+            for j, name in enumerate(names):
+                available_columns[name] = values[:, j]
+
+        if 'requested' in kwargs:
+            missing = set(kwargs['requested']) - available_columns.keys()
+            if missing:
+                raise KeyError(
+                    f"Missing columns in {age_name}: {sorted(missing)}"
+                )
+            return {name: available_columns[name] for name in kwargs['requested']}
+        else:
+            return available_columns
+
+        
     def create_pops(self,R,amrd,amrt,sfrd,sfrt,sigmash,imf,**kwargs):
 
+        # Check if brown dwarfs are modelled 
+        # ---------------------------------------------------------------
         pop_tabs = {}
 
-        # ---------------------------------------------------------------
-        # 1. Construct time-metallicity populations
-        # ---------------------------------------------------------------
+        if 'bd' in self.mode.keys():
 
-        # Stellar-halo population
-        amrsh_spread = np.linspace(
-            self.p.FeHsh - 3*self.p.dFeHsh,
-            self.p.FeHsh + 3*self.p.dFeHsh,
-            self.p.n_FeHsh
-        )
-        wsh = gauss_weights(amrsh_spread, self.p.FeHsh, self.p.dFeHsh)
-        popsh = [np.zeros(self.p.n_FeHsh), amrsh_spread, wsh]
+            if len(self.mode.keys()) > 1:
+                raise KeyError("Modelling brown drawfs together with MS+giant or WD populations is currently not supported!") 
 
-        # Disk populations
-        popd = spread_metallicity(self.a.t, amrd, self.p.n_FeHdt, self.p.dFeHdt)
-        popt = spread_metallicity(self.a.t[:self.a.jt], amrt[:self.a.jt],self.p.n_FeHdt, self.p.dFeHdt)
+            # Only one metallicity model is available for BD -> 
+            # no metallicity spread 
 
-        # ---------------------------------------------------------------
-        # 2. Calculate the mass reservoir of each subpopulation
-        # ---------------------------------------------------------------
+            # ---------------------------------------------------------------
+            # 1. Construct time-metallicity populations
+            # ---------------------------------------------------------------
 
-        md = mass_per_population(self.p,'d',popd[0],sfrd,popd[2])
-        mt = mass_per_population(self.p,'t',popt[0],sfrt[:self.a.jt],popt[2])
-        msh = mass_per_population(self.p,'sh',popsh[0],sigmash,popsh[2])
+            # Stellar-halo population
+            t_birth_sh = 0    # Gyr
+            wsh = 1 
+            popsh = [np.array([t_birth_sh]), np.array([self.p.FeHsh]), np.array([wsh])]
 
-        # Combine the populations.
+            # Disk populations
+            n_FeHdt_bd = 1 
+            dFeHdt_bd = 0 
+            popd = spread_metallicity(self.a.t, amrd, n_FeHdt_bd, dFeHdt_bd)
+            popt = spread_metallicity(self.a.t[:self.a.jt], amrt[:self.a.jt],n_FeHdt_bd, dFeHdt_bd)
+
+            # ---------------------------------------------------------------
+            # 2. Calculate the mass reservoir of each subpopulation
+            # ---------------------------------------------------------------
+
+            md = mass_per_population(self.p,'d',popd[0],sfrd,popd[2])
+            mt = mass_per_population(self.p,'t',popt[0],sfrt[:self.a.jt],popt[2])
+            msh = mass_per_population(self.p,'sh',popsh[0],sigmash,popsh[2])
+
+            # Available ages - for BD resolution is 0.025 Gyr
+            table_age = np.round(np.arange(0.025,13.025,0.025),3)
+
+            pop_type = list(self.mode.keys())[0]
+            iso_model = list(self.mode.values())[0].split('_')[0]
+
+        else:
+            # ---------------------------------------------------------------
+            # 1. Construct time-metallicity populations
+            # ---------------------------------------------------------------
+
+            # Stellar-halo population
+            amrsh_spread = np.linspace(
+                self.p.FeHsh - 3*self.p.dFeHsh,
+                self.p.FeHsh + 3*self.p.dFeHsh,
+                self.p.n_FeHsh
+            )
+            wsh = gauss_weights(amrsh_spread, self.p.FeHsh, self.p.dFeHsh)
+            popsh = [np.zeros(self.p.n_FeHsh), amrsh_spread, wsh]
+
+            # Disk populations
+            popd = spread_metallicity(self.a.t, amrd, self.p.n_FeHdt, self.p.dFeHdt)
+            popt = spread_metallicity(self.a.t[:self.a.jt], amrt[:self.a.jt],self.p.n_FeHdt, self.p.dFeHdt)
+
+            # ---------------------------------------------------------------
+            # 2. Calculate the mass reservoir of each subpopulation
+            # ---------------------------------------------------------------
+
+            md = mass_per_population(self.p,'d',popd[0],sfrd,popd[2])
+            mt = mass_per_population(self.p,'t',popt[0],sfrt[:self.a.jt],popt[2])
+            msh = mass_per_population(self.p,'sh',popsh[0],sigmash,popsh[2])
+
+            # Available ages - for BD resolution is 0.025 Gyr
+            table_age = np.round(np.arange(0.05,13.05,0.05),2)
+
+            pop_type = list(self.mode.keys())[0]
+            iso_model = list(self.mode.values())[0]
+
+        # Combine all populations.
         # Each row will represent one population:
         # [formation_time, FeH, spread_weight, mass]
         times = {'d':popd[0],'t':popt[0], 'sh':popsh[0]}
@@ -221,13 +396,11 @@ class StellarAssemblies:
         # 3. Discover available metallicities from HDF5 filenames
         # ---------------------------------------------------------------
 
-        iso_dir_main = os.path.join(self.iso_dir,'main','Padova')
+        iso_dir_main = os.path.join(self.iso_dir,pop_type,iso_model)
         iso_files = glob.glob(os.path.join(iso_dir_main, 'iso_feh*.h5'))
-        
+
         # Available metallicities
         table_met = np.sort([float(fn.split('iso_feh')[1].split('.h5')[0]) for fn in iso_files])
-        # Available ages
-        table_age = np.round(np.arange(0.05,13.05,0.05),2)
 
         for i,label in enumerate(self.mwcomponent_labels):
 
@@ -236,6 +409,7 @@ class StellarAssemblies:
             M_column = masses[label]
 
             # Then for all populations find closest values in the metallicity grid (indices)
+            
             ind_feh = np.array([find_ind(val,table_met) for val in FeH_column])
 
             # Get their unique values (in case if there are duplications) 
@@ -249,7 +423,10 @@ class StellarAssemblies:
             # ---------------------------------------------------------------
             filenames = {}
             for mode_key in self.mode.keys():
-                iso_dir = os.path.join(self.iso_dir,mode_key,self.mode[mode_key])
+                iso_model = self.mode[mode_key]
+                if mode_key == 'bd':
+                    iso_model = iso_model.split('_')[0]
+                iso_dir = os.path.join(self.iso_dir,mode_key,iso_model)
                 filenames[mode_key] = [os.path.join(iso_dir,f'iso_feh{table_met[ind]}.h5') 
                                        for ind in ind_feh_unique]
 
@@ -309,67 +486,4 @@ class StellarAssemblies:
             pop_tabs[label] = out_tab
 
         return pop_tabs
-
-    @staticmethod
-    def get_available_ages(h5):
-        """Return the ages available in one metallicity file."""
-        return np.array(sorted(
-            float(name.removeprefix('age_'))
-            for name in h5.keys()
-            if name.startswith('age_')
-        ))
-
-    @staticmethod
-    def read_hdf5_isochrone(h5, age, photometric_system,wd_atmo=None,**kwargs):
-        """
-        Read the requested physical columns from one age group.
-
-        Assumes each age group contains an 'Astro' dataset and one or
-        more photometric datasets, each with a 'columns' attribute.
-        """
-        age_name = f'age_{age:.2f}'
-
-        if wd_atmo:
-            category = h5[wd_atmo]
-            group = category[age_name]
-        else:
-            group = h5[age_name]
-
-        # Public photometric-system names -> HDF5 dataset names.
-        category_map = {
-            'GaiaDR3': 'GDR3',
-            'UBVRIplus': 'UBVRIJHK',
-            'WISE':'WISE'
-            # update when necessary
-        }
-
-        systems = photometric_system.split('+')
-        datasets = ['Astro'] + [category_map[system] for system in systems]
-
-        available_columns = {}
-
-        for dataset_name in datasets:
-            dataset = group[dataset_name]
-            values = np.asarray(dataset)
-            names = dataset.attrs['columns']
-
-            # HDF5 string attributes may be stored as bytes.
-            names = [
-                name.decode() if isinstance(name, bytes) else str(name)
-                for name in names
-            ]
-
-            for j, name in enumerate(names):
-                available_columns[name] = values[:, j]
-
-        if 'requested' in kwargs:
-            missing = set(kwargs['requested']) - available_columns.keys()
-            if missing:
-                raise KeyError(
-                    f"Missing columns in {age_name}: {sorted(missing)}"
-                )
-            return {name: available_columns[name] for name in kwargs['requested']}
-        else:
-            return available_columns
-
 

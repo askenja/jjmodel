@@ -157,6 +157,7 @@ cython_debug/
 /jjmodel/input/isochrones/old
 /jjmodel/input/isochrones/main
 /jjmodel/input/isochrones/wd
+/jjmodel/input/isochrones/bd
 /jjmodel/input/isochrones/Metallicity_grid_old.txt
 
 /jjmodel/tutorials/tutorial1/output
@@ -164,6 +165,7 @@ cython_debug/
 /jjmodel/tutorials/tutorial3/output
 /jjmodel/tutorials/tutorial4/output
 /jjmodel/tutorials/tutorial5/output
+/jjmodel/tutorials/tutorial6/output
 
 #av
 /jjmodel/jjmodel/tutorials/test.py

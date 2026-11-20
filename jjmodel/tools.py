@@ -653,8 +653,10 @@ def reduce_table(tab,a):
         c+=len(ind)
         if ind.size > 0:
             out['N'][i] = np.sum(np.array(tab['N'][ind]))
-            out['Sigma'][i] = np.sum(np.array(tab['N'][ind]*tab['Mf'][ind]))
-        
+            try:
+                out['Sigma'][i] = np.sum(np.array(tab['N'][ind]*tab['Mf'][ind]))
+            except:
+                out['Sigma'][i] = np.sum(np.array(tab['N'][ind]*tab['Mini'][ind]))
     return out
 
 
