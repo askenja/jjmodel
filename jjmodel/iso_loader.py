@@ -32,6 +32,9 @@ def isochrone_loader(iso_type,model):
             'LPCODE':'https://drive.google.com/file/d/1Zm2iVmKWQlb3jz3hkXggrBQTOp-tkE5p/view?usp=sharing',
             'Montreal':'https://drive.google.com/file/d/1PzIWb6FT66-Xd95irmpF4ojwZ-TKSqNK/view?usp=sharing',
             'BaSTI':'https://drive.google.com/file/d/1lKywK0O3SN_jNttShiC0lD5F4kPmTo5L/view?usp=sharing'
+            },
+        'bd':{
+            'ATMO':'https://drive.google.com/file/d/1g_WsFR-xsQX_b2iWN23KWD6vsmGEcNLP/view?usp=sharing'
             }
         }
 
