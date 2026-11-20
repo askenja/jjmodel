@@ -19,7 +19,7 @@ The calibrated model reproduces star counts across different regions of the *Gai
 
 CALOMERA extends the population synthesis capabilities of the JJ model without modifying its underlying chemo-dynamical formulation, providing a unified framework for modelling the Galactic stellar and substellar populations.
 
-The framework is presented in Sysoliatina & Vani, *The full Gaia colour–magnitude diagram with white dwarfs reveals a declining Milky Way star formation history* (in preparation).
+The framework is presented in [Sysoliatina & Vani, *The full Gaia colour–magnitude diagram with white dwarfs reveals a declining Milky Way star formation history* (2026)](https://scixplorer.org/abs/2026arXiv261117337S/abstract).
 
 ## Documentation
 
